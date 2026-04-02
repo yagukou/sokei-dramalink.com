@@ -4,6 +4,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SFC演劇</title>
+
+     <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #eee;
+      padding: 10px 20px;
+    }
+
+    .menu-left, .menu-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+      font-size: 14px;
+    }
+
+    a:hover {
+      color: red;
+    }
+  </style>
   </head>
 
   <style>
@@ -19,8 +55,29 @@
     <p>testpage</p>
 
      <a href="ticket.html">
+      <!-- ボタンの位置、後で調整 -->
       <button>チケット予約</button>
     </a>
+
+    <header>
+  <!-- 左 -->
+  <div class="menu-left">
+    <a href="#">チケット予約</a>
+    <a href="#">スケジュール</a>
+    <a href="#">当日券</a>
+  </div>
+
+  <!-- 真ん中 -->
+  <div class="logo">早慶演劇祭</div>
+
+  <!-- 右 -->
+  <div class="menu-right">
+    <a href="#">エリア：東京</a>
+    <a href="#">Language</a>
+    <a href="#">ログイン</a>
+    <a href="#">メニュー</a>
+  </div>
+</header>
   </body>
 
 </html>
