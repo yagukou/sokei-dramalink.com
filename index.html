@@ -40,28 +40,28 @@
       color: red;
     }
 
-   @media (max-width: 768px) {
+  @media (max-width: 768px) {
 
   header {
     flex-direction: column;
-    align-items: stretch;
+    align-items: center;
   }
 
-  /* 上の段 */
+  /* 左メニューを上段に */
   .menu-left {
-    justify-content: space-around;
-    margin-bottom: 10px;
-  }
-
-  /* 下の段 */
-  .menu-right {
+    width: 100%;
     justify-content: space-around;
   }
 
   /* ロゴを中央 */
   .logo {
-    text-align: center;
     margin: 10px 0;
+  }
+
+  /* 右メニューを下段に */
+  .menu-right {
+    width: 100%;
+    justify-content: space-around;
   }
 
 }
