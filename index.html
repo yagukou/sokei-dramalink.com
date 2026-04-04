@@ -39,8 +39,25 @@
     a:hover {
       color: red;
     }
+
+    @media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menu-left,
+  .menu-right {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .logo {
+    margin: 10px 0;
+  }
+}
   </style>
-  </head>
+ </head>
 
   <body>
     <h1>SFC演劇</h1>
