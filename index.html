@@ -40,17 +40,33 @@
       color: red;
     }
 
- @media (max-width: 768px) {
+@media (max-width: 768px) {
 
-  .top-row {
-    flex-direction: row;
-  }
-
-  .bottom-row {
+  header {
     display: flex;
     flex-wrap: wrap;   /* ←これ重要 */
-    gap: 10px;
+  }
+
+  /* 上段（ロゴ＋左メニュー） */
+  .logo {
+    order: 1;
+    width: 30%;
+  }
+
+  .menu-left {
+    order: 2;
+    width: 70%;
+    display: flex;
     justify-content: space-around;
+  }
+
+  /* 下段（右メニュー） */
+  .menu-right {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
   }
 
 }
