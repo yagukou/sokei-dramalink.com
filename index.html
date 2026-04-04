@@ -31,6 +31,7 @@
 
     a {
       text-decoration: none;
+      flex-direction: column;
       color: black;
       font-size: 13px;
     }
@@ -49,12 +50,12 @@
   /* 上段（ロゴ＋左メニュー） */
   .logo {
     order: 1;
-    width: 30%;
+    width: 100%;
   }
 
   .menu-left {
     order: 2;
-    width: 70%;
+    width: 100%;
     display: flex;
     justify-content: space-around;
   }
@@ -68,9 +69,8 @@
     margin-top: 10px;
   }
 
-  .menu-item {
+  .menu-1 {
   display: flex;
-  flex-direction: column;
   align-items: center;
   gap: 5px; /* 画像と文字の間 syasin */
   text-decoration: none;
@@ -95,7 +95,7 @@
     <header>
   <!-- 左 -->
   <div class="menu-left">
-   <a href="ticket.html" class="menu-item">
+   <a href="ticket.html" class="menu-1">
   <img src="ticket.png" width="50">
   <span>チケット</span>
 </a>
