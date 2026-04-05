@@ -44,7 +44,8 @@
 
   header {
     display: flex;
-    flex-wrap: wrap;   /* ←これ重要 */
+    flex-wrap: wrap;  /* ←これ重要 */
+    align-items: flex-start;
   }
 
   /* 上段（ロゴ＋左メニュー） */
@@ -52,6 +53,8 @@
     order: 1;
     width: 100%;
     display: block;
+    text-align: left;
+    margin: 10px 0;
   }
 
   .menu-left {
