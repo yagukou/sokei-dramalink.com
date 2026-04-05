@@ -21,8 +21,22 @@
     .menu-left, .menu-right {
       display: flex;
       gap: 10px;
+      justify-content: space-around;
       align-items: center;
     }
+
+    .menu-left div, .menu-right div {
+      display: flex;
+      flex-direction: column;  /* ←縦にする */
+      align-items: center;
+      text-align: center;
+}
+ 
+    .menu-left img, .menu-right img {
+       width: 30px;
+       height: 30px;
+       margin-bottom: 5px;
+}
 
     .logo {
       font-size: 24px;
