@@ -53,45 +53,40 @@
 @media (max-width: 768px) {
 
   header {
-    display: flex;
-    flex-wrap: wrap;  /* ←これ重要 */
-    align-items: flex-start;
-  }
-
-  /* 上段（ロゴ＋左メニュー） */
-  .logo {
-    order: 1;
-    width: 100%;
     display: block;
-    text-align: left;
-    margin: 10px 0;
   }
 
-  .menu-left {
-    order: 2;
-    width: 100%;
+  /* 上段 */
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+
+  /* 下段 */
+  .bottom-row {
     display: flex;
     justify-content: space-around;
+    padding: 10px;
   }
 
-  /* 下段（右メニュー） */
-  .menu-right {
-    order: 3;
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
-  }
-
+  /* アイコン＋文字 */
   .menu-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px; /* 画像と文字の間 syasin */
-  text-decoration: none;
-  color: black;
-}
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .menu-1 img {
+    width: 30px;
+  }
+
+  .menu-1 span {
+    font-size: 12px;
+  }
+
+}
   /* 文字 */
   .a{
     font-size: 2px;
