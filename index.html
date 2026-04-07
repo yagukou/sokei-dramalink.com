@@ -5,92 +5,110 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
      <style>
-body {
-  margin: 0;
-  font-family: sans-serif;
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #eee;
+      padding: 10px 20px;
+    }
+
+    .menu-left, .menu-right {
+      display: flex;
+      gap: 10px;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .menu-left div, .menu-right div {
+      display: flex;
+      flex-direction: column;  /* ←縦にする */
+      align-items: center;
+      text-align: center;
 }
 
-header {
-  display: flex;
-  justify-content: space-between; /* 左・中央・右 */
-  align-items: center;
-  background-color: white; /* ←白に */
-  padding: 10px 40px;
+    .menu-left img, .menu-right img {
+       width: 30px;
+       height: 30px;
+       margin-bottom: 5px;
 }
 
-/* 左と右 */
-.menu-left, .menu-right {
-  display: flex;
-  gap: 40px; /* ←間隔広げる（重要） */
-  align-items: center;
-}
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
 
-/* 中央ロゴ */
-.logo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* アイコン＋文字 */
-.menu-left div, .menu-right div {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-size: 12px;
-}
-
-/* アイコン */
-.menu-left img, .menu-right img {
-  width: 30px;
-  height: 30px;
-  margin-bottom: 5px;
-}
+    a {
+      text-decoration: none;
+      flex-direction: column;
+      color: black;
+      font-size: 12px;
+    }
 
 @media (max-width: 768px) {
 
   header {
-    flex-direction: column;   /* 縦にする */
-    align-items: stretch;
+    display: block;
   }
 
   /* 上段 */
-  .top-bar {
+  .top-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
   }
 
-  /* ロゴ中央 */
-  .logo {
-    position: static;
-    transform: none;
-    text-align: center;
+  .top-right {
+    display: flex;
+    gap: 10px;
   }
 
-  /* 下段メニュー */
-  .menu-left, .menu-right {
-    width: 100%;
+  /* 下段 */
+  .bottom-row {
     display: flex;
     justify-content: space-around;
-    padding: 10px 0;
+    padding: 10px;
   }
 
   /* アイコン＋文字 */
-  .menu-left div, .menu-right div {
+  .menu-1 {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    font-size: 10px;
-  }
 
-  /* アイコンサイズ */
-  .menu-left img, .menu-right img {
-    width: 24px;
-    height: 24px;
-  }
-
+     background: white;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
+  }
+
+  .menu-1 img {
+    width: 30px;
+  }
+
+  .menu-1 span {
+    font-size: 12px;
+  }
+
+  .logo {
+  margin-right: auto; /* ←これが超重要 */
+}
+
+  .top-row, .bottom-row {
+    display: flex; /* スマホ版だけ表示 */
+    display: none;
+}
+
+  .menu-left, .menu-right, .logo {
+    display: flex;
+  }
 
   </style>
  </head>
