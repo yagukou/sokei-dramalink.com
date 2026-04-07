@@ -16,7 +16,6 @@
       align-items: center;
       background-color: #eee;
       padding: 10px 20px;
-      position: relative; 
     }
 
     .menu-left, .menu-right {
@@ -35,16 +34,11 @@
  
     .menu-left img, .menu-right img {
        margin-bottom: 5px;
-       width: 30px;
-       height: 30px;
 }
 
     .logo {
       font-size: 24px;
       font-weight: bold;
-     position: absolute;
-     left: 50%;
-     transform: translateX(-50%);
     }
 
     a {
@@ -58,11 +52,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-
-  width: 80px;
-  height: 80px;
-
   background: white;
   border-radius: 12px;
   padding: 10px;
@@ -107,9 +96,6 @@
     flex-direction: column;
     align-items: center;
 
-       width: 60px;
-    height: 60px;
-
      background: white;
   border-radius: 12px;
   padding: 10px;
@@ -119,8 +105,6 @@
 
   .menu-1 img {
     width: 30px;
-    height: 30px;
-    object-fit: contain;
   }
 
   .menu-1 span {
@@ -133,13 +117,12 @@
   left: 50%;
   position: static;
   transform: none;
-  text-align: center;
-    margin: 10px 0;
 }
 
   .top-row, .bottom-row {
+    width: 30px;
+    height: 30px;
     display: flex; /* スマホ版だけ表示 */
-    display: none;
 }
 
   .menu-left, .menu-right, .logo {
@@ -234,7 +217,6 @@ body {
 }
 
 </html>
-
 
 
 
