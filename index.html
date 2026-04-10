@@ -55,7 +55,7 @@
       font-size: 12px;
     }
 
- .menu-1 {
+        .menu-1 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -70,55 +70,6 @@
 .menu-1:hover {
   transform: translateY(-3px);
   transition: 0.3s;
-}
-
-.language-wrapper {
-  position: relative;
-}
-
-.lang-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-
-  background: white;
-  border-radius: 10px;
-  padding: 5px 0;
-
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-
-  z-index: 999; /* ←これ超重要 */
-}
-
-.lang-menu a {
-  display: block;
-  padding: 8px 12px;
-  text-decoration: none;
-  color: black;
-}
-
-.lang-menu a:hover {
-  background: #f0f0f0;
-}
-
-.language-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  width: 80px;
-  height: 80px;
-
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-
-  cursor: pointer; /* ←これ重要 */
-
-.language-wrapper {
-  display: flex;
 }
 
 @media (max-width: 768px) {
@@ -191,17 +142,10 @@
     <header>
   <!-- 左 -->
   <div class="menu-left">
-<div class="language-wrapper">
-  <div class="language-btn" onclick="toggleMenu()">
-    <img src="Language2.png">
-    <span>Language</span>
-  </div>
-  <div id="lang-menu" class="lang-menu">
-    <a href="index.html?lang=ja">日本語</a>
-    <a href="index.html?lang=en">English</a>
-    <a href="index.html?lang=ko">한국어</a>
-  </div>
-</div>
+   <a href="Language.html" class="menu-1">
+  <img src="Language2.png" width="50">
+  <span>Language</span>
+  </a>
    <a href="Inquiry.html" class="menu-1">
   <img src="Inquiry2.png" width="50">
   <span>お問い合わせ</span>
@@ -238,25 +182,28 @@
   <span>ニュース</span>
   </a>
   </div>
+
+  <!-- 真ん中 -->
+  <div class="logo">早慶演劇祭</div>
+
+  <!-- 右 -->
+  <div class="menu-right">
+   <a href="Language.html" class="menu-1">
+  <img src="Language2.png" width="50">
+  <span>Language</span>
+  </a>
+   <a href="Inquiry.html" class="menu-1">
+  <img src="Inquiry2.png" width="50">
+  <span>お問い合わせ</span>
+  </a>
+    <a href="menu.html" class="menu-1">
+  <img src="menu2.png" width="50">
+  <span>メニュー</span>
+  </a>
+  </div>
 </header>
 
   </body>
-
-<script>
-function toggleMenu() {
-  const menu = document.getElementById("lang-menu");
-  menu.style.display =
-    menu.style.display === "block" ? "none" : "block";
-}
-document.addEventListener("click", function(e) {
-  const menu = document.getElementById("lang-menu");
-  const btn = document.querySelector(".language-btn");
-
-  if (!btn.contains(e.target)) {
-    menu.style.display = "none";
-  }
-});
-</script>
 
 body {
   background: url('background.jpg') no-repeat center center/cover;
