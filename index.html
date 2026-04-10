@@ -142,10 +142,17 @@
     <header>
   <!-- 左 -->
   <div class="menu-left">
-   <a href="Language.html" class="menu-1">
-  <img src="Language2.png" width="50">
-  <span>Language</span>
-  </a>
+<div class="language-wrapper">
+  <div class="language-btn" onclick="toggleMenu()">
+    <img src="Language2.png">
+    <span>Language</span>
+  </div>
+  <div id="lang-menu" class="lang-menu">
+    <a href="index.html?lang=ja">日本語</a>
+    <a href="index.html?lang=en">English</a>
+    <a href="index.html?lang=ko">한국어</a>
+  </div>
+</div>
    <a href="Inquiry.html" class="menu-1">
   <img src="Inquiry2.png" width="50">
   <span>お問い合わせ</span>
