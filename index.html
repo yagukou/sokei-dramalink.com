@@ -77,6 +77,41 @@
   transition: 0.3s;
 }
 
+.slider {
+  position: relative;
+  width: 80%;
+  margin: 30px auto;
+  overflow: hidden;
+}
+
+.slides {
+  position: relative;
+}
+
+.slide {
+  width: 100%;
+  display: none;
+  border-radius: 10px;
+}
+
+.slide.active {
+  display: block;
+}
+
+button.prev, button.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
 @media (max-width: 768px) {
 
   header {
@@ -193,43 +228,40 @@
   </a>
   </div>
 </header>
-
   </body>
 
-body {
-  background: url('background.jpg') no-repeat center center/cover;
-  position: relative;
-  min-height: 100vh;
-}
-
-/* オーバーレイ */
-body::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0, 0, 0, 0.3); /* 半透明の黒で引き締め */
-  z-index: -1;
-}
-
-body {
-  background-image: url('pattern.png');
-  background-repeat: repeat;
-}
-
-body {
-  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
-}
-
-@keyframes gradientBG {
-  0% {background-position:0% 50%;}
-  50% {background-position:100% 50%;}
-  100% {background-position:0% 50%;}
-}
-
 </html>
+
+<div class="slider">
+  <div class="slides">
+    <img src="img1.jpg" class="slide active">
+    <img src="img2.jpg" class="slide">
+    <img src="img3.jpg" class="slide">
+  </div>
+
+  <button class="prev">◀</button>
+  <button class="next">▶</button>
+</div>
+
+<script>
+let index = 0;
+const slides = document.querySelectorAll(".slide");
+
+function showSlide(n) {
+  slides.forEach(slide => slide.classList.remove("active"));
+  slides[n].classList.add("active");
+}
+
+document.querySelector(".next").onclick = () => {
+  index = (index + 1) % slides.length;
+  showSlide(index);
+};
+
+document.querySelector(".prev").onclick = () => {
+  index = (index - 1 + slides.length) % slides.length;
+  showSlide(index);
+};
+</script>
 
 
 
