@@ -92,10 +92,15 @@
   width: 100%;
   display: none;
   border-radius: 10px;
+  opacity: 0;
+  transition: 0.5s;
+  position: absolute;
 }
 
 .slide.active {
   display: block;
+  opacity: 1;
+  position: relative;
 }
 
 button.prev, button.next {
@@ -261,6 +266,11 @@ document.querySelector(".prev").onclick = () => {
   index = (index - 1 + slides.length) % slides.length;
   showSlide(index);
 };
+
+setInterval(() => {
+  index = (index + 1) % slides.length;
+  showSlide(index);
+}, 3000); // 3秒ごと
 </script>
 
 
