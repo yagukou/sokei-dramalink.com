@@ -211,10 +211,10 @@ button.prev, button.next {
     <header>
   <!-- 左 -->
   <div class="menu-left">
-   <a href="Language.html" class="menu-1">
-  <img src="Language2.png" width="50">
+   <a class="menu-1" onclick="toggleTranslate()">
+  <img src="Language2.png">
   <span>Language</span>
-  </a>
+</a>
    <a href="Inquiry.html" class="menu-1">
   <img src="Inquiry2.png" width="50">
   <span>お問い合わせ</span>
@@ -255,7 +255,7 @@ button.prev, button.next {
   </a>
   </div>
 </header>
-
+<div id="google_translate_element" style="display:none;"></div>
   </body>
 
 </html>
@@ -296,5 +296,21 @@ setInterval(() => {
 }, 10000); // 10秒ごと
 </script>
 
+<script>
+function toggleTranslate() {
+  const el = document.getElementById("google_translate_element");
+  el.style.display = (el.style.display === "none") ? "block" : "none";
+}
+</script>
 
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ja',
+    includedLanguages: 'en,ko,zh-CN,zh-TW',
+    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+  }, 'google_translate_element');
+}
+</script>
 
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
