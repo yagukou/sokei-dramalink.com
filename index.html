@@ -52,29 +52,17 @@
       line-height: 1.2;
       display: flex;
       flex-direction: column;  
-      align-items: center;max-width: 100%;
-      white-space: nowrap; /* 改行防止 */
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
+      align-items: center;
     }
 
-    body.translated-ltr .logo-main {
-  font-size: clamp(16px, 2vw, 22px);
-}
-
-body.translated-ltr .logo-sub {
-  font-size: clamp(10px, 1.5vw, 14px);
-}
-
     .logo-main {
-  font-size: clamp(18px, 3vw, 32px);
+  font-size: 32px;
   font-weight: bold;
   letter-spacing: 3px;
 }
 
 .logo-sub {  
-  font-size: clamp(12px, 2vw, 20px);   
+  font-size: 20px;   
   letter-spacing: 2px;
   color: #d4af37;      
 }
@@ -147,25 +135,6 @@ button.prev, button.next {
 
 .prev { left: 10px; }
 .next { right: 10px; }
-
-.goog-te-banner-frame {
-  display: none !important;
-}
-
-body {
-  top: 0 !important;
-}
-
-#google_translate_element {
-  position: absolute;
-  top: 70px; /* ヘッダーの下に出す */
-  left: 20px;
-  background: white;
-  padding: 10px;
-  border-radius: 10px;
-  display: none;
-  z-index: 9999;
-}
 
 @media (max-width: 768px) {
 
@@ -242,8 +211,8 @@ body {
     <header>
   <!-- 左 -->
   <div class="menu-left">
-   <a class="menu-1" onclick="toggleTranslate()">
-  <img src="Language2.png">
+   <a href="Language.html" class="menu-1">
+  <img src="Language2.png" width="50">
   <span>Language</span>
   </a>
    <a href="Inquiry.html" class="menu-1">
@@ -325,23 +294,3 @@ setInterval(() => {
   index = (index + 1) % slides.length;
   showSlide(index);
 }, 10000); // 10秒ごと
-</script>
-
-<div id="google_translate_element"></div>
-
-<script>
-function toggleTranslate() {
-  const el = document.getElementById("google_translate_element");
-  el.style.display = (el.style.display === "none") ? "block" : "none";
-}
-
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja',
-    includedLanguages: 'en,ko,zh-CN,zh-TW',
-    layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-  }, 'google_translate_element');
-}
-</script>
-
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
