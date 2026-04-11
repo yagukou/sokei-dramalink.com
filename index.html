@@ -103,6 +103,20 @@
   color: rgb(8, 8, 8);
 }
 
+.goog-te-banner-frame,
+  .goog-te-banner-frame.skiptranslate,
+  .goog-te-gadget-icon,
+  .goog-te-gadget-simple,
+  .goog-te-balloon-frame,
+  .skiptranslate {
+    display: none !important;
+  }
+
+  body {
+    top: 0px !important;
+    position: static !important;
+  }
+
 /* ホバー効果 */
 .menu-1:hover {
   transform: translateY(-3px);
@@ -223,6 +237,8 @@ body.translated-ltr .logo-main {
 body.translated-ltr .logo-sub {
   font-size: 14px;
 }
+
+
 
 @media (max-width: 768px) {
 
@@ -391,6 +407,27 @@ function googleTranslateElementInit() {
   </a>
   </div>
 </header>
+
+<script>
+function removeGoogleUI() {
+  // バナー
+  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+
+  // ポップアップ（翻訳されました表示）
+  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+
+  // その他UI
+  document.querySelectorAll('.skiptranslate').forEach(el => {
+    if (el.innerText.includes("翻訳")) el.remove();
+  });
+
+  // 位置ズレ修正
+  document.body.style.top = '0px';
+}
+
+/* ずっと監視して消す */
+setInterval(removeGoogleUI, 300);
+</script>
 
   </body>
 
