@@ -83,6 +83,9 @@
   border-radius: 12px;
   padding: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 80px;   /* 横幅固定 */
+  height: 80px;  /* 高さ固定 */
+  justify-content: center;
 }
 
 .menu-1, .language-btn {
@@ -94,6 +97,11 @@
 .menu-1:hover {
   transform: translateY(-3px);
   transition: 0.3s;
+}
+
+.menu-1 img {
+  width: 30px !important;
+  height: 30px !important;
 }
 
 .slider {
@@ -166,6 +174,19 @@ button.prev, button.next {
 /* ホバー */
 .lang-menu div:hover {
   background: #ddd;
+}
+
+.lang-wrapper .lang-menu {
+  display: none;
+}
+
+.menu-1 span {
+  display: block;
+  width: 60px;              /* ←幅固定（重要） */
+  white-space: nowrap;      /* 改行させない */
+  overflow: hidden;         
+  text-overflow: ellipsis;  /* …で省略 */
+  font-size: 11px;
 }
 
 @media (max-width: 768px) {
