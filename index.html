@@ -8,15 +8,13 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      background: #111;  
-      color: white; 
     }
 
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #b90e0e;
+      background-color: #eee;
       padding: 10px 20px;
     }
 
@@ -33,7 +31,7 @@
       align-items: center;
       text-align: center;
 }
-
+ 
     .menu-left img, .menu-right img {
        width: 30px;
        height: 30px;
@@ -43,29 +41,7 @@
     .logo {
       font-size: 24px;
       font-weight: bold;
-      font-family: "Times New Roman", serif;
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 3px;
-      color: #222;
-      text-align: center;
-      line-height: 1.2;
-      display: flex;
-      flex-direction: column;  
-      align-items: center;
     }
-
-    .logo-main {
-  font-size: 32px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
-
-.logo-sub {  
-  font-size: 20px;   
-  letter-spacing: 2px;
-  color: #d4af37;      
-}
 
     a {
       text-decoration: none;
@@ -74,68 +50,33 @@
       font-size: 12px;
     }
 
-        .menu-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.menu-1, .language-btn {
-  background: #f7f6f6;; /* 好きな色 */
-  color: rgb(8, 8, 8);
-}
-
-/* ホバー効果 */
-.menu-1:hover {
-  transform: translateY(-3px);
-  transition: 0.3s;
-}
-
-.slider {
-  position: relative;
-  width: 80%;
-  margin: 30px auto;
-  overflow: hidden;
-}
-
-.slides {
+    .lang-wrapper {
   position: relative;
 }
 
-.slide {
-  width: 100%;
-  display: none;
+.lang-menu {
+  position: absolute;
+  top: 60px;
+  left: 0;
+  width: 200px;
+  background: #eee;
   border-radius: 10px;
-  opacity: 0;
-  transition: 0.5s;
-  position: absolute;
+  display: none;
+  overflow: hidden;
+  z-index: 9999;
 }
 
-.slide.active {
-  display: block;
-  opacity: 1;
-  position: relative;
-}
-
-button.prev, button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  border: none;
-  padding: 10px;
+.lang-menu div {
+  padding: 12px;
+  text-align: center;
   cursor: pointer;
+  border-bottom: 1px solid #ccc;
 }
 
-.prev { left: 10px; }
-.next { right: 10px; }
-
+.lang-menu div:hover {
+  background: #ddd;
+}
+ 
 @media (max-width: 768px) {
 
   header {
@@ -154,7 +95,7 @@ button.prev, button.next {
     display: flex;
     gap: 10px;
   }
-
+  
   /* 下段 */
   .bottom-row {
     display: flex;
@@ -167,12 +108,6 @@ button.prev, button.next {
     display: flex;
     flex-direction: column;
     align-items: center;
-
-     background: rgb(247, 246, 246);
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
   }
 
   .menu-1 img {
@@ -183,11 +118,10 @@ button.prev, button.next {
     font-size: 12px;
   }
 
+}
+
   .logo {
   margin-right: auto; /* ←これが超重要 */
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
   .top-row, .bottom-row {
@@ -199,11 +133,6 @@ button.prev, button.next {
     display: flex;
   }
 
-  .menu-1, .language-btn {
-  background: #fcfafa;; /* 好きな色 */
-  color: rgb(12, 12, 12);
-}
-
   </style>
  </head>
 
@@ -211,86 +140,85 @@ button.prev, button.next {
     <header>
   <!-- 左 -->
   <div class="menu-left">
-   <a href="Language.html" class="menu-1">
-  <img src="Language2.png" width="50">
-  <span>Language</span>
+   <div class="lang-wrapper">
+  <a class="menu-1" onclick="toggleLangMenu()">
+    <img src="Language2.png">
+    <span>Language</span>
   </a>
+
+   <div id="lang-menu" class="lang-menu">
+    <div onclick="setLang('ja')">日本語</div>
+    <div onclick="setLang('en')">ENGLISH</div>
+    <div onclick="setLang('zh-CN')">简体中文</div>
+    <div onclick="setLang('zh-TW')">繁體中文</div>
+    <div onclick="setLang('ko')">한국어</div>
+    <div onclick="setLang('th')">ภาษาไทย</div>
+   </div>
+</div>
    <a href="Inquiry.html" class="menu-1">
-  <img src="Inquiry2.png" width="50">
+  <img src="Inquiry.png" width="50">
   <span>お問い合わせ</span>
   </a>
     <a href="menu.html" class="menu-1">
-  <img src="menu2.png" width="50">
+  <img src="menu.png" width="50">
   <span>メニュー</span>
-  </a>
-    <a href="ticket.html" class="menu-1">
-  <img src="ticket2.png" width="50">
-  <span>チケット</span>
   </a>
   </div>
 
   <!-- 真ん中 -->
-  <div class="logo">
-    <div class="logo-main">早慶演劇祭 2026</div>
-    <div class="logo-sub">Waseda–Keio Theatre Festival</div>
-  </div>
+  <div class="logo">早慶演劇祭</div>
 
   <!-- 右 -->
   <div class="menu-right">
+    <a href="ticket.html" class="menu-1">
+  <img src="ticket.png" width="50">
+  <span>チケット</span>
+</a>
     <a href="Schedule.html" class="menu-1">
-  <img src="Schedule2.png" width="50">
+  <img src="Schedule.png" width="50">
   <span>スケジュール</span>
 </a>
     <a href="Participant.html" class="menu-1">
-  <img src="Participant2.png" width="50">
+  <img src="Participant.png" width="50">
   <span>出場団体</span>
   </a>
     <a href="what.html" class="menu-1">
-  <img src="what2.png" width="50">
+  <img src="what.png" width="50">
   <span>早慶演劇祭とは</span>
   </a>
     <a href="news.html" class="menu-1">
-  <img src="news2.png" width="50">
+  <img src="news.png" width="50">
   <span>ニュース</span>
   </a>
   </div>
 </header>
-
   </body>
 
 </html>
 
-<div class="slider">
-  <div class="slides">
-    <img src="img1.jpg" class="slide active">
-    <img src="img2.jpg" class="slide">
-    <img src="img3.jpg" class="slide">
-  </div>
-
-  <button class="prev">◀</button>
-  <button class="next">▶</button>
-</div>
+<script>
+function toggleLangMenu() {
+  const menu = document.getElementById("lang-menu");
+  menu.style.display = (menu.style.display === "block") ? "none" : "block";
+}
+</script>
 
 <script>
-let index = 0;
-const slides = document.querySelectorAll(".slide");
-
-function showSlide(n) {
-  slides.forEach(slide => slide.classList.remove("active"));
-  slides[n].classList.add("active");
+function setLang(lang) {
+  document.cookie = "googtrans=/ja/" + lang + "; path=/";
+  location.reload();
 }
+</script>
 
-document.querySelector(".next").onclick = () => {
-  index = (index + 1) % slides.length;
-  showSlide(index);
-};
+<div id="google_translate_element" style="display:none;"></div>
 
-document.querySelector(".prev").onclick = () => {
-  index = (index - 1 + slides.length) % slides.length;
-  showSlide(index);
-};
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ja'
+  }, 'google_translate_element');
+}
+</script>
 
-setInterval(() => {
-  index = (index + 1) % slides.length;
-  showSlide(index);
-}, 10000); // 10秒ごと
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
