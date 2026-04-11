@@ -150,7 +150,7 @@ button.prev, button.next {
 
   background: #f0f0f0;
   border-radius: 12px;
-  display: none;
+  display: none !important;
   overflow: hidden;
   z-index: 9999;
 }
@@ -241,7 +241,7 @@ button.prev, button.next {
 
  <script>
 function toggleLangMenu(e) {
-  e.stopPropagation(); // ←これ重要
+  if (e) e.stopPropagation();
 
   const menu = document.getElementById("lang-menu");
 
@@ -252,11 +252,30 @@ function toggleLangMenu(e) {
   }
 }
 
+/* 外クリックで閉じる */
 document.addEventListener("click", function() {
   const menu = document.getElementById("lang-menu");
   if (menu) menu.style.display = "none";
 });
+
+/* ←これが無かったから翻訳されてない */
+function setLang(lang) {
+  document.cookie = "googtrans=/ja/" + lang + "; path=/";
+  location.reload();
+}
 </script>
+
+<div id="google_translate_element" style="display:none;"></div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ja'
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <body>
     <header>
@@ -356,4 +375,4 @@ setInterval(() => {
   showSlide(index);
 }, 10000); // 10秒ごと
 
-<a class="menu-1" onclick="toggleLangMenu(event); return false;">
+
