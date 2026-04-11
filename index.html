@@ -138,6 +138,7 @@ button.prev, button.next {
 
 .lang-wrapper {
   position: relative;
+  display: inline-block;
 }
 
 /* ↓ 下にポップアップさせる */
@@ -238,6 +239,25 @@ button.prev, button.next {
   </style>
  </head>
 
+ <script>
+function toggleLangMenu(e) {
+  e.stopPropagation(); // ←これ重要
+
+  const menu = document.getElementById("lang-menu");
+
+  if (menu.style.display === "block") {
+    menu.style.display = "none";
+  } else {
+    menu.style.display = "block";
+  }
+}
+
+document.addEventListener("click", function() {
+  const menu = document.getElementById("lang-menu");
+  if (menu) menu.style.display = "none";
+});
+</script>
+
   <body>
     <header>
   <!-- 左 -->
@@ -334,35 +354,3 @@ setInterval(() => {
   showSlide(index);
 }, 10000); // 10秒ごと
 
-<script>
-function toggleLangMenu() {
-  const menu = document.getElementById("lang-menu");
-  menu.style.display = (menu.style.display === "block") ? "none" : "block";
-}
-</script>
-
-<div id="google_translate_element" style="display:none;"></div>
-
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
-
-function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
-}
-</script>
-
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-document.addEventListener("click", function(e) {
-  const menu = document.getElementById("lang-menu");
-  const btn = document.querySelector(".lang-wrapper");
-
-  if (!btn.contains(e.target)) {
-    menu.style.display = "none";
-  }
-});
