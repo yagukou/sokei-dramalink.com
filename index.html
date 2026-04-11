@@ -262,10 +262,12 @@ document.addEventListener("click", function() {
     <header>
   <!-- 左 -->
   <div class="menu-left">
-  <a class="menu-1" onclick="toggleLangMenu()">
-    <img src="Language2.png">
-    <span>Language</span>
-  </a>
+
+     <div class="lang-wrapper">
+    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
+      <img src="Language2.png">
+      <span>Language</span>
+    </a>
 
   <div id="lang-menu" class="lang-menu">
     <div onclick="setLang('ja')">日本語</div>
@@ -354,3 +356,4 @@ setInterval(() => {
   showSlide(index);
 }, 10000); // 10秒ごと
 
+<a class="menu-1" onclick="toggleLangMenu(event); return false;">
