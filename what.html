@@ -238,6 +238,49 @@ body.translated-ltr .logo-sub {
   font-size: 14px;
 }
 
+.hamburger {
+  display: none;
+}
+
+@media (max-width: 768px) {
+
+  header {
+    position: relative;
+    height: 70px;
+  }
+
+  /* ロゴ中央 */
+  .logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+  }
+
+  /* 左メニュー消す */
+  .menu-left {
+    display: none;
+  }
+
+  /* 右メニューも消す */
+  .menu-right {
+    display: none;
+  }
+
+  /* ハンバーガー（右上） */
+  .hamburger {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    z-index: 1000;
+    display: block;
+  }
+}
+
   </style>
  </head>
 
