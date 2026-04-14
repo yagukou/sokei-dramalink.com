@@ -1,3 +1,368 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+     <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #111;  
+      color: white; 
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #b90e0e;
+      padding: 10px 20px;
+    }
+
+    .menu-left, .menu-right {
+      display: flex;
+      gap: 10px;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .menu-left div, .menu-right div {
+      display: flex;
+      flex-direction: column;  /* ←縦にする */
+      align-items: center;
+      text-align: center;
+}
+
+    .menu-left img, .menu-right img {
+       width: 30px;
+       height: 30px;
+       margin-bottom: 5px;
+}
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      font-family: "Times New Roman", serif;
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #222;
+      text-align: center;
+      line-height: 1.2;
+      display: flex;
+      flex-direction: column;  
+      align-items: center;
+      position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+
+  max-width: 40%;  /* ←これ超重要 */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+    }
+
+    .logo-main {
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 3px;
+}
+
+.logo-sub {   
+  font-size: 16px;   
+  letter-spacing: 2px;
+  color: #d4af37;      
+}
+
+    a {
+      text-decoration: none;
+      flex-direction: column;
+      color: black;
+      font-size: 12px;
+    }
+
+        .menu-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background: white;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 80px;   /* 横幅固定 */
+  height: 80px;  /* 高さ固定 */
+  justify-content: center;
+}
+
+.menu-1, .language-btn {
+  background: #f7f6f6;; /* 好きな色 */
+  color: rgb(8, 8, 8);
+}
+
+.goog-te-banner-frame,
+  .goog-te-banner-frame.skiptranslate,
+  .goog-te-gadget-icon,
+  .goog-te-gadget-simple,
+  .goog-te-balloon-frame,
+  .skiptranslate {
+    display: none !important;
+  }
+
+  body {
+    top: 0px !important;
+    position: static !important;
+  }
+
+/* ホバー効果 */
+.menu-1:hover {
+  transform: translateY(-3px);
+  transition: 0.3s;
+}
+
+.menu-1 img {
+  width: 30px !important;
+  height: 30px !important;
+}
+
+.slider {
+  position: relative;
+  width: 80%;
+  margin: 30px auto;
+  overflow: hidden;
+}
+
+.slides {
+  position: relative;
+}
+
+.slide {
+  width: 100%;
+  display: none;
+  border-radius: 10px;
+  opacity: 0;
+  transition: 0.5s;
+  position: absolute;
+}
+
+.slide.active {
+  display: block;
+  opacity: 1;
+  position: relative;
+}
+
+button.prev, button.next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+.lang-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* ↓ 下にポップアップさせる */
+.lang-menu {
+  position: absolute;
+  top: 110%;   /* ←ボタンの真下 */
+  left: 0;
+  width: 140px;
+
+  background: #f0f0f0;
+  border-radius: 12px;
+  display: none;
+  overflow: hidden;
+  z-index: 9999;
+}
+
+/* 中身 */
+.lang-menu div {
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  color: black
+}
+
+/* ホバー */
+.lang-menu div:hover {
+  background: #ddd;
+}
+
+.lang-wrapper .lang-menu {
+  display: none;
+}
+
+.menu-1 span {
+  display: block;
+  width: 100%;
+  text-align: center;       /* 真ん中に */
+  margin-top: 5px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+}
+
+.goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+body.translated-ltr .logo-main {
+  font-size: 22px;
+}
+
+body.translated-ltr .logo-sub {
+  font-size: 14px;
+}
+
+  </style>
+ </head>
+
+ <script>
+function toggleLangMenu(e) {
+  if (e) e.stopPropagation();
+
+  const menu = document.getElementById("lang-menu");
+
+  if (menu.style.display === "block") {
+    menu.style.display = "none";
+  } else {
+    menu.style.display = "block";
+  }
+}
+
+/* 外クリックで閉じる */
+document.addEventListener("click", function() {
+  const menu = document.getElementById("lang-menu");
+  if (menu) menu.style.display = "none";
+});
+
+/* ←これが無かったから翻訳されてない */
+function setLang(lang) {
+  document.cookie = "googtrans=/ja/" + lang + "; path=/";
+  location.reload();
+}
+</script>
+
+<div id="google_translate_element" style="display:none;"></div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ja'
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <body>
+    <header>
+  <!-- 左 -->
+  <div class="menu-left">
+
+     <div class="lang-wrapper">
+    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
+      <img src="Language2.png">
+      <span>Language</span>
+    </a>
+
+  <div id="lang-menu" class="lang-menu">
+    <div onclick="setLang('ja')">日本語</div>
+    <div onclick="setLang('en')">ENGLISH</div>
+    <div onclick="setLang('zh-CN')">简体中文</div>
+    <div onclick="setLang('ko')">한국어</div>
+  </div>
+</div>
+   <a href="Inquiry.html" class="menu-1">
+  <img src="Inquiry2.png" width="50">
+  <span>お問い合わせ</span>
+  </a>
+    <a href="menu.html" class="menu-1">
+  <img src="menu2.png" width="50">
+  <span>メニュー</span>
+  </a>
+    <a href="ticket.html" class="menu-1">
+  <img src="ticket2.png" width="50">
+  <span>チケット</span>
+  </a>
+  </div>
+
+  <!-- 真ん中 -->
+  <div class="logo">
+    <div class="logo-main">早慶演劇祭</div>
+    <div class="logo-sub">Waseda–Keio Theatre Festival</div>
+  </div>
+
+  <!-- 右 -->
+  <div class="menu-right">
+    <a href="Schedule.html" class="menu-1">
+  <img src="Schedule2.png" width="50">
+  <span>スケジュール</span>
+</a>
+    <a href="Participant.html" class="menu-1">
+  <img src="Participant2.png" width="50">
+  <span>出場団体</span>
+  </a>
+    <a href="what.html" class="menu-1">
+  <img src="what2.png" width="50">
+  <span>公演紹介</span>
+  </a>
+    <a href="news.html" class="menu-1">
+  <img src="news2.png" width="50">
+  <span>ニュース</span>
+  </a>
+  </div>
+</header>
+
+<script>
+function removeGoogleUI() {
+  // バナー
+  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+
+  // ポップアップ（翻訳されました表示）
+  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+
+  // その他UI
+  document.querySelectorAll('.skiptranslate').forEach(el => {
+    if (el.innerText.includes("翻訳")) el.remove();
+  });
+
+  // 位置ズレ修正
+  document.body.style.top = '0px';
+}
+
+/* ずっと監視して消す */
+setInterval(removeGoogleUI, 300);
+</script>
+
+  </body>
+
+</html>
+
 <header>
   <div class="menu-left">...</div>
 
