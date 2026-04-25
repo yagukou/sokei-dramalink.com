@@ -99,7 +99,7 @@
 }
 
 .menu-1, .language-btn {
-  background: #f7f6f6;; /* 好きな色 */
+  background: #b90e0e;; /* 好きな色 */
   color: rgb(8, 8, 8);
 }
 
@@ -240,6 +240,31 @@ body.translated-ltr .logo-sub {
 
 .hamburger {
   display: none;
+}
+
+.sns {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin: 50px 0;
+}
+
+.sns-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sns-item img {
+  width: 40px;   /* 少し小さくするといい感じ */
+  height: 40px;
+  padding: 0;    /* ←削除 */
+  background: none;  /* ←削除 */
+  border-radius: 0;  /* ←削除 */
+}
+
+.sns-item span {
+  margin-top: 10px;
 }
 
 @media (max-width: 768px) {
@@ -400,6 +425,23 @@ function removeGoogleUI() {
   // 位置ズレ修正
   document.body.style.top = '0px';
 }
+
+<div class="sns">
+<a href="https://x.com/あなたのID" class="sns-item" target="_blank">
+  <img src="x.png">
+  <span>X</span>
+</a>
+
+<a href="https://line.me/https://line.me/ti/p/FCNw6bQYGm" class="sns-item" target="_blank">
+  <img src="line.png">
+  <span>LINE</span>
+</a>
+
+<a href="https://www.instagram.com/@あなたのチャンネル" class="sns-item" target="_blank">
+  <img src="instagram.png">
+  <span>instagram</span>
+</a>
+  </div>
 
 /* ずっと監視して消す */
 setInterval(removeGoogleUI, 300);
