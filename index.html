@@ -350,7 +350,17 @@ function googleTranslateElementInit() {
   <body>
  
  <script>
-document.cookie = "googtrans=/auto/ja; path=/";
+function forceJapanese() {
+  document.cookie = "googtrans=/auto/ja; path=/";
+
+  const select = document.querySelector(".goog-te-combo");
+  if (select) {
+    select.value = "ja";
+    select.dispatchEvent(new Event("change"));
+  }
+}
+
+setInterval(forceJapanese, 500);
 </script>
 
     <header>
