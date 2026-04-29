@@ -106,11 +106,10 @@
 }
 
 .goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate,
+  .goog-te-banner-frame,
   .goog-te-gadget-icon,
   .goog-te-gadget-simple,
-  .goog-te-balloon-frame,
-  .skiptranslate {
+  .goog-te-balloon-frame{
     display: none !important;
   }
 
@@ -332,7 +331,7 @@ document.addEventListener("click", function() {
 
 /* ←これが無かったから翻訳されてない */
 function setLang(lang) {
-const interval = setInterval(() => {
+  const interval = setInterval(() => {
     const select = document.querySelector(".goog-te-combo");
 
     if (select) {
@@ -341,9 +340,8 @@ const interval = setInterval(() => {
       clearInterval(interval);
     }
   }, 200);
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
 }
+
 </script>
 
 <div id="google_translate_element" style="display:none;"></div>
