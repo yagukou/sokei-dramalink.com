@@ -326,15 +326,16 @@ document.addEventListener("click", function() {
 
 /* ←これが無かったから翻訳されてない */
 function setLang(lang) {
-  const select = document.querySelector(".goog-te-combo");
-  if (select) {
-    select.value = lang;
-    select.dispatchEvent(new Event("change"));
-  }
+  const interval = setInterval(() => {
+    const select = document.querySelector(".goog-te-combo");
+    if (select) {
+      select.value = lang;
+      select.dispatchEvent(new Event("change"));
+      clearInterval(interval);
+    }
+  }, 100);
 }
 </script>
-
-<div id="google_translate_element"></div>
 
 <script>
 function googleTranslateElementInit() {
@@ -345,9 +346,14 @@ function googleTranslateElementInit() {
 }
 </script>
 
+<script>
+document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+</script>
+
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <body>
+    <div id="google_translate_element"></div>
     <header>
   <!-- 左 -->
   <div class="menu-left">
