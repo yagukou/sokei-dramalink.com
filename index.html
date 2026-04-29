@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" translate="no">
+<html lang="ja">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -330,22 +330,27 @@ document.addEventListener("click", function() {
 
 /* ←これが無かったから翻訳されてない */
 function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
+  const select = document.querySelector(".goog-te-combo");
+  if (select) {
+    select.value = lang;
+    select.dispatchEvent(new Event("change"));
+  }
 }
 </script>
 
-<div id="google_translate_element" style="display:none;"></div>
+<div id="google_translate_element"></div>
 
 <script>
 function googleTranslateElementInit() {
   new google.translate.TranslateElement({
-    pageLanguage: 'ja'
+    pageLanguage: 'ja',
+    autoDisplay: false
   }, 'google_translate_element');
 }
 </script>
 
 <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
   <body>
     <header>
   <!-- 左 -->
@@ -486,4 +491,3 @@ document.querySelector(".hamburger").onclick = function() {
 };
 
 </script>
-
