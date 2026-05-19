@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+ <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+
      <style>
     body {
       margin: 0;
@@ -241,189 +246,6 @@ body.translated-ltr .logo-sub {
 .hamburger {
   display: none;
 }
-
-@media (max-width: 768px) {
-
-  header {
-    position: relative;
-    height: 70px;
-  }
-
-  /* ロゴ中央 */
-  .logo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-  }
-
-  /* 左メニュー消す */
-  .menu-left {
-    display: none;
-  }
-
-  /* 右メニューも消す */
-  .menu-right {
-    display: none;
-  }
-
-  /* ハンバーガー（右上） */
-  .hamburger {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1000;
-    display: block;
-  }
-}
-
-  </style>
- </head>
-
- <script>
-function toggleLangMenu(e) {
-  if (e) e.stopPropagation();
-
-  const menu = document.getElementById("lang-menu");
-
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "block";
-  }
-}
-
-/* 外クリックで閉じる */
-document.addEventListener("click", function() {
-  const menu = document.getElementById("lang-menu");
-  if (menu) menu.style.display = "none";
-});
-
-/* ←これが無かったから翻訳されてない */
-function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
-}
-</script>
-
-<div id="google_translate_element" style="display:none;"></div>
-
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
-</script>
-
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-  <body>
-    <header>
-  <!-- 左 -->
- <div class="menu-left">
-    <a href="ticket.html" class="menu-1">
-  <img src="ticket3.png" width="50">
-  <span>チケット</span>
-  </a>
-  <a href="what.html" class="menu-1">
-  <img src="what3.png" width="50">
-  <span>公演紹介</span>
-  </a>
-      <a href="Participant.html" class="menu-1">
-  <img src="Participant3.png" width="50">
-  <span>出場団体</span>
-  </a>
-    <a href="Schedule.html" class="menu-1">
-  <img src="Schedule3.png" width="50">
-  <span>スケジュール</span>
-</a>
-  </div>
-
-  <!-- 真ん中 -->
-  <a href="index.html" class="logo">
-  <div class="logo-main">早慶演劇祭</div>
-  <div class="logo-sub">Waseda–Keio Theatre Festival</div>
-</a>
-
-  <!-- 右 -->
-  <div class="menu-right">
-     <a href="news.html" class="menu-1">
-  <img src="news3.png" width="50">
-  <span>ニュース</span>
-  </a>
-     <div class="lang-wrapper">
-    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-      <img src="Language3.png">
-      <span>Language</span>
-    </a>
-
-  <div id="lang-menu" class="lang-menu">
-    <div onclick="setLang('ja')">日本語</div>
-    <div onclick="setLang('en')">ENGLISH</div>
-    <div onclick="setLang('zh-CN')">简体中文</div>
-    <div onclick="setLang('ko')">한국어</div>
-  </div>
-</div>
-   <a href="Inquiry.html" class="menu-1">
-  <img src="Inquiry3.png" width="50">
-  <span>お問い合わせ</span>
-  </a>
-    <a href="menu.html" class="menu-1">
-  <img src="menu3.png" width="50">
-  <span>メニュー</span>
-  </a>
-  </div>
-  <div class="hamburger">
-  ☰
-  </div>
-</header>
-
-<script>
-function removeGoogleUI() {
-  // バナー
-  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
-
-  // ポップアップ（翻訳されました表示）
-  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
-
-  // その他UI
-  document.querySelectorAll('.skiptranslate').forEach(el => {
-    if (el.innerText.includes("翻訳")) el.remove();
-  });
-
-  // 位置ズレ修正
-  document.body.style.top = '0px';
-}
-
-/* ずっと監視して消す */
-setInterval(removeGoogleUI, 300);
-</script>
-
-  </body>
-
-</html>
-
-
-
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <title>折込ネット2024</title>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
-
-  <style>
 
     *{
       margin:0;
@@ -771,13 +593,46 @@ setInterval(removeGoogleUI, 300);
       font-size:.9rem;
     }
 
-    /* =========================
-       MOBILE
-    ========================= */
+@media (max-width: 768px) {
 
-    @media(max-width:768px){
+  header {
+    position: relative;
+    height: 70px;
+  }
 
-      nav{
+  /* ロゴ中央 */
+  .logo {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+  }
+
+  /* 左メニュー消す */
+  .menu-left {
+    display: none;
+  }
+
+  /* 右メニューも消す */
+  .menu-right {
+    display: none;
+  }
+
+  /* ハンバーガー（右上） */
+  .hamburger {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    z-index: 1000;
+    display: block;
+  }
+}
+
+ nav{
         display:none;
       }
 
@@ -801,14 +656,132 @@ setInterval(removeGoogleUI, 300);
         font-size:2rem;
       }
 
-    }
-
   </style>
-</head>
+ </head>
 
-<body>
+ <script>
+function toggleLangMenu(e) {
+  if (e) e.stopPropagation();
 
-  <!-- HEADER -->
+  const menu = document.getElementById("lang-menu");
+
+  if (menu.style.display === "block") {
+    menu.style.display = "none";
+  } else {
+    menu.style.display = "block";
+  }
+}
+
+/* 外クリックで閉じる */
+document.addEventListener("click", function() {
+  const menu = document.getElementById("lang-menu");
+  if (menu) menu.style.display = "none";
+});
+
+/* ←これが無かったから翻訳されてない */
+function setLang(lang) {
+  document.cookie = "googtrans=/ja/" + lang + "; path=/";
+  location.reload();
+}
+</script>
+
+<div id="google_translate_element" style="display:none;"></div>
+
+<script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'ja'
+  }, 'google_translate_element');
+}
+</script>
+
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <body>
+    <header>
+  <!-- 左 -->
+ <div class="menu-left">
+    <a href="ticket.html" class="menu-1">
+  <img src="ticket3.png" width="50">
+  <span>チケット</span>
+  </a>
+  <a href="what.html" class="menu-1">
+  <img src="what3.png" width="50">
+  <span>公演紹介</span>
+  </a>
+      <a href="Participant.html" class="menu-1">
+  <img src="Participant3.png" width="50">
+  <span>出場団体</span>
+  </a>
+    <a href="Schedule.html" class="menu-1">
+  <img src="Schedule3.png" width="50">
+  <span>スケジュール</span>
+</a>
+  </div>
+
+  <!-- 真ん中 -->
+  <a href="index.html" class="logo">
+  <div class="logo-main">早慶演劇祭</div>
+  <div class="logo-sub">Waseda–Keio Theatre Festival</div>
+</a>
+
+  <!-- 右 -->
+  <div class="menu-right">
+     <a href="news.html" class="menu-1">
+  <img src="news3.png" width="50">
+  <span>ニュース</span>
+  </a>
+     <div class="lang-wrapper">
+    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
+      <img src="Language3.png">
+      <span>Language</span>
+    </a>
+
+  <div id="lang-menu" class="lang-menu">
+    <div onclick="setLang('ja')">日本語</div>
+    <div onclick="setLang('en')">ENGLISH</div>
+    <div onclick="setLang('zh-CN')">简体中文</div>
+    <div onclick="setLang('ko')">한국어</div>
+  </div>
+</div>
+   <a href="Inquiry.html" class="menu-1">
+  <img src="Inquiry3.png" width="50">
+  <span>お問い合わせ</span>
+  </a>
+    <a href="menu.html" class="menu-1">
+  <img src="menu3.png" width="50">
+  <span>メニュー</span>
+  </a>
+  </div>
+  <div class="hamburger">
+  ☰
+  </div>
+</header>
+
+<script>
+function removeGoogleUI() {
+  // バナー
+  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+
+  // ポップアップ（翻訳されました表示）
+  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+
+  // その他UI
+  document.querySelectorAll('.skiptranslate').forEach(el => {
+    if (el.innerText.includes("翻訳")) el.remove();
+  });
+
+  // 位置ズレ修正
+  document.body.style.top = '0px';
+}
+
+/* ずっと監視して消す */
+setInterval(removeGoogleUI, 300);
+</script>
+
+  </body>
+
+</html>
 
   <header>
     <div class="container header-inner">
@@ -1082,11 +1055,7 @@ setInterval(removeGoogleUI, 300);
 
   </section>
 
-  <!-- FOOTER -->
-
-  <footer>
-    © ORIKOMI NET 2024 All Rights Reserved.
-  </footer>
-
 </body>
 </html>
+
+
