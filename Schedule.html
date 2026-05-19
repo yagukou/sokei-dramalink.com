@@ -407,3 +407,686 @@ setInterval(removeGoogleUI, 300);
   </body>
 
 </html>
+
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>折込ネット2024</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:"Noto Sans JP",sans-serif;
+      background:#f8f8f8;
+      color:#111;
+      line-height:1.9;
+    }
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
+    img{
+      width:100%;
+      display:block;
+    }
+
+    .container{
+      width:min(1100px,90%);
+      margin:auto;
+    }
+
+    section{
+      padding:90px 0;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      background:rgba(255,255,255,0.95);
+      backdrop-filter:blur(10px);
+      z-index:1000;
+      border-bottom:1px solid #e5e5e5;
+    }
+
+    .header-inner{
+      height:75px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .logo{
+      font-size:1.3rem;
+      font-weight:900;
+      letter-spacing:.05em;
+    }
+
+    nav{
+      display:flex;
+      gap:30px;
+      align-items:center;
+    }
+
+    nav a{
+      font-size:.95rem;
+      font-weight:500;
+      transition:.3s;
+    }
+
+    nav a:hover{
+      color:#8b1e3f;
+    }
+
+    .header-btn{
+      background:#111;
+      color:white;
+      padding:12px 22px;
+      border-radius:999px;
+      font-weight:700;
+      transition:.3s;
+    }
+
+    .header-btn:hover{
+      background:#8b1e3f;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      background:
+      linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+      url("https://images.unsplash.com/photo-1503095396549-807759245b35?q=80&w=1600&auto=format&fit=crop");
+      background-size:cover;
+      background-position:center;
+      color:white;
+      padding-top:100px;
+    }
+
+    .hero-content{
+      max-width:700px;
+    }
+
+    .hero-sub{
+      font-size:1rem;
+      margin-bottom:20px;
+      letter-spacing:.15em;
+      opacity:.9;
+    }
+
+    .hero h1{
+      font-size:4rem;
+      line-height:1.2;
+      margin-bottom:25px;
+      font-weight:900;
+    }
+
+    .hero-text{
+      font-size:1.1rem;
+      margin-bottom:40px;
+      opacity:.92;
+    }
+
+    .hero-buttons{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      display:inline-block;
+      padding:16px 34px;
+      border-radius:999px;
+      font-weight:700;
+      transition:.3s;
+    }
+
+    .btn-main{
+      background:#8b1e3f;
+      color:white;
+    }
+
+    .btn-main:hover{
+      transform:translateY(-3px);
+      background:#a5274c;
+    }
+
+    .btn-sub{
+      border:2px solid white;
+      color:white;
+    }
+
+    .btn-sub:hover{
+      background:white;
+      color:#111;
+    }
+
+    /* =========================
+       SECTION TITLE
+    ========================= */
+
+    .section-title{
+      text-align:center;
+      margin-bottom:60px;
+    }
+
+    .section-title h2{
+      font-size:2.5rem;
+      margin-bottom:15px;
+    }
+
+    .section-title p{
+      color:#666;
+    }
+
+    /* =========================
+       ABOUT
+    ========================= */
+
+    .about-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:30px;
+    }
+
+    .about-card{
+      background:white;
+      padding:40px 30px;
+      border-radius:24px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+      transition:.3s;
+    }
+
+    .about-card:hover{
+      transform:translateY(-8px);
+    }
+
+    .about-card h3{
+      margin-bottom:15px;
+      font-size:1.3rem;
+    }
+
+    /* =========================
+       COURSE
+    ========================= */
+
+    .course-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+      gap:35px;
+    }
+
+    .course-card{
+      background:white;
+      padding:45px;
+      border-radius:28px;
+      box-shadow:0 10px 35px rgba(0,0,0,.08);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .course-card::before{
+      content:"";
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:6px;
+      background:#8b1e3f;
+    }
+
+    .course-card h3{
+      font-size:2rem;
+      margin-bottom:20px;
+    }
+
+    .price{
+      font-size:2.5rem;
+      font-weight:900;
+      margin-bottom:20px;
+      color:#8b1e3f;
+    }
+
+    .course-card ul{
+      list-style:none;
+      margin-bottom:35px;
+    }
+
+    .course-card li{
+      margin-bottom:12px;
+    }
+
+    /* =========================
+       INFO
+    ========================= */
+
+    .info{
+      background:#111;
+      color:white;
+      border-radius:30px;
+      padding:70px;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:30px;
+      text-align:center;
+    }
+
+    .info-box h3{
+      font-size:3rem;
+      margin-bottom:10px;
+      color:#d7a0b3;
+    }
+
+    /* =========================
+       FLOW
+    ========================= */
+
+    .flow-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:25px;
+    }
+
+    .flow-card{
+      background:white;
+      padding:35px;
+      border-radius:24px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+      position:relative;
+    }
+
+    .step{
+      font-size:.9rem;
+      color:#8b1e3f;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    /* =========================
+       CTA
+    ========================= */
+
+    .cta{
+      text-align:center;
+      background:#8b1e3f;
+      color:white;
+      border-radius:30px;
+      padding:90px 20px;
+    }
+
+    .cta h2{
+      font-size:3rem;
+      margin-bottom:20px;
+    }
+
+    .cta p{
+      margin-bottom:35px;
+      opacity:.92;
+    }
+
+    .cta .btn{
+      background:white;
+      color:#8b1e3f;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer{
+      padding:40px 20px;
+      text-align:center;
+      color:#666;
+      font-size:.9rem;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media(max-width:768px){
+
+      nav{
+        display:none;
+      }
+
+      .hero h1{
+        font-size:2.5rem;
+      }
+
+      .hero-text{
+        font-size:1rem;
+      }
+
+      .section-title h2{
+        font-size:2rem;
+      }
+
+      .info{
+        padding:40px 25px;
+      }
+
+      .cta h2{
+        font-size:2rem;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+
+  <header>
+    <div class="container header-inner">
+
+      <div class="logo">
+        ORIKOMI NET 2024
+      </div>
+
+      <nav>
+        <a href="#">サービス</a>
+        <a href="#">料金</a>
+        <a href="#">折込情報</a>
+        <a href="#">利用の流れ</a>
+
+        <a href="#" class="header-btn">
+          チラシ登録
+        </a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- HERO -->
+
+  <section class="hero">
+
+    <div class="container hero-content">
+
+      <p class="hero-sub">
+        THEATRE FLYER DISTRIBUTION SERVICE
+      </p>
+
+      <h1>
+        小劇場向け<br>
+        チラシ折込代行サービス
+      </h1>
+
+      <p class="hero-text">
+        名古屋の演劇・舞台公演向けに、
+        効率的なチラシ折込と配布をサポート。
+        Aコース・Bコースから用途に合わせて選択できます。
+      </p>
+
+      <div class="hero-buttons">
+
+        <a href="#" class="btn btn-main">
+          無料で登録する
+        </a>
+
+        <a href="#" class="btn btn-sub">
+          料金を見る
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ABOUT -->
+
+  <section>
+
+    <div class="container">
+
+      <div class="section-title">
+        <h2>サービス内容</h2>
+        <p>
+          演劇公演のチラシ配布をもっと効率的に
+        </p>
+      </div>
+
+      <div class="about-grid">
+
+        <div class="about-card">
+          <h3>低コスト</h3>
+
+          <p>
+            必要な範囲だけ利用できるため、
+            小規模公演でも導入しやすい価格設計。
+          </p>
+        </div>
+
+        <div class="about-card">
+          <h3>折込管理</h3>
+
+          <p>
+            スケジュールや部数管理を
+            一括で整理可能。
+          </p>
+        </div>
+
+        <div class="about-card">
+          <h3>劇団向け最適化</h3>
+
+          <p>
+            小劇場・学生演劇・地域公演向けに
+            特化した運営。
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- COURSE -->
+
+  <section>
+
+    <div class="container">
+
+      <div class="section-title">
+        <h2>コース比較</h2>
+        <p>
+          用途に合わせて選べる2プラン
+        </p>
+      </div>
+
+      <div class="course-grid">
+
+        <div class="course-card">
+
+          <h3>Aコース</h3>
+
+          <div class="price">
+            ¥3,000〜
+          </div>
+
+          <ul>
+            <li>✔ 低価格プラン</li>
+            <li>✔ 作業参加型</li>
+            <li>✔ 小規模公演向け</li>
+          </ul>
+
+          <a href="#" class="btn btn-main">
+            詳細を見る
+          </a>
+
+        </div>
+
+        <div class="course-card">
+
+          <h3>Bコース</h3>
+
+          <div class="price">
+            ¥8,000〜
+          </div>
+
+          <ul>
+            <li>✔ 完全委託対応</li>
+            <li>✔ 郵送のみOK</li>
+            <li>✔ 手間を削減</li>
+          </ul>
+
+          <a href="#" class="btn btn-main">
+            詳細を見る
+          </a>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- INFO -->
+
+  <section>
+
+    <div class="container">
+
+      <div class="info">
+
+        <div class="info-grid">
+
+          <div class="info-box">
+            <h3>2500+</h3>
+            <p>今週の折込部数</p>
+          </div>
+
+          <div class="info-box">
+            <h3>12</h3>
+            <p>参加団体</p>
+          </div>
+
+          <div class="info-box">
+            <h3>5/20</h3>
+            <p>次回締切</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FLOW -->
+
+  <section>
+
+    <div class="container">
+
+      <div class="section-title">
+        <h2>利用の流れ</h2>
+
+        <p>
+          申し込みから折込まで簡単4ステップ
+        </p>
+      </div>
+
+      <div class="flow-grid">
+
+        <div class="flow-card">
+          <div class="step">STEP 01</div>
+          <h3>登録</h3>
+          <p>フォームから必要事項を入力</p>
+        </div>
+
+        <div class="flow-card">
+          <div class="step">STEP 02</div>
+          <h3>確認</h3>
+          <p>折込内容と部数を確認</p>
+        </div>
+
+        <div class="flow-card">
+          <div class="step">STEP 03</div>
+          <h3>発送</h3>
+          <p>チラシを指定先へ送付</p>
+        </div>
+
+        <div class="flow-card">
+          <div class="step">STEP 04</div>
+          <h3>折込完了</h3>
+          <p>各公演へ折込実施</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- CTA -->
+
+  <section>
+
+    <div class="container">
+
+      <div class="cta">
+
+        <h2>
+          公演の宣伝をもっと効率的に
+        </h2>
+
+        <p>
+          チラシ折込をスムーズに管理しませんか？
+        </p>
+
+        <a href="#" class="btn">
+          今すぐ登録する
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer>
+    © ORIKOMI NET 2024 All Rights Reserved.
+  </footer>
+
+</body>
+</html>
