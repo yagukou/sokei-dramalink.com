@@ -257,10 +257,14 @@ body.translated-ltr .logo-sub {
   transition: max-height 0.5s ease;
 
   z-index: 999;
+  pointer-events: none;
+  opacity: 0;
 }
 
 .mega-menu.active {
   max-height: 500px;
+  pointer-events: auto;
+  opacity: 1;
 }
 
 .mega-content {
