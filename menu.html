@@ -242,6 +242,60 @@ body.translated-ltr .logo-sub {
   display: none;
 }
 
+.mega-menu {
+  position: fixed;
+  top: 178px; /* ヘッダーの高さに合わせる */
+  left: 0;
+
+  width: 100%;
+  background: rgba(0,0,0,0.96);
+
+  overflow: hidden;
+
+  max-height: 0;
+
+  transition: max-height 0.5s ease;
+
+  z-index: 999;
+}
+
+.mega-menu.active {
+  max-height: 500px;
+}
+
+.mega-content {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+
+  padding: 50px;
+}
+
+.mega-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.mega-column h3 {
+  color: gold;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.mega-column a {
+  color: white;
+  text-decoration: none;
+
+  margin-bottom: 14px;
+
+  transition: 0.3s;
+}
+
+.mega-column a:hover {
+  color: gold;
+  transform: translateX(5px);
+}
+
 @media (max-width: 768px) {
 
   header {
@@ -408,5 +462,44 @@ setInterval(removeGoogleUI, 300);
 
 </html>
 
+<div id="mega-menu" class="mega-menu">
 
+  <div class="mega-content">
+
+    <div class="mega-column">
+      <h3>公演情報</h3>
+      <a href="#">上演作品</a>
+      <a href="#">出演団体</a>
+      <a href="#">スケジュール</a>
+    </div>
+
+    <div class="mega-column">
+      <h3>チケット</h3>
+      <a href="#">予約方法</a>
+      <a href="#">料金</a>
+      <a href="#">注意事項</a>
+    </div>
+
+    <div class="mega-column">
+      <h3>アクセス</h3>
+      <a href="#">会場案内</a>
+      <a href="#">周辺情報</a>
+    </div>
+
+    <div class="mega-column">
+      <h3>その他</h3>
+      <a href="#">ニュース</a>
+      <a href="#">お問い合わせ</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function toggleMenu() {
+  document
+    .getElementById("mega-menu")
+    .classList.toggle("active");
+}
+</script>
 
