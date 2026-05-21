@@ -242,6 +242,138 @@ body.translated-ltr .logo-sub {
   display: none;
 }
 
+.news-page {
+  background: #111;
+  min-height: 100vh;
+
+  padding: 140px 10%;
+}
+
+.news-header {
+  text-align: center;
+
+  margin-bottom: 80px;
+}
+
+.news-header h1 {
+  font-size: 72px;
+
+  color: white;
+
+  letter-spacing: 8px;
+
+  margin-bottom: 10px;
+
+  font-family: "Times New Roman", serif;
+}
+
+.news-header p {
+  color: #d4af37;
+
+  letter-spacing: 3px;
+}
+
+.news-list {
+  border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.news-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 40px;
+
+  padding: 30px 10px;
+
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+
+  text-decoration: none;
+
+  transition: 0.35s;
+}
+
+.news-item:hover {
+  background: rgba(255,255,255,0.04);
+
+  padding-left: 25px;
+}
+
+.news-meta {
+  min-width: 220px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.news-date {
+  color: #bbb;
+
+  font-size: 14px;
+}
+
+.news-category {
+  background: #b90e0e;
+
+  color: white;
+
+  padding: 5px 12px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  letter-spacing: 1px;
+}
+
+.news-title {
+  color: white;
+
+  font-size: 20px;
+
+  transition: 0.3s;
+}
+
+.news-item:hover .news-title {
+  color: #d4af37;
+}
+
+.news-title.important {
+  color: #ffb3b3;
+}
+
+/* スマホ */
+@media (max-width: 768px) {
+
+  .news-page {
+    padding: 120px 5%;
+  }
+
+  .news-header h1 {
+    font-size: 46px;
+  }
+
+  .news-item {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 15px;
+  }
+
+  .news-meta {
+    min-width: auto;
+  }
+
+  .news-title {
+    font-size: 17px;
+  }
+
+}
+
 @media (max-width: 768px) {
 
   header {
@@ -382,6 +514,75 @@ function googleTranslateElementInit() {
   ☰
   </div>
 </header>
+
+<section class="news-page">
+
+  <div class="news-header">
+    <h1>NEWS</h1>
+    <p>ニュース</p>
+  </div>
+
+  <div class="news-list">
+
+    <!-- ニュース -->
+    <a href="#" class="news-item">
+
+      <div class="news-meta">
+        <span class="news-date">2026.08.12</span>
+        <span class="news-category">公演</span>
+      </div>
+
+      <div class="news-title">
+        早慶演劇祭2026 メインビジュアル公開
+      </div>
+
+    </a>
+
+    <!-- ニュース -->
+    <a href="#" class="news-item">
+
+      <div class="news-meta">
+        <span class="news-date">2026.08.08</span>
+        <span class="news-category">チケット</span>
+      </div>
+
+      <div class="news-title">
+        チケット一般販売開始のお知らせ
+      </div>
+
+    </a>
+
+    <!-- ニュース -->
+    <a href="#" class="news-item">
+
+      <div class="news-meta">
+        <span class="news-date">2026.08.01</span>
+        <span class="news-category">出演団体</span>
+      </div>
+
+      <div class="news-title">
+        出演団体情報を更新しました
+      </div>
+
+    </a>
+
+    <!-- ニュース -->
+    <a href="#" class="news-item">
+
+      <div class="news-meta">
+        <span class="news-date">2026.07.20</span>
+        <span class="news-category">重要</span>
+      </div>
+
+      <div class="news-title important">
+        ご来場時の注意事項について
+      </div>
+
+    </a>
+
+  </div>
+
+</section>
 
 <script>
 function removeGoogleUI() {
