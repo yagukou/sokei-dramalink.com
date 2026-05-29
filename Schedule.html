@@ -1,10 +1,368 @@
-<section class="schedule-page">
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <div class="schedule-head">
+<title>公演スケジュール</title>
 
-    <p class="schedule-en">
-      PERFORMANCE
-    </p>
+<style>
+
+body{
+  margin:0;
+  background:#111;
+  font-family:sans-serif;
+}
+
+/* =======================
+   HEADER
+======================= */
+
+header{
+  position:fixed;
+  top:0;
+  left:0;
+
+  width:100%;
+
+  background:#b90e0e;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  padding:15px 40px;
+
+  z-index:999;
+}
+
+.logo{
+  color:white;
+  font-size:28px;
+  font-family:serif;
+  letter-spacing:3px;
+}
+
+.header-menu{
+  display:flex;
+  gap:30px;
+}
+
+.header-menu a{
+  color:white;
+  text-decoration:none;
+  font-size:15px;
+}
+
+/* =======================
+   HERO
+======================= */
+
+.hero{
+  height:60vh;
+
+  background:
+  linear-gradient(
+    rgba(0,0,0,0.45),
+    rgba(0,0,0,0.6)
+  ),
+  url("hero.jpg");
+
+  background-size:cover;
+  background-position:center;
+
+  display:flex;
+  align-items:end;
+
+  padding:120px 8%;
+}
+
+.hero-text p{
+  color:#d4af37;
+  letter-spacing:4px;
+}
+
+.hero-text h1{
+  color:white;
+  font-size:72px;
+  margin-top:20px;
+  font-family:serif;
+}
+
+/* =======================
+   CALENDAR
+======================= */
+
+.calendar-section{
+  background:#f7f7f7;
+
+  padding:120px 8%;
+}
+
+.section-en{
+  color:#b90e0e;
+  letter-spacing:4px;
+}
+
+.section-title{
+  font-size:60px;
+  margin-top:10px;
+  margin-bottom:60px;
+
+  color:black;
+
+  font-family:serif;
+}
+
+/* top */
+
+.calendar-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  margin-bottom:50px;
+}
+
+.month-change{
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+
+.month-change button{
+  width:50px;
+  height:50px;
+
+  border:none;
+
+  background:#b90e0e;
+  color:white;
+
+  border-radius:50%;
+
+  font-size:18px;
+
+  cursor:pointer;
+}
+
+.month-change h2{
+  color:black;
+  font-size:40px;
+  font-family:serif;
+}
+
+/* grid */
+
+.calendar-grid{
+  display:grid;
+
+  grid-template-columns:repeat(7,1fr);
+
+  gap:2px;
+
+  background:#ddd;
+}
+
+.day-name{
+  background:#222;
+
+  color:white;
+
+  padding:20px;
+
+  text-align:center;
+}
+
+.day{
+  min-height:170px;
+
+  background:white;
+
+  padding:15px;
+
+  position:relative;
+}
+
+.date{
+  color:#777;
+  margin-bottom:15px;
+}
+
+.event{
+  display:block;
+
+  background:#111;
+  color:white;
+
+  text-decoration:none;
+
+  padding:10px;
+
+  border-radius:10px;
+
+  margin-bottom:10px;
+
+  transition:0.3s;
+}
+
+.event:hover{
+  background:#b90e0e;
+  transform:translateY(-3px);
+}
+
+/* =======================
+   PERFORMANCE LIST
+======================= */
+
+.performance-list{
+  margin-top:100px;
+}
+
+.performance-grid{
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(320px,1fr));
+
+  gap:40px;
+}
+
+.performance-card{
+  background:white;
+
+  border-radius:20px;
+
+  overflow:hidden;
+
+  text-decoration:none;
+
+  transition:0.4s;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,0.08);
+}
+
+.performance-card:hover{
+  transform:translateY(-10px);
+}
+
+.performance-card img{
+  width:100%;
+  height:380px;
+
+  object-fit:cover;
+
+  transition:0.6s;
+}
+
+.performance-card:hover img{
+  transform:scale(1.05);
+}
+
+.performance-info{
+  padding:30px;
+}
+
+.performance-date{
+  color:#888;
+  margin-bottom:15px;
+}
+
+.performance-title{
+  color:black;
+  font-size:32px;
+  font-family:serif;
+
+  margin-bottom:20px;
+}
+
+.performance-place{
+  color:#666;
+  margin-bottom:30px;
+}
+
+.detail-btn{
+  color:#b90e0e;
+  font-weight:bold;
+}
+
+/* =======================
+   LOGIN BUTTON
+======================= */
+
+.login-btn{
+  position:fixed;
+
+  right:30px;
+  bottom:30px;
+
+  background:#b90e0e;
+  color:white;
+
+  text-decoration:none;
+
+  padding:18px 28px;
+
+  border-radius:999px;
+
+  z-index:999;
+}
+
+/* =======================
+   SP
+======================= */
+
+@media(max-width:768px){
+
+.hero-text h1{
+  font-size:48px;
+}
+
+.calendar-grid{
+  grid-template-columns:repeat(2,1fr);
+}
+
+.day{
+  min-height:140px;
+}
+
+.header-menu{
+  display:none;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+
+<header>
+
+  <div class="logo">
+    早慶演劇祭
+  </div>
+
+  <div class="header-menu">
+    <a href="#">公演一覧</a>
+    <a href="#">カレンダー</a>
+    <a href="#">ニュース</a>
+    <a href="#">ログイン</a>
+  </div>
+
+</header>
+
+<!-- HERO -->
+
+<section class="hero">
+
+  <div class="hero-text">
+
+    <p>Waseda–Keio Theatre Festival</p>
 
     <h1>
       公演スケジュール
@@ -12,169 +370,167 @@
 
   </div>
 
-  <div class="performance-grid">
+</section>
 
-    <!-- card -->
-    <a href="#" class="performance-card">
+<!-- CALENDAR -->
 
-      <div class="performance-image">
+<section class="calendar-section">
+
+  <p class="section-en">
+    PERFORMANCE CALENDAR
+  </p>
+
+  <h2 class="section-title">
+    公演カレンダー
+  </h2>
+
+  <div class="calendar-top">
+
+    <div class="month-change">
+
+      <button>◀</button>
+
+      <h2>2026.08</h2>
+
+      <button>▶</button>
+
+    </div>
+
+  </div>
+
+  <!-- 曜日 -->
+
+  <div class="calendar-grid">
+
+    <div class="day-name">SUN</div>
+    <div class="day-name">MON</div>
+    <div class="day-name">TUE</div>
+    <div class="day-name">WED</div>
+    <div class="day-name">THU</div>
+    <div class="day-name">FRI</div>
+    <div class="day-name">SAT</div>
+
+    <!-- day -->
+
+    <div class="day">
+      <div class="date">10</div>
+
+      <a href="#" class="event">
+        光と影
+      </a>
+    </div>
+
+    <div class="day">
+      <div class="date">11</div>
+    </div>
+
+    <div class="day">
+      <div class="date">12</div>
+
+      <a href="#" class="event">
+        慶應義塾大学公演
+      </a>
+
+    </div>
+
+    <div class="day">
+      <div class="date">13</div>
+    </div>
+
+    <div class="day">
+      <div class="date">14</div>
+    </div>
+
+    <div class="day">
+      <div class="date">15</div>
+    </div>
+
+    <div class="day">
+      <div class="date">16</div>
+    </div>
+
+  </div>
+
+  <!-- PERFORMANCE LIST -->
+
+  <div class="performance-list">
+
+    <p class="section-en">
+      PERFORMANCE LIST
+    </p>
+
+    <h2 class="section-title">
+      公演一覧
+    </h2>
+
+    <div class="performance-grid">
+
+      <!-- card -->
+
+      <a href="#" class="performance-card">
+
         <img src="stage1.jpg">
-      </div>
 
-      <div class="performance-info">
+        <div class="performance-info">
 
-        <p class="performance-date">
-          2026.08.10 MON
-        </p>
+          <div class="performance-date">
+            2026.08.10
+          </div>
 
-        <h2>
-          開幕公演『光と影』
-        </h2>
+          <div class="performance-title">
+            開幕公演『光と影』
+          </div>
 
-        <p class="performance-place">
-          早稲田大学大隈講堂
-        </p>
+          <div class="performance-place">
+            早稲田大学大隈講堂
+          </div>
 
-        <div class="performance-btn">
-          詳細を見る →
+          <div class="detail-btn">
+            詳細を見る →
+          </div>
+
         </div>
 
-      </div>
+      </a>
 
-    </a>
+      <!-- card -->
 
-    <!-- card -->
-    <a href="#" class="performance-card">
+      <a href="#" class="performance-card">
 
-      <div class="performance-image">
         <img src="stage2.jpg">
-      </div>
 
-      <div class="performance-info">
+        <div class="performance-info">
 
-        <p class="performance-date">
-          2026.08.12 WED
-        </p>
+          <div class="performance-date">
+            2026.08.12
+          </div>
 
-        <h2>
-          慶應義塾大学公演
-        </h2>
+          <div class="performance-title">
+            慶應義塾大学公演
+          </div>
 
-        <p class="performance-place">
-          三田キャンパスホール
-        </p>
+          <div class="performance-place">
+            三田キャンパスホール
+          </div>
 
-        <div class="performance-btn">
-          詳細を見る →
+          <div class="detail-btn">
+            詳細を見る →
+          </div>
+
         </div>
 
-      </div>
+      </a>
 
-    </a>
+    </div>
 
   </div>
 
 </section>
-.schedule-page {
-  background: #f7f7f7;
-  padding: 120px 8%;
-}
 
-.schedule-head {
-  margin-bottom: 70px;
-}
+<a href="#" class="login-btn">
+  ログイン
+</a>
 
-.schedule-en {
-  color: #b90e0e;
-  letter-spacing: 4px;
-  margin-bottom: 10px;
-}
-
-.schedule-head h1 {
-  font-size: 58px;
-  color: black;
-  font-family: serif;
-}
-
-.performance-grid {
-  display: grid;
-
-  grid-template-columns:
-  repeat(auto-fit, minmax(320px,1fr));
-
-  gap: 50px;
-}
-
-.performance-card {
-  background: white;
-
-  border-radius: 24px;
-
-  overflow: hidden;
-
-  text-decoration: none;
-
-  transition: 0.45s;
-
-  box-shadow:
-  0 10px 30px rgba(0,0,0,0.08);
-}
-
-.performance-card:hover {
-  transform: translateY(-10px);
-}
-
-.performance-image {
-  overflow: hidden;
-}
-
-.performance-image img {
-  width: 100%;
-  height: 420px;
-
-  object-fit: cover;
-
-  transition: 0.7s;
-}
-
-.performance-card:hover img {
-  transform: scale(1.05);
-}
-
-.performance-info {
-  padding: 35px;
-}
-
-.performance-date {
-  color: #999;
-
-  letter-spacing: 2px;
-
-  margin-bottom: 20px;
-}
-
-.performance-info h2 {
-  color: black;
-
-  font-size: 32px;
-
-  line-height: 1.4;
-
-  margin-bottom: 20px;
-
-  font-family: serif;
-}
-
-.performance-place {
-  color: #666;
-
-  margin-bottom: 35px;
-}
-
-.performance-btn {
-  color: #b90e0e;
-
-  font-weight: bold;
-
-  letter-spacing: 1px;
-}
+</body>
+</html>
+```
