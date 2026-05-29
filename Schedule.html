@@ -310,6 +310,156 @@ header{
   z-index:999;
 }
 
+.calendar-section{
+  background:#f7f7f7;
+  padding:140px 8%;
+}
+
+.calendar-head{
+  margin-bottom:50px;
+}
+
+.calendar-en{
+  color:#b90e0e;
+  letter-spacing:4px;
+  margin-bottom:10px;
+}
+
+.calendar-head h2{
+  font-size:58px;
+  color:black;
+  margin:0;
+  font-family:serif;
+}
+
+.calendar-top{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:30px;
+
+  margin-bottom:40px;
+}
+
+.calendar-top button{
+  width:55px;
+  height:55px;
+
+  border:none;
+  border-radius:50%;
+
+  background:#b90e0e;
+  color:white;
+
+  font-size:28px;
+  cursor:pointer;
+
+  transition:0.3s;
+}
+
+.calendar-top button:hover{
+  transform:scale(1.08);
+}
+
+.month-title{
+  font-size:34px;
+  color:black;
+  font-family:serif;
+}
+
+.calendar-grid{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+
+  background:white;
+
+  border-radius:24px;
+  overflow:hidden;
+
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+}
+
+.day-name{
+  background:#111;
+  color:white;
+
+  padding:20px;
+  text-align:center;
+
+  font-size:14px;
+  letter-spacing:2px;
+}
+
+.day{
+  min-height:150px;
+
+  border:1px solid #eee;
+
+  padding:12px;
+
+  position:relative;
+
+  background:white;
+
+  transition:0.3s;
+}
+
+.day:hover{
+  background:#fafafa;
+}
+
+.day-number{
+  font-size:18px;
+  color:#777;
+
+  margin-bottom:12px;
+}
+
+.event{
+  background:#b90e0e;
+  color:white;
+
+  padding:8px 10px;
+
+  border-radius:10px;
+
+  margin-bottom:8px;
+
+  font-size:13px;
+
+  cursor:pointer;
+
+  transition:0.3s;
+}
+
+.event:hover{
+  transform:translateY(-2px);
+  background:#920909;
+}
+
+.empty{
+  background:#f8f8f8;
+}
+
+@media(max-width:768px){
+
+  .calendar-head h2{
+    font-size:42px;
+  }
+
+  .calendar-grid{
+    grid-template-columns:repeat(1,1fr);
+  }
+
+  .day-name{
+    display:none;
+  }
+
+  .day{
+    min-height:auto;
+  }
+
+}
 /* =======================
    SP
 ======================= */
@@ -384,146 +534,26 @@ header{
     公演カレンダー
   </h2>
 
+  <section class="calendar-section">
+
+  <div class="calendar-head">
+    <p class="calendar-en">CALENDAR</p>
+    <h2>公演カレンダー</h2>
+  </div>
+
   <div class="calendar-top">
 
-    <div class="month-change">
+    <button id="prevMonth">‹</button>
 
-      <button>◀</button>
-
-      <h2>2026.08</h2>
-
-      <button>▶</button>
-
+    <div class="month-title" id="monthTitle">
+      2026年8月
     </div>
+
+    <button id="nextMonth">›</button>
 
   </div>
 
-  <!-- 曜日 -->
-
-  <div class="calendar-grid">
-
-    <div class="day-name">SUN</div>
-    <div class="day-name">MON</div>
-    <div class="day-name">TUE</div>
-    <div class="day-name">WED</div>
-    <div class="day-name">THU</div>
-    <div class="day-name">FRI</div>
-    <div class="day-name">SAT</div>
-
-    <!-- day -->
-
-    <div class="day">
-      <div class="date">10</div>
-
-      <a href="#" class="event">
-        光と影
-      </a>
-    </div>
-
-    <div class="day">
-      <div class="date">11</div>
-    </div>
-
-    <div class="day">
-      <div class="date">12</div>
-
-      <a href="#" class="event">
-        慶應義塾大学公演
-      </a>
-
-    </div>
-
-    <div class="day">
-      <div class="date">13</div>
-    </div>
-
-    <div class="day">
-      <div class="date">14</div>
-    </div>
-
-    <div class="day">
-      <div class="date">15</div>
-    </div>
-
-    <div class="day">
-      <div class="date">16</div>
-    </div>
-
-  </div>
-
-  <!-- PERFORMANCE LIST -->
-
-  <div class="performance-list">
-
-    <p class="section-en">
-      PERFORMANCE LIST
-    </p>
-
-    <h2 class="section-title">
-      公演一覧
-    </h2>
-
-    <div class="performance-grid">
-
-      <!-- card -->
-
-      <a href="#" class="performance-card">
-
-        <img src="stage1.jpg">
-
-        <div class="performance-info">
-
-          <div class="performance-date">
-            2026.08.10
-          </div>
-
-          <div class="performance-title">
-            開幕公演『光と影』
-          </div>
-
-          <div class="performance-place">
-            早稲田大学大隈講堂
-          </div>
-
-          <div class="detail-btn">
-            詳細を見る →
-          </div>
-
-        </div>
-
-      </a>
-
-      <!-- card -->
-
-      <a href="#" class="performance-card">
-
-        <img src="stage2.jpg">
-
-        <div class="performance-info">
-
-          <div class="performance-date">
-            2026.08.12
-          </div>
-
-          <div class="performance-title">
-            慶應義塾大学公演
-          </div>
-
-          <div class="performance-place">
-            三田キャンパスホール
-          </div>
-
-          <div class="detail-btn">
-            詳細を見る →
-          </div>
-
-        </div>
-
-      </a>
-
-    </div>
-
-  </div>
+  <div class="calendar-grid" id="calendar"></div>
 
 </section>
 
@@ -531,6 +561,103 @@ header{
   ログイン
 </a>
 
+<script>
+
+const calendar = document.getElementById("calendar");
+
+const monthTitle = document.getElementById("monthTitle");
+
+let currentMonth = 7;
+let currentYear = 2026;
+
+const events = {
+  "2026-8-10": ["開幕公演『光と影』"],
+  "2026-8-12": ["慶應義塾大学公演"],
+  "2026-8-15": ["早稲田演劇研究会"],
+  "2026-8-18": ["特別シンポジウム"],
+  "2026-8-22": ["学生交流イベント"]
+};
+
+function renderCalendar(year, month){
+
+  calendar.innerHTML = "";
+
+  const dayNames = ["SUN","MON","TUE","WED","THU","FRI","SAT"];
+
+  dayNames.forEach(day=>{
+    calendar.innerHTML += `
+      <div class="day-name">${day}</div>
+    `;
+  });
+
+  const firstDay = new Date(year, month, 1).getDay();
+
+  const lastDate = new Date(year, month + 1, 0).getDate();
+
+  monthTitle.innerHTML = `${year}年${month + 1}月`;
+
+  for(let i=0; i<firstDay; i++){
+    calendar.innerHTML += `<div class="day empty"></div>`;
+  }
+
+  for(let d=1; d<=lastDate; d++){
+
+    const key = `${year}-${month+1}-${d}`;
+
+    let eventHTML = "";
+
+    if(events[key]){
+
+      events[key].forEach(ev=>{
+
+        eventHTML += `
+          <div class="event">
+            ${ev}
+          </div>
+        `;
+
+      });
+
+    }
+
+    calendar.innerHTML += `
+      <div class="day">
+        <div class="day-number">${d}</div>
+        ${eventHTML}
+      </div>
+    `;
+  }
+}
+
+renderCalendar(currentYear,currentMonth);
+
+document.getElementById("prevMonth").onclick = ()=>{
+
+  currentMonth--;
+
+  if(currentMonth < 0){
+    currentMonth = 11;
+    currentYear--;
+  }
+
+  renderCalendar(currentYear,currentMonth);
+};
+
+document.getElementById("nextMonth").onclick = ()=>{
+
+  currentMonth++;
+
+  if(currentMonth > 11){
+    currentMonth = 0;
+    currentYear++;
+  }
+
+  renderCalendar(currentYear,currentMonth);
+};
+
+</script>
+
 </body>
 </html>
 ```
+
