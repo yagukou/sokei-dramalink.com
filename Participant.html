@@ -1,409 +1,1470 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ビラネットワーク｜早慶演劇祭</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-     <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #111;  
-      color: white; 
+    :root {
+      --crimson: #8B1A2F;
+      --crimson-light: #C0394F;
+      --crimson-pale: #F9ECEE;
+      --gold: #B8892A;
+      --gold-light: #E8C86A;
+      --ink: #1A1410;
+      --ink-mid: #3D3028;
+      --muted: #7A6E68;
+      --surface: #FDFAF7;
+      --surface2: #F4EEE8;
+      --border: rgba(139,26,47,0.15);
+      --border-neutral: #E2DDD8;
+      --white: #ffffff;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 10px;
     }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #b90e0e;
-      padding: 10px 20px;
+    html, body {
+      height: 100%;
+      font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--ink);
+      background: var(--surface);
     }
 
-    .menu-left, .menu-right {
+    a { color: inherit; text-decoration: none; }
+    button { font-family: inherit; }
+    input, select, textarea { font-family: inherit; }
+
+    /* ===================== NAV ===================== */
+    .nav {
+      background: var(--crimson);
+      padding: 0 1.5rem;
       display: flex;
-      gap: 10px;
-      justify-content: space-around;
       align-items: center;
-      z-index: 2;
+      gap: 0;
+      border-bottom: 3px solid var(--gold);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-
-    .menu-left div, .menu-right div {
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: 0.05em;
+      padding: 14px 0;
+      margin-right: 2rem;
+      white-space: nowrap;
       display: flex;
-      flex-direction: column;  /* ←縦にする */
       align-items: center;
-      text-align: center;
-}
-
-    .menu-left img, .menu-right img {
-       width: 30px;
-       height: 30px;
-       margin-bottom: 5px;
-}
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      font-family: "Times New Roman", serif;
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 3px;
-      color: #222;
-      text-align: center;
-      line-height: 1.2;
-      display: flex;
-      flex-direction: column;  
-      align-items: center;
-      position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-
-  max-width: 40%;  /* ←これ超重要 */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+      gap: 8px;
     }
-
-    .logo-main {
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
-
-.logo-sub {   
-  font-size: 16px;   
-  letter-spacing: 2px;
-  color: #d4af37;      
-}
-
-    a {
-      text-decoration: none;
-      flex-direction: column;
-      color: black;
+    .nav-logo span { color: var(--gold-light); font-weight: 400; }
+    .nav-tabs { display: flex; gap: 0; flex: 1; }
+    .nav-tab {
+      padding: 14px 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -3px;
+      transition: all 0.15s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      background: none;
+    }
+    .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.07); }
+    .nav-tab.active { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+    .nav-tab i { font-size: 15px; }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .nav-btn {
+      padding: 6px 14px;
       font-size: 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .nav-btn-outline {
+      border: 1px solid rgba(255,255,255,0.35);
+      color: #fff;
+      background: transparent;
+    }
+    .nav-btn-outline:hover { background: rgba(255,255,255,0.12); }
+    .nav-btn-primary {
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .nav-btn-primary:hover { background: var(--gold-light); }
+    .notif-badge {
+      background: var(--crimson-light);
+      color: #fff;
+      font-size: 10px;
+      padding: 1px 5px;
+      border-radius: 8px;
+      margin-left: 2px;
     }
 
-        .menu-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    /* ===================== LAYOUT ===================== */
+    .app { min-height: 100vh; }
+    .page { display: none; padding: 2rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+    .page.active { display: block; }
 
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 80px;   /* 横幅固定 */
-  height: 80px;  /* 高さ固定 */
-  justify-content: center;
-}
+    .page-header { margin-bottom: 1.5rem; }
+    .page-title { font-size: 22px; font-weight: 500; color: var(--ink); }
+    .page-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
 
-.menu-1, .language-btn {
-  background: #b90e0e;; /* 好きな色 */
-  color: rgb(8, 8, 8);
-}
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--crimson);
+      cursor: pointer;
+      margin-bottom: 1.25rem;
+      background: none;
+      border: none;
+      padding: 0;
+    }
+    .back-btn:hover { color: var(--crimson-light); }
 
-.goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate,
-  .goog-te-gadget-icon,
-  .goog-te-gadget-simple,
-  .goog-te-balloon-frame,
-  .skiptranslate {
-    display: none !important;
-  }
+    .divider { border: none; border-top: 0.5px solid var(--border-neutral); margin: 1.5rem 0; }
 
-  body {
-    top: 0px !important;
-    position: static !important;
-  }
+    /* ===================== CALENDAR ===================== */
+    .calendar-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .month-nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border-radius: var(--radius-md);
+      padding: 6px 12px;
+      border: 0.5px solid var(--border);
+    }
+    .month-nav button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--crimson);
+      font-size: 18px;
+      padding: 0 4px;
+      line-height: 1;
+    }
+    .month-nav button:hover { color: var(--crimson-light); }
+    .month-label { font-size: 15px; font-weight: 500; min-width: 120px; text-align: center; }
+    .cal-filter {
+      padding: 7px 12px;
+      font-size: 13px;
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      background: var(--white);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .cal-filter:focus { outline: none; border-color: var(--crimson); }
+    .new-perf-btn {
+      margin-left: auto;
+      padding: 7px 16px;
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+      transition: background 0.15s;
+    }
+    .new-perf-btn:hover { background: var(--crimson-light); }
 
-/* ホバー効果 */
-.menu-1:hover {
-  transform: translateY(-3px);
-  transition: 0.3s;
-}
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: var(--border-neutral);
+      border: 1px solid var(--border-neutral);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .cal-dow {
+      background: var(--surface2);
+      padding: 8px 4px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .cal-cell {
+      background: var(--white);
+      min-height: 90px;
+      padding: 6px;
+      position: relative;
+    }
+    .cal-cell.other-month { background: var(--surface2); }
+    .cal-cell.has-event { cursor: pointer; }
+    .cal-cell.has-event:hover { background: var(--crimson-pale); }
+    .cal-day-num { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .cal-cell.today .cal-day-num {
+      color: var(--crimson);
+      font-weight: 600;
+    }
+    .cal-event {
+      font-size: 10px;
+      padding: 2px 5px;
+      border-radius: 3px;
+      margin-bottom: 2px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      display: block;
+      transition: opacity 0.12s;
+    }
+    .cal-event:hover { opacity: 0.8; }
+    .troupe-a { background: #FFE5E8; color: #8B1A2F; }
+    .troupe-b { background: #E5EEF9; color: #1A4A8B; }
+    .troupe-c { background: #E5F3EE; color: #1A6B4A; }
+    .troupe-d { background: #FFF4E5; color: #8B5A1A; }
+    .troupe-e { background: #F0E5F9; color: #5A1A8B; }
+    .more-events { font-size: 10px; color: var(--muted); padding: 0 2px; }
 
-.menu-1 img {
-  width: 30px !important;
-  height: 30px !important;
-}
+    .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 1rem; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
 
-.slider {
-  position: relative;
-  width: 80%;
-  margin: 30px auto;
-  overflow: hidden;
-}
+    /* ===================== TROUPE LIST ===================== */
+    .search-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .search-input-wrap { position: relative; flex: 1; min-width: 200px; }
+    .search-input-wrap i {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 16px;
+      pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 14px 9px 36px;
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      background: var(--white);
+      color: var(--ink);
+    }
+    .search-input:focus { outline: none; border-color: var(--crimson); }
 
-.slides {
-  position: relative;
-}
+    .troupe-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    .troupe-card {
+      background: var(--white);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .troupe-card:hover {
+      border-color: var(--crimson-light);
+      box-shadow: 0 2px 12px rgba(139,26,47,0.08);
+    }
+    .troupe-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+    .troupe-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .troupe-name { font-size: 15px; font-weight: 500; color: var(--ink); }
+    .troupe-univ { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .troupe-stats { display: flex; gap: 12px; align-items: center; }
+    .troupe-stat { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+    .troupe-stat strong { color: var(--ink); font-weight: 500; }
+    .troupe-tags { margin-top: 8px; }
+    .troupe-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-right: 4px;
+      margin-bottom: 4px;
+      background: var(--crimson-pale);
+      color: var(--crimson);
+    }
+    .status-badge {
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .status-open { background: #E5F3EE; color: #1A6B4A; }
+    .status-closed { background: #FEF0F0; color: #A32D2D; }
+    .status-soon { background: #FFF4E5; color: #8B5A1A; }
 
-.slide {
-  width: 100%;
-  display: none;
-  border-radius: 10px;
-  opacity: 0;
-  transition: 0.5s;
-  position: absolute;
-}
+    /* ===================== PERF DETAIL ===================== */
+    .perf-detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 768px) {
+      .perf-detail-grid { grid-template-columns: 1fr; }
+    }
+    .perf-main {
+      background: var(--white);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+    .perf-sidebar { display: flex; flex-direction: column; gap: 12px; }
+    .perf-title-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 0.75rem;
+    }
+    .perf-title { font-size: 20px; font-weight: 500; }
+    .perf-troupe-link {
+      font-size: 13px;
+      color: var(--crimson);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .perf-troupe-link:hover { color: var(--crimson-light); }
+    .perf-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 1rem 0; }
+    .perf-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .perf-meta-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .perf-meta-val { font-size: 14px; color: var(--ink); font-weight: 500; }
 
-.slide.active {
-  display: block;
-  opacity: 1;
-  position: relative;
-}
+    .sidebar-card {
+      background: var(--white);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+    }
+    .sidebar-card-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sidebar-card-title i { color: var(--crimson); }
 
-button.prev, button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
+    .quota-bar-bg { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
+    .quota-bar-fill { height: 100%; background: var(--crimson); border-radius: 3px; }
+    .quota-text { font-size: 12px; color: var(--muted); margin-top: 4px; }
 
-.prev { left: 10px; }
-.next { right: 10px; }
+    .request-btn {
+      width: 100%;
+      padding: 11px;
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .request-btn:hover { background: var(--crimson-light); }
 
-.lang-wrapper {
-  position: relative;
-  display: inline-block;
-}
+    /* ===================== FORMS ===================== */
+    .form-card {
+      background: var(--white);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      max-width: 680px;
+    }
+    .form-section { margin-bottom: 1.5rem; }
+    .form-section-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 0.5px solid var(--border-neutral);
+    }
+    .form-row { margin-bottom: 14px; }
+    .form-label { font-size: 13px; color: var(--ink); margin-bottom: 5px; display: block; }
+    .form-required { color: var(--crimson); margin-left: 2px; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: 8px 12px;
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      background: var(--white);
+      color: var(--ink);
+      transition: border-color 0.15s;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--crimson);
+    }
+    .form-textarea { min-height: 80px; resize: vertical; }
+    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .form-2col { grid-template-columns: 1fr; } }
 
-/* ↓ 下にポップアップさせる */
-.lang-menu {
-  position: absolute;
-  top: 110%;   /* ←ボタンの真下 */
-  left: 0;
-  width: 140px;
+    .form-radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+    .form-radio-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 8px 12px;
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      transition: all 0.12s;
+    }
+    .form-radio-label:hover { border-color: var(--crimson); background: var(--crimson-pale); }
+    .form-radio-label input[type=radio] { accent-color: var(--crimson); }
+    .form-checkbox-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
+    .form-checkbox-label {
+      display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;
+    }
+    .form-checkbox-label input { accent-color: var(--crimson); }
 
-  background: #f0f0f0;
-  border-radius: 12px;
-  display: none;
-  overflow: hidden;
-  z-index: 9999;
-}
+    .submit-row { display: flex; gap: 10px; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; }
+    .btn-primary {
+      padding: 10px 24px;
+      background: var(--crimson);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.15s;
+    }
+    .btn-primary:hover { background: var(--crimson-light); }
+    .btn-ghost {
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--muted);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-ghost:hover { background: var(--surface2); }
+    .btn-secondary {
+      padding: 10px 20px;
+      background: var(--surface2);
+      color: var(--ink);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-secondary:hover { background: var(--border-neutral); }
 
-/* 中身 */
-.lang-menu div {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 13px;
-  color: black
-}
+    .success-banner {
+      display: none;
+      background: #E5F3EE;
+      border: 0.5px solid #9FDFC6;
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #1A6B4A;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .success-banner.show { display: flex; }
 
-/* ホバー */
-.lang-menu div:hover {
-  background: #ddd;
-}
+    /* ===================== MY PAGE ===================== */
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+    .stat-card { border-radius: var(--radius-md); padding: 1rem; }
+    .stat-card-red { background: var(--crimson-pale); border: 0.5px solid rgba(139,26,47,0.2); }
+    .stat-card-neutral { background: var(--surface2); border: 0.5px solid var(--border-neutral); }
+    .stat-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .stat-label-red { color: var(--crimson); }
+    .stat-value { font-size: 24px; font-weight: 500; }
+    .stat-value-red { color: var(--crimson); }
 
-.lang-wrapper .lang-menu {
-  display: none;
-}
+    .section-title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title i { color: var(--crimson); }
 
-.menu-1 span {
-  display: block;
-  width: 100%;
-  text-align: center;       /* 真ん中に */
-  margin-top: 5px;
+    .inbox-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
+    .inbox-item {
+      background: var(--white);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      transition: border-color 0.15s;
+    }
+    .inbox-item.unread { border-left: 3px solid var(--crimson); }
+    .inbox-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .inbox-body { flex: 1; min-width: 0; }
+    .inbox-from { font-size: 13px; font-weight: 500; color: var(--ink); }
+    .inbox-preview { font-size: 13px; color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .inbox-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+    .inbox-copies {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--crimson);
+      background: var(--crimson-pale);
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .inbox-date { font-size: 11px; color: var(--muted); }
+    .inbox-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .inbox-btn { padding: 5px 12px; font-size: 12px; border-radius: var(--radius-sm); cursor: pointer; border: 0.5px solid transparent; transition: opacity 0.12s; }
+    .inbox-btn:hover { opacity: 0.8; }
+    .inbox-btn-accept { background: #E5F3EE; color: #1A6B4A; border-color: #9FDFC6; }
+    .inbox-btn-decline { background: var(--surface2); color: var(--muted); border-color: var(--border-neutral); }
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11px;
-}
+    .my-perf-list { display: flex; flex-direction: column; gap: 8px; }
+    .my-perf-item {
+      background: var(--white);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .my-perf-info { flex: 1; min-width: 150px; }
+    .my-perf-name { font-size: 14px; font-weight: 500; }
+    .my-perf-date { font-size: 12px; color: var(--muted); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+    .my-perf-quota { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+    .quota-bar-sm { width: 60px; }
+    .my-perf-edit {
+      padding: 5px 12px;
+      font-size: 12px;
+      border-radius: var(--radius-sm);
+      border: 0.5px solid var(--border-neutral);
+      background: var(--white);
+      color: var(--ink);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .my-perf-edit:hover { border-color: var(--crimson); color: var(--crimson); }
 
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
+    /* ===================== HELP PAGE ===================== */
+    .info-banner {
+      background: var(--crimson-pale);
+      border: 0.5px solid rgba(139,26,47,0.2);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .info-banner-title { font-size: 14px; font-weight: 500; color: var(--crimson); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .info-banner p { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
 
-.goog-te-banner-frame {
-  display: none !important;
-}
+    .help-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .help-card {
+      background: var(--white);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+    }
+    .help-icon { font-size: 28px; color: var(--crimson); margin-bottom: 10px; }
+    .help-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
+    .help-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
-body {
-  top: 0px !important;
-  position: static !important;
-}
+    .faq-list { display: flex; flex-direction: column; gap: 8px; }
+    details {
+      background: var(--white);
+      border: 0.5px solid var(--border-neutral);
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+    }
+    details summary {
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--ink);
+      font-weight: 500;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    details summary::after { content: '+'; color: var(--crimson); font-size: 18px; }
+    details[open] summary::after { content: '−'; }
+    details p { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.7; }
 
-body.translated-ltr .logo-main {
-  font-size: 22px;
-}
+    /* ===================== EMPTY STATE ===================== */
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
+    .empty-state i { font-size: 40px; margin-bottom: 12px; display: block; color: var(--border-neutral); }
 
-body.translated-ltr .logo-sub {
-  font-size: 14px;
-}
-
-.hamburger {
-  display: none;
-}
-
-@media (max-width: 768px) {
-
-  header {
-    position: relative;
-    height: 70px;
-  }
-
-  /* ロゴ中央 */
-  .logo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-  }
-
-  /* 左メニュー消す */
-  .menu-left {
-    display: none;
-  }
-
-  /* 右メニューも消す */
-  .menu-right {
-    display: none;
-  }
-
-  /* ハンバーガー（右上） */
-  .hamburger {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1000;
-    display: block;
-  }
-}
-
+    /* ===================== UTILITY ===================== */
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .gap-8 { gap: 8px; }
+    .text-muted { color: var(--muted); }
+    .text-sm { font-size: 13px; }
+    .text-xs { font-size: 12px; }
+    .font-medium { font-weight: 500; }
+    .mt-1 { margin-top: 4px; }
+    .mt-2 { margin-top: 8px; }
+    .mt-3 { margin-top: 12px; }
+    .mb-3 { margin-bottom: 12px; }
   </style>
- </head>
+</head>
+<body>
 
- <script>
-function toggleLangMenu(e) {
-  if (e) e.stopPropagation();
+<div class="app">
 
-  const menu = document.getElementById("lang-menu");
+  <!-- =================== NAV =================== -->
+  <nav class="nav">
+    <div class="nav-logo">
+      <i class="ti ti-ticket"></i>
+      ビラネットワーク <span>早慶演劇祭</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('calendar')" id="tab-calendar">
+        <i class="ti ti-calendar"></i>カレンダー
+      </button>
+      <button class="nav-tab" onclick="showPage('troupes')" id="tab-troupes">
+        <i class="ti ti-users"></i>劇団一覧
+      </button>
+      <button class="nav-tab" onclick="showPage('mypage')" id="tab-mypage">
+        <i class="ti ti-layout-dashboard"></i>マイページ
+      </button>
+      <button class="nav-tab" onclick="showPage('register')" id="tab-register">
+        <i class="ti ti-plus"></i>公演登録
+      </button>
+      <button class="nav-tab" onclick="showPage('help')" id="tab-help">
+        <i class="ti ti-info-circle"></i>使い方
+      </button>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn nav-btn-outline">
+        <i class="ti ti-bell" style="font-size:13px"></i>
+        通知 <span class="notif-badge">2</span>
+      </button>
+      <button class="nav-btn nav-btn-primary">
+        <i class="ti ti-user" style="font-size:13px"></i>ログイン
+      </button>
+    </div>
+  </nav>
 
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "block";
+  <!-- =================== CALENDAR PAGE =================== -->
+  <div class="page active" id="page-calendar">
+    <div class="page-header">
+      <div class="page-title">公演カレンダー</div>
+      <div class="page-sub">劇団の公演スケジュールと折り込み受付状況を確認できます</div>
+    </div>
+    <div class="calendar-controls">
+      <div class="month-nav">
+        <button onclick="changeMonth(-1)" aria-label="前の月"><i class="ti ti-chevron-left"></i></button>
+        <div class="month-label" id="month-label">2025年6月</div>
+        <button onclick="changeMonth(1)" aria-label="次の月"><i class="ti ti-chevron-right"></i></button>
+      </div>
+      <select class="cal-filter" id="cal-filter" onchange="renderCalendar()">
+        <option value="">すべての劇団</option>
+        <option value="a">劇団ソウル</option>
+        <option value="b">ステージクロス</option>
+        <option value="c">早稲田演劇研究会</option>
+        <option value="d">慶應ドラマクラブ</option>
+        <option value="e">パラドックス</option>
+      </select>
+      <button class="new-perf-btn" onclick="showPage('register')">
+        <i class="ti ti-plus" style="font-size:14px"></i>公演を登録
+      </button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#FFE5E8"></div>劇団ソウル</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#E5EEF9"></div>ステージクロス</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#E5F3EE"></div>早稲田演劇研究会</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#FFF4E5"></div>慶應ドラマクラブ</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#F0E5F9"></div>パラドックス</div>
+    </div>
+  </div>
+
+  <!-- =================== TROUPE LIST PAGE =================== -->
+  <div class="page" id="page-troupes">
+    <div class="page-header">
+      <div class="page-title">劇団一覧</div>
+      <div class="page-sub">折り込みを依頼したい劇団を探しましょう</div>
+    </div>
+    <div class="search-bar">
+      <div class="search-input-wrap">
+        <i class="ti ti-search"></i>
+        <input type="text" class="search-input" placeholder="劇団名・大学名で検索" oninput="filterTroupes(this.value)">
+      </div>
+      <select class="cal-filter" id="univ-filter" onchange="filterTroupes(document.querySelector('.search-input').value)">
+        <option value="">すべての大学</option>
+        <option value="早稲田大学">早稲田大学</option>
+        <option value="慶應義塾大学">慶應義塾大学</option>
+      </select>
+      <select class="cal-filter" id="accept-filter" onchange="filterTroupes(document.querySelector('.search-input').value)">
+        <option value="">折り込み状況：すべて</option>
+        <option value="true">受付中のみ</option>
+        <option value="false">締切済みのみ</option>
+      </select>
+    </div>
+    <div class="troupe-grid" id="troupe-grid"></div>
+  </div>
+
+  <!-- =================== PERFORMANCE DETAIL PAGE =================== -->
+  <div class="page" id="page-perf-detail">
+    <button class="back-btn" id="perf-back-btn" onclick="goBack()">
+      <i class="ti ti-arrow-left" style="font-size:15px"></i>戻る
+    </button>
+    <div class="perf-detail-grid">
+      <div class="perf-main">
+        <div class="perf-title-row">
+          <div>
+            <div class="perf-troupe-link" onclick="showPage('troupes')">
+              <i class="ti ti-users" style="font-size:13px"></i>劇団ソウル
+            </div>
+            <div class="perf-title">春の嵐、それから</div>
+          </div>
+          <div class="status-badge status-open">折り込み受付中</div>
+        </div>
+        <p class="perf-desc">
+          人間の孤独と繋がりをテーマにした現代演劇。過去と現在が交差する独特の時間軸の中で、4人の登場人物が互いの真実を探る2時間の旅。早慶の枠を超えた演劇の可能性を追求した意欲作です。
+        </p>
+        <hr class="divider">
+        <div class="perf-meta-grid">
+          <div>
+            <div class="perf-meta-label"><i class="ti ti-calendar" style="font-size:12px"></i>公演日程</div>
+            <div class="perf-meta-val">6月14日(土) 〜 6月16日(月)</div>
+          </div>
+          <div>
+            <div class="perf-meta-label"><i class="ti ti-map-pin" style="font-size:12px"></i>会場</div>
+            <div class="perf-meta-val">早稲田大学小劇場</div>
+          </div>
+          <div>
+            <div class="perf-meta-label"><i class="ti ti-clock" style="font-size:12px"></i>折り込み受付期間</div>
+            <div class="perf-meta-val">5月20日 〜 6月10日</div>
+          </div>
+          <div>
+            <div class="perf-meta-label"><i class="ti ti-mail" style="font-size:12px"></i>担当者連絡先</div>
+            <div class="perf-meta-val">soul.drama@example.com</div>
+          </div>
+          <div>
+            <div class="perf-meta-label"><i class="ti ti-users" style="font-size:12px"></i>想定動員数</div>
+            <div class="perf-meta-val">全3ステージ 約300名</div>
+          </div>
+          <div>
+            <div class="perf-meta-label"><i class="ti ti-layers" style="font-size:12px"></i>受付済み劇団数</div>
+            <div class="perf-meta-val">3劇団（受付中）</div>
+          </div>
+        </div>
+      </div>
+      <div class="perf-sidebar">
+        <!-- 折り込み枠状況 -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title"><i class="ti ti-stack-2"></i>折り込み枠の状況</div>
+          <div class="text-sm text-muted mb-3">受付可能部数</div>
+          <div style="font-size:22px;font-weight:500;color:var(--ink)">
+            300<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span>
+          </div>
+          <div style="margin:8px 0">
+            <div class="quota-bar-bg"><div class="quota-bar-fill" style="width:42%"></div></div>
+          </div>
+          <div class="quota-text">126/300部 使用済み（残り174部）</div>
+          <button class="request-btn" onclick="showPage('request-form')">
+            <i class="ti ti-send" style="font-size:15px"></i>折り込みを依頼する
+          </button>
+        </div>
+        <!-- 劇団情報 -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title"><i class="ti ti-building"></i>劇団情報</div>
+          <table style="width:100%;font-size:13px;border-collapse:collapse">
+            <tr>
+              <td style="color:var(--muted);padding:5px 0">大学</td>
+              <td style="text-align:right;font-weight:500;padding:5px 0">早稲田大学</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);padding:5px 0">設立</td>
+              <td style="text-align:right;font-weight:500;padding:5px 0">2018年</td>
+            </tr>
+            <tr>
+              <td style="color:var(--muted);padding:5px 0">公演実績</td>
+              <td style="text-align:right;font-weight:500;padding:5px 0">12公演</td>
+            </tr>
+          </table>
+          <button class="my-perf-edit" style="width:100%;margin-top:12px;padding:8px;text-align:center" onclick="showPage('troupes')">
+            劇団ページを見る <i class="ti ti-arrow-right" style="font-size:12px"></i>
+          </button>
+        </div>
+        <!-- 直近の依頼 -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title"><i class="ti ti-clock"></i>最近の折り込み依頼</div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+              <span class="text-muted">ステージクロス</span>
+              <span class="inbox-copies">100部</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px">
+              <span class="text-muted">慶應ドラマクラブ</span>
+              <span class="inbox-copies">26部</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== REQUEST FORM PAGE =================== -->
+  <div class="page" id="page-request-form">
+    <button class="back-btn" onclick="showPage('perf-detail')">
+      <i class="ti ti-arrow-left" style="font-size:15px"></i>公演詳細に戻る
+    </button>
+    <div class="page-header">
+      <div class="page-title">折り込み依頼フォーム</div>
+      <div class="page-sub">劇団ソウル「春の嵐、それから」への折り込みを依頼します</div>
+    </div>
+
+    <div id="success-banner" class="success-banner">
+      <i class="ti ti-circle-check" style="font-size:20px"></i>
+      折り込み依頼を送信しました。担当者からの返答をお待ちください。
+    </div>
+
+    <div class="form-card">
+      <!-- 依頼元の情報 -->
+      <div class="form-section">
+        <div class="form-section-title">依頼元の情報</div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label class="form-label">劇団名<span class="form-required">*</span></label>
+            <input type="text" class="form-input" placeholder="例：ステージクロス">
+          </div>
+          <div class="form-row">
+            <label class="form-label">担当者名<span class="form-required">*</span></label>
+            <input type="text" class="form-input" placeholder="例：山田 太郎">
+          </div>
+        </div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label class="form-label">メールアドレス<span class="form-required">*</span></label>
+            <input type="email" class="form-input" placeholder="example@waseda.jp">
+          </div>
+          <div class="form-row">
+            <label class="form-label">電話番号</label>
+            <input type="tel" class="form-input" placeholder="090-XXXX-XXXX">
+          </div>
+        </div>
+      </div>
+      <!-- 折り込みの詳細 -->
+      <div class="form-section">
+        <div class="form-section-title">折り込みの詳細</div>
+        <div class="form-row">
+          <label class="form-label">折り込みたい公演（自劇団の公演）<span class="form-required">*</span></label>
+          <select class="form-select">
+            <option value="">公演を選択してください</option>
+            <option>ステージクロス「光と影の間で」(6月21日〜23日)</option>
+            <option>ステージクロス「ゼロの地平線」(7月5日〜7日)</option>
+          </select>
+        </div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label class="form-label">折り込み希望部数<span class="form-required">*</span></label>
+            <input type="number" class="form-input" placeholder="例：100" min="1" max="174">
+          </div>
+          <div class="form-row">
+            <label class="form-label">チラシサイズ</label>
+            <select class="form-select">
+              <option>A4（一般的）</option>
+              <option>A5</option>
+              <option>B5</option>
+              <option>B4</option>
+              <option>その他</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">チラシの渡し方<span class="form-required">*</span></label>
+          <div class="form-radio-group">
+            <label class="form-radio-label">
+              <input type="radio" name="delivery" value="post">
+              郵送する（切手代は依頼元が負担）
+            </label>
+            <label class="form-radio-label">
+              <input type="radio" name="delivery" value="handover">
+              手渡し（日時・場所は別途調整）
+            </label>
+            <label class="form-radio-label">
+              <input type="radio" name="delivery" value="other">
+              その他（備考欄に記入）
+            </label>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">郵送先住所 <span class="text-xs text-muted">（郵送の場合）</span></label>
+          <input type="text" class="form-input" placeholder="〒XXX-XXXX 東京都新宿区...">
+        </div>
+      </div>
+      <!-- 備考 -->
+      <div class="form-section">
+        <div class="form-section-title">備考・メッセージ</div>
+        <div class="form-row">
+          <textarea class="form-textarea" placeholder="折り込みに関する追記事項があればご記入ください。&#10;（例：特定のステージのみへの折り込み希望、梱包方法のご要望など）"></textarea>
+        </div>
+      </div>
+      <div class="submit-row">
+        <button class="btn-primary" onclick="submitRequest()">
+          <i class="ti ti-send" style="font-size:14px"></i>依頼を送信する
+        </button>
+        <button class="btn-ghost" onclick="showPage('perf-detail')">キャンセル</button>
+        <span class="text-xs text-muted" style="margin-left:4px"><span class="form-required">*</span>は必須項目です</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== MY PAGE =================== -->
+  <div class="page" id="page-mypage">
+    <div class="page-header">
+      <div class="page-title">マイページ</div>
+      <div class="page-sub">ステージクロス の管理ページ</div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card stat-card-red">
+        <div class="stat-label stat-label-red">未読の折り込み依頼</div>
+        <div class="stat-value stat-value-red">2件</div>
+      </div>
+      <div class="stat-card stat-card-neutral">
+        <div class="stat-label">登録中の公演</div>
+        <div class="stat-value">2件</div>
+      </div>
+      <div class="stat-card stat-card-neutral">
+        <div class="stat-label">送信した依頼</div>
+        <div class="stat-value">3件</div>
+      </div>
+      <div class="stat-card stat-card-neutral">
+        <div class="stat-label">承諾済み折り込み</div>
+        <div class="stat-value">2件</div>
+      </div>
+    </div>
+
+    <!-- 受信した依頼 -->
+    <div class="section-title"><i class="ti ti-inbox"></i>受信した折り込み依頼</div>
+    <div class="inbox-list" id="inbox-list">
+      <div class="inbox-item unread" id="inbox-0">
+        <div class="inbox-avatar" style="background:#FFE5E8;color:#8B1A2F">ソ</div>
+        <div class="inbox-body">
+          <div class="inbox-from">劇団ソウル「春の嵐、それから」</div>
+          <div class="inbox-preview">6月21日〜23日公演「光と影の間で」への折り込みを依頼します</div>
+          <div class="inbox-meta">
+            <span class="inbox-copies">100部 / 郵送</span>
+            <span class="inbox-date">2025年5月14日</span>
+          </div>
+        </div>
+        <div class="inbox-actions">
+          <button class="inbox-btn inbox-btn-accept" onclick="acceptRequest(0)">承諾</button>
+          <button class="inbox-btn inbox-btn-decline" onclick="declineRequest(0)">辞退</button>
+        </div>
+      </div>
+      <div class="inbox-item unread" id="inbox-1">
+        <div class="inbox-avatar" style="background:#F0E5F9;color:#5A1A8B">パ</div>
+        <div class="inbox-body">
+          <div class="inbox-from">パラドックス「記憶の破片」</div>
+          <div class="inbox-preview">7月5日〜7日公演「ゼロの地平線」への折り込みを依頼します</div>
+          <div class="inbox-meta">
+            <span class="inbox-copies">50部 / 手渡し</span>
+            <span class="inbox-date">2025年5月12日</span>
+          </div>
+        </div>
+        <div class="inbox-actions">
+          <button class="inbox-btn inbox-btn-accept" onclick="acceptRequest(1)">承諾</button>
+          <button class="inbox-btn inbox-btn-decline" onclick="declineRequest(1)">辞退</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 登録中の公演 -->
+    <div class="section-title"><i class="ti ti-theater"></i>登録中の公演</div>
+    <div class="my-perf-list">
+      <div class="my-perf-item">
+        <div class="inbox-avatar" style="background:#E5EEF9;color:#1A4A8B;width:36px;height:36px;font-size:13px">ス</div>
+        <div class="my-perf-info">
+          <div class="my-perf-name">光と影の間で</div>
+          <div class="my-perf-date"><i class="ti ti-calendar" style="font-size:12px"></i>6月21日(土) 〜 6月23日(月)</div>
+        </div>
+        <div class="my-perf-quota">
+          <div class="quota-bar-bg quota-bar-sm"><div class="quota-bar-fill" style="width:60%"></div></div>
+          <span>180/300部</span>
+        </div>
+        <div class="status-badge status-open" style="margin:0 8px">受付中</div>
+        <button class="my-perf-edit" onclick="showPage('register')">編集</button>
+      </div>
+      <div class="my-perf-item">
+        <div class="inbox-avatar" style="background:#E5EEF9;color:#1A4A8B;width:36px;height:36px;font-size:13px">ス</div>
+        <div class="my-perf-info">
+          <div class="my-perf-name">ゼロの地平線</div>
+          <div class="my-perf-date"><i class="ti ti-calendar" style="font-size:12px"></i>7月5日(土) 〜 7月7日(月)</div>
+        </div>
+        <div class="my-perf-quota">
+          <div class="quota-bar-bg quota-bar-sm"><div class="quota-bar-fill" style="width:20%"></div></div>
+          <span>60/300部</span>
+        </div>
+        <div class="status-badge status-soon" style="margin:0 8px">まもなく受付</div>
+        <button class="my-perf-edit" onclick="showPage('register')">編集</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== REGISTER PAGE =================== -->
+  <div class="page" id="page-register">
+    <div class="page-header">
+      <div class="page-title">公演を登録する</div>
+      <div class="page-sub">公演情報を入力してビラネットワークに掲載しましょう</div>
+    </div>
+    <div class="form-card">
+      <!-- 劇団・公演基本情報 -->
+      <div class="form-section">
+        <div class="form-section-title">劇団・公演基本情報</div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label class="form-label">劇団名<span class="form-required">*</span></label>
+            <input type="text" class="form-input" placeholder="例：劇団ソウル">
+          </div>
+          <div class="form-row">
+            <label class="form-label">大学名<span class="form-required">*</span></label>
+            <select class="form-select">
+              <option value="">選択してください</option>
+              <option>早稲田大学</option>
+              <option>慶應義塾大学</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">公演名<span class="form-required">*</span></label>
+          <input type="text" class="form-input" placeholder="例：春の嵐、それから">
+        </div>
+        <div class="form-row">
+          <label class="form-label">公演内容・あらすじ</label>
+          <textarea class="form-textarea" placeholder="公演のテーマ、ストーリーの概要などを記入してください"></textarea>
+        </div>
+        <div class="form-row">
+          <label class="form-label">ジャンル・タグ</label>
+          <input type="text" class="form-input" placeholder="例：現代劇、コメディ、ミュージカル（カンマ区切り）">
+        </div>
+      </div>
+      <!-- 公演日程・会場 -->
+      <div class="form-section">
+        <div class="form-section-title">公演日程・会場</div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label class="form-label">公演開始日<span class="form-required">*</span></label>
+            <input type="date" class="form-input">
+          </div>
+          <div class="form-row">
+            <label class="form-label">公演終了日<span class="form-required">*</span></label>
+            <input type="date" class="form-input">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">会場<span class="form-required">*</span></label>
+          <input type="text" class="form-input" placeholder="例：早稲田大学小劇場 / 慶應義塾大学三田キャンパス">
+        </div>
+        <div class="form-row">
+          <label class="form-label">想定動員数（全ステージ合計）</label>
+          <input type="number" class="form-input" placeholder="例：300">
+        </div>
+      </div>
+      <!-- 折り込み受付設定 -->
+      <div class="form-section">
+        <div class="form-section-title">折り込み受付設定</div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label class="form-label">折り込み受付開始日<span class="form-required">*</span></label>
+            <input type="date" class="form-input">
+          </div>
+          <div class="form-row">
+            <label class="form-label">折り込み受付締切日<span class="form-required">*</span></label>
+            <input type="date" class="form-input">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">折り込み受付可能部数（上限）<span class="form-required">*</span></label>
+          <input type="number" class="form-input" placeholder="例：300">
+        </div>
+        <div class="form-row">
+          <label class="form-label">チラシ受け入れ可能な渡し方法</label>
+          <div class="form-checkbox-row">
+            <label class="form-checkbox-label"><input type="checkbox" checked> 郵送</label>
+            <label class="form-checkbox-label"><input type="checkbox" checked> 手渡し</label>
+            <label class="form-checkbox-label"><input type="checkbox"> その他</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">折り込み受付に関する備考</label>
+          <textarea class="form-textarea" style="min-height:60px" placeholder="例：手渡しは公演当日のみ受け付けます"></textarea>
+        </div>
+      </div>
+      <!-- 連絡先情報 -->
+      <div class="form-section">
+        <div class="form-section-title">連絡先情報</div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label class="form-label">広報担当者名<span class="form-required">*</span></label>
+            <input type="text" class="form-input" placeholder="例：田中 花子">
+          </div>
+          <div class="form-row">
+            <label class="form-label">連絡用メールアドレス<span class="form-required">*</span></label>
+            <input type="email" class="form-input" placeholder="example@keio.jp">
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">SNS / 公演HP（任意）</label>
+          <input type="url" class="form-input" placeholder="https://twitter.com/...">
+        </div>
+        <div class="form-row">
+          <label class="form-label">郵送先住所（折り込みを受け取る住所）</label>
+          <input type="text" class="form-input" placeholder="〒XXX-XXXX 東京都...">
+        </div>
+      </div>
+      <div class="submit-row">
+        <button class="btn-primary" onclick="alert('公演を登録しました！カレンダーに反映されます。')">
+          <i class="ti ti-circle-check" style="font-size:14px"></i>公演を登録する
+        </button>
+        <button class="btn-secondary">下書き保存</button>
+        <button class="btn-ghost" onclick="showPage('calendar')">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================== HELP PAGE =================== -->
+  <div class="page" id="page-help">
+    <div class="page-header">
+      <div class="page-title">ビラネットワークの使い方</div>
+      <div class="page-sub">チラシ折り込みをもっとスムーズに</div>
+    </div>
+
+    <div class="info-banner">
+      <div class="info-banner-title"><i class="ti ti-info-circle"></i>ビラネットワークとは</div>
+      <p>早慶演劇祭に参加する劇団同士が、公演のチラシを互いのパンフレットや当日パンフに折り込みあうためのプラットフォームです。これまでCorichやSNSでバラバラに行っていたリサーチと個別連絡を、このサービス一つで完結できます。</p>
+    </div>
+
+    <div class="help-grid" style="margin-bottom:1.5rem">
+      <div class="help-card">
+        <div class="help-icon"><i class="ti ti-calendar-plus"></i></div>
+        <div class="help-title">1. 公演を登録する</div>
+        <div class="help-body">公演情報と折り込み受付の設定を登録。受付期間・上限部数を設定すると、他の劇団から依頼が届きます。</div>
+      </div>
+      <div class="help-card">
+        <div class="help-icon"><i class="ti ti-search"></i></div>
+        <div class="help-title">2. 折り込み先を探す</div>
+        <div class="help-body">カレンダーや劇団一覧から、自分の公演時期に折り込みを受け付けている公演を探せます。</div>
+      </div>
+      <div class="help-card">
+        <div class="help-icon"><i class="ti ti-send"></i></div>
+        <div class="help-title">3. 折り込みを依頼する</div>
+        <div class="help-body">依頼フォームから部数・渡し方法を選んで送信。担当者に直接通知が届きます。</div>
+      </div>
+      <div class="help-card">
+        <div class="help-icon"><i class="ti ti-circle-check"></i></div>
+        <div class="help-title">4. 承諾・チラシを準備</div>
+        <div class="help-body">受け取った依頼をマイページで確認・承諾。承諾後は依頼元に通知が届き、チラシの手配に移れます。</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <div style="font-size:15px;font-weight:500;margin-bottom:12px">よくある質問</div>
+    <div class="faq-list">
+      <details>
+        <summary>折り込み部数に上限はありますか？</summary>
+        <p>公演を登録する際に上限部数を設定します。上限に達すると自動的に受付終了となります。カレンダー上でも「受付終了」と表示されます。</p>
+      </details>
+      <details>
+        <summary>チラシの郵送費は誰が負担しますか？</summary>
+        <p>原則として依頼元の劇団が郵送費を負担します。依頼フォームで「郵送」を選択した場合は、切手を貼って相手劇団の指定住所にお送りください。</p>
+      </details>
+      <details>
+        <summary>依頼を断ることはできますか？</summary>
+        <p>はい、マイページから受け取った依頼を「辞退」できます。辞退の際は備考欄に理由を添えることが推奨されます。</p>
+      </details>
+      <details>
+        <summary>複数の公演に同時に折り込み依頼を送れますか？</summary>
+        <p>はい、複数の公演に対して個別に依頼を送ることができます。各公演の詳細ページから依頼フォームに進んでください。</p>
+      </details>
+      <details>
+        <summary>このサービスを使うには登録が必要ですか？</summary>
+        <p>カレンダーの閲覧は登録不要です。公演の登録・折り込みの依頼・依頼の受け取りには劇団アカウントの登録が必要です。</p>
+      </details>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<script>
+  // ===================== DATA =====================
+  const EVENTS = [
+    {day:3,  troupe:'a', title:'劇団ソウル「春の嵐」',     cls:'troupe-a'},
+    {day:4,  troupe:'a', title:'劇団ソウル「春の嵐」',     cls:'troupe-a'},
+    {day:5,  troupe:'a', title:'劇団ソウル「春の嵐」',     cls:'troupe-a'},
+    {day:8,  troupe:'b', title:'ステージクロス「光と影」', cls:'troupe-b'},
+    {day:9,  troupe:'b', title:'ステージクロス「光と影」', cls:'troupe-b'},
+    {day:10, troupe:'c', title:'早稲田演劇研究会',         cls:'troupe-c'},
+    {day:14, troupe:'a', title:'劇団ソウル 公演',          cls:'troupe-a'},
+    {day:14, troupe:'d', title:'慶應ドラマクラブ',         cls:'troupe-d'},
+    {day:15, troupe:'a', title:'劇団ソウル 公演',          cls:'troupe-a'},
+    {day:15, troupe:'d', title:'慶應ドラマクラブ',         cls:'troupe-d'},
+    {day:16, troupe:'a', title:'劇団ソウル 公演',          cls:'troupe-a'},
+    {day:20, troupe:'e', title:'パラドックス「記憶の破片」', cls:'troupe-e'},
+    {day:21, troupe:'b', title:'ステージクロス「光と影」', cls:'troupe-b'},
+    {day:21, troupe:'e', title:'パラドックス「記憶の破片」', cls:'troupe-e'},
+    {day:22, troupe:'b', title:'ステージクロス「光と影」', cls:'troupe-b'},
+    {day:23, troupe:'b', title:'ステージクロス「光と影」', cls:'troupe-b'},
+    {day:27, troupe:'c', title:'早稲田演劇研究会',         cls:'troupe-c'},
+    {day:28, troupe:'c', title:'早稲田演劇研究会',         cls:'troupe-c'},
+  ];
+
+  const TROUPES = [
+    {id:'a', name:'劇団ソウル',       univ:'早稲田大学',   perfs:3, accepting:true,  tags:['現代劇','小劇場'],     initials:'ソ', bg:'#FFE5E8', color:'#8B1A2F'},
+    {id:'b', name:'ステージクロス',   univ:'慶應義塾大学', perfs:2, accepting:true,  tags:['コメディ','実験演劇'], initials:'ス', bg:'#E5EEF9', color:'#1A4A8B'},
+    {id:'c', name:'早稲田演劇研究会', univ:'早稲田大学',   perfs:2, accepting:false, tags:['古典','朗読劇'],       initials:'早', bg:'#E5F3EE', color:'#1A6B4A'},
+    {id:'d', name:'慶應ドラマクラブ', univ:'慶應義塾大学', perfs:1, accepting:true,  tags:['ミュージカル'],        initials:'慶', bg:'#FFF4E5', color:'#8B5A1A'},
+    {id:'e', name:'パラドックス',     univ:'早稲田大学',   perfs:1, accepting:true,  tags:['物語劇','新作'],       initials:'パ', bg:'#F0E5F9', color:'#5A1A8B'},
+  ];
+
+  // ===================== STATE =====================
+  let currentYear  = 2025;
+  let currentMonth = 5; // 0-indexed (5 = June)
+  let prevPage     = 'calendar';
+
+  // ===================== NAVIGATION =====================
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    const page = document.getElementById('page-' + id);
+    const tab  = document.getElementById('tab-' + id);
+    if (page) page.classList.add('active');
+    if (tab)  tab.classList.add('active');
+    window.scrollTo(0, 0);
   }
-}
 
-/* 外クリックで閉じる */
-document.addEventListener("click", function() {
-  const menu = document.getElementById("lang-menu");
-  if (menu) menu.style.display = "none";
-});
+  function goBack() { showPage(prevPage); }
 
-/* ←これが無かったから翻訳されてない */
-function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
-}
+  // ===================== CALENDAR =====================
+  function changeMonth(delta) {
+    currentMonth += delta;
+    if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+    if (currentMonth <  0) { currentMonth = 11; currentYear--; }
+    renderCalendar();
+  }
+
+  function renderCalendar() {
+    const filter = document.getElementById('cal-filter').value;
+    document.getElementById('month-label').textContent =
+      currentYear + '年' + (currentMonth + 1) + '月';
+
+    const grid    = document.getElementById('cal-grid');
+    const dow     = ['日','月','火','水','木','金','土'];
+    const today   = new Date();
+    const firstDow = new Date(currentYear, currentMonth, 1).getDay();
+    const totalDays = new Date(currentYear, currentMonth + 1, 0).getDate();
+    const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
+
+    let html = dow.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+    const cells = [];
+    for (let i = firstDow - 1; i >= 0; i--) cells.push({day: prevMonthDays - i, cur: false});
+    for (let d = 1; d <= totalDays; d++)     cells.push({day: d, cur: true});
+    while (cells.length % 7 !== 0)           cells.push({day: cells.length - totalDays - firstDow + 1, cur: false});
+
+    cells.forEach(cell => {
+      const evs = EVENTS.filter(e =>
+        cell.cur && e.day === cell.day && (!filter || e.troupe === filter)
+      );
+      const isToday = cell.cur &&
+        today.getFullYear() === currentYear &&
+        today.getMonth()    === currentMonth &&
+        today.getDate()     === cell.day;
+
+      const cls = [
+        'cal-cell',
+        !cell.cur     ? 'other-month' : '',
+        evs.length    ? 'has-event'   : '',
+        isToday       ? 'today'       : '',
+      ].filter(Boolean).join(' ');
+
+      let evHtml = evs.slice(0, 2).map(e =>
+        `<div class="cal-event ${e.cls}" onclick="openPerf(event)">${e.title}</div>`
+      ).join('');
+      if (evs.length > 2) evHtml += `<div class="more-events">+${evs.length - 2}件</div>`;
+
+      html += `<div class="${cls}"><div class="cal-day-num">${cell.day}</div>${evHtml}</div>`;
+    });
+
+    grid.innerHTML = html;
+  }
+
+  function openPerf(e) {
+    e.stopPropagation();
+    prevPage = 'calendar';
+    showPage('perf-detail');
+  }
+
+  // ===================== TROUPE LIST =====================
+  function filterTroupes(q) {
+    const query       = (q || '').trim().toLowerCase();
+    const univFilter  = document.getElementById('univ-filter').value;
+    const acceptFilter = document.getElementById('accept-filter').value;
+
+    const filtered = TROUPES.filter(t => {
+      const matchQ      = !query      || t.name.includes(query) || t.univ.includes(query);
+      const matchUniv   = !univFilter || t.univ === univFilter;
+      const matchAccept = acceptFilter === ''
+        ? true
+        : acceptFilter === 'true' ? t.accepting : !t.accepting;
+      return matchQ && matchUniv && matchAccept;
+    });
+
+    renderTroupes(filtered);
+  }
+
+  function renderTroupes(list) {
+    const grid = document.getElementById('troupe-grid');
+    if (!list.length) {
+      grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+        <i class="ti ti-search-off"></i>
+        条件に一致する劇団が見つかりませんでした
+      </div>`;
+      return;
+    }
+    grid.innerHTML = list.map(t => `
+      <div class="troupe-card" onclick="openTroupePerf('${t.id}')">
+        <div class="troupe-card-head">
+          <div class="troupe-avatar" style="background:${t.bg};color:${t.color}">${t.initials}</div>
+          <div>
+            <div class="troupe-name">${t.name}</div>
+            <div class="troupe-univ">${t.univ}</div>
+          </div>
+        </div>
+        <div class="troupe-stats">
+          <div class="troupe-stat">
+            <i class="ti ti-theater" style="font-size:13px"></i>
+            公演 <strong>${t.perfs}件</strong>
+          </div>
+          <div style="margin-left:auto">
+            ${t.accepting
+              ? '<span class="status-badge status-open">折り込み受付中</span>'
+              : '<span class="status-badge status-closed">受付停止中</span>'
+            }
+          </div>
+        </div>
+        <div class="troupe-tags">
+          ${t.tags.map(tag => `<span class="troupe-tag">${tag}</span>`).join('')}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function openTroupePerf(id) {
+    prevPage = 'troupes';
+    showPage('perf-detail');
+  }
+
+  // ===================== FORMS =====================
+  function submitRequest() {
+    const banner = document.getElementById('success-banner');
+    banner.classList.add('show');
+    window.scrollTo(0, 0);
+  }
+
+  // ===================== MY PAGE =====================
+  function acceptRequest(index) {
+    const item = document.getElementById('inbox-' + index);
+    if (!item) return;
+    item.classList.remove('unread');
+    const actions = item.querySelector('.inbox-actions');
+    actions.innerHTML = '<span class="status-badge status-open" style="font-size:12px;padding:4px 12px">承諾済み</span>';
+  }
+
+  function declineRequest(index) {
+    const item = document.getElementById('inbox-' + index);
+    if (!item) return;
+    item.classList.remove('unread');
+    const actions = item.querySelector('.inbox-actions');
+    actions.innerHTML = '<span class="status-badge status-closed" style="font-size:12px;padding:4px 12px">辞退済み</span>';
+  }
+
+  // ===================== INIT =====================
+  renderCalendar();
+  renderTroupes(TROUPES);
 </script>
-
-<div id="google_translate_element" style="display:none;"></div>
-
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
-</script>
-
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-  <body>
-    <header>
-  <!-- 左 -->
- <div class="menu-left">
-    <a href="ticket.html" class="menu-1">
-  <img src="ticket3.png" width="50">
-  <span>チケット</span>
-  </a>
-  <a href="what.html" class="menu-1">
-  <img src="what3.png" width="50">
-  <span>公演紹介</span>
-  </a>
-      <a href="Participant.html" class="menu-1">
-  <img src="Participant3.png" width="50">
-  <span>出場団体</span>
-  </a>
-    <a href="Schedule.html" class="menu-1">
-  <img src="Schedule3.png" width="50">
-  <span>スケジュール</span>
-</a>
-  </div>
-
-  <!-- 真ん中 -->
-  <a href="index.html" class="logo">
-  <div class="logo-main">早慶演劇祭</div>
-  <div class="logo-sub">Waseda–Keio Theatre Festival</div>
-</a>
-
-  <!-- 右 -->
-  <div class="menu-right">
-     <a href="news.html" class="menu-1">
-  <img src="news3.png" width="50">
-  <span>ニュース</span>
-  </a>
-     <div class="lang-wrapper">
-    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-      <img src="Language3.png">
-      <span>Language</span>
-    </a>
-
-  <div id="lang-menu" class="lang-menu">
-    <div onclick="setLang('ja')">日本語</div>
-    <div onclick="setLang('en')">ENGLISH</div>
-    <div onclick="setLang('zh-CN')">简体中文</div>
-    <div onclick="setLang('ko')">한국어</div>
-  </div>
-</div>
-   <a href="Inquiry.html" class="menu-1">
-  <img src="Inquiry3.png" width="50">
-  <span>お問い合わせ</span>
-  </a>
-    <a href="menu.html" class="menu-1">
-  <img src="menu3.png" width="50">
-  <span>メニュー</span>
-  </a>
-  </div>
-  <div class="hamburger">
-  ☰
-  </div>
-</header>
-
-<script>
-function removeGoogleUI() {
-  // バナー
-  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
-
-  // ポップアップ（翻訳されました表示）
-  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
-
-  // その他UI
-  document.querySelectorAll('.skiptranslate').forEach(el => {
-    if (el.innerText.includes("翻訳")) el.remove();
-  });
-
-  // 位置ズレ修正
-  document.body.style.top = '0px';
-}
-
-/* ずっと監視して消す */
-setInterval(removeGoogleUI, 300);
-</script>
-
-  </body>
-
+</body>
 </html>
