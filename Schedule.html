@@ -625,6 +625,10 @@ const monthTitle = document.getElementById("monthTitle");
 
 let currentMonth = 7;
 let currentYear = 2026;
+const events = {};
+
+window.events = events;
+window.renderCalendar = renderCalendar;
 
 function renderCalendar(year, month){
 
@@ -793,8 +797,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const events = {};
-
 async function loadPerformances(){
 
   const snapshot =
@@ -819,6 +821,30 @@ async function loadPerformances(){
 }
 
 loadPerformances();
+
+window.renderCalendar = renderCalendar;
+window.events = events;
+window.currentYear = currentYear;
+window.currentMonth = currentMonth;
+
+window.renderCalendar(
+  currentYear,
+  currentMonth
+);
+
+snapshot.forEach(doc=>{
+
+  const data = doc.data();
+
+  const date = data.date;
+
+  if(!window.events[date]){
+    window.events[date] = [];
+  }
+
+  window.events[date].push(data.title);
+
+});
 
 </script>
 
