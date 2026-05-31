@@ -312,7 +312,7 @@ header{
 
 .calendar-section{
   background:#f7f7f7;
-  padding:60px 8%;
+  padding:140px 8%;
 }
 
 .calendar-head{
@@ -578,8 +578,8 @@ header{
 <div class="calendar-header">
 
   <div class="calendar-title">
-    <h2>公演カレンダー</h2>
-    <p>公演日程とイベント情報を確認できます</p>
+    <h2>THEATRE CALENDAR</h2>
+    <p>公演スケジュール</p>
   </div>
 
   <a href="#" class="register-btn">
@@ -659,17 +659,20 @@ function renderCalendar(year, month){
 
     if(events[key]){
 
-      events[key].forEach(ev=>{
+  events[key].forEach(ev=>{
 
-        eventHTML += `
-          <div class="event">
-            ${ev}
-          </div>
-        `;
+    eventHTML += `
+      <div class="event"
+           onclick="showPerformance('${ev}')">
 
-      });
+        ${ev}
 
-    }
+      </div>
+    `;
+
+  });
+
+}
 
     calendar.innerHTML += `
       <div class="day">
@@ -751,6 +754,76 @@ eventHTML += `
   </div>
 
 </div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+const firebaseConfig = {
+
+  apiKey: "ここにコピー",
+
+  authDomain: "ここにコピー",
+
+  projectId: "ここにコピー",
+
+  storageBucket: "ここにコピー",
+
+  messagingSenderId: "ここにコピー",
+
+  appId: "ここにコピー"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+</script>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "...",
+  authDomain: "...",
+  projectId: "...",
+  storageBucket: "...",
+  messagingSenderId: "...",
+  appId: "..."
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+async function addPerformance(){
+
+  await addDoc(
+    collection(db,"performances"),
+    {
+      title:"開幕公演",
+      date:"2026-08-10",
+      place:"大隈講堂"
+    }
+  );
+
+  alert("保存完了");
+}
+
+</script>
+
+<button onclick="addPerformance()">
+公演登録
+</button>
 
 </body>
 </html>
