@@ -1,4 +1,6 @@
-<div id="companyGrid"></div>
+<div class="company-grid" id="companyGrid"></div>
+
+<script type="module">
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -12,9 +14,12 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 
-  apiKey:"あなたのAPIキー",
-  authDomain:"...",
-  projectId:"..."
+  apiKey:"AIza...",
+  authDomain:"soukeiengekisai.firebaseapp.com",
+  projectId:"soukeiengekisai",
+  storageBucket:"soukeiengekisai.firebasestorage.app",
+  messagingSenderId:"421329522934",
+  appId:"1:421329522934:web:5011ab66c01335f12a5cd7"
 
 };
 
@@ -35,76 +40,25 @@ async function loadTheatres(){
 
     const data = doc.data();
 
-    const statusClass =
-      data.status === "open"
-      ? "open"
-      : "close";
-
-    const statusText =
-      data.status === "open"
-      ? "折り込み受付中"
-      : "受付停止中";
-
     grid.innerHTML += `
+      <div class="company-card">
 
-      <a href="theatre.html?id=${doc.id}"
-         class="company-card">
+        <h3>${data.name}</h3>
 
-        <div class="company-top">
+        <p>${data.university}</p>
 
-          <div class="company-icon">
-            ${data.name.charAt(0)}
-          </div>
-
-          <div>
-
-            <div class="company-name">
-              ${data.name}
-            </div>
-
-            <div class="company-univ">
-              ${data.university}
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="next-show">
+        <p>
           次回公演：
-          「${data.nextShow}」
-        </div>
+          ${data.nextShow}
+        </p>
 
-        <div class="info-row">
-
-          <div>
-            🎭 公演${data.performances}件
-          </div>
-
-          <div class="status ${statusClass}">
-            ${statusText}
-          </div>
-
-        </div>
-
-        <div class="tags">
-
-          <div class="tag">
-            ${data.tag1}
-          </div>
-
-          <div class="tag">
-            ${data.tag2}
-          </div>
-
-        </div>
-
-      </a>
-
+      </div>
     `;
+
   });
 
 }
 
 loadTheatres();
 
+</script>
