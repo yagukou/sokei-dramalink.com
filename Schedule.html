@@ -617,7 +617,7 @@ header{
   ログイン
 </a>
 
-<script>
+<script type="module">
 
 const calendar = document.getElementById("calendar");
 
@@ -625,8 +625,6 @@ const monthTitle = document.getElementById("monthTitle");
 
 let currentMonth = 7;
 let currentYear = 2026;
-
-const events = {};
 
 function renderCalendar(year, month){
 
@@ -721,42 +719,6 @@ document.getElementById("nextMonth").onclick = ()=>{
   renderCalendar(currentYear,currentMonth);
 };
 
-</script>
-
-eventHTML += `
-<div
- class="event"
- onclick="showPerformance('${ev}')">
-
- ${ev}
-
-</div>
-`;
-
-<div id="performanceModal" class="modal">
-
-  <div class="modal-content">
-
-    <span class="close">&times;</span>
-
-    <h2 id="modalTitle"></h2>
-
-    <p>会場：早稲田大学大隈講堂</p>
-
-    <p>期間：2026.08.10〜08.12</p>
-
-    <p>主催：早慶演劇祭実行委員会</p>
-
-    <button>
-      詳細を見る
-    </button>
-
-  </div>
-
-</div>
-
-<script type="module">
-
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
@@ -777,10 +739,6 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
-</script>
-
-<script type="module">
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -833,9 +791,27 @@ loadPerformances();
 
 </script>
 
-<button onclick="addPerformance()">
-公演登録
-</button>
+<div id="performanceModal" class="modal">
+
+  <div class="modal-content">
+
+    <span class="close">&times;</span>
+
+    <h2 id="modalTitle"></h2>
+
+    <p>会場：早稲田大学大隈講堂</p>
+
+    <p>期間：2026.08.10〜08.12</p>
+
+    <p>主催：早慶演劇祭実行委員会</p>
+
+    <button>
+      詳細を見る
+    </button>
+
+  </div>
+
+</div>
 
 </body>
 </html>
