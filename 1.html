@@ -1,0 +1,120 @@
+     <!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ビラネットワーク｜早慶演劇祭</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
+   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+     .nav {
+      background: var(--crimson);
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border-bottom: 3px solid var(--gold);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      letter-spacing: 0.05em;
+      padding: 14px 0;
+      margin-right: 2rem;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo span { color: var(--gold-light); font-weight: 400; }
+    .nav-tabs { display: flex; gap: 0; flex: 1; }
+    .nav-tab {
+      padding: 14px 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -3px;
+      transition: all 0.15s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      background: none;
+    }
+    .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.07); }
+    .nav-tab.active { color: var(--gold-light); border-bottom-color: var(--gold-light); }
+    .nav-tab i { font-size: 15px; }
+    .nav-right { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+    .nav-btn {
+      padding: 6px 14px;
+      font-size: 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .nav-btn-outline {
+      border: 1px solid rgba(255,255,255,0.35);
+      color: #fff;
+      background: transparent;
+    }
+    .nav-btn-outline:hover { background: rgba(255,255,255,0.12); }
+    .nav-btn-primary {
+      border: 1px solid var(--gold);
+      background: var(--gold);
+      color: var(--ink);
+      font-weight: 500;
+    }
+    .nav-btn-primary:hover { background: var(--gold-light); }
+    .notif-badge {
+      background: var(--crimson-light);
+      color: #fff;
+      font-size: 10px;
+      padding: 1px 5px;
+      border-radius: 8px;
+      margin-left: 2px;
+    }
+
+  <nav class="nav">
+    <div class="nav-logo">
+      <i class="ti ti-ticket"></i>
+      ビラネットワーク <span>早慶演劇祭</span>
+    </div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showPage('calendar')" id="tab-calendar">
+        <i class="ti ti-calendar"></i>カレンダー
+      </button>
+      <button class="nav-tab" onclick="showPage('troupes')" id="tab-troupes">
+        <i class="ti ti-users"></i>劇団一覧
+      </button>
+      <button class="nav-tab" onclick="showPage('mypage')" id="tab-mypage">
+        <i class="ti ti-layout-dashboard"></i>マイページ
+      </button>
+      <button class="nav-tab" onclick="showPage('register')" id="tab-register">
+        <i class="ti ti-plus"></i>公演登録
+      </button>
+      <button class="nav-tab" onclick="showPage('help')" id="tab-help">
+        <i class="ti ti-info-circle"></i>使い方
+      </button>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn nav-btn-outline">
+        <i class="ti ti-bell" style="font-size:13px"></i>
+        通知 <span class="notif-badge">2</span>
+      </button>
+      <button class="nav-btn nav-btn-primary">
+        <i class="ti ti-user" style="font-size:13px"></i>ログイン
+      </button>
+    </div>
+  </nav>
