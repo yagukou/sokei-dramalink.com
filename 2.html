@@ -1,0 +1,110 @@
+<div id="companyGrid"></div>
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+  apiKey:"あなたのAPIキー",
+  authDomain:"...",
+  projectId:"..."
+
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+async function loadTheatres(){
+
+  const grid =
+    document.getElementById("companyGrid");
+
+  const snapshot =
+    await getDocs(collection(db,"theatres"));
+
+  grid.innerHTML = "";
+
+  snapshot.forEach(doc=>{
+
+    const data = doc.data();
+
+    const statusClass =
+      data.status === "open"
+      ? "open"
+      : "close";
+
+    const statusText =
+      data.status === "open"
+      ? "折り込み受付中"
+      : "受付停止中";
+
+    grid.innerHTML += `
+
+      <a href="theatre.html?id=${doc.id}"
+         class="company-card">
+
+        <div class="company-top">
+
+          <div class="company-icon">
+            ${data.name.charAt(0)}
+          </div>
+
+          <div>
+
+            <div class="company-name">
+              ${data.name}
+            </div>
+
+            <div class="company-univ">
+              ${data.university}
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="next-show">
+          次回公演：
+          「${data.nextShow}」
+        </div>
+
+        <div class="info-row">
+
+          <div>
+            🎭 公演${data.performances}件
+          </div>
+
+          <div class="status ${statusClass}">
+            ${statusText}
+          </div>
+
+        </div>
+
+        <div class="tags">
+
+          <div class="tag">
+            ${data.tag1}
+          </div>
+
+          <div class="tag">
+            ${data.tag2}
+          </div>
+
+        </div>
+
+      </a>
+
+    `;
+  });
+
+}
+
+loadTheatres();
+
