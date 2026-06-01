@@ -349,8 +349,11 @@
           </div>
           <div class="quota-text" id="detail-quota-summary">0 / 300部 使用済み</div>
           <button class="request-btn" id="detail-request-btn" onclick="showPage('request-form')">
-            <i class="ti ti-send"></i>折り込みを依頼する
-          </button>
+  <i class="ti ti-send"></i>折り込みを依頼する
+</button>
+<button class="request-btn" id="detail-delete-btn" onclick="deleteSinglePerformance()" style="background:transparent; border:1px solid #A32D2D; color:#A32D2D; margin-top:8px;">
+  <i class="ti ti-trash"></i> この公演予定を削除する
+</button>
         </div>
       </div>
     </div>
@@ -852,9 +855,11 @@ function renderTroupes(data) {
   container.innerHTML = '';
   data.forEach(t => {
     const card = document.createElement('div'); card.className = 'troupe-card';
+    card.style.position = 'relative'; // ボタン配置用
     card.onclick = () => { document.getElementById('cal-filter').value = t.id; showPage('calendar'); };
+    
     card.innerHTML = `
-      <div class="troupe-card-head">
+      <div class="troupe-card-head" style="padding-right: 24px;">
         <div class="troupe-avatar ${t.cls}">${t.name[0]}</div>
         <div>
           <div class="troupe-name">${t.name}</div>
@@ -866,6 +871,9 @@ function renderTroupes(data) {
         <div><strong>${t.count}</strong></div>
         <div>設立: <strong>${t.est}</strong></div>
       </div>
+      <button onclick="deleteSingleTroupe(event, '${t.id}', '${t.name}')" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px;" title="劇団を削除">
+        <i class="ti ti-x"></i>
+      </button>
     `;
     container.appendChild(card);
   });
@@ -1013,6 +1021,50 @@ function finalizeRequestFormSuccess() {
     // 再度詳細ページを開き直して最新メーター状態にする
     openPerformanceDetail(selectedPerfId);
   }, 2500);
+}
+
+// 💡 【追加】特定の「公演」をデータから削除する関数
+function deleteSinglePerformance() {
+  if (!selectedPerfId) return;
+  const perf = performancesData.find(p => p.id === selectedPerfId);
+  if (!perf) return;
+
+  if (confirm(`公演「${perf.title}」をカレンダーから削除しますか？\n(この公演宛ての折り込み依頼データも一緒に削除されます)`)) {
+    // 1. 公演データを配列から除外
+    performancesData = performancesData.filter(p => p.id !== selectedPerfId);
+    // 2. その公演に紐づいていた依頼データも一緒に掃除
+    incomingRequests = incomingRequests.filter(r => r.perfId !== selectedPerfId);
+    
+    saveAllData(); // ローカルストレージに保存
+    alert("公演予定を削除しました。");
+    showPage('calendar'); // カレンダー画面に戻る
+  }
+}
+
+// 💡 【追加】特定の「劇団」をデータから削除する関数
+// 💡 【セキュリティ強化版】特定の「公演」をデータから削除する関数
+function deleteSinglePerformance() {
+  if (!selectedPerfId) return;
+  const perf = performancesData.find(p => p.id === selectedPerfId);
+  if (!perf) return;
+
+  // 🔒 【セキュリティ追加】ログインしていない、または別の劇団の場合は拒否する
+  if (!currentUser || currentUser.id !== perf.troupeId) {
+    alert("❌ セキュリティエラー：この公演を削除する権限がありません。\n（公演を登録した劇団アカウントでログインしてください）");
+    return;
+  }
+
+  // 本人確認が取れた場合のみ、以下の削除処理が進む
+  if (confirm(`公演「${perf.title}」をカレンダーから削除しますか？\n(この公演宛ての折り込み依頼データも一緒に削除されます)`)) {
+    // 1. 公演データを配列から除外
+    performancesData = performancesData.filter(p => p.id !== selectedPerfId);
+    // 2. その公演に紐づいていた依頼データも一緒に掃除
+    incomingRequests = incomingRequests.filter(r => r.perfId !== selectedPerfId);
+    
+    saveAllData(); // ローカルストレージに保存
+    alert("公演予定を削除しました。");
+    showPage('calendar'); // カレンダー画面に戻る
+  }
 }
 
 // 初期起動
