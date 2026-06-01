@@ -1089,40 +1089,42 @@ function deleteSinglePerformance() {
     showPage('calendar'); // カレンダー画面に戻る
   }
 }
+// 💡 【追加】劇団一覧の「×」ボタンから特定の劇団を削除する関数
+function deleteSingleTroupe(event, id, name) {
+  // 1. カード自体のクリックイベント（カレンダーへの画面遷移）が発火するのを防ぐ
+  event.stopPropagation();
 
-// 💡 【追加】特定の「劇団」をデータから削除する関数
-// 💡 【セキュリティ強化版】特定の「公演」をデータから削除する関数
-function deleteSinglePerformance() {
-  if (!selectedPerfId) return;
-  const perf = performancesData.find(p => p.id === selectedPerfId);
-  if (!perf) return;
-
-  // 🔒 【セキュリティ追加】ログインしていない、または別の劇団の場合は拒否する
-  if (!currentUser || currentUser.id !== perf.troupeId) {
-    alert("❌ セキュリティエラー：この公演を削除する権限がありません。\n（公演を登録した劇団アカウントでログインしてください）");
+  // 🔒 セキュリティチェック：ログインしていない、または別の劇団の場合は拒否
+  if (!currentUser || currentUser.id !== id) {
+    alert(`❌ セキュリティエラー：劇団「${name}」を削除する権限がありません。\n（この劇団のアカウントでログインしてから操作してください）`);
     return;
   }
 
-  // 本人確認が取れた場合のみ、以下の削除処理が進む
-  if (confirm(`公演「${perf.title}」をカレンダーから削除しますか？\n(この公演宛ての折り込み依頼データも一緒に削除されます)`)) {
-    // 1. 公演データを配列から除外
-    performancesData = performancesData.filter(p => p.id !== selectedPerfId);
-    // 2. その公演に紐づいていた依頼データも一緒に掃除
-    incomingRequests = incomingRequests.filter(r => r.perfId !== selectedPerfId);
+  // 本人確認が取れた場合のみ削除を実行
+  if (confirm(`本当に劇団「${name}」のアカウントを削除しますか？\n（この劇団が登録した公演情報や依頼も一緒に削除されます）`)) {
     
-    saveAllData(); // ローカルストレージに保存
-    alert("公演予定を削除しました。");
-    showPage('calendar'); // カレンダー画面に戻る
+    // 2. 劇団リストから削除
+    troupesData = troupesData.filter(t => t.id !== id);
+    
+    // 3. 連動して、その劇団の公演情報と届いていた依頼も削除
+    performancesData = performancesData.filter(p => p.troupeId !== id);
+    incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
+
+    // 4. 自分のアカウントを消したことになるので、ログイン状態をクリア
+    currentUser = null;
+    
+    // 5. データを保存して画面をリフレッシュ
+    saveAllData();
+    alert(`劇団「${name}」のデータをすべて削除しました。`);
+    
+    // 6. UI（ドロップダウンや一覧、ナビバー）の再描画
+    updateFilterDropdown();
+    renderLegend();
+    renderTroupes(troupesData);
+    updateAuthUI();
+    showPage('troupes'); // 劇団一覧ページを再表示
   }
 }
-
-// 初期起動
-document.addEventListener('DOMContentLoaded', () => {
-  updateFilterDropdown();
-  renderLegend();
-  renderCalendar();
-  updateAuthUI();
-});
 </script>
 </body>
 </html>
