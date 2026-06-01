@@ -806,17 +806,61 @@
     </div>
   </div>
 
-  <div class="page" id="page-request-form">
+<div class="page" id="page-request-form">
     <button class="back-btn" onclick="showPage('perf-detail')">
       <i class="ti ti-arrow-left" style="font-size:15px"></i>公演詳細に戻る
     </button>
     <div class="page-header">
       <div class="page-title">折り込み依頼フォーム</div>
-      <div class="page-sub">劇団ソウル「春の嵐、それから」への折り込みを依頼します</div>
+      <div class="page-sub">選択した公演へのビラ折り込み（挟み込み）を申し込みます</div>
     </div>
 
     <div id="success-banner" class="success-banner">
-      <i class="ti ti-circle-check" style="font-size:20px"></i>登録が完了しました。
+      <i class="ti ti-circle-check" style="font-size:20px"></i>折り込み依頼を送信しました！相手団体の担当者へ通知メールが送られます。
+    </div>
+
+    <div class="form-card" id="request-form-body">
+      <div class="form-section">
+        <div class="form-section-title">あなたの劇団情報</div>
+        <div class="form-row">
+          <label class="form-label">依頼元の劇団名<span class="form-required">*</span></label>
+          <input type="text" class="form-input" id="req-from-name" placeholder="例：劇団シアターエクスプレス" value="ステージクロス">
+        </div>
+        <div class="form-row">
+          <label class="form-label">担当者メールアドレス<span class="form-required">*</span></label>
+          <input type="email" class="form-input" id="req-from-email" placeholder="example@gmail.com" value="applicant@example.com">
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">折り込みビラの詳細</div>
+        <div class="form-2col">
+          <div class="form-row">
+            <label class="form-label">希望折り込み部数<span class="form-required">*</span></label>
+            <input type="number" class="form-input" id="req-copies" value="100" min="1" max="300">
+          </div>
+          <div class="form-row">
+            <label class="form-label">ビラのサイズ・形状<span class="form-required">*</span></label>
+            <select class="form-select" id="req-size">
+              <option value="A4ペラ">A4サイズ（1枚ペラ）</option>
+              <option value="A4二つ折り">A4サイズ（二つ折り）</option>
+              <option value="B5ペラ">B5サイズ（1枚ペラ）</option>
+              <option value="その他">その他（パンフレット等）</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="form-label">備考・伝言（搬入方法の相談など）</label>
+          <textarea class="form-textarea" id="req-notes" placeholder="例：今回はA4両面カラーのチラシになります。納品は配送を希望します。"></textarea>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <button class="btn-primary" onclick="submitRequestForm()">
+          <i class="ti ti-send"></i>この内容で折り込みを依頼する
+        </button>
+        <button class="btn-ghost" onclick="showPage('perf-detail')">キャンセル</button>
+      </div>
     </div>
   </div>
 
@@ -1259,6 +1303,53 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCalendar();
   updateAuthUI();
 });
+
+// 折り込み依頼フォームの送信処理
+function submitRequestForm() {
+  const fromName = document.getElementById('req-from-name').value;
+  const fromEmail = document.getElementById('req-from-email').value;
+  const copies = document.getElementById('req-copies').value;
+  const size = document.getElementById('req-size').value;
+  const notes = document.getElementById('req-notes').value;
+
+  if (!fromName || !fromEmail || !copies) {
+    alert('必須項目（劇団名、メールアドレス、部数）を入力してください。');
+    return;
+  }
+
+  // 1. 新しい申し込みデータとして管理システム（インボックス）に追加
+  const newReqId = Date.now();
+  incomingRequests.push({
+    id: newReqId,
+    fromTroupe: fromName,
+    copies: parseInt(copies),
+    date: '2026/06/01',
+    preview: `${size} / ${notes || '備考なし'}`,
+    status: 'pending'
+  });
+
+  // 2. 相手の劇団（今回は劇団ソウル）の担当者へ、新規受付の自動メールをシミュレート
+  simulateSendEmail(
+    'soul.member@example.com',
+    `【ビラネットワーク】新しい折り込み依頼が届きました（${fromName} より）`,
+    `劇団ソウル 担当者様\n\nあなたの公演に対して、新しいビラ折り込みの申し込みがありました。\n\n【依頼内容】\n■ 劇団名：${fromName}\n■ 希望部数：${copies} 部\n■ ビラ形状：${size}\n■ 備考：${notes || '特になし'}\n\nマイページにログインして内容を確認し、承認または拒否の選択を行ってください。`
+  );
+
+  // 3. 画面上に成功バナーをパッと出す
+  const banner = document.getElementById('success-banner');
+  const formBody = document.getElementById('request-form-body');
+  if (banner) banner.classList.add('show');
+  if (formBody) formBody.style.display = 'none'; // フォームを隠す
+
+  // 4. 3秒後に自動的にマイページへ移動して、届いた依頼を確認できるようにする
+  setTimeout(() => {
+    if (banner) banner.classList.remove('show');
+    if (formBody) formBody.style.display = 'block'; // フォームを元に戻す
+    handleLogin(); // 劇団ソウルとしてログイン状態にする
+    showPage('mypage'); // マイページ（ダッシュボード）へ移動
+  }, 3000);
+}
+
 </script>
 </body>
 </html>
