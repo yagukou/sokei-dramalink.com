@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -110,431 +110,99 @@
       font-weight: 500;
     }
     .nav-btn-primary:hover { background: var(--gold-light); }
-    .notif-badge {
-      background: var(--crimson-light);
-      color: #fff;
-      font-size: 10px;
-      padding: 1px 5px;
-      border-radius: 8px;
-      margin-left: 2px;
-    }
+    .notif-badge { background: var(--crimson-light); color: white; padding: 1px 5px; border-radius: 10px; font-size: 10px; margin-left: 3px; }
 
     /* ===================== LAYOUT ===================== */
-    .app { min-height: 100vh; }
     .page { display: none; padding: 2rem 1.5rem; max-width: 1100px; margin: 0 auto; }
     .page.active { display: block; }
-
     .page-header { margin-bottom: 1.5rem; }
     .page-title { font-size: 22px; font-weight: 500; color: var(--ink); }
     .page-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
-
-    .back-btn {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--crimson);
-      cursor: pointer;
-      margin-bottom: 1.25rem;
-      background: none;
-      border: none;
-      padding: 0;
-    }
+    .back-btn { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--crimson); cursor: pointer; margin-bottom: 1.25rem; background: none; border: none; padding: 0; }
     .back-btn:hover { color: var(--crimson-light); }
-
     .divider { border: none; border-top: 0.5px solid var(--border-neutral); margin: 1.5rem 0; }
 
     /* ===================== CALENDAR ===================== */
-    .calendar-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .month-nav {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--surface2);
-      border-radius: var(--radius-md);
-      padding: 6px 12px;
-      border: 0.5px solid var(--border);
-    }
-    .month-nav button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--crimson);
-      font-size: 18px;
-      padding: 0 4px;
-      line-height: 1;
-    }
-    .month-nav button:hover { color: var(--crimson-light); }
+    .calendar-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .month-nav { display: flex; align-items: center; gap: 8px; background: var(--surface2); border-radius: var(--radius-md); padding: 6px 12px; border: 0.5px solid var(--border); }
+    .month-nav button { background: none; border: none; cursor: pointer; color: var(--crimson); font-size: 18px; padding: 0 4px; }
     .month-label { font-size: 15px; font-weight: 500; min-width: 120px; text-align: center; }
-    .cal-filter {
-      padding: 7px 12px;
-      font-size: 13px;
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-md);
-      background: var(--white);
-      color: var(--ink);
-      cursor: pointer;
-    }
-    .cal-filter:focus { outline: none; border-color: var(--crimson); }
-    .new-perf-btn {
-      margin-left: auto;
-      padding: 7px 16px;
-      background: var(--crimson);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 500;
-      transition: background 0.15s;
-    }
+    .cal-filter { padding: 7px 12px; font-size: 13px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); background: var(--white); color: var(--ink); cursor: pointer; }
+    .new-perf-btn { margin-left: auto; padding: 7px 16px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; }
     .new-perf-btn:hover { background: var(--crimson-light); }
-
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 1px;
-      background: var(--border-neutral);
-      border: 1px solid var(--border-neutral);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-    }
-    .cal-dow {
-      background: var(--surface2);
-      padding: 8px 4px;
-      text-align: center;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
-    .cal-cell {
-      background: var(--white);
-      min-height: 90px;
-      padding: 6px;
-      position: relative;
-    }
+    
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; background: var(--border-neutral); border: 1px solid var(--border-neutral); border-radius: var(--radius-lg); overflow: hidden; }
+    .cal-dow { background: var(--surface2); padding: 8px 4px; text-align: center; font-size: 11px; font-weight: 500; color: var(--muted); }
+    .cal-cell { background: var(--white); min-height: 90px; padding: 6px; position: relative; }
     .cal-cell.other-month { background: var(--surface2); }
-    .cal-cell.has-event { cursor: pointer; }
-    .cal-cell.has-event:hover { background: var(--crimson-pale); }
     .cal-day-num { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-    .cal-cell.today .cal-day-num {
-      color: var(--crimson);
-      font-weight: 600;
-    }
-    .cal-event {
-      font-size: 10px;
-      padding: 2px 5px;
-      border-radius: 3px;
-      margin-bottom: 2px;
-      cursor: pointer;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      display: block;
-      transition: opacity 0.12s;
-    }
-    .cal-event:hover { opacity: 0.8; }
+    .cal-cell.today .cal-day-num { color: var(--crimson); font-weight: 600; }
+    .cal-event { font-size: 10px; padding: 2px 5px; border-radius: 3px; margin-bottom: 2px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+    
+    .legend { display: flex; gap: 16px; margin-top: 1rem; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
     .troupe-a { background: #FFE5E8; color: #8B1A2F; }
     .troupe-b { background: #E5EEF9; color: #1A4A8B; }
     .troupe-c { background: #E5F3EE; color: #1A6B4A; }
     .troupe-d { background: #FFF4E5; color: #8B5A1A; }
     .troupe-e { background: #F0E5F9; color: #5A1A8B; }
-    .more-events { font-size: 10px; color: var(--muted); padding: 0 2px; }
-
-    .legend { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 1rem; }
-    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--muted); }
-    .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
 
     /* ===================== TROUPE LIST ===================== */
     .search-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
     .search-input-wrap { position: relative; flex: 1; min-width: 200px; }
-    .search-input-wrap i {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--muted);
-      font-size: 16px;
-      pointer-events: none;
-    }
-    .search-input {
-      width: 100%;
-      padding: 9px 14px 9px 36px;
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      background: var(--white);
-      color: var(--ink);
-    }
-    .search-input:focus { outline: none; border-color: var(--crimson); }
-
-    .troupe-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 12px;
-    }
-    .troupe-card {
-      background: var(--white);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .troupe-card:hover {
-      border-color: var(--crimson-light);
-      box-shadow: 0 2px 12px rgba(139,26,47,0.08);
-    }
+    .search-input-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    .search-input { width: 100%; padding: 9px 14px 9px 36px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; }
+    .troupe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+    .troupe-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.25rem; cursor: pointer; }
+    .troupe-card:hover { border-color: var(--crimson-light); }
     .troupe-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-    .troupe-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 500;
-      flex-shrink: 0;
-    }
-    .troupe-name { font-size: 15px; font-weight: 500; color: var(--ink); }
-    .troupe-univ { font-size: 12px; color: var(--muted); margin-top: 2px; }
-    .troupe-stats { display: flex; gap: 12px; align-items: center; }
-    .troupe-stat { font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 4px; }
-    .troupe-stat strong { color: var(--ink); font-weight: 500; }
-    .troupe-tags { margin-top: 8px; }
-    .troupe-tag {
-      display: inline-block;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 3px;
-      margin-right: 4px;
-      margin-bottom: 4px;
-      background: var(--crimson-pale);
-      color: var(--crimson);
-    }
-    .status-badge {
-      font-size: 11px;
-      padding: 3px 10px;
-      border-radius: 12px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
+    .troupe-avatar { width: 44px; height: 44px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 500; flex-shrink: 0; }
+    .troupe-name { font-size: 15px; font-weight: 500; }
+    .troupe-univ { font-size: 12px; color: var(--muted); }
+    .status-badge { font-size: 11px; padding: 3px 10px; border-radius: 12px; margin-left: auto; }
     .status-open { background: #E5F3EE; color: #1A6B4A; }
     .status-closed { background: #FEF0F0; color: #A32D2D; }
     .status-soon { background: #FFF4E5; color: #8B5A1A; }
+    .troupe-stats { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); border-top: 0.5px solid var(--border-neutral); padding-top: 8px; margin-top: 8px; }
 
     /* ===================== PERF DETAIL ===================== */
-    .perf-detail-grid {
-      display: grid;
-      grid-template-columns: 1fr 320px;
-      gap: 1.5rem;
-      align-items: start;
-    }
-    @media (max-width: 768px) {
-      .perf-detail-grid { grid-template-columns: 1fr; }
-    }
-    .perf-main {
-      background: var(--white);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-    }
+    .perf-detail-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
+    @media (max-width: 768px) { .perf-detail-grid { grid-template-columns: 1fr; } }
+    .perf-main { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.5rem; }
     .perf-sidebar { display: flex; flex-direction: column; gap: 12px; }
-    .perf-title-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 0.75rem;
-    }
+    .perf-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 0.75rem; }
     .perf-title { font-size: 20px; font-weight: 500; }
-    .perf-troupe-link {
-      font-size: 13px;
-      color: var(--crimson);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      margin-bottom: 6px;
-    }
-    .perf-troupe-link:hover { color: var(--crimson-light); }
+    .perf-troupe-link { font-size: 13px; color: var(--crimson); cursor: pointer; display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
     .perf-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 1rem 0; }
     .perf-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .perf-meta-label {
-      font-size: 11px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 3px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
+    .perf-meta-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
     .perf-meta-val { font-size: 14px; color: var(--ink); font-weight: 500; }
-
-    .sidebar-card {
-      background: var(--white);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-    }
-    .sidebar-card-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .sidebar-card-title i { color: var(--crimson); }
-
-    .quota-bar-bg { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; }
-    .quota-bar-fill { height: 100%; background: var(--crimson); border-radius: 3px; }
-    .quota-text { font-size: 12px; color: var(--muted); margin-top: 4px; }
-
-    .request-btn {
-      width: 100%;
-      padding: 11px;
-      background: var(--crimson);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-top: 12px;
-      transition: background 0.15s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .request-btn:hover { background: var(--crimson-light); }
+    .sidebar-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.25rem; }
+    .sidebar-card-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .quota-bar-bg { background: var(--surface2); height: 8px; border-radius: 4px; overflow: hidden; }
+    .quota-bar-fill { background: var(--crimson); height: 100%; }
+    .quota-text { font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .request-btn { width: 100%; padding: 11px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
 
     /* ===================== FORMS ===================== */
-    .form-card {
-      background: var(--white);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      max-width: 680px;
-    }
+    .form-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 680px; }
     .form-section { margin-bottom: 1.5rem; }
-    .form-section-title {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      padding-bottom: 8px;
-      border-bottom: 0.5px solid var(--border-neutral);
-    }
+    .form-section-title { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border-neutral); }
     .form-row { margin-bottom: 14px; }
-    .form-label { font-size: 13px; color: var(--ink); margin-bottom: 5px; display: block; }
+    .form-label { font-size: 13px; margin-bottom: 5px; display: block; }
     .form-required { color: var(--crimson); margin-left: 2px; }
-    .form-input, .form-select, .form-textarea {
-      width: 100%;
-      padding: 8px 12px;
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      background: var(--white);
-      color: var(--ink);
-      transition: border-color 0.15s;
-    }
-    .form-input:focus, .form-select:focus, .form-textarea:focus {
-      outline: none;
-      border-color: var(--crimson);
-    }
+    .form-input, .form-select, .form-textarea { width: 100%; padding: 8px 12px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; background: var(--white); }
     .form-textarea { min-height: 80px; resize: vertical; }
     .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 600px) { .form-2col { grid-template-columns: 1fr; } }
-
-    .form-radio-group { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
-    .form-radio-label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 14px;
-      cursor: pointer;
-      padding: 8px 12px;
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-md);
-      transition: all 0.12s;
-    }
-    .form-radio-label:hover { border-color: var(--crimson); background: var(--crimson-pale); }
-    .form-radio-label input[type=radio] { accent-color: var(--crimson); }
-    .form-checkbox-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 6px; }
-    .form-checkbox-label {
-      display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;
-    }
-    .form-checkbox-label input { accent-color: var(--crimson); }
-
-    .submit-row { display: flex; gap: 10px; align-items: center; margin-top: 1.5rem; flex-wrap: wrap; }
-    .btn-primary {
-      padding: 10px 24px;
-      background: var(--crimson);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      transition: background 0.15s;
-    }
-    .btn-primary:hover { background: var(--crimson-light); }
-    .btn-ghost {
-      padding: 10px 20px;
-      background: transparent;
-      color: var(--muted);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .btn-ghost:hover { background: var(--surface2); }
-    .btn-secondary {
-      padding: 10px 20px;
-      background: var(--surface2);
-      color: var(--ink);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-md);
-      font-size: 14px;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .btn-secondary:hover { background: var(--border-neutral); }
-
-    .success-banner {
-      display: none;
-      background: #E5F3EE;
-      border: 0.5px solid #9FDFC6;
-      border-radius: var(--radius-md);
-      padding: 14px 18px;
-      font-size: 14px;
-      color: #1A6B4A;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 1.5rem;
-    }
+    .submit-row { display: flex; gap: 10px; align-items: center; margin-top: 1.5rem; }
+    .btn-primary { padding: 10px 24px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 7px; }
+    .btn-ghost { padding: 10px 20px; background: transparent; color: var(--muted); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; cursor: pointer; }
+    .btn-secondary { padding: 10px 20px; background: var(--surface2); color: var(--ink); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; cursor: pointer; }
+    
+    .success-banner { display: none; background: #E5F3EE; border: 0.5px solid #9FDFC6; border-radius: var(--radius-md); padding: 14px 18px; font-size: 14px; color: #1A6B4A; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
     .success-banner.show { display: flex; }
 
     /* ===================== MY PAGE ===================== */
@@ -543,118 +211,29 @@
     .stat-card-red { background: var(--crimson-pale); border: 0.5px solid rgba(139,26,47,0.2); }
     .stat-card-neutral { background: var(--surface2); border: 0.5px solid var(--border-neutral); }
     .stat-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-    .stat-label-red { color: var(--crimson); }
     .stat-value { font-size: 24px; font-weight: 500; }
-    .stat-value-red { color: var(--crimson); }
-
-    .section-title {
-      font-size: 16px;
-      font-weight: 500;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .section-title { font-size: 16px; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
     .section-title i { color: var(--crimson); }
-
+    
     .inbox-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
-    .inbox-item {
-      background: var(--white);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      transition: border-color 0.15s;
-    }
+    .inbox-item { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
     .inbox-item.unread { border-left: 3px solid var(--crimson); }
-    .inbox-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 500;
-      flex-shrink: 0;
-    }
     .inbox-body { flex: 1; min-width: 0; }
-    .inbox-from { font-size: 13px; font-weight: 500; color: var(--ink); }
+    .inbox-from { font-size: 13px; font-weight: 500; }
     .inbox-preview { font-size: 13px; color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .inbox-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-    .inbox-copies {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--crimson);
-      background: var(--crimson-pale);
-      padding: 2px 8px;
-      border-radius: 3px;
-    }
-    .inbox-date { font-size: 11px; color: var(--muted); }
+    .inbox-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+    .inbox-copies { font-size: 12px; font-weight: 500; color: var(--crimson); background: var(--crimson-pale); padding: 2px 8px; border-radius: 3px; }
     .inbox-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .inbox-btn { padding: 5px 12px; font-size: 12px; border-radius: var(--radius-sm); cursor: pointer; border: 0.5px solid transparent; transition: opacity 0.12s; }
-    .inbox-btn:hover { opacity: 0.8; }
+    .inbox-btn { padding: 5px 12px; font-size: 12px; border-radius: var(--radius-sm); cursor: pointer; border: 0.5px solid transparent; }
     .inbox-btn-accept { background: #E5F3EE; color: #1A6B4A; border-color: #9FDFC6; }
     .inbox-btn-decline { background: var(--surface2); color: var(--muted); border-color: var(--border-neutral); }
-
-    /* ===================== HELP PAGE ===================== */
-    .info-banner {
-      background: var(--crimson-pale);
-      border: 0.5px solid rgba(139,26,47,0.2);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-      margin-bottom: 1.5rem;
-    }
+    
+    .info-banner { background: var(--crimson-pale); border: 0.5px solid rgba(139,26,47,0.2); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
     .info-banner-title { font-size: 14px; font-weight: 500; color: var(--crimson); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-    .info-banner p { font-size: 13px; color: var(--ink-mid); line-height: 1.7; }
-
-    .help-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
-    .help-card {
-      background: var(--white);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-lg);
-      padding: 1.25rem;
-    }
-    .help-icon { font-size: 28px; color: var(--crimson); margin-bottom: 10px; }
-    .help-title { font-size: 14px; font-weight: 500; margin-bottom: 6px; }
-    .help-body { font-size: 13px; color: var(--muted); line-height: 1.6; }
-
-    .faq-list { display: flex; flex-direction: column; gap: 8px; }
-    details {
-      background: var(--white);
-      border: 0.5px solid var(--border-neutral);
-      border-radius: var(--radius-md);
-      padding: 12px 16px;
-    }
-    details summary {
-      font-size: 14px;
-      cursor: pointer;
-      color: var(--ink);
-      font-weight: 500;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    details summary::after { content: '+'; color: var(--crimson); font-size: 18px; }
-    details[open] summary::after { content: '−'; }
-    details p { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.7; }
-
-    /* ===================== EMPTY STATE ===================== */
+    .info-banner p { font-size: 13px; color: var(--ink-mid); }
     .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
     .empty-state i { font-size: 40px; margin-bottom: 12px; display: block; color: var(--border-neutral); }
   </style>
-
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-<script type="text/javascript">
-   (function(){
-      // ★ここにあなたのPublic Key（公開キー）を貼り付けます
-      emailjs.init("YOUR_PUBLIC_KEY");
-   })();
-</script>
-
 </head>
 <body>
 
@@ -662,32 +241,20 @@
 
   <nav class="nav">
     <div class="nav-logo">
-      <i class="ti ti-ticket"></i>
-      ビラネットワーク <span>早慶演劇祭</span>
+      <i class="ti ti-ticket"></i> ビラネットワーク <span>早慶演劇祭</span>
     </div>
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="showPage('calendar')" id="tab-calendar">
-        <i class="ti ti-calendar"></i>カレンダー
-      </button>
-      <button class="nav-tab" onclick="showPage('troupes')" id="tab-troupes">
-        <i class="ti ti-users"></i>劇団一覧
-      </button>
-      <button class="nav-tab" onclick="showPage('mypage')" id="tab-mypage">
-        <i class="ti ti-layout-dashboard"></i>マイページ
-      </button>
-      <button class="nav-tab" onclick="showPage('register')" id="tab-register">
-        <i class="ti ti-plus"></i>公演登録
-      </button>
-      <button class="nav-tab" onclick="showPage('help')" id="tab-help">
-        <i class="ti ti-info-circle"></i>使い方
-      </button>
+      <button class="nav-tab active" onclick="showPage('calendar')" id="tab-calendar"><i class="ti ti-calendar"></i>カレンダー</button>
+      <button class="nav-tab" onclick="showPage('troupes')" id="tab-troupes"><i class="ti ti-users"></i>劇団一覧</button>
+      <button class="nav-tab" onclick="showPage('mypage')" id="tab-mypage"><i class="ti ti-layout-dashboard"></i>マイページ</button>
+      <button class="nav-tab" onclick="showPage('register')" id="tab-register"><i class="ti ti-plus"></i>公演登録</button>
+      <button class="nav-tab" onclick="showPage('help')" id="tab-help"><i class="ti ti-info-circle"></i>使い方</button>
     </div>
     <div class="nav-right">
       <button class="nav-btn nav-btn-outline">
-        <i class="ti ti-bell" style="font-size:13px"></i>
-        通知 <span class="notif-badge">2</span>
+        <i class="ti ti-bell" style="font-size:13px"></i>通知 <span class="notif-badge">2</span>
       </button>
-      <button class="nav-btn nav-btn-primary" onclick="showPage('mypage')">
+      <button class="nav-btn nav-btn-primary" onclick="showPage('mypage')" id="nav-login-btn">
         <i class="ti ti-user" style="font-size:13px"></i>ログイン
       </button>
     </div>
@@ -700,30 +267,19 @@
     </div>
     <div class="calendar-controls">
       <div class="month-nav">
-        <button onclick="changeMonth(-1)" aria-label="前の月"><i class="ti ti-chevron-left"></i></button>
-        <div class="month-label" id="month-label">2025年6月</div>
-        <button onclick="changeMonth(1)" aria-label="次の月"><i class="ti ti-chevron-right"></i></button>
+        <button onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+        <div class="month-label" id="month-label">2026年6月</div>
+        <button onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
       </div>
       <select class="cal-filter" id="cal-filter" onchange="renderCalendar()">
         <option value="">すべての劇団</option>
-        <option value="a">劇団ソウル</option>
-        <option value="b">ステージクロス</option>
-        <option value="c">早稲田演劇研究会</option>
-        <option value="d">慶應ドラマクラブ</option>
-        <option value="e">パラドックス</option>
       </select>
       <button class="new-perf-btn" onclick="showPage('register')">
         <i class="ti ti-plus" style="font-size:14px"></i>公演を登録
       </button>
     </div>
     <div class="cal-grid" id="cal-grid"></div>
-    <div class="legend">
-      <div class="legend-item"><div class="legend-dot" style="background:#FFE5E8"></div>劇団ソウル</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#E5EEF9"></div>ステージクロス</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#E5F3EE"></div>早稲田演劇研究会</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#FFF4E5"></div>慶應ドラマクラブ</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#F0E5F9"></div>パラドックス</div>
-    </div>
+    <div class="legend" id="calendar-legend"></div>
   </div>
 
   <div class="page" id="page-troupes">
@@ -751,32 +307,26 @@
   </div>
 
   <div class="page" id="page-perf-detail">
-    <button class="back-btn" id="perf-back-btn" onclick="goBack()">
-      <i class="ti ti-arrow-left" style="font-size:15px"></i>戻る
-    </button>
+    <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i>戻る</button>
     <div class="perf-detail-grid">
       <div class="perf-main">
         <div class="perf-title-row">
           <div>
-            <div class="perf-troupe-link" onclick="showPage('troupes')">
-              <i class="ti ti-users" style="font-size:13px"></i>劇団ソウル
-            </div>
-            <div class="perf-title">春の嵐、それから</div>
+            <div class="perf-troupe-link" id="detail-troupe-name" onclick="showPage('troupes')"></div>
+            <div class="perf-title" id="detail-title"></div>
           </div>
           <div class="status-badge status-open">折り込み受付中</div>
         </div>
-        <p class="perf-desc">
-          人間の孤独と繋がりをテーマにした現代演劇。過去と現在が交差する独特の時間軸の中で、4人の登場人物が互いの真実を探る2時間の旅。早慶の枠を超えた演劇の可能性を追求した意欲作です。
-        </p>
+        <p class="perf-desc" id="detail-desc"></p>
         <hr class="divider">
         <div class="perf-meta-grid">
           <div>
             <div class="perf-meta-label"><i class="ti ti-calendar" style="font-size:12px"></i>公演日程</div>
-            <div class="perf-meta-val">6月14日(土) 〜 6月16日(月)</div>
+            <div class="perf-meta-val" id="detail-date"></div>
           </div>
           <div>
             <div class="perf-meta-label"><i class="ti ti-map-pin" style="font-size:12px"></i>会場</div>
-            <div class="perf-meta-val">早稲田大学小劇場</div>
+            <div class="perf-meta-val" id="detail-venue"></div>
           </div>
           <div>
             <div class="perf-meta-label"><i class="ti ti-clock" style="font-size:12px"></i>折り込み受付期間</div>
@@ -784,63 +334,48 @@
           </div>
           <div>
             <div class="perf-meta-label"><i class="ti ti-mail" style="font-size:12px"></i>担当者連絡先</div>
-            <div class="perf-meta-val">soul.drama@example.com</div>
-          </div>
-          <div>
-            <div class="perf-meta-label"><i class="ti ti-users" style="font-size:12px"></i>想定動員数</div>
-            <div class="perf-meta-val">全3ステージ 約300名</div>
-          </div>
-          <div>
-            <div class="perf-meta-label"><i class="ti ti-layers" style="font-size:12px"></i>受付済み劇団数</div>
-            <div class="perf-meta-val">3劇団（受付中）</div>
+            <div class="perf-meta-val" id="detail-email"></div>
           </div>
         </div>
       </div>
       <div class="perf-sidebar">
         <div class="sidebar-card">
           <div class="sidebar-card-title"><i class="ti ti-stack-2"></i>折り込み枠の状況</div>
-          <div class="text-sm text-muted mb-3">受付可能部数</div>
-          <div style="font-size:22px;font-weight:500;color:var(--ink)">
-            300<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span>
-          </div>
+          <div class="quota-text">受付可能部数</div>
+          <div style="font-size:22px;font-weight:500;color:var(--ink)">300<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span></div>
           <div style="margin:8px 0">
             <div class="quota-bar-bg"><div class="quota-bar-fill" style="width:42%"></div></div>
           </div>
-          <div class="quota-text">126/300部 使用済み（残り174部）</div>
+          <div class="quota-text">126/300部 使用済み</div>
           <button class="request-btn" onclick="showPage('request-form')">
-            <i class="ti ti-send" style="font-size:15px"></i>折り込みを依頼する
+            <i class="ti ti-send"></i>折り込みを依頼する
           </button>
         </div>
       </div>
     </div>
   </div>
 
-<div class="page" id="page-request-form">
-    <button class="back-btn" onclick="showPage('perf-detail')">
-      <i class="ti ti-arrow-left" style="font-size:15px"></i>公演詳細に戻る
-    </button>
+  <div class="page" id="page-request-form">
+    <button class="back-btn" onclick="showPage('perf-detail')"><i class="ti ti-arrow-left"></i>戻る</button>
     <div class="page-header">
       <div class="page-title">折り込み依頼フォーム</div>
-      <div class="page-sub">選択した公演へのビラ折り込み（挟み込み）を申し込みます</div>
+      <div class="page-sub" id="request-target-info"></div>
     </div>
-
     <div id="success-banner" class="success-banner">
       <i class="ti ti-circle-check" style="font-size:20px"></i>折り込み依頼を送信しました！相手団体の担当者へ通知メールが送られます。
     </div>
-
     <div class="form-card" id="request-form-body">
       <div class="form-section">
         <div class="form-section-title">あなたの劇団情報</div>
         <div class="form-row">
           <label class="form-label">依頼元の劇団名<span class="form-required">*</span></label>
-          <input type="text" class="form-input" id="req-from-name" placeholder="例：劇団シアターエクスプレス" value="ステージクロス">
+          <input type="text" class="form-input" id="req-from-name" placeholder="例：劇団シアターエクスプレス">
         </div>
         <div class="form-row">
           <label class="form-label">担当者メールアドレス<span class="form-required">*</span></label>
-          <input type="email" class="form-input" id="req-from-email" placeholder="example@gmail.com" value="applicant@example.com">
+          <input type="email" class="form-input" id="req-from-email" placeholder="example@gmail.com">
         </div>
       </div>
-
       <div class="form-section">
         <div class="form-section-title">折り込みビラの詳細</div>
         <div class="form-2col">
@@ -854,21 +389,17 @@
               <option value="A4ペラ">A4サイズ（1枚ペラ）</option>
               <option value="A4二つ折り">A4サイズ（二つ折り）</option>
               <option value="B5ペラ">B5サイズ（1枚ペラ）</option>
-              <option value="その他">その他（パンフレット等）</option>
+              <option value="その他">その他</option>
             </select>
           </div>
         </div>
         <div class="form-row">
-          <label class="form-label">備考・伝言（搬入方法の相談など）</label>
-          <textarea class="form-textarea" id="req-notes" placeholder="例：今回はA4両面カラーのチラシになります。納品は配送を希望します。"></textarea>
+          <label class="form-label">備考・伝言</label>
+          <textarea class="form-textarea" id="req-notes" placeholder="納品方法の相談など"></textarea>
         </div>
       </div>
-
       <div class="submit-row">
-        <button class="btn-primary" onclick="submitRequestForm()">
-          <i class="ti ti-send"></i>この内容で折り込みを依頼する
-        </button>
-        <button class="btn-ghost" onclick="showPage('perf-detail')">キャンセル</button>
+        <button class="btn-primary" onclick="submitRequestForm()"><i class="ti ti-send"></i>この内容で折り込みを依頼する</button>
       </div>
     </div>
   </div>
@@ -878,9 +409,12 @@
       <div class="page-title">新規公演登録</div>
       <div class="page-sub">あなたの劇団の公演予定を登録し、折り込み枠の受付を開始できます</div>
     </div>
-    <div class="form-card">
+    <div id="register-need-login-msg" class="info-banner" style="display: none;">
+      <div class="info-banner-title"><i class="ti ti-alert-triangle"></i>ログインが必要です</div>
+      <p>公演を登録するには、「マイページ」タブからログインまたはアカウント作成を行ってください。</p>
+    </div>
+    <div class="form-card" id="register-form-body">
       <div class="form-section">
-        <div class="form-section-title">公演の基本情報</div>
         <div class="form-row">
           <label class="form-label">演目名・公演タイトル<span class="form-required">*</span></label>
           <input type="text" class="form-input" id="new-perf-title" placeholder="例：夏の夜の群青">
@@ -888,11 +422,11 @@
         <div class="form-2col">
           <div class="form-row">
             <label class="form-label">開始日程<span class="form-required">*</span></label>
-            <input type="date" class="form-input" id="new-perf-start" value="2025-06-20">
+            <input type="date" class="form-input" id="new-perf-start" value="2026-06-20">
           </div>
           <div class="form-row">
             <label class="form-label">終了日程<span class="form-required">*</span></label>
-            <input type="date" class="form-input" id="new-perf-end" value="2025-06-22">
+            <input type="date" class="form-input" id="new-perf-end" value="2026-06-22">
           </div>
         </div>
         <div class="form-row">
@@ -901,12 +435,10 @@
         </div>
         <div class="form-row">
           <label class="form-label">公演概要・詳細説明</label>
-          <textarea class="form-textarea" id="new-perf-desc" placeholder="公演内容や見どころなどを記入してください。"></textarea>
+          <textarea class="form-textarea" id="new-perf-desc"></textarea>
         </div>
       </div>
-      <button class="btn-primary" onclick="handleRegisterPerformance()">
-        <i class="ti ti-check"></i>この公演をカレンダーに登録する
-      </button>
+      <button class="btn-primary" onclick="handleRegisterPerformance()"><i class="ti ti-check"></i>この公演をカレンダーに登録する</button>
     </div>
   </div>
 
@@ -924,15 +456,8 @@
             <label class="form-label">メールアドレス</label>
             <input type="email" class="form-input" id="login-email" value="soul.member@example.com">
           </div>
-          <div class="form-row">
-            <label class="form-label">パスワード</label>
-            <input type="password" class="form-input" id="login-pass" value="••••••••">
-          </div>
-          <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="handleLogin()">
-            <i class="ti ti-login"></i>ログインする
-          </button>
+          <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="handleLogin()"><i class="ti ti-login"></i>ログインする</button>
         </div>
-
         <div style="border-left: 0.5px solid var(--border-neutral); padding-left: 1.5rem;">
           <div class="form-section-title">新規団体アカウント作成</div>
           <div class="form-row">
@@ -951,9 +476,7 @@
             <label class="form-label">担当者メールアドレス<span class="form-required">*</span></label>
             <input type="email" class="form-input" id="reg-troupe-email" placeholder="example@gmail.com">
           </div>
-          <button class="btn-secondary" style="width: 100%; justify-content: center; background: var(--crimson-pale); color: var(--crimson); border-color: rgba(139,26,47,0.2);" onclick="handleRegisterAccount()">
-            <i class="ti ti-user-plus"></i>アカウントを作成する
-          </button>
+          <button class="btn-secondary" style="width: 100%; justify-content: center; background: var(--crimson-pale); color: var(--crimson);" onclick="handleRegisterAccount()"><i class="ti ti-user-plus"></i>アカウントを作成する</button>
         </div>
       </div>
     </div>
@@ -961,30 +484,23 @@
     <div id="dashboard-section" style="display: none;">
       <div class="info-banner" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
         <div>
-          <div class="info-banner-title" id="welcome-message"><i class="ti ti-user"></i>こんにちは、劇団ソウル さん</div>
-          <p id="account-status-info">担当者メールアドレス: soul.member@example.com（認証済み）</p>
+          <div class="info-banner-title" id="welcome-message"></div>
+          <p id="account-status-info"></p>
         </div>
         <button class="btn-ghost" style="padding: 6px 12px; font-size: 12px;" onclick="handleLogout()">ログアウト</button>
       </div>
-
       <div class="stat-grid">
         <div class="stat-card stat-card-red">
-          <div class="stat-label stat-label-red">届いた折り込み依頼</div>
-          <div class="stat-value stat-value-red" id="stat-incoming-count">2 件</div>
+          <div class="stat-label">届いた折り込み依頼</div>
+          <div class="stat-value" id="stat-incoming-count">0 件</div>
         </div>
         <div class="stat-card stat-card-neutral">
           <div class="stat-label">現在の枠使用率</div>
           <div class="stat-value">42%</div>
         </div>
-        <div class="stat-card stat-card-neutral">
-          <div class="stat-label">残りの受付可能部数</div>
-          <div class="stat-value">174 部</div>
-        </div>
       </div>
-
-      <div class="section-title"><i class="ti ti-mail-opened"></i>届いた折り込み依頼の管理（承認 / 拒否）</div>
-      <div class="inbox-list" id="dashboard-inbox">
-        </div>
+      <div class="section-title"><i class="ti ti-mail-opened"></i>自劇団宛ての折り込み依頼一覧（承認 / 拒否）</div>
+      <div class="inbox-list" id="dashboard-inbox"></div>
     </div>
   </div>
 
@@ -995,63 +511,61 @@
     </div>
     <div class="info-banner">
       <div class="info-banner-title"><i class="ti ti-info-circle"></i>ビラ折り込み（挟み込み）とは？</div>
-      <p>他劇団の公演で配られる当日パンフレットに、自劇団の宣伝チラシを一緒に挟んでもらう仕組みです。演劇に関心のある観客に直接届くため、最も効果的な宣伝手法の一つとされています。本プラットフォームでは早慶演劇祭に関わる劇団間の折り込み手続きを効率化します。</p>
+      <p>他劇団の公演で配られる当日パンフレットに、自劇団の宣伝チラシを一緒に挟んでもらう仕組みです。演劇に関心のある観客に直接届くため、最も効果的な宣伝手法の一つとされています。</p>
     </div>
   </div>
 
 </div>
 
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function(){
+      // ★ここにあなたのEmailJSの「Public Key」を貼り付けます！
+      emailjs.init("YOUR_PUBLIC_KEY");
+   })();
+</script>
+
 <script>
 // ==========================================
 // 1. データの定義（初期モックデータ）
 // ==========================================
-// ==========================================
-// ==========================================
-// 1. データの定義（初期モックデータ）
-// ==========================================
-// ★すべての初期データを「2026年」に統一しました
 const DEFAULT_TROUPES = [
-  { id: 'a', name: '劇団ソウル', univ: '早稲田大学', est: '2018年', count: '12公演', accept: true, tags: ['現代演劇', '学生劇団'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open', email: 'soul.member@example.com' },
-  { id: 'b', name: 'ステージクロス', univ: '慶應義塾大学', est: '2015年', count: '24公演', accept: true, tags: ['ミュージカル', 'エンタメ'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open', email: 'cross@example.com' },
-  { id: 'c', name: '早稲田演劇研究会', univ: '早稲田大学', est: '1970年', count: '150公演', accept: false, tags: ['アングラ', '伝統'], cls: 'troupe-c', statusText: '締切済み', statusCls: 'status-closed', email: 'enken@example.com' },
-  { id: 'd', name: '慶應ドラマクラブ', univ: '慶應義塾大学', est: '1965年', count: '110公演', accept: true, tags: ['翻訳劇', '正統派'], cls: 'troupe-d', statusText: 'まもなく締切', statusCls: 'status-soon', email: 'drama@example.com' },
-  { id: 'e', name: 'パラドックス', univ: '早稲田大学', est: '2021年', count: '6公演', accept: true, tags: ['コメディ', '会話劇'], cls: 'troupe-e', statusText: '折り込み受付中', statusCls: 'status-open', email: 'paradox@example.com' }
+  { id: 'a', name: '劇団ソウル', univ: '早稲田大学', est: '2018年', count: '12公演', accept: true, tags: ['現代演劇'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open', email: 'soul.member@example.com' },
+  { id: 'b', name: 'ステージクロス', univ: '慶應義塾大学', est: '2015年', count: '24公演', accept: true, tags: ['ミュージカル'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open', email: 'cross@example.com' },
+  { id: 'c', name: '早稲田演劇研究会', univ: '早稲田大学', est: '1970年', count: '150公演', accept: false, tags: ['アングラ'], cls: 'troupe-c', statusText: '締切済み', statusCls: 'status-closed', email: 'enken@example.com' },
+  { id: 'd', name: '慶應ドラマクラブ', univ: '慶應義塾大学', est: '1965年', count: '110公演', accept: true, tags: ['翻訳劇'], cls: 'troupe-d', statusText: 'まもなく締切', statusCls: 'status-soon', email: 'drama@example.com' },
+  { id: 'e', name: 'パラドックス', univ: '早稲田大学', est: '2021年', count: '6公演', accept: true, tags: ['コメディ'], cls: 'troupe-e', statusText: '折り込み受付中', statusCls: 'status-open', email: 'paradox@example.com' }
 ];
 
 const DEFAULT_PERFORMANCES = [
-  { id: 1, troupeId: 'a', title: '春の嵐、それから', dateStart: '2026-06-14', dateEnd: '2026-06-16', venue: '早稲田大学小劇場', desc: '人間の孤独と繋がりをテーマにした現代演劇。早慶の枠を超えた演劇の可能性を追求した意欲作です。' },
-  { id: 2, troupeId: 'b', title: '真夏の夜の夢', dateStart: '2026-06-05', dateEnd: '2026-06-08', venue: '慶應日吉協生館', desc: 'シェイクスピアの名作を現代風ポップスに乗せてお届けする、躍動感あふれるミュージカルステージ。' },
-  { id: 3, troupeId: 'd', title: '検察官', dateStart: '2026-06-25', dateEnd: '2026-06-28', venue: '外部劇場', desc: '古典名作を鋭い視点で再解釈。人間の滑稽さと社会の縮図を描き出す、緊迫のシチュエーション劇。' }
+  { id: 1, troupeId: 'a', title: '春の嵐、それから', dateStart: '2026-06-14', dateEnd: '2026-06-16', venue: '早稲田大学小劇場', desc: '人間の孤独と繋がりをテーマにした現代演劇。' },
+  { id: 2, troupeId: 'b', title: '真夏の夜の夢', dateStart: '2026-06-05', dateEnd: '2026-06-08', venue: '慶應日吉協生館', desc: 'シェイクスピアの名作を現代風ポップスに乗せてお届けするミュージカル。' },
+  { id: 3, troupeId: 'd', title: '検察官', dateStart: '2026-06-25', dateEnd: '2026-06-28', venue: '外部劇場', desc: '古典名作を鋭い視点で再解釈。' }
 ];
 
 const DEFAULT_REQUESTS = [
-  { id: 101, fromTroupe: 'ステージクロス', copies: 100, date: '2026/06/01', preview: '春の定期公演のビラ折り込みをお願いします。A4サイズ1枚です。', status: 'pending' },
-  { id: 102, fromTroupe: '慶應ドラマクラブ', copies: 26, date: '2026/05/30', preview: '新歓公演のビラです。よろしくお願いします。', status: 'pending' }
+  { id: 101, toTroupeId: 'a', fromTroupe: 'ステージクロス', copies: 100, date: '2026/06/01', preview: 'A4ペラ / 定期公演のビラ折り込みをお願いします。', status: 'pending' }
 ];
 
-// --- ローカルストレージからデータを読み込む、無ければ初期データを使う ---
-let troupesData = JSON.parse(localStorage.getItem('troupesData')) || DEFAULT_TROUPES;
-let performancesData = JSON.parse(localStorage.getItem('performancesData')) || DEFAULT_PERFORMANCES;
-let incomingRequests = JSON.parse(localStorage.getItem('incomingRequests')) || DEFAULT_REQUESTS;
+let troupesData = JSON.parse(localStorage.getItem('troupesData_v3')) || DEFAULT_TROUPES;
+let performancesData = JSON.parse(localStorage.getItem('performancesData_v3')) || DEFAULT_PERFORMANCES;
+let incomingRequests = JSON.parse(localStorage.getItem('incomingRequests_v3')) || DEFAULT_REQUESTS;
+let currentUser = JSON.parse(localStorage.getItem('currentUser_v3')) || null;
 
-// データを保存する共通関数
 function saveAllData() {
-  localStorage.setItem('troupesData', JSON.stringify(troupesData));
-  localStorage.setItem('performancesData', JSON.stringify(performancesData));
-  localStorage.setItem('incomingRequests', JSON.stringify(incomingRequests));
+  localStorage.setItem('troupesData_v3', JSON.stringify(troupesData));
+  localStorage.setItem('performancesData_v3', JSON.stringify(performancesData));
+  localStorage.setItem('incomingRequests_v3', JSON.stringify(incomingRequests));
+  localStorage.setItem('currentUser_v3', JSON.stringify(currentUser));
 }
 
-// ==========================================
-// 2. グローバル状態管理
-// ==========================================
-// ★カレンダーの初期表示も「2026年6月」に合わせました
 let currentYear = 2026;
-let currentMonth = 5; // 6月 (0始まり)
+let currentMonth = 5; // 6月
+let selectedPerfId = null;
 let pageHistory = ['calendar'];
-let currentUser = null; 
 
 // ==========================================
-// 3. 画面切り替え機能 (ルーティング)
+// 2. ルーティング & UI更新
 // ==========================================
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
@@ -1062,13 +576,13 @@ function showPage(pageId) {
   const targetTab = document.getElementById(`tab-${pageId}`);
   if (targetTab) targetTab.classList.add('active');
 
-  if (pageHistory[pageHistory.length - 1] !== pageId) {
-    pageHistory.push(pageId);
-  }
+  if (pageHistory[pageHistory.length - 1] !== pageId) pageHistory.push(pageId);
 
   if (pageId === 'calendar') renderCalendar();
   if (pageId === 'troupes') renderTroupes(troupesData);
   if (pageId === 'mypage') updateAuthUI();
+  if (pageId === 'register') updateRegisterFormUI();
+  if (pageId === 'request-form') updateRequestFormUI();
 }
 
 function goBack() {
@@ -1081,13 +595,144 @@ function goBack() {
 }
 
 // ==========================================
-// 4. カレンダー表示ロジック
+// 3. アカウント管理 & 自動仕分けログイン
+// ==========================================
+function handleRegisterAccount() {
+  const name = document.getElementById('reg-troupe-name').value;
+  const univ = document.getElementById('reg-troupe-univ').value;
+  const email = document.getElementById('reg-troupe-email').value;
+
+  if (!name || !email) { alert('劇団名とメールアドレスを入力してください！'); return; }
+  if (troupesData.some(t => t.email === email)) { alert('このメールアドレスは既に登録されています。'); return; }
+
+  const colors = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+  const newTroupe = {
+    id: 'troupe-' + Date.now(), name, univ, est: '2026年', count: '0公演', accept: true,
+    tags: ['新規'], cls: randomColor, statusText: '折り込み受付中', statusCls: 'status-open', email
+  };
+
+  troupesData.push(newTroupe);
+  currentUser = newTroupe;
+  saveAllData();
+  
+  alert(`劇団「${name}」のアカウントを作成しました！`);
+  updateFilterDropdown();
+  renderLegend();
+  showPage('mypage');
+}
+
+function handleLogin() {
+  const email = document.getElementById('login-email').value;
+  if (!email) { alert('メールアドレスを入力してください'); return; }
+
+  const found = troupesData.find(t => t.email === email);
+  if (found) {
+    currentUser = found;
+    saveAllData();
+    showPage('mypage');
+    alert(`劇団「${found.name}」としてログインしました。専用管理ページに切り替えます。`);
+  } else {
+    alert('登録されていないメールアドレスです。');
+  }
+}
+
+function handleLogout() {
+  currentUser = null;
+  saveAllData();
+  updateAuthUI();
+  alert('ログアウトしました。');
+}
+
+function updateAuthUI() {
+  const auth = document.getElementById('auth-section');
+  const dash = document.getElementById('dashboard-section');
+  const navBtn = document.getElementById('nav-login-btn');
+
+  if (currentUser) {
+    if(auth) auth.style.display = 'none';
+    if(dash) dash.style.display = 'block';
+    document.getElementById('welcome-message').innerText = `こんにちは、${currentUser.name} の管理ページ`;
+    document.getElementById('account-status-info').innerText = `通知用メールアドレス: ${currentUser.email}`;
+    if(navBtn) navBtn.innerHTML = `<i class="ti ti-user"></i> ${currentUser.name}`;
+    renderDashboardInbox();
+  } else {
+    if(auth) auth.style.display = 'block';
+    if(dash) dash.style.display = 'none';
+    if(navBtn) navBtn.innerHTML = `<i class="ti ti-user"></i> ログイン`;
+  }
+}
+
+// ★最重要：自分宛ての折込依頼だけをフィルタリングしてダッシュボードに表示！
+function renderDashboardInbox() {
+  const container = document.getElementById('dashboard-inbox');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!currentUser) return;
+
+  const myRequests = incomingRequests.filter(r => r.toTroupeId === currentUser.id && r.status === 'pending');
+  document.getElementById('stat-incoming-count').innerText = `${myRequests.length} 件`;
+
+  if (myRequests.length === 0) {
+    container.innerHTML = `<div class="empty-state"><i class="ti ti-mail"></i>あなた宛ての未処理の依頼はありません。</div>`;
+    return;
+  }
+
+  myRequests.forEach(r => {
+    const item = document.createElement('div');
+    item.className = 'inbox-item unread';
+    item.innerHTML = `
+      <div class="inbox-body">
+        <div class="inbox-from">依頼元：${r.fromTroupe}</div>
+        <div class="inbox-preview">${r.preview}</div>
+        <div class="inbox-meta"><span class="inbox-copies">${r.copies}部</span></div>
+      </div>
+      <div class="inbox-actions">
+        <button class="inbox-btn inbox-btn-accept" onclick="respondRequest(${r.id}, 'approve')">承認</button>
+        <button class="inbox-btn inbox-btn-decline" onclick="respondRequest(${r.id}, '拒否')">拒否</button>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function respondRequest(id, action) {
+  const r = incomingRequests.find(req => req.id === id);
+  if (!r) return;
+  r.status = action;
+  saveAllData();
+  alert(action === 'approve' ? '依頼を承認しました。' : '依頼を見送りました。');
+  renderDashboardInbox();
+}
+
+// ==========================================
+// 4. カレンダー・公演詳細
 // ==========================================
 function changeMonth(diff) {
   currentMonth += diff;
   if (currentMonth > 11) { currentMonth = 0; currentYear++; }
   else if (currentMonth < 0) { currentMonth = 11; currentYear--; }
   renderCalendar();
+}
+
+function updateFilterDropdown() {
+  const filter = document.getElementById('cal-filter');
+  if (!filter) return;
+  filter.innerHTML = '<option value="">すべての劇団</option>';
+  troupesData.forEach(t => {
+    filter.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+  });
+}
+
+function renderLegend() {
+  const legend = document.getElementById('calendar-legend');
+  if (!legend) return;
+  legend.innerHTML = '';
+  troupesData.slice(0, 6).forEach(t => {
+    legend.innerHTML += `<div class="legend-item"><div class="legend-dot ${t.cls}"></div>${t.name}</div>`;
+  });
 }
 
 function renderCalendar() {
@@ -1101,10 +746,7 @@ function renderCalendar() {
 
   const dows = ['日', '月', '火', '水', '木', '金', '土'];
   dows.forEach(d => {
-    const div = document.createElement('div');
-    div.className = 'cal-dow';
-    div.innerText = d;
-    grid.appendChild(div);
+    const div = document.createElement('div'); div.className = 'cal-dow'; div.innerText = d; grid.appendChild(div);
   });
 
   const firstDay = new Date(currentYear, currentMonth, 1);
@@ -1113,19 +755,12 @@ function renderCalendar() {
   const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
 
   for (let i = startDayOfWeek - 1; i >= 0; i--) {
-    const cell = document.createElement('div');
-    cell.className = 'cal-cell other-month';
-    cell.innerHTML = `<div class="cal-day-num">${prevLastDay - i}</div>`;
-    grid.appendChild(cell);
+    const cell = document.createElement('div'); cell.className = 'cal-cell other-month';
+    cell.innerHTML = `<div class="cal-day-num">${prevLastDay - i}</div>`; grid.appendChild(cell);
   }
 
-  const today = new Date();
   for (let d = 1; d <= lastDay.getDate(); d++) {
-    const cell = document.createElement('div');
-    cell.className = 'cal-cell';
-    if (today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === d) {
-      cell.classList.add('today');
-    }
+    const cell = document.createElement('div'); cell.className = 'cal-cell';
     cell.innerHTML = `<div class="cal-day-num">${d}</div>`;
 
     const currentStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -1135,7 +770,7 @@ function renderCalendar() {
         cell.classList.add('has-event');
         const troupe = troupesData.find(t => t.id === perf.troupeId);
         const ev = document.createElement('div');
-        ev.className = `cal-event ${troupe ? troupe.cls : ''}`;
+        ev.className = `cal-event ${troupe ? troupe.cls : 'troupe-a'}`;
         ev.innerText = perf.title;
         ev.onclick = (e) => { e.stopPropagation(); openPerformanceDetail(perf.id); };
         cell.appendChild(ev);
@@ -1146,16 +781,52 @@ function renderCalendar() {
 
   const total = grid.children.length - 7;
   for (let i = 1; i <= (42 - total); i++) {
-    const cell = document.createElement('div');
-    cell.className = 'cal-cell other-month';
-    cell.innerHTML = `<div class="cal-day-num">${i}</div>`;
-    grid.appendChild(cell);
+    const cell = document.createElement('div'); cell.className = 'cal-cell other-month';
+    cell.innerHTML = `<div class="cal-day-num">${i}</div>`; grid.appendChild(cell);
   }
 }
 
-// ==========================================
-// 5. 検索・フィルター
-// ==========================================
+function openPerformanceDetail(id) {
+  selectedPerfId = id;
+  const perf = performancesData.find(p => p.id === id);
+  if (!perf) return;
+  const troupe = troupesData.find(t => t.id === perf.troupeId);
+
+  document.getElementById('detail-troupe-name').innerText = troupe ? troupe.name : '不明な劇団';
+  document.getElementById('detail-title').innerText = perf.title;
+  document.getElementById('detail-desc').innerText = perf.desc || '公演概要は登録されていません。';
+  document.getElementById('detail-date').innerText = `${perf.dateStart} 〜 ${perf.dateEnd}`;
+  document.getElementById('detail-venue').innerText = perf.venue;
+  document.getElementById('detail-email').innerText = troupe ? troupe.email : '不明';
+
+  showPage('perf-detail');
+}
+
+function renderTroupes(data) {
+  const container = document.getElementById('troupe-grid');
+  if (!container) return;
+  container.innerHTML = '';
+  data.forEach(t => {
+    const card = document.createElement('div'); card.className = 'troupe-card';
+    card.onclick = () => { document.getElementById('cal-filter').value = t.id; showPage('calendar'); };
+    card.innerHTML = `
+      <div class="troupe-card-head">
+        <div class="troupe-avatar ${t.cls}">${t.name[0]}</div>
+        <div>
+          <div class="troupe-name">${t.name}</div>
+          <div class="troupe-univ">${t.univ}</div>
+        </div>
+        <span class="status-badge ${t.statusCls}">${t.statusText}</span>
+      </div>
+      <div class="troupe-stats">
+        <div><strong>${t.count}</strong></div>
+        <div>設立: <strong>${t.est}</strong></div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
 function filterTroupes() {
   const keyword = document.querySelector('.search-input').value.toLowerCase();
   const univFilter = document.getElementById('univ-filter').value;
@@ -1169,190 +840,78 @@ function filterTroupes() {
   renderTroupes(filtered);
 }
 
-function renderTroupes(data) {
-  const container = document.getElementById('troupe-grid');
-  if (!container) return;
-  container.innerHTML = '';
-
-  if (data.length === 0) {
-    container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="ti ti-users"></i>該当なし</div>`;
-    return;
-  }
-
-  data.forEach(t => {
-    const card = document.createElement('div');
-    card.className = 'troupe-card';
-    card.onclick = () => { document.getElementById('cal-filter').value = t.id; showPage('calendar'); };
-    card.innerHTML = `
-      <div class="troupe-card-head">
-        <div class="troupe-avatar ${t.cls}">${t.name[0]}</div>
-        <div style="flex:1">
-          <div class="troupe-name">${t.name}</div>
-          <div class="troupe-univ">${t.univ}</div>
-        </div>
-        <span class="status-badge ${t.statusCls}">${t.statusText}</span>
-      </div>
-      <div class="troupe-stats">
-        <div class="troupe-stat"><strong>${t.count}</strong></div>
-        <div class="troupe-stat">設立: <strong>${t.est}</strong></div>
-      </div>
-    `;
-    container.appendChild(card);
-  });
-}
-
-function openPerformanceDetail(id) {
-  const perf = performancesData.find(p => p.id === id);
-  if (!perf) return;
-  const troupe = troupesData.find(t => t.id === perf.troupeId);
-  const page = document.getElementById('page-perf-detail');
-
-  page.querySelector('.perf-troupe-link').innerText = troupe ? troupe.name : '';
-  page.querySelector('.perf-title').innerText = perf.title;
-  page.querySelector('.perf-desc').innerText = perf.desc;
-  showPage('perf-detail');
-}
-
 // ==========================================
-// 6. アカウント管理・疑似メール送信
+// 5. 公演登録（ログインしている団体に紐付け）
 // ==========================================
-function simulateSendEmail(to, subject, body) {
-  console.log(`%c【自動メール送信】\nTo: ${to}\nSubject: ${subject}\n\n${body}`, "background:#222; color:#bada55; padding:8px;");
-  alert(`【自動メール通知】\n担当者（${to}）宛にシステムから自動メールが送信されました！\n\n件名: ${subject}`);
-}
-
-function handleRegisterAccount() {
-  const name = document.getElementById('reg-troupe-name').value;
-  const univ = document.getElementById('reg-troupe-univ').value;
-  const email = document.getElementById('reg-troupe-email').value;
-
-  if (!name || !email) { alert('劇団名とメールアドレスは必須です！'); return; }
-
-  const newTroupe = {
-    id: 'troupe-' + Date.now(), name, univ, est: '2026年', count: '0公演', accept: true,
-    tags: ['新規登録'], cls: 'troupe-e', statusText: '受付中', statusCls: 'status-open', email
-  };
-
-  troupesData.push(newTroupe);
-  currentUser = newTroupe;
-
-  saveAllData(); 
-  simulateSendEmail(email, '【ビラネットワーク】団体アカウント作成完了', `${name} 様\nアカウント作成が完了しました。管理マイページが利用可能です。`);
-  updateAuthUI();
-}
-
-function handleLogin() {
-  currentUser = troupesData[0]; 
-  updateAuthUI();
-}
-
-function handleLogout() {
-  currentUser = null;
-  updateAuthUI();
-}
-
-function updateAuthUI() {
-  const auth = document.getElementById('auth-section');
-  const dash = document.getElementById('dashboard-section');
-  const navBtn = document.querySelector('.nav-btn-primary');
-
+function updateRegisterFormUI() {
+  const form = document.getElementById('register-form-body');
+  const msg = document.getElementById('register-need-login-msg');
   if (currentUser) {
-    if(auth) auth.style.display = 'none';
-    if(dash) dash.style.display = 'block';
-    document.getElementById('welcome-message').innerText = `こんにちは、${currentUser.name} さん`;
-    document.getElementById('account-status-info').innerText = `担当者連絡先: ${currentUser.email || 'soul.member@example.com'}`;
-    if(navBtn) navBtn.innerText = currentUser.name;
-    renderDashboardInbox();
+    if(form) form.style.display = 'block';
+    if(msg) msg.style.display = 'none';
   } else {
-    if(auth) auth.style.display = 'block';
-    if(dash) dash.style.display = 'none';
-    if(navBtn) navBtn.innerText = 'ログイン';
+    if(form) form.style.display = 'none';
+    if(msg) msg.style.display = 'block';
   }
-}
-
-function renderDashboardInbox() {
-  const container = document.getElementById('dashboard-inbox');
-  if (!container) return;
-  container.innerHTML = '';
-
-  const active = incomingRequests.filter(r => r.status === 'pending');
-  document.getElementById('stat-incoming-count').innerText = `${active.length} 件`;
-
-  if (active.length === 0) {
-    container.innerHTML = `<div class="empty-state"><i class="ti ti-mail"></i>依頼はありません</div>`;
-    return;
-  }
-
-  active.forEach(r => {
-    const item = document.createElement('div');
-    item.className = 'inbox-item unread';
-    item.innerHTML = `
-      <div class="inbox-body">
-        <div class="inbox-from">${r.fromTroupe}</div>
-        <div class="inbox-preview">${r.preview}</div>
-        <div class="inbox-meta"><span class="inbox-copies">${r.copies}部</span></div>
-      </div>
-      <div class="inbox-actions">
-        <button class="inbox-btn inbox-btn-accept" onclick="respondRequest(${r.id}, 'approve')">承認</button>
-        <button class="inbox-btn inbox-btn-decline" onclick="respondRequest(${r.id}, 'decline')">拒否</button>
-      </div>
-    `;
-    container.appendChild(item);
-  });
-}
-
-function respondRequest(id, action) {
-  const r = incomingRequests.find(req => req.id === id);
-  if (!r) return;
-  r.status = action;
-
-  saveAllData(); 
-
-  const resultText = action === 'approve' ? '【承認】' : '【見送り】';
-  simulateSendEmail('applicant@example.com', `折り込み依頼の結果通知（${resultText}）`, `${r.fromTroupe} 御中\nご依頼いただいたビラ折り込みの件、結果は${resultText}となりました。`);
-
-  renderDashboardInbox();
 }
 
 function handleRegisterPerformance() {
+  if (!currentUser) { alert('ログインしてください'); return; }
   const title = document.getElementById('new-perf-title').value;
   const start = document.getElementById('new-perf-start').value;
   const end = document.getElementById('new-perf-end').value;
   const venue = document.getElementById('new-perf-venue').value;
   const desc = document.getElementById('new-perf-desc').value;
 
-  if (!title || !venue) { alert('タイトルと会場名を入力してください'); return; }
+  if (!title || !venue) { alert('タイトルと会場名は必須です！'); return; }
 
-  // データを保存
-  performancesData.push({ id: Date.now(), troupeId: 'a', title, dateStart: start, dateEnd: end, venue, desc });
-  saveAllData(); 
-  
-  // 入力された日付の「年」と「月」を解析してカレンダーを自動でその月に切り替える
+  // ログイン中団体のIDをセットして保存
+  performancesData.push({ id: Date.now(), troupeId: currentUser.id, title, dateStart: start, dateEnd: end, venue, desc });
+  saveAllData();
+
   const targetDate = new Date(start);
   currentYear = targetDate.getFullYear();
   currentMonth = targetDate.getMonth();
 
-  alert('カレンダーに新公演を登録しました！');
+  alert(`劇団「${currentUser.name}」の公演を登録しました！`);
   showPage('calendar');
 }
 
-// 折り込み依頼フォームの送信処理（本物のメール送信版）
+// ==========================================
+// 6. 本物の折り込み依頼送信 (EmailJS自動宛先切り替え)
+// ==========================================
+function updateRequestFormUI() {
+  const perf = performancesData.find(p => p.id === selectedPerfId);
+  if (!perf) return;
+  const troupe = troupesData.find(t => t.id === perf.troupeId);
+  document.getElementById('request-target-info').innerText = `宛先：${troupe ? troupe.name : ''} 「${perf.title}」`;
+  
+  if (currentUser) {
+    document.getElementById('req-from-name').value = currentUser.name;
+    document.getElementById('req-from-email').value = currentUser.email;
+  } else {
+    document.getElementById('req-from-name').value = '';
+    document.getElementById('req-from-email').value = '';
+  }
+}
+
 function submitRequestForm() {
+  const perf = performancesData.find(p => p.id === selectedPerfId);
+  if (!perf) return;
+  const targetTroupe = troupesData.find(t => t.id === perf.troupeId); // 申し込み先の劇団
+
   const fromName = document.getElementById('req-from-name').value;
   const fromEmail = document.getElementById('req-from-email').value;
   const copies = document.getElementById('req-copies').value;
   const size = document.getElementById('req-size').value;
   const notes = document.getElementById('req-notes').value;
 
-  if (!fromName || !fromEmail || !copies) {
-    alert('必須項目（劇団名、メールアドレス、部数）を入力してください。');
-    return;
-  }
+  if (!fromName || !fromEmail || !copies) { alert('必須項目を入力してください。'); return; }
 
-  // 1. ローカルストレージへの保存処理（これまでの機能）
-  const newReqId = Date.now();
+  // 1. データとして保存（宛先団体IDをしっかり紐付け）
   incomingRequests.push({
-    id: newReqId,
+    id: Date.now(),
+    toTroupeId: targetTroupe.id,
     fromTroupe: fromName,
     copies: parseInt(copies),
     date: '2026/06/01',
@@ -1361,9 +920,9 @@ function submitRequestForm() {
   });
   saveAllData();
 
-  // 2. ★本物のメールを送信する処理
-  // EmailJSに渡すデータ（テンプレートの {{ }} 部分と名前を合わせます）
+  // 2. EmailJSにデータを渡して本物のメールを自動宛先振り分け送信
   const templateParams = {
+    to_email: targetTroupe.email,      // ★相手劇団が登録した本物のメアドをここに代入！
     from_name: fromName,
     from_email: fromEmail,
     copies: copies,
@@ -1371,18 +930,17 @@ function submitRequestForm() {
     notes: notes || '特になし'
   };
 
-  // EmailJSを使って送信
-  // "YOUR_SERVICE_ID" と "YOUR_TEMPLATE_ID" はご自身のものに書き換えてください
+  // ※ あらかじめ登録されているService IDとTemplate IDを使います
   emailjs.send('service_4gfx3qf', 'template_rzattmh', templateParams)
     .then(function(response) {
        console.log('SUCCESS!', response.status, response.text);
-       alert('【本物のメール通知】劇団ソウルの担当者メアドへ、実際の通知メールが送信されました！');
+       alert(`【本物のメール送信成功！】\n相手劇団（${targetTroupe.name}）の登録アドレス「${targetTroupe.email}」へ通知を送信しました！`);
     }, function(error) {
        console.log('FAILED...', error);
-       alert('メール送信に失敗しました。設定を確認してください。');
+       alert('EmailJSの送信に失敗しました。Keyの設定などを再度確認してください。');
     });
 
-  // 3. 画面上の成功アニメーションとマイページへの移動
+  // アニメーション
   const banner = document.getElementById('success-banner');
   const formBody = document.getElementById('request-form-body');
   if (banner) banner.classList.add('show');
@@ -1391,18 +949,17 @@ function submitRequestForm() {
   setTimeout(() => {
     if (banner) banner.classList.remove('show');
     if (formBody) formBody.style.display = 'block';
-    handleLogin();
-    showPage('mypage');
-  }, 3000);
+    showPage('calendar');
+  }, 2500);
 }
 
-// 初期ロード
+// 初期起動
 document.addEventListener('DOMContentLoaded', () => {
+  updateFilterDropdown();
+  renderLegend();
   renderCalendar();
   updateAuthUI();
 });
-
 </script>
 </body>
 </html>
-
