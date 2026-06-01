@@ -279,7 +279,7 @@
 <body>
 
 <div class="app">
-
+ 
   <nav class="nav">
     <div class="nav-logo">
       <i class="ti ti-ticket"></i>ビラネットワーク <span>早慶演劇祭</span>
@@ -309,7 +309,7 @@
       </button>
     </div>
   </nav>
-
+ 
   <div class="page active" id="page-calendar">
     <div class="page-header">
       <div class="page-title">公演カレンダー</div>
@@ -331,7 +331,7 @@
     <div class="cal-grid" id="cal-grid"></div>
     <div class="legend" id="calendar-legend"></div>
   </div>
-
+ 
   <div class="page" id="page-troupes">
     <div class="page-header">
       <div class="page-title">劇団一覧</div>
@@ -355,7 +355,7 @@
     </div>
     <div class="troupe-grid" id="troupe-grid"></div>
   </div>
-
+ 
   <div class="page" id="page-perf-detail">
     <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i>戻る</button>
     <div class="perf-detail-grid">
@@ -398,23 +398,23 @@
           </div>
           <div class="quota-text" id="detail-quota-summary">0 / 300部 使用済み</div>
           <button class="request-btn" id="detail-request-btn" onclick="showPage('request-form')">
-  <i class="ti ti-send"></i>折り込みを依頼する
-</button>
-<button class="request-btn" id="detail-delete-btn" onclick="deleteSinglePerformance()" style="background:transparent; border:1px solid #A32D2D; color:#A32D2D; margin-top:8px;">
-  <i class="ti ti-trash"></i> この公演予定を削除する
-</button>
+            <i class="ti ti-send"></i>折り込みを依頼する
+          </button>
+          <button class="request-btn" id="detail-delete-btn" onclick="deleteSinglePerformance()" style="background:transparent; border:1px solid #A32D2D; color:#A32D2D; margin-top:8px;">
+            <i class="ti ti-trash"></i> この公演予定を削除する
+          </button>
         </div>
       </div>
     </div>
   </div>
-
+ 
   <div class="page" id="page-request-form">
     <button class="back-btn" onclick="showPage('perf-detail')"><i class="ti ti-arrow-left"></i>戻る</button>
     <div class="page-header">
       <div class="page-title">折り込み依頼フォーム</div>
       <div class="page-sub" id="request-target-info"></div>
     </div>
-    <div id="success-banner" class="success-banner">
+    <div id="success-banner" class="success-banner" style="display: none;">
       <i class="ti ti-circle-check" style="font-size:20px"></i>折り込み依頼を送信しました！相手団体の担当者へ通知メールが送られます。
     </div>
     <div class="form-card" id="request-form-body">
@@ -456,7 +456,7 @@
       </div>
     </div>
   </div>
-
+ 
   <div class="page" id="page-register">
     <div class="page-header">
       <div class="page-title">新規公演登録</div>
@@ -500,13 +500,13 @@
       <button class="btn-primary" onclick="handleRegisterPerformance()"><i class="ti ti-check"></i>この公演をカレンダーに登録する</button>
     </div>
   </div>
-
+ 
   <div class="page" id="page-mypage">
     <div class="page-header">
       <div class="page-title">団体アカウント・管理マイページ</div>
       <div class="page-sub">アカウントの作成、ログイン、および折り込み進捗の管理ができます</div>
     </div>
-
+ 
     <div id="auth-section" class="form-card" style="margin-bottom: 2rem;">
       <div class="form-2col">
         <div>
@@ -547,7 +547,7 @@
         </div>
       </div>
     </div>
-
+ 
     <div id="dashboard-section" style="display: none;">
       <div class="info-banner" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
         <div>
@@ -570,65 +570,66 @@
       <div class="inbox-list" id="dashboard-inbox"></div>
     </div>
   </div>
-
+ 
   <div class="page" id="page-help">
     <div class="page-header">
       <div class="page-title">ビラネットワークの使い方</div>
-      <div class="page-sub">早慶演劇祭における共通ビラ折り込みシステムの利用手順
+      <div class="page-sub">早慶演劇祭における共通ビラ折り込みシステムの利用手順</div>
     </div>
     <div class="info-banner">
       <div class="info-banner-title"><i class="ti ti-info-circle"></i>ビラ折り込み（挟み込み）とは？</div>
       <p>他劇団の公演で配られる当日パンフレットに、自劇団の宣伝チラシを一緒に挟んでもらう仕組みです。演劇に関心のある観客に直接届くため、最も効果的な宣伝手法の一つとされています。</p>
+    </div>
+  </div>
 </div>
-
+ 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script type="text/javascript">
    (function(){
       emailjs.init("G7zBiW5JvckByX5DB");
    })();
 </script>
-
+ 
 <script>
 // ==========================================
 // 1. データの定義（初期モックデータ）
 // ==========================================
+// 💡 既存劇団にも初期パスワード 'password' を設定しました
 const DEFAULT_TROUPES = [
-  { id: 'a', name: '劇団ソウル', univ: '早稲田大学', est: '2018年', count: '12公演', accept: true, tags: ['現代演劇'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open', email: 'soul.member@example.com' },
-  { id: 'b', name: 'ステージクロス', univ: '慶應義塾大学', est: '2015年', count: '24公演', accept: true, tags: ['ミュージカル'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open', email: 'cross@example.com' },
-  { id: 'c', name: '早稲田演劇研究会', univ: '早稲田大学', est: '1970年', count: '150公演', accept: false, tags: ['アングラ'], cls: 'troupe-c', statusText: '締切済み', statusCls: 'status-closed', email: 'enken@example.com' },
-  { id: 'd', name: '慶應ドラマクラブ', univ: '慶應義塾大学', est: '1965年', count: '110公演', accept: true, tags: ['翻訳劇'], cls: 'troupe-d', statusText: 'まもなく締切', statusCls: 'status-soon', email: 'drama@example.com' },
-  { id: 'e', name: 'パラドックス', univ: '早稲田大学', est: '2021年', count: '6公演', accept: true, tags: ['コメディ'], cls: 'troupe-e', statusText: '折り込み受付中', statusCls: 'status-open', email: 'paradox@example.com' }
+  { id: 'a', name: '劇団ソウル', univ: '早稲田大学', est: '2018年', count: '12公演', accept: true, tags: ['現代演劇'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open', email: 'soul.member@example.com', password: 'password' },
+  { id: 'b', name: 'ステージクロス', univ: '慶應義塾大学', est: '2015年', count: '24公演', accept: true, tags: ['ミュージカル'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open', email: 'cross@example.com', password: 'password' },
+  { id: 'c', name: '早稲田演劇研究会', univ: '早稲田大学', est: '1970年', count: '150公演', accept: false, tags: ['アングラ'], cls: 'troupe-c', statusText: '締切済み', statusCls: 'status-closed', email: 'enken@example.com', password: 'password' },
+  { id: 'd', name: '慶應ドラマクラブ', univ: '慶應義塾大学', est: '1965年', count: '110公演', accept: true, tags: ['翻訳劇'], cls: 'troupe-d', statusText: 'まもなく締切', statusCls: 'status-soon', email: 'drama@example.com', password: 'password' },
+  { id: 'e', name: 'パラドックス', univ: '早稲田大学', est: '2021年', count: '6公演', accept: true, tags: ['コメディ'], cls: 'troupe-e', statusText: '折り込み受付中', statusCls: 'status-open', email: 'paradox@example.com', password: 'password' }
 ];
-
-// 💡 maxQuota（上限枠数）を各初期データに持たせました
+ 
 const DEFAULT_PERFORMANCES = [
   { id: 1, troupeId: 'a', title: '春の嵐、それから', dateStart: '2026-06-14', dateEnd: '2026-06-16', venue: '早稲田大学小劇場', desc: '人間の孤独と繋がりをテーマにした現代演劇。', maxQuota: 300 },
   { id: 2, troupeId: 'b', title: '真夏の夜の夢', dateStart: '2026-06-05', dateEnd: '2026-06-08', venue: '慶應日吉協生館', desc: 'シェイクスピアの名作を現代風ポップスに乗せてお届けするミュージカル。', maxQuota: 200 },
   { id: 3, troupeId: 'd', title: '検察官', dateStart: '2026-06-25', dateEnd: '2026-06-28', venue: '外部劇場', desc: '古典名作を鋭い視点で再解釈。', maxQuota: 400 }
 ];
-
-// 💡 どの公演（perfId）に対する依頼かを紐付けられるように修正
+ 
 const DEFAULT_REQUESTS = [
   { id: 101, toTroupeId: 'a', perfId: 1, fromTroupe: 'ステージクロス', copies: 126, date: '2026/06/01', preview: 'A4ペラ / 定期公演のビラ折り込みをお願いします。', status: 'pending' }
 ];
-
+ 
 let troupesData = JSON.parse(localStorage.getItem('troupesData_v4')) || DEFAULT_TROUPES;
 let performancesData = JSON.parse(localStorage.getItem('performancesData_v4')) || DEFAULT_PERFORMANCES;
 let incomingRequests = JSON.parse(localStorage.getItem('incomingRequests_v4')) || DEFAULT_REQUESTS;
 let currentUser = JSON.parse(localStorage.getItem('currentUser_v4')) || null;
-
+ 
 function saveAllData() {
   localStorage.setItem('troupesData_v4', JSON.stringify(troupesData));
   localStorage.setItem('performancesData_v4', JSON.stringify(performancesData));
   localStorage.setItem('incomingRequests_v4', JSON.stringify(incomingRequests));
   localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
 }
-
+ 
 let currentYear = 2026;
 let currentMonth = 5; // 6月
 let selectedPerfId = null;
 let pageHistory = ['calendar'];
-
+ 
 // ==========================================
 // 2. ルーティング & UI更新
 // ==========================================
@@ -636,20 +637,20 @@ function showPage(pageId) {
   document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
   const targetPage = document.getElementById(`page-${pageId}`);
   if (targetPage) targetPage.classList.add('active');
-
+ 
   document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
   const targetTab = document.getElementById(`tab-${pageId}`);
   if (targetTab) targetTab.classList.add('active');
-
+ 
   if (pageHistory[pageHistory.length - 1] !== pageId) pageHistory.push(pageId);
-
+ 
   if (pageId === 'calendar') renderCalendar();
   if (pageId === 'troupes') renderTroupes(troupesData);
   if (pageId === 'mypage') updateAuthUI();
   if (pageId === 'register') updateRegisterFormUI();
   if (pageId === 'request-form') updateRequestFormUI();
 }
-
+ 
 function goBack() {
   if (pageHistory.length > 1) {
     pageHistory.pop();
@@ -658,90 +659,74 @@ function goBack() {
     showPage('calendar');
   }
 }
-
+ 
 // ==========================================
 // 3. アカウント管理
 // ==========================================
-// 📝 新規劇団アカウント作成（安全版）
 function handleRegisterAccount() {
   const name = document.getElementById('reg-troupe-name').value.trim();
   const univ = document.getElementById('reg-troupe-univ').value;
   const email = document.getElementById('reg-troupe-email').value.trim();
-  const password = document.getElementById('reg-troupe-password').value.trim();
-
-  if (!name || !email || !password) {
-    alert('❌ 必須項目（*）をすべて入力してください。');
-    return;
-  }
-
-  let troupes = JSON.parse(localStorage.getItem('troupes')) || [];
-  
-  if (troupes.some(t => t.email === email)) {
-    alert('❌ このメールアドレスは既に登録されています。');
-    return;
-  }
-
-  // 新しい劇団データにパスワードを含めて保存
+  const password = document.getElementById('reg-troupe-password').value.trim(); // 💡 パスワード取得
+ 
+  if (!name || !email || !password) { alert('劇団名、メールアドレス、パスワードをすべて入力してください！'); return; }
+  if (troupesData.some(t => t.email === email)) { alert('このメールアドレスは既に登録されています。'); return; }
+ 
+  const colors = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+ 
   const newTroupe = {
-    id: 'troupe_' + Date.now(),
-    name: name,
-    univ: univ,
-    email: email,
+    id: 'troupe-' + Date.now(),
+    name, univ, est: '2026年', count: '0公演', accept: true,
+    tags: ['新規'], cls: randomColor, statusText: '折り込み受付中', statusCls: 'status-open', email,
     password: password // 💡 パスワードをしっかり保存
   };
-
-  troupes.push(newTroupe);
-  localStorage.setItem('troupes', JSON.stringify(troupes));
+ 
+  troupesData.push(newTroupe);
+  currentUser = newTroupe; 
+  saveAllData();
   
-  alert(`✨ 劇団「${name}」のアカウントを作成しました！\n作成したパスワードでログインしてください。`);
-  location.reload();
+  alert(`劇団「${name}」のアカウントを作成しました！マイページに移動します。`);
+  
+  updateFilterDropdown();
+  renderLegend();
+  showPage('mypage'); 
 }
-
-// 🔐 ログイン処理（安全版）
+ 
 function handleLogin() {
   const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value.trim();
-
-  if (!email || !password) {
-    alert('❌ メールアドレスとパスワードを入力してください。');
-    return;
-  }
-
-  // ローカルストレージから劇団一覧を取得
-  const troupes = JSON.parse(localStorage.getItem('troupes')) || [];
-  const troupe = troupes.find(t => t.email === email);
-
-  if (!troupe) {
-    alert('❌ 登録されていないメールアドレスです。');
-    return;
-  }
-
-  // 💡 シンプルに、登録されているパスワードと一致するかだけをチェック
-  if (password !== troupe.password) {
-    alert('❌ パスワードが間違っています。');
-    return;
-  }
-
-  // ログイン成功処理（元のアプリのログイン状態と同期させます）
-  currentUser = troupe;
-  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  const password = document.getElementById('login-password').value.trim(); // 💡 パスワード取得
   
-  alert(`🔑 ${troupe.name} としてログインしました！`);
-  location.reload(); // 画面を更新してログイン状態を反映
+  if (!email || !password) { alert('メールアドレスとパスワードを入力してください'); return; }
+ 
+  const found = troupesData.find(t => t.email === email);
+  if (found) {
+    // 💡 パスワードの一致チェック
+    if (found.password && found.password !== password) {
+      alert('パスワードが間違っています。');
+      return;
+    }
+    currentUser = found;
+    saveAllData();
+    showPage('mypage');
+    alert(`劇団「${found.name}」としてログインしました。専用管理ページに切り替えます。`);
+  } else {
+    alert('登録されていないメールアドレスです。');
+  }
 }
-
+ 
 function handleLogout() {
   currentUser = null;
   saveAllData();
   updateAuthUI();
   alert('ログアウトしました。');
 }
-
+ 
 function updateAuthUI() {
   const auth = document.getElementById('auth-section');
   const dash = document.getElementById('dashboard-section');
   const navBtn = document.getElementById('nav-login-btn');
-
+ 
   if (currentUser) {
     if(auth) auth.style.display = 'none';
     if(dash) dash.style.display = 'block';
@@ -755,14 +740,14 @@ function updateAuthUI() {
     if(navBtn) navBtn.innerHTML = `<i class="ti ti-user"></i> ログイン`;
   }
 }
-
+ 
 function renderDashboardInbox() {
   const container = document.getElementById('dashboard-inbox');
   if (!container) return;
   container.innerHTML = '';
-
+ 
   if (!currentUser) return;
-
+ 
   const myRequests = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
   const pendingRequests = myRequests.filter(r => r.status === 'pending');
   
@@ -770,12 +755,12 @@ function renderDashboardInbox() {
   
   const totalCopies = myRequests.reduce((sum, r) => sum + r.copies, 0);
   document.getElementById('stat-total-requested').innerText = `${totalCopies} 部`;
-
+ 
   if (pendingRequests.length === 0) {
     container.innerHTML = `<div class="empty-state"><i class="ti ti-mail"></i>あなた宛ての未処理の依頼はありません。</div>`;
     return;
   }
-
+ 
   pendingRequests.forEach(r => {
     const item = document.createElement('div');
     item.className = 'inbox-item unread';
@@ -793,7 +778,7 @@ function renderDashboardInbox() {
     container.appendChild(item);
   });
 }
-
+ 
 function respondRequest(id, action) {
   const r = incomingRequests.find(req => req.id === id);
   if (!r) return;
@@ -802,7 +787,7 @@ function respondRequest(id, action) {
   alert(action === 'approve' ? '依頼を承認しました。' : '依頼を見送りました。');
   renderDashboardInbox();
 }
-
+ 
 // ==========================================
 // 4. カレンダー・公演詳細
 // ==========================================
@@ -812,7 +797,7 @@ function changeMonth(diff) {
   else if (currentMonth < 0) { currentMonth = 11; currentYear--; }
   renderCalendar();
 }
-
+ 
 function updateFilterDropdown() {
   const filter = document.getElementById('cal-filter');
   if (!filter) return;
@@ -821,7 +806,7 @@ function updateFilterDropdown() {
     filter.innerHTML += `<option value="${t.id}">${t.name}</option>`;
   });
 }
-
+ 
 function renderLegend() {
   const legend = document.getElementById('calendar-legend');
   if (!legend) return;
@@ -830,35 +815,36 @@ function renderLegend() {
     legend.innerHTML += `<div class="legend-item"><div class="legend-dot ${t.cls}"></div>${t.name}</div>`;
   });
 }
-
+ 
 function renderCalendar() {
   const grid = document.getElementById('cal-grid');
   const label = document.getElementById('month-label');
-  const filterValue = document.getElementById('cal-filter').value;
+  const calFilter = document.getElementById('cal-filter');
+  const filterValue = calFilter ? calFilter.value : '';
   if (!grid || !label) return;
-
+ 
   grid.innerHTML = '';
   label.innerText = `${currentYear}年${currentMonth + 1}月`;
-
+ 
   const dows = ['日', '月', '火', '水', '木', '金', '土'];
   dows.forEach(d => {
     const div = document.createElement('div'); div.className = 'cal-dow'; div.innerText = d; grid.appendChild(div);
   });
-
+ 
   const firstDay = new Date(currentYear, currentMonth, 1);
   const lastDay = new Date(currentYear, currentMonth + 1, 0);
   const startDayOfWeek = firstDay.getDay();
   const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
-
+ 
   for (let i = startDayOfWeek - 1; i >= 0; i--) {
     const cell = document.createElement('div'); cell.className = 'cal-cell other-month';
     cell.innerHTML = `<div class="cal-day-num">${prevLastDay - i}</div>`; grid.appendChild(cell);
   }
-
+ 
   for (let d = 1; d <= lastDay.getDate(); d++) {
     const cell = document.createElement('div'); cell.className = 'cal-cell';
     cell.innerHTML = `<div class="cal-day-num">${d}</div>`;
-
+ 
     const currentStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
     performancesData.forEach(perf => {
       if (filterValue && perf.troupeId !== filterValue) return;
@@ -874,44 +860,36 @@ function renderCalendar() {
     });
     grid.appendChild(cell);
   }
-
+ 
   const total = grid.children.length - 7;
   for (let i = 1; i <= (42 - total); i++) {
     const cell = document.createElement('div'); cell.className = 'cal-cell other-month';
     cell.innerHTML = `<div class="cal-day-num">${i}</div>`; grid.appendChild(cell);
   }
 }
-
-// 💡 公演ごとに「設定された上限枠」と「現在の使用数」を動的に集計して表示
+ 
 function openPerformanceDetail(id) {
   selectedPerfId = id;
   const perf = performancesData.find(p => p.id === id);
   if (!perf) return;
   const troupe = troupesData.find(t => t.id === perf.troupeId);
-
-  // 公演情報書き換え
+ 
   document.getElementById('detail-troupe-name').innerText = troupe ? troupe.name : '不明な劇団';
   document.getElementById('detail-title').innerText = perf.title;
   document.getElementById('detail-desc').innerText = perf.desc || '公演概要は登録されていません。';
   document.getElementById('detail-date').innerText = `${perf.dateStart} 〜 ${perf.dateEnd}`;
   document.getElementById('detail-venue').innerText = perf.venue;
   document.getElementById('detail-email').innerText = troupe ? troupe.email : '不明';
-
-  // 💡 【機能拡張】この公演に届いている依頼部数の合計を計算
-  const maxQuota = perf.maxQuota || 300; // 旧データ救済措置として未設定は300
-  const usedQuota = incomingRequests
-    .filter(r => r.perfId === id)
-    .reduce((sum, r) => sum + r.copies, 0);
-
-  // 右側サイドバーのメーターを動的更新
+ 
+  const maxQuota = perf.maxQuota || 300; 
+  const usedQuota = incomingRequests.filter(r => r.perfId === id).reduce((sum, r) => sum + r.copies, 0);
+ 
   document.getElementById('detail-max-quota').innerHTML = `${maxQuota}<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span>`;
   document.getElementById('detail-quota-summary').innerText = `${usedQuota} / ${maxQuota}部 使用済み`;
-  
-  // バーの長さ計算
+ 
   const percentage = Math.min(100, Math.floor((usedQuota / maxQuota) * 100));
   document.getElementById('detail-quota-bar').style.width = `${percentage}%`;
-
-  // 満杯ならバッジとボタンを変更
+ 
   const badge = document.getElementById('detail-status-badge');
   const reqBtn = document.getElementById('detail-request-btn');
   if (usedQuota >= maxQuota) {
@@ -925,18 +903,22 @@ function openPerformanceDetail(id) {
     reqBtn.innerText = '折り込みを依頼する';
     reqBtn.disabled = false;
   }
-
+ 
   showPage('perf-detail');
 }
-
+ 
 function renderTroupes(data) {
   const container = document.getElementById('troupe-grid');
   if (!container) return;
   container.innerHTML = '';
   data.forEach(t => {
     const card = document.createElement('div'); card.className = 'troupe-card';
-    card.style.position = 'relative'; // ボタン配置用
-    card.onclick = () => { document.getElementById('cal-filter').value = t.id; showPage('calendar'); };
+    card.style.position = 'relative';
+    card.onclick = () => { 
+      const calFilter = document.getElementById('cal-filter');
+      if (calFilter) calFilter.value = t.id; 
+      showPage('calendar'); 
+    };
     
     card.innerHTML = `
       <div class="troupe-card-head" style="padding-right: 24px;">
@@ -951,19 +933,16 @@ function renderTroupes(data) {
         <div><strong>${t.count}</strong></div>
         <div>設立: <strong>${t.est}</strong></div>
       </div>
-      <button onclick="deleteSingleTroupe(event, '${t.id}', '${t.name}')" style="position:absolute; top:12px; right:12px; background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px;" title="劇団を削除">
-        <i class="ti ti-x"></i>
-      </button>
     `;
     container.appendChild(card);
   });
 }
-
+ 
 function filterTroupes() {
   const keyword = document.querySelector('.search-input').value.toLowerCase();
   const univFilter = document.getElementById('univ-filter').value;
   const acceptFilter = document.getElementById('accept-filter').value;
-
+ 
   const filtered = troupesData.filter(t => {
     return (t.name.toLowerCase().includes(keyword) || t.univ.toLowerCase().includes(keyword)) &&
            (!univFilter || t.univ === univFilter) &&
@@ -971,7 +950,7 @@ function filterTroupes() {
   });
   renderTroupes(filtered);
 }
-
+ 
 // ==========================================
 // 5. 公演登録
 // ==========================================
@@ -986,7 +965,7 @@ function updateRegisterFormUI() {
     if(msg) msg.style.display = 'block';
   }
 }
-
+ 
 function handleRegisterPerformance() {
   if (!currentUser) { alert('ログインしてください'); return; }
   const title = document.getElementById('new-perf-title').value;
@@ -994,30 +973,29 @@ function handleRegisterPerformance() {
   const end = document.getElementById('new-perf-end').value;
   const venue = document.getElementById('new-perf-venue').value;
   const desc = document.getElementById('new-perf-desc').value;
-  // 💡 入力された上限部数を取得
   const quota = parseInt(document.getElementById('new-perf-quota').value) || 300;
-
+ 
   if (!title || !venue) { alert('タイトルと会場名は必須です！'); return; }
-
-  // 💡 maxQuota プロパティを持たせて保存
+ 
   performancesData.push({ id: Date.now(), troupeId: currentUser.id, title, dateStart: start, dateEnd: end, venue, desc, maxQuota: quota });
   saveAllData();
-
+ 
   const targetDate = new Date(start);
   currentYear = targetDate.getFullYear();
   currentMonth = targetDate.getMonth();
-
+ 
   alert(`劇団「${currentUser.name}」の公演「${title}」（上限：${quota}部）を登録しました！`);
   showPage('calendar');
 }
-
+ 
 // ==========================================
-// 6. 折り込み依頼送信 (Service ID & Template ID 適用済み)
+// 6. 折り込み依頼送信
 // ==========================================
 function updateRequestFormUI() {
   const perf = performancesData.find(p => p.id === selectedPerfId);
   if (!perf) return;
   const troupe = troupesData.find(t => t.id === perf.troupeId);
+ 
   document.getElementById('request-target-info').innerText = `宛先：${troupe ? troupe.name : ''} 「${perf.title}」`;
   
   if (currentUser) {
@@ -1028,29 +1006,27 @@ function updateRequestFormUI() {
     document.getElementById('req-from-email').value = '';
   }
 }
-
+ 
 function submitRequestForm() {
   const perf = performancesData.find(p => p.id === selectedPerfId);
   if (!perf) return;
   const targetTroupe = troupesData.find(t => t.id === perf.troupeId); 
-
+ 
   const fromName = document.getElementById('req-from-name').value;
   const fromEmail = document.getElementById('req-from-email').value;
   const copies = parseInt(document.getElementById('req-copies').value);
   const size = document.getElementById('req-size').value;
   const notes = document.getElementById('req-notes').value;
-
+ 
   if (!fromName || !fromEmail || !copies) { alert('必須項目を入力してください。'); return; }
-
-  // 💡 【残数制限チェック】残り枠を超える依頼はストップする
+ 
   const maxQuota = perf.maxQuota || 300;
   const usedQuota = incomingRequests.filter(r => r.perfId === selectedPerfId).reduce((sum, r) => sum + r.copies, 0);
   if (usedQuota + copies > maxQuota) {
     alert(`申し訳ありません。この公演の残り受付枠はあと ${maxQuota - usedQuota} 部のため、${copies} 部の依頼は承れません。`);
     return;
   }
-
-  // 内部データベースへの登録（perfIdをしっかり付与）
+ 
   incomingRequests.push({
     id: Date.now(),
     toTroupeId: targetTroupe.id,
@@ -1062,29 +1038,28 @@ function submitRequestForm() {
     status: 'pending'
   });
   saveAllData();
-
-  // メール送信用パラメータ
+ 
   const templateParams = {
-    to_email: targetTroupe.email,      
+    to_email: targetTroupe.email,
     from_name: fromName,
     from_email: fromEmail,
     copies: copies,
     size: size,
     notes: notes || '特になし'
   };
-
-  const serviceID = 'service_4gfx3qf';  
+ 
+  const serviceID = 'service_4gfx3qf';
   const templateID = 'template_rzattmh'; 
-
-  // EmailJS送信
+ 
+  // 💡 文字切れしていたEmailJS送信処理を完全に修復しました
   emailjs.send(serviceID, templateID, templateParams)
     .then(function(response) {
-       console.log('SUCCESS!', response.status, response.text);
-       alert(`【メール送信成功】\n相手劇団（${targetTroupe.name}）へ通知を送信しました！`);
-       finalizeRequestFormSuccess();
+      document.getElementById('success-banner').style.display = 'block';
+      document.getElementById('request-form-body').style.display = 'none';
+      alert('折り込み依頼を送信しました！相手団体の担当者へ通知メールが送られます。');
     }, function(error) {
-       console.log('FAILED...', error);
-       alert('EmailJSの送信に失敗しました。\nエラー内容: ' + JSON.stringify(error));
+      console.error('EmailJS Error:', error);
+      alert('メール送信に失敗しました。');
     });
 }
 
