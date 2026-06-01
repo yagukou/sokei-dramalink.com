@@ -207,100 +207,6 @@
     .status-soon { background: #FFF4E5; color: #8B5A1A; }
     .troupe-stats { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); border-top: 0.5px solid var(--border-neutral); padding-top: 8px; margin-top: 8px; }
 
-/* 利用ガイド全体のスタイル */
-.guide-header {
-  margin-bottom: 32px;
-}
-.guide-header h2 {
-  font-size: 24px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 8px;
-}
-.guide-subtitle {
-  color: #666;
-  font-size: 14px;
-}
-
-/* 概要カード（ピンクの箱を今風にリライト） */
-.guide-about-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  background: #fdf6f5; /* 既存の優しいピンクを引き継ぎ */
-  border: 1px solid #f5e2e0;
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 40px;
-}
-.guide-about-icon {
-  background: #b5473e;
-  color: white;
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  flex-shrink: 0;
-}
-.guide-about-text h3 {
-  font-size: 18px;
-  color: #b5473e;
-  margin: 0 0 8px 0;
-  font-weight: 700;
-}
-.guide-about-text p {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.6;
-  color: #444;
-}
-
-/* ステップフローのグリッド */
-.guide-flow-section h3 {
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: #333;
-}
-.guide-flow-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-.guide-flow-card {
-  background: #fff;
-  border: 1px solid #eaeaea;
-  border-radius: 16px;
-  padding: 24px;
-  position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-}
-.guide-step-badge {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  color: #b5473e;
-  background: #fdf6f5;
-  padding: 4px 8px;
-  border-radius: 6px;
-  margin-bottom: 12px;
-}
-.guide-flow-card h4 {
-  margin: 0 0 10px 0;
-  font-size: 16px;
-  font-weight: 700;
-  color: #222;
-}
-.guide-flow-card p {
-  margin: 0;
-  font-size: 13px;
-  line-height: 1.6;
-  color: #666;
-}
-
     /* ===================== PERF DETAIL ===================== */
     .perf-detail-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
     @media (max-width: 768px) { .perf-detail-grid { grid-template-columns: 1fr; } }
@@ -657,48 +563,14 @@
     </div>
   </div>
 
-<div id="page-howto" class="page">
-  <div class="guide-header">
-    <h2>利用ガイド</h2>
-    <p class="guide-subtitle">早慶演劇祭における共通ビラ折り込みシステムの利用手順</p>
-  </div>
-
-  <div class="guide-about-card">
-    <div class="guide-about-icon">
-      <i class="ti ti-copy"></i>
+  <div class="page" id="page-help">
+    <div class="page-header">
+      <div class="page-title">ビラネットワークの使い方</div>
+      <div class="page-sub">早慶演劇祭における共通ビラ折り込みシステムの利用手順
     </div>
-    <div class="guide-about-text">
-      <h3>ビラ折り込み（挟み込み）とは？</h3>
-      <p>他劇団の公演で配られる当日パンフレットに、自劇団の宣伝チラシを一緒に挟んでもらう仕組みです。演劇に関心のある観客へ直接届くため、最も効果的な宣伝手法の一つとされています。</p>
-    </div>
-  </div>
-
-  <div class="guide-flow-section">
-    <h3>システム利用のステップ</h3>
-    <div class="guide-flow-grid">
-      
-      <div class="guide-flow-card">
-        <div class="guide-step-badge">STEP 01</div>
-        <h4>劇団アカウントの登録</h4>
-        <p>「マイページ」から自劇団のアカウントを作成し、ログインします。</p>
-      </div>
-
-      <div class="guide-flow-card">
-        <div class="guide-step-badge">STEP 02</div>
-        <h4>公演スケジュールの追加</h4>
-        <p>「公演登録」から自劇団の公演情報を入力し、ビラの**最大受入枠（上限部数）**を設定します。</p>
-      </div>
-
-      <div class="guide-flow-card">
-        <div class="guide-step-badge">STEP 03</div>
-        <h4>折り込みの依頼・承認</h4>
-        <p>カレンダーから他劇団の公演を選んで依頼を送信！相手劇団へのメール通知と連動し、枠の残数が自動計算されます。</p>
-      </div>
-
-    </div>
-  </div>
-</div>
-
+    <div class="info-banner">
+      <div class="info-banner-title"><i class="ti ti-info-circle"></i>ビラ折り込み（挟み込み）とは？</div>
+      <p>他劇団の公演で配られる当日パンフレットに、自劇団の宣伝チラシを一緒に挟んでもらう仕組みです。演劇に関心のある観客に直接届くため、最も効果的な宣伝手法の一つとされています。</p>
 </div>
 
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
