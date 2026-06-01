@@ -907,6 +907,7 @@ function openPerformanceDetail(id) {
   showPage('perf-detail');
 }
  
+// 💡 修正後の renderTroupes 関数
 function renderTroupes(data) {
   const container = document.getElementById('troupe-grid');
   if (!container) return;
@@ -920,14 +921,12 @@ function renderTroupes(data) {
       showPage('calendar'); 
     };
     
-    // 💡 【修正ポイント】型が違っても一致するように「==」で比較するか、Number()で数値に統一します
-    const isMyTroupe = typeof currentUser !== 'undefined' && currentUser && Number(currentUser.id) === Number(t.id);
+    // ⭕【修正①】Number() を外して、そのまま文字列として比較します
+    const isMyTroupe = typeof currentUser !== 'undefined' && currentUser && currentUser.id === t.id;
     
-    // デバッグ用（もしこれでも出ない場合、開発者ツールのコンソールでIDが一致しているか確認できます）
-    // if (currentUser) console.log("ログイン中ID:", currentUser.id, "カードの劇団ID:", t.id, "一致?:", isMyTroupe);
-
+    // ⭕【修正②】deleteSingleTroupeの引数 ${t.id} を、シングルクォーテーション「'」で囲みます
     const deleteBtn = isMyTroupe 
-      ? `<span class="delete-troupe-btn" onclick="deleteSingleTroupe(event, ${t.id}, '${t.name}')" style="position: absolute; top: 12px; right: 12px; cursor: pointer; color: #ff4d4d; font-weight: bold; font-size: 18px; z-index: 10;">×</span>` 
+      ? `<span class="delete-troupe-btn" onclick="deleteSingleTroupe(event, '${t.id}', '${t.name}')" style="position: absolute; top: 12px; right: 12px; cursor: pointer; color: #ff4d4d; font-weight: bold; font-size: 18px; z-index: 10;">×</span>` 
       : '';
     
     card.innerHTML = `
