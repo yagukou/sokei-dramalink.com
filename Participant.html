@@ -1466,5 +1466,306 @@
   renderCalendar();
   renderTroupes(TROUPES);
 </script>
+
+<script>
+// ==========================================
+// 1. データの定義（モックデータ）
+// ==========================================
+
+// 劇団データ一覧
+const troupesData = [
+  { id: 'a', name: '劇団ソウル', univ: '早稲田大学', est: '2018年', count: '12公演', accept: true, tags: ['現代演劇', '学生劇団'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open' },
+  { id: 'b', name: 'ステージクロス', univ: '慶應義塾大学', est: '2015年', count: '24公演', accept: true, tags: ['ミュージカル', 'エンタメ'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open' },
+  { id: 'c', name: '早稲田演劇研究会', univ: '早稲田大学', est: '1970年', count: '150公演', accept: false, tags: ['アングラ', '伝統'], cls: 'troupe-c', statusText: '締切済み', statusCls: 'status-closed' },
+  { id: 'd', name: '慶應ドラマクラブ', univ: '慶應義塾大学', est: '1965年', count: '110公演', accept: true, tags: ['翻訳劇', '正統派'], cls: 'troupe-d', statusText: 'まもなく締切', statusCls: 'status-soon' },
+  { id: 'e', name: 'パラドックス', univ: '早稲田大学', est: '2021年', count: '6公演', accept: true, tags: ['コメディ', '会話劇'], cls: 'troupe-e', statusText: '折り込み受付中', statusCls: 'status-open' }
+];
+
+// 公演データ（カレンダー等で使用）
+const performancesData = [
+  { id: 1, troupeId: 'a', title: '春の嵐、それから', dateStart: '2025-06-14', dateEnd: '2025-06-16', venue: '早稲田大学小劇場', desc: '人間の孤独と繋がりをテーマにした現代演劇。過去と現在が交差する独特の時間軸の中で、4人の登場人物が互いの真真を探る2時間の旅。早慶の枠を超えた演劇の可能性を追求した意欲作です。' },
+  { id: 2, troupeId: 'b', title: '真夏の夜の夢', dateStart: '2025-06-05', dateEnd: '2025-06-08', venue: '慶應日吉協生館', desc: 'シェイクスピアの名作を現代風ポップスに乗せてお届けする、躍動感あふれるミュージカルステージ。' },
+  { id: 3, troupeId: 'd', title: '検察官', dateStart: '2025-06-25', dateEnd: '2025-06-28', venue: '外部劇場', desc: '古典名作を鋭い視点で再解釈。人間の滑稽さと社会の縮図を描き出す、緊迫のシチュエーション劇。' },
+  { id: 4, troupeId: 'e', title: 'ストップウォッチ', dateStart: '2025-07-02', dateEnd: '2025-07-04', venue: 'どらま館', desc: '時間が止まった部室の中で繰り広げられる、ノンストップ・シチュエーションコメディ。' }
+];
+
+// ==========================================
+// 2. グローバル状態管理
+// ==========================================
+let currentYear = 2025;
+let currentMonth = 5; // JavaScriptのMonthは0始まり（5 = 6月）
+let pageHistory = ['calendar']; // 簡易的な戻るボタン用履歴
+
+// ==========================================
+// 3. ページ遷移ルーティング
+// ==========================================
+function showPage(pageId) {
+  // すべてのページを非表示に
+  document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+  // 対象のページを表示
+  const targetPage = document.getElementById(`page-${pageId}`);
+  if (targetPage) targetPage.classList.add('active');
+
+  // ナビゲーションタブのアクティブ状態を変更
+  document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+  const targetTab = document.getElementById(`tab-${pageId}`);
+  if (targetTab) targetTab.classList.add('active');
+
+  // 履歴の追加（直前と同じでなければ）
+  if (pageHistory[pageHistory.length - 1] !== pageId) {
+    pageHistory.push(pageId);
+  }
+
+  // ページ初期表示時のデータレンダリング
+  if (pageId === 'calendar') {
+    renderCalendar();
+  } else if (pageId === 'troupes') {
+    renderTroupes(troupesData);
+  } else if (pageId === 'mypage') {
+    // マイページ遷移時に通知バッジを消すなどの処理があればここに
+  }
+}
+
+// 戻るボタンの挙動
+function goBack() {
+  if (pageHistory.length > 1) {
+    pageHistory.pop(); // 現在のページを削除
+    const prevPage = pageHistory[pageHistory.length - 1];
+    showPage(prevPage);
+  } else {
+    showPage('calendar');
+  }
+}
+
+// ==========================================
+// 4. カレンダー機能
+// ==========================================
+function changeMonth(diff) {
+  currentMonth += diff;
+  if (currentMonth > 11) {
+    currentMonth = 0;
+    currentYear++;
+  } else if (currentMonth < 0) {
+    currentMonth = 11;
+    currentYear--;
+  }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('cal-grid');
+  const label = document.getElementById('month-label');
+  const filterValue = document.getElementById('cal-filter').value;
+
+  if (!grid) return;
+  grid.innerHTML = ''; // クリア
+
+  // ヘッダー（曜日）の設定
+  label.innerText = `${currentYear}年${currentMonth + 1}月`;
+  const dows = ['日', '月', '火', '水', '木', '金', '土'];
+  dows.forEach(dow => {
+    const dowDiv = document.createElement('div');
+    dowDiv.className = 'cal-dow';
+    dowDiv.innerText = dow;
+    grid.appendChild(dowDiv);
+  });
+
+  // カレンダーの日付計算
+  const firstDay = new Date(currentYear, currentMonth, 1);
+  const lastDay = new Date(currentYear, currentMonth + 1, 0);
+  
+  // 開始曜日分、前の月の日付を埋めるための計算
+  const startDayOfWeek = firstDay.getDay();
+  const prevLastDay = new Date(currentYear, currentMonth, 0).getDate();
+
+  // 前月の末尾を埋める
+  for (let i = startDayOfWeek - 1; i >= 0; i--) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell other-month';
+    cell.innerHTML = `<div class="cal-day-num">${prevLastDay - i}</div>`;
+    grid.appendChild(cell);
+  }
+
+  // 当月の日付を埋める
+  const today = new Date();
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell';
+    
+    // 今日の判定
+    if (today.getFullYear() === currentYear && today.getMonth() === currentMonth && today.getDate() === d) {
+      cell.classList.add('today');
+    }
+
+    cell.innerHTML = `<div class="cal-day-num">${d}</div>`;
+
+    // この日に該当する公演があるか検証
+    const currentStringDate = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    
+    performancesData.forEach(perf => {
+      // フィルター条件判定
+      if (filterValue && perf.troupeId !== filterValue) return;
+
+      // 公演期間内かチェック
+      if (currentStringDate >= perf.dateStart && currentStringDate <= perf.dateEnd) {
+        cell.classList.add('has-event');
+        
+        const troupe = troupesData.find(t => t.id === perf.troupeId);
+        const eventDiv = document.createElement('div');
+        eventDiv.className = `cal-event ${troupe ? troupe.cls : ''}`;
+        eventDiv.innerText = perf.title;
+        
+        // イベントクリックで公演詳細へ
+        eventDiv.onclick = (e) => {
+          e.stopPropagation();
+          openPerformanceDetail(perf.id);
+        };
+        cell.appendChild(eventDiv);
+      }
+    });
+
+    grid.appendChild(cell);
+  }
+
+  // 翌月の日付でグリッドの残りを埋める (7列 × 6行 = 42マスの調整)
+  const totalCells = grid.children.length - 7; // 曜日ヘッダー分を除く
+  const nextMonthCells = 42 - totalCells;
+  for (let i = 1; i <= nextMonthCells; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell other-month';
+    cell.innerHTML = `<div class="cal-day-num">${i}</div>`;
+    grid.appendChild(cell);
+  }
+}
+
+// ==========================================
+// 5. 劇団一覧の検索・フィルタリング
+// ==========================================
+function filterTroupes() {
+  const keyword = document.querySelector('.search-input').value.toLowerCase();
+  const univFilter = document.getElementById('univ-filter').value;
+  const acceptFilter = document.getElementById('accept-filter').value;
+
+  const filtered = troupesData.filter(troupe => {
+    const matchesKeyword = troupe.name.toLowerCase().includes(keyword) || troupe.univ.toLowerCase().includes(keyword);
+    const matchesUniv = !univFilter || troupe.univ === univFilter;
+    const matchesAccept = !acceptFilter || String(troupe.accept) === acceptFilter;
+
+    return matchesKeyword && matchesUniv && matchesAccept;
+  });
+
+  renderTroupes(filtered);
+}
+
+function renderTroupes(data) {
+  const container = document.getElementById('troupe-grid');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (data.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <i class="ti ti-users"></i>
+        該当する劇団が見つかりませんでした。
+      </div>`;
+    return;
+  }
+
+  data.forEach(troupe => {
+    const card = document.createElement('div');
+    card.className = 'troupe-card';
+    card.onclick = () => {
+      // 劇団に関連する公演を紐付けて詳細に飛ばす、またはカレンダーをフィルタリングするなどの動線
+      document.getElementById('cal-filter').value = troupe.id;
+      showPage('calendar');
+    };
+
+    // タグのHTML生成
+    const tagsHtml = troupe.tags.map(t => `<span class="troupe-tag">${t}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="troupe-card-head">
+        <div class="troupe-avatar ${troupe.cls}">${troupe.name[0]}</div>
+        <div style="flex:1">
+          <div class="troupe-name">${troupe.name}</div>
+          <div class="troupe-univ">${troupe.univ}</div>
+        </div>
+        <span class="status-badge ${troupe.statusCls}">${troupe.statusText}</span>
+      </div>
+      <div class="troupe-stats">
+        <div class="troupe-stat"><i class="ti ti-calendar"></i>実績: <strong>${troupe.count}</strong></div>
+        <div class="troupe-stat"><i class="ti ti-hourglass"></i>設立: <strong>${troupe.est}</strong></div>
+      </div>
+      <div class="troupe-tags">${tagsHtml}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// ==========================================
+// 6. 公演詳細ページの動的生成
+// ==========================================
+function openPerformanceDetail(perfId) {
+  const perf = performancesData.find(p => p.id === perfId);
+  if (!perf) return;
+
+  const troupe = troupesData.find(t => t.id === perf.troupeId);
+
+  // HTML要素を動的に書き換える
+  const page = document.getElementById('page-perf-detail');
+  if (!page) return;
+
+  page.querySelector('.perf-troupe-link').innerHTML = `<i class="ti ti-users" style="font-size:13px"></i>${troupe ? troupe.name : '不明な劇団'}`;
+  page.querySelector('.perf-title').innerText = perf.title;
+  page.querySelector('.perf-desc').innerText = perf.desc;
+  page.querySelector('.perf-meta-val').innerText = `${formatDateString(perf.dateStart)} 〜 ${formatDateString(perf.dateEnd)}`;
+  
+  // 会場データ等の反映
+  const metaValues = page.querySelectorAll('.perf-meta-val');
+  if(metaValues.length >= 2) metaValues[1].innerText = perf.venue;
+
+  // フォーム側のタイトルや文言もあらかじめセットしておく
+  const formSub = document.querySelector('#page-request-form .page-sub');
+  if (formSub) {
+    formSub.innerText = `${troupe ? troupe.name : ''}「${perf.title}」への折り込みを依頼します`;
+  }
+
+  showPage('perf-detail');
+}
+
+// 読みやすい日付に変換するヘルパー
+function formatDateString(dateStr) {
+  const d = new Date(dateStr);
+  const days = ['日', '月', '火', '水', '木', '金', '土'];
+  return `${d.getMonth() + 1}月${d.getDate()}日(${days[d.getDay()]})`;
+}
+
+// ==========================================
+// 7. フォーム送信処理（擬似イベント）
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  // アプリ起動時にカレンダーを初期描写
+  renderCalendar();
+
+  // 折り込み依頼フォームの「送信ボタン」等にイベントを仕込む
+  const requestForm = document.querySelector('#page-request-form .btn-primary');
+  if (requestForm) {
+    requestForm.onclick = (e) => {
+      e.preventDefault();
+      
+      // 成功バナーを表示してカレンダー画面へ戻るシミュレーション
+      const banner = document.getElementById('success-banner');
+      if (banner) {
+        banner.classList.add('show');
+        // 3秒後にバナーを消す
+        setTimeout(() => { banner.classList.remove('show'); }, 4000);
+      }
+      
+      showPage('mypage'); // 送信後はマイページなどで進捗確認させるのが自然
+    };
+  }
+});
+</script>
+
 </body>
 </html>
