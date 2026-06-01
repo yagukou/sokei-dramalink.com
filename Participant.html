@@ -920,13 +920,18 @@ function renderTroupes(data) {
       showPage('calendar'); 
     };
     
-// 💡 【ここを追加】自分がログインしている劇団カードにだけ「×ボタン」のHTMLを作る
-    const isMyTroupe = typeof currentUser !== 'undefined' && currentUser && currentUser.id === t.id;
+    // 💡 【修正ポイント】型が違っても一致するように「==」で比較するか、Number()で数値に統一します
+    const isMyTroupe = typeof currentUser !== 'undefined' && currentUser && Number(currentUser.id) === Number(t.id);
+    
+    // デバッグ用（もしこれでも出ない場合、開発者ツールのコンソールでIDが一致しているか確認できます）
+    // if (currentUser) console.log("ログイン中ID:", currentUser.id, "カードの劇団ID:", t.id, "一致?:", isMyTroupe);
+
     const deleteBtn = isMyTroupe 
       ? `<span class="delete-troupe-btn" onclick="deleteSingleTroupe(event, ${t.id}, '${t.name}')" style="position: absolute; top: 12px; right: 12px; cursor: pointer; color: #ff4d4d; font-weight: bold; font-size: 18px; z-index: 10;">×</span>` 
       : '';
-
+    
     card.innerHTML = `
+      ${deleteBtn}
       <div class="troupe-card-head" style="padding-right: 24px;">
         <div class="troupe-avatar ${t.cls}">${t.name[0]}</div>
         <div>
