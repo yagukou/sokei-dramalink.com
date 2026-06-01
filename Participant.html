@@ -994,94 +994,81 @@
   </div>
 
   <!-- =================== MY PAGE =================== -->
-  <div class="page" id="page-mypage">
+ <div class="page" id="page-mypage">
     <div class="page-header">
-      <div class="page-title">マイページ</div>
-      <div class="page-sub">ステージクロス の管理ページ</div>
-    </div>
-    <div class="stat-grid">
-      <div class="stat-card stat-card-red">
-        <div class="stat-label stat-label-red">未読の折り込み依頼</div>
-        <div class="stat-value stat-value-red">2件</div>
-      </div>
-      <div class="stat-card stat-card-neutral">
-        <div class="stat-label">登録中の公演</div>
-        <div class="stat-value">2件</div>
-      </div>
-      <div class="stat-card stat-card-neutral">
-        <div class="stat-label">送信した依頼</div>
-        <div class="stat-value">3件</div>
-      </div>
-      <div class="stat-card stat-card-neutral">
-        <div class="stat-label">承諾済み折り込み</div>
-        <div class="stat-value">2件</div>
-      </div>
+      <div class="page-title">団体アカウント・管理マイページ</div>
+      <div class="page-sub">アカウントの作成、ログイン、および折り込み進捗の管理ができます</div>
     </div>
 
-    <!-- 受信した依頼 -->
-    <div class="section-title"><i class="ti ti-inbox"></i>受信した折り込み依頼</div>
-    <div class="inbox-list" id="inbox-list">
-      <div class="inbox-item unread" id="inbox-0">
-        <div class="inbox-avatar" style="background:#FFE5E8;color:#8B1A2F">ソ</div>
-        <div class="inbox-body">
-          <div class="inbox-from">劇団ソウル「春の嵐、それから」</div>
-          <div class="inbox-preview">6月21日〜23日公演「光と影の間で」への折り込みを依頼します</div>
-          <div class="inbox-meta">
-            <span class="inbox-copies">100部 / 郵送</span>
-            <span class="inbox-date">2025年5月14日</span>
+    <div id="auth-section" class="form-card" style="margin-bottom: 2rem;">
+      <div class="form-2col">
+        <div>
+          <div class="form-section-title">登録団体 ログイン</div>
+          <div class="form-row">
+            <label class="form-label">メールアドレス</label>
+            <input type="email" class="form-input" id="login-email" value="soul.member@example.com">
           </div>
-        </div>
-        <div class="inbox-actions">
-          <button class="inbox-btn inbox-btn-accept" onclick="acceptRequest(0)">承諾</button>
-          <button class="inbox-btn inbox-btn-decline" onclick="declineRequest(0)">辞退</button>
-        </div>
-      </div>
-      <div class="inbox-item unread" id="inbox-1">
-        <div class="inbox-avatar" style="background:#F0E5F9;color:#5A1A8B">パ</div>
-        <div class="inbox-body">
-          <div class="inbox-from">パラドックス「記憶の破片」</div>
-          <div class="inbox-preview">7月5日〜7日公演「ゼロの地平線」への折り込みを依頼します</div>
-          <div class="inbox-meta">
-            <span class="inbox-copies">50部 / 手渡し</span>
-            <span class="inbox-date">2025年5月12日</span>
+          <div class="form-row">
+            <label class="form-label">パスワード</label>
+            <input type="password" class="form-input" id="login-pass" value="••••••••">
           </div>
+          <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="handleLogin()">
+            <i class="ti ti-login"></i>ログインする
+          </button>
         </div>
-        <div class="inbox-actions">
-          <button class="inbox-btn inbox-btn-accept" onclick="acceptRequest(1)">承諾</button>
-          <button class="inbox-btn inbox-btn-decline" onclick="declineRequest(1)">辞退</button>
+
+        <div style="border-left: 0.5px solid var(--border-neutral); padding-left: 1.5rem;">
+          <div class="form-section-title">新規団体アカウント作成</div>
+          <div class="form-row">
+            <label class="form-label">劇団名<span class="form-required">*</span></label>
+            <input type="text" class="form-input" id="reg-troupe-name" placeholder="例：劇団シアターエクスプレス">
+          </div>
+          <div class="form-row">
+            <label class="form-label">所属大学<span class="form-required">*</span></label>
+            <select class="form-select" id="reg-troupe-univ">
+              <option value="早稲田大学">早稲田大学</option>
+              <option value="慶應義塾大学">慶應義塾大学</option>
+              <option value="その他">その他</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label class="form-label">担当者メールアドレス<span class="form-required">*</span></label>
+            <input type="email" class="form-input" id="reg-troupe-email" placeholder="example@gmail.com">
+          </div>
+          <button class="btn-secondary" style="width: 100%; justify-content: center; background: var(--crimson-pale); color: var(--crimson); border-color: rgba(139,26,47,0.2);" onclick="handleRegisterAccount()">
+            <i class="ti ti-user-plus"></i>アカウントを作成する
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- 登録中の公演 -->
-    <div class="section-title"><i class="ti ti-theater"></i>登録中の公演</div>
-    <div class="my-perf-list">
-      <div class="my-perf-item">
-        <div class="inbox-avatar" style="background:#E5EEF9;color:#1A4A8B;width:36px;height:36px;font-size:13px">ス</div>
-        <div class="my-perf-info">
-          <div class="my-perf-name">光と影の間で</div>
-          <div class="my-perf-date"><i class="ti ti-calendar" style="font-size:12px"></i>6月21日(土) 〜 6月23日(月)</div>
+    <div id="dashboard-section" style="display: none;">
+      <div class="info-banner" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <div class="info-banner-title" id="welcome-message"><i class="ti ti-user"></i>こんにちは、劇団ソウル さん</div>
+          <p id="account-status-info">担当者メールアドレス: soul.member@example.com（認証済み）</p>
         </div>
-        <div class="my-perf-quota">
-          <div class="quota-bar-bg quota-bar-sm"><div class="quota-bar-fill" style="width:60%"></div></div>
-          <span>180/300部</span>
-        </div>
-        <div class="status-badge status-open" style="margin:0 8px">受付中</div>
-        <button class="my-perf-edit" onclick="showPage('register')">編集</button>
+        <button class="btn-ghost" style="padding: 6px 12px; font-size: 12px;" onclick="handleLogout()">ログアウト</button>
       </div>
-      <div class="my-perf-item">
-        <div class="inbox-avatar" style="background:#E5EEF9;color:#1A4A8B;width:36px;height:36px;font-size:13px">ス</div>
-        <div class="my-perf-info">
-          <div class="my-perf-name">ゼロの地平線</div>
-          <div class="my-perf-date"><i class="ti ti-calendar" style="font-size:12px"></i>7月5日(土) 〜 7月7日(月)</div>
+
+      <div class="stat-grid">
+        <div class="stat-card stat-card-red">
+          <div class="stat-label stat-label-red">届いた折り込み依頼</div>
+          <div class="stat-value stat-value-red" id="stat-incoming-count">2 件</div>
         </div>
-        <div class="my-perf-quota">
-          <div class="quota-bar-bg quota-bar-sm"><div class="quota-bar-fill" style="width:20%"></div></div>
-          <span>60/300部</span>
+        <div class="stat-card stat-card-neutral">
+          <div class="stat-label">現在の枠使用率</div>
+          <div class="stat-value">42%</div>
         </div>
-        <div class="status-badge status-soon" style="margin:0 8px">まもなく受付</div>
-        <button class="my-perf-edit" onclick="showPage('register')">編集</button>
+        <div class="stat-card stat-card-neutral">
+          <div class="stat-label">残りの受付可能部数</div>
+          <div class="stat-value">174 部</div>
+        </div>
       </div>
+
+      <div class="section-title"><i class="ti ti-mail-opened"></i>届いた折り込み依頼の管理（承認 / 拒否）</div>
+      <div class="inbox-list" id="dashboard-inbox">
+        </div>
     </div>
   </div>
 
@@ -1765,6 +1752,212 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 });
+
+// ==========================================
+// アカウント管理・自動メール送信の追加ロジック
+// ==========================================
+
+// ログイン中のユーザー情報を保持するオブジェクト（null の場合は未ログイン）
+let currentUser = null; 
+
+// 届いた申し込みの初期データ
+let incomingRequests = [
+  { id: 101, fromTroupe: 'ステージクロス', copies: 100, date: '2026/06/01', preview: '春の定期公演のビラ折り込みをお願いします。A4サイズ1枚です。', status: 'pending' },
+  { id: 102, fromTroupe: '慶應ドラマクラブ', copies: 26, date: '2026/05/30', preview: '新歓公演のビラです。よろしくお願いします。', status: 'pending' }
+];
+
+// 疑似メール自動送信関数
+function simulateSendEmail(toEmail, subject, body) {
+  console.log(`%c【自動メール送信システム】\nTo: ${toEmail}\nSubject: ${subject}\nBody:\n${body}`, "background: #1e1e1e; color: #5cd65c; padding: 8px; border-radius: 4px;");
+  
+  // 画面上にメールが飛んだことを分かりやすく通知するポップアップ
+  alert(`【自動メール通知】\n担当者（${toEmail}）宛にメールが自動送信されました！\n\n件名: ${subject}`);
+}
+
+// 1. 新規アカウント作成処理
+function handleRegisterAccount() {
+  const name = document.getElementById('reg-troupe-name').value;
+  const univ = document.getElementById('reg-troupe-univ').value;
+  const email = document.getElementById('reg-troupe-email').value;
+
+  if (!name || !email) {
+    alert('劇団名とメールアドレスを入力してください。');
+    return;
+  }
+
+  // 既存の劇団データ配列に新規追加
+  const newId = 'troupe-' + (troupesData.length + 1);
+  const newTroupe = {
+    id: newId,
+    name: name,
+    univ: univ,
+    est: '2026年',
+    count: '0公演',
+    accept: true,
+    tags: ['新規団体'],
+    cls: 'troupe-e',
+    statusText: '折り込み受付中',
+    statusCls: 'status-open',
+    email: email
+  };
+
+  troupesData.push(newTroupe);
+  
+  // アカウント作成完了メールの送信シミュレート
+  simulateSendEmail(
+    email,
+    `【ビラネットワーク】団体アカウント作成完了のお知らせ`,
+    `${name} 様\n\nビラネットワークをご利用いただきありがとうございます。\n団体アカウントの作成が完了しました。\n今後はマイページより折り込み依頼の管理が行えます。`
+  );
+
+  // 自動ログインさせる
+  currentUser = newTroupe;
+  updateAuthUI();
+  alert('アカウントを作成し、ログインしました！');
+}
+
+// 2. ログイン処理
+function handleLogin() {
+  // デモ用に、最初から登録されている「劇団ソウル」としてログインさせる
+  currentUser = troupesData[0]; // 劇団ソウル
+  currentUser.email = 'soul.member@example.com'; // ダミーアドレス設定
+  updateAuthUI();
+}
+
+// 3. ログアウト処理
+function handleLogout() {
+  currentUser = null;
+  updateAuthUI();
+}
+
+// 4. ログイン状態に合わせたUIの切り替え
+function updateAuthUI() {
+  const authSection = document.getElementById('auth-section');
+  const dashboardSection = document.getElementById('dashboard-section');
+  const navLoginBtn = document.querySelector('.nav-btn-primary');
+
+  if (currentUser) {
+    // ログイン状態
+    if(authSection) authSection.style.display = 'none';
+    if(dashboardSection) dashboardSection.style.display = 'block';
+    
+    document.getElementById('welcome-message').innerHTML = `<i class="ti ti-user"></i>こんにちは、${currentUser.name} さん`;
+    document.getElementById('account-status-info').innerText = `担当者メールアドレス: ${currentUser.email}（認証済み）`;
+    
+    if(navLoginBtn) navLoginBtn.innerHTML = `<i class="ti ti-user" style="font-size:13px"></i>${currentUser.name}`;
+    
+    renderDashboardInbox();
+  } else {
+    // 未ログイン状態
+    if(authSection) authSection.style.display = 'block';
+    if(dashboardSection) dashboardSection.style.display = 'none';
+    if(navLoginBtn) navLoginBtn.innerHTML = `<i class="ti ti-user" style="font-size:13px"></i>ログイン`;
+  }
+}
+
+// 5. マイページ内の届いた依頼リストの描画
+function renderDashboardInbox() {
+  const container = document.getElementById('dashboard-inbox');
+  const statCount = document.getElementById('stat-incoming-count');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const activeRequests = incomingRequests.filter(r => r.status === 'pending');
+  if(statCount) statCount.innerText = `${activeRequests.length} 件`;
+
+  if (activeRequests.length === 0) {
+    container.innerHTML = `<div class="empty-state"><i class="ti ti-mail"></i>未処理の依頼はありません。</div>`;
+    return;
+  }
+
+  activeRequests.forEach(req => {
+    const item = document.createElement('div');
+    item.className = 'inbox-item unread';
+    item.innerHTML = `
+      <div class="inbox-body">
+        <div class="inbox-from">${req.fromTroupe} からの依頼</div>
+        <div class="inbox-preview">${req.preview}</div>
+        <div class="inbox-meta">
+          <span class="inbox-copies">${req.copies}部</span>
+          <span class="inbox-date">${req.date}</span>
+        </div>
+      </div>
+      <div class="inbox-actions">
+        <button class="inbox-btn inbox-btn-accept" onclick="respondRequest(${req.id}, 'approve')">承認</button>
+        <button class="inbox-btn inbox-btn-decline" onclick="respondRequest(${req.id}, 'decline')">拒否</button>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+}
+
+// 6. 依頼への承認・拒否アクション ＆ メール自動送信
+function respondRequest(reqId, action) {
+  const req = incomingRequests.find(r => r.id === reqId);
+  if (!req) return;
+
+  req.status = action;
+
+  // 相手の劇団のメールアドレスを特定（ダミー）
+  const targetEmail = 'applicant@example.com';
+  const actionText = action === 'approve' ? '【承認】されました' : '【見送り】となりました';
+  const actionBody = action === 'approve' 
+    ? 'ビラの折り込みを承諾いたしました。追って搬入方法等の詳細をご連絡いたします。' 
+    : '大変恐縮ですが、部数制限またはスケジューリングの都合上、今回は折り込みを見送らせていただくこととなりました。';
+
+  // 申し込み側への自動メール通知
+  simulateSendEmail(
+    targetEmail,
+    `【ビラネットワーク】折り込み依頼の結果通知（${actionText}）`,
+    `${req.fromTroupe} 御中\n\nいつもお世話になっております。\n${currentUser.name} にご依頼いただいておりましたビラ折り込みの件、ステータスが${actionText}。\n\n詳細内容：\n${actionBody}`
+  );
+
+  // 再レンダリング
+  renderDashboardInbox();
+}
+
+// 7. 既存の「フォーム送信ボタン」の処理を上書き拡張
+document.addEventListener('DOMContentLoaded', () => {
+  const requestFormBtn = document.querySelector('#page-request-form .btn-primary');
+  if (requestFormBtn) {
+    requestFormBtn.onclick = (e) => {
+      e.preventDefault();
+
+      // 新しい申し込みが届いたと仮定して、管理データを1件増やす
+      const newReqId = Date.now();
+      incomingRequests.push({
+        id: newReqId,
+        fromTroupe: 'あなたの劇団',
+        copies: 150,
+        date: '2026/06/01',
+        preview: '新規に申し込みフォームから送信されたビラ折り込み依頼です。',
+        status: 'pending'
+      });
+
+      // 申し込み相手（劇団ソウルの担当者）への新規受付自動メール
+      simulateSendEmail(
+        'soul.member@example.com',
+        `【ビラネットワーク】新しい折り込み依頼が届きました`,
+        `劇団ソウル 担当者様\n\nあなたの公演「春の嵐、それから」に対して、新しいビラ折り込みの申し込みがありました。\nマイページにログインして内容を確認し、承認または拒否の選択を行ってください。`
+      );
+
+      // 成功バナー表示
+      const banner = document.getElementById('success-banner');
+      if (banner) {
+        banner.classList.add('show');
+        setTimeout(() => { banner.classList.remove('show'); }, 4000);
+      }
+
+      // ログイン状態にしてマイページへ移動
+      handleLogin(); 
+      showPage('mypage');
+    };
+  }
+  
+  // 初回ロード時のUI整合性チェック
+  updateAuthUI();
+});
+
 </script>
 
 </body>
