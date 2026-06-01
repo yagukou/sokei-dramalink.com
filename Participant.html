@@ -996,7 +996,10 @@
 // ==========================================
 // 1. データの定義（初期モックデータ）
 // ==========================================
-const troupesData = [
+// ==========================================
+// 1. データの定義（初期モックデータ）
+// ==========================================
+const DEFAULT_TROUPES = [
   { id: 'a', name: '劇団ソウル', univ: '早稲田大学', est: '2018年', count: '12公演', accept: true, tags: ['現代演劇', '学生劇団'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open', email: 'soul.member@example.com' },
   { id: 'b', name: 'ステージクロス', univ: '慶應義塾大学', est: '2015年', count: '24公演', accept: true, tags: ['ミュージカル', 'エンタメ'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open', email: 'cross@example.com' },
   { id: 'c', name: '早稲田演劇研究会', univ: '早稲田大学', est: '1970年', count: '150公演', accept: false, tags: ['アングラ', '伝統'], cls: 'troupe-c', statusText: '締切済み', statusCls: 'status-closed', email: 'enken@example.com' },
@@ -1004,16 +1007,28 @@ const troupesData = [
   { id: 'e', name: 'パラドックス', univ: '早稲田大学', est: '2021年', count: '6公演', accept: true, tags: ['コメディ', '会話劇'], cls: 'troupe-e', statusText: '折り込み受付中', statusCls: 'status-open', email: 'paradox@example.com' }
 ];
 
-const performancesData = [
+const DEFAULT_PERFORMANCES = [
   { id: 1, troupeId: 'a', title: '春の嵐、それから', dateStart: '2025-06-14', dateEnd: '2025-06-16', venue: '早稲田大学小劇場', desc: '人間の孤独と繋がりをテーマにした現代演劇。早慶の枠を超えた演劇の可能性を追求した意欲作です。' },
   { id: 2, troupeId: 'b', title: '真夏の夜の夢', dateStart: '2025-06-05', dateEnd: '2025-06-08', venue: '慶應日吉協生館', desc: 'シェイクスピアの名作を現代風ポップスに乗せてお届けする、躍動感あふれるミュージカルステージ。' },
   { id: 3, troupeId: 'd', title: '検察官', dateStart: '2025-06-25', dateEnd: '2025-06-28', venue: '外部劇場', desc: '古典名作を鋭い視点で再解釈。人間の滑稽さと社会の縮図を描き出す、緊迫のシチュエーション劇。' }
 ];
 
-let incomingRequests = [
+const DEFAULT_REQUESTS = [
   { id: 101, fromTroupe: 'ステージクロス', copies: 100, date: '2026/06/01', preview: '春の定期公演のビラ折り込みをお願いします。A4サイズ1枚です。', status: 'pending' },
   { id: 102, fromTroupe: '慶應ドラマクラブ', copies: 26, date: '2026/05/30', preview: '新歓公演のビラです。よろしくお願いします。', status: 'pending' }
 ];
+
+// --- ローカルストレージからデータを読み込む、無ければ初期データを使う ---
+let troupesData = JSON.parse(localStorage.getItem('troupesData')) || DEFAULT_TROUPES;
+let performancesData = JSON.parse(localStorage.getItem('performancesData')) || DEFAULT_PERFORMANCES;
+let incomingRequests = JSON.parse(localStorage.getItem('incomingRequests')) || DEFAULT_REQUESTS;
+
+// データを保存する共通関数
+function saveAllData() {
+  localStorage.setItem('troupesData', JSON.stringify(troupesData));
+  localStorage.setItem('performancesData', JSON.stringify(performancesData));
+  localStorage.setItem('incomingRequests', JSON.stringify(incomingRequests));
+}
 
 // ==========================================
 // 2. グローバル状態管理
@@ -1187,7 +1202,7 @@ function openPerformanceDetail(id) {
 }
 
 // ==========================================
-// 6. アカウント管理・疑似メール送信 (ご要望のコア機能)
+// 6. アカウント管理・疑似メール送信
 // ==========================================
 function simulateSendEmail(to, subject, body) {
   console.log(`%c【自動メール送信】\nTo: ${to}\nSubject: ${subject}\n\n${body}`, "background:#222; color:#bada55; padding:8px;");
@@ -1209,6 +1224,7 @@ function handleRegisterAccount() {
   troupesData.push(newTroupe);
   currentUser = newTroupe;
 
+  saveAllData(); // ★ローカルストレージに保存
   simulateSendEmail(email, '【ビラネットワーク】団体アカウント作成完了', `${name} 様\nアカウント作成が完了しました。管理マイページが利用可能です。`);
   updateAuthUI();
 }
@@ -1278,6 +1294,8 @@ function respondRequest(id, action) {
   if (!r) return;
   r.status = action;
 
+  saveAllData(); // ★ローカルストレージに保存
+
   const resultText = action === 'approve' ? '【承認】' : '【見送り】';
   simulateSendEmail('applicant@example.com', `折り込み依頼の結果通知（${resultText}）`, `${r.fromTroupe} 御中\nご依頼いただいたビラ折り込みの件、結果は${resultText}となりました。`);
 
@@ -1294,15 +1312,12 @@ function handleRegisterPerformance() {
   if (!title || !venue) { alert('タイトルと会場名を入力してください'); return; }
 
   performancesData.push({ id: Date.now(), troupeId: 'a', title, dateStart: start, dateEnd: end, venue, desc });
+  
+  saveAllData(); // ★ローカルストレージに保存
+  
   alert('カレンダーに新公演を登録しました！');
   showPage('calendar');
 }
-
-// 初期ロード
-document.addEventListener('DOMContentLoaded', () => {
-  renderCalendar();
-  updateAuthUI();
-});
 
 // 折り込み依頼フォームの送信処理
 function submitRequestForm() {
@@ -1317,7 +1332,6 @@ function submitRequestForm() {
     return;
   }
 
-  // 1. 新しい申し込みデータとして管理システム（インボックス）に追加
   const newReqId = Date.now();
   incomingRequests.push({
     id: newReqId,
@@ -1328,27 +1342,32 @@ function submitRequestForm() {
     status: 'pending'
   });
 
-  // 2. 相手の劇団（今回は劇団ソウル）の担当者へ、新規受付の自動メールをシミュレート
+  saveAllData(); // ★ローカルストレージに保存
+
   simulateSendEmail(
     'soul.member@example.com',
     `【ビラネットワーク】新しい折り込み依頼が届きました（${fromName} より）`,
-    `劇団ソウル 担当者様\n\nあなたの公演に対して、新しいビラ折り込みの申し込みがありました。\n\n【依頼内容】\n■ 劇団名：${fromName}\n■ 希望部数：${copies} 部\n■ ビラ形状：${size}\n■ 備考：${notes || '特になし'}\n\nマイページにログインして内容を確認し、承認または拒否の選択を行ってください。`
+    `劇団ソウル 担当者様\n\nあなたの公演に対して、新しいビラ折り込みの申し込みがありました。\n\n【依頼内容】\n■ 劇団名：${fromName}\n■ 希望部数：${copies} 部\n■ ビラ形状：${size}\n■ 備考：${notes || '特になし'}`
   );
 
-  // 3. 画面上に成功バナーをパッと出す
   const banner = document.getElementById('success-banner');
   const formBody = document.getElementById('request-form-body');
   if (banner) banner.classList.add('show');
-  if (formBody) formBody.style.display = 'none'; // フォームを隠す
+  if (formBody) formBody.style.display = 'none';
 
-  // 4. 3秒後に自動的にマイページへ移動して、届いた依頼を確認できるようにする
   setTimeout(() => {
     if (banner) banner.classList.remove('show');
-    if (formBody) formBody.style.display = 'block'; // フォームを元に戻す
-    handleLogin(); // 劇団ソウルとしてログイン状態にする
-    showPage('mypage'); // マイページ（ダッシュボード）へ移動
+    if (formBody) formBody.style.display = 'block';
+    handleLogin();
+    showPage('mypage');
   }, 3000);
 }
+
+// 初期ロード
+document.addEventListener('DOMContentLoaded', () => {
+  renderCalendar();
+  updateAuthUI();
+});
 
 </script>
 </body>
