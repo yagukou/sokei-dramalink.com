@@ -1094,16 +1094,15 @@ function deleteSinglePerformance() {
   }
 }
 
-// 💡 【追加】特定の「劇団」を一覧の×ボタンから削除する関数
+// 💡 特定の「劇団」を一覧の×ボタンから削除する関数
 function deleteSingleTroupe(event, id, name) {
-  // カード自体のクリックイベント（カレンダーへの画面遷移）が発火するのを防ぐ
   event.stopPropagation();
 
-  // 【セキュリティ】ログインしていない、または別の劇団の場合は拒否
-  if (!currentUser || currentUser.id !== id) {
-    alert(`❌ セキュリティエラー：劇団「${name}」を削除する権限がありません。\n（この劇団のアカウントでログインしてから操作してください）`);
-    return;
-  }
+  // 🛠️ 【一時的にコメントアウトして無効化！】
+  // if (!currentUser || currentUser.id !== id) {
+  //   alert(`❌ セキュリティエラー：劇団「${name}」を削除する権限がありません。`);
+  //   return;
+  // }
 
   if (confirm(`本当に劇団「${name}」のアカウントを削除しますか？\n（この劇団が登録した公演情報や依頼も一緒に削除されます）`)) {
     troupesData = troupesData.filter(t => t.id !== id);
