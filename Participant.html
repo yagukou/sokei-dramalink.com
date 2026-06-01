@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -646,6 +646,15 @@
     .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
     .empty-state i { font-size: 40px; margin-bottom: 12px; display: block; color: var(--border-neutral); }
   </style>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+   (function(){
+      // ★ここにあなたのPublic Key（公開キー）を貼り付けます
+      emailjs.init("YOUR_PUBLIC_KEY");
+   })();
+</script>
+
 </head>
 <body>
 
@@ -1327,7 +1336,7 @@ function handleRegisterPerformance() {
   showPage('calendar');
 }
 
-// 折り込み依頼フォームの送信処理
+// 折り込み依頼フォームの送信処理（本物のメール送信版）
 function submitRequestForm() {
   const fromName = document.getElementById('req-from-name').value;
   const fromEmail = document.getElementById('req-from-email').value;
@@ -1340,6 +1349,7 @@ function submitRequestForm() {
     return;
   }
 
+  // 1. ローカルストレージへの保存処理（これまでの機能）
   const newReqId = Date.now();
   incomingRequests.push({
     id: newReqId,
@@ -1349,15 +1359,30 @@ function submitRequestForm() {
     preview: `${size} / ${notes || '備考なし'}`,
     status: 'pending'
   });
+  saveAllData();
 
-  saveAllData(); 
+  // 2. ★本物のメールを送信する処理
+  // EmailJSに渡すデータ（テンプレートの {{ }} 部分と名前を合わせます）
+  const templateParams = {
+    from_name: fromName,
+    from_email: fromEmail,
+    copies: copies,
+    size: size,
+    notes: notes || '特になし'
+  };
 
-  simulateSendEmail(
-    'soul.member@example.com',
-    `【ビラネットワーク】新しい折り込み依頼が届きました（${fromName} より）`,
-    `劇団ソウル 担当者様\n\nあなたの公演に対して、新しいビラ折り込みの申し込みがありました。\n\n【依頼内容】\n■ 劇団名：${fromName}\n■ 希望部数：${copies} 部\n■ ビラ形状：${size}\n■ 備考：${notes || '特になし'}`
-  );
+  // EmailJSを使って送信
+  // "YOUR_SERVICE_ID" と "YOUR_TEMPLATE_ID" はご自身のものに書き換えてください
+  emailjs.send('service_4gfx3qf', 'template_rzattmh', templateParams)
+    .then(function(response) {
+       console.log('SUCCESS!', response.status, response.text);
+       alert('【本物のメール通知】劇団ソウルの担当者メアドへ、実際の通知メールが送信されました！');
+    }, function(error) {
+       console.log('FAILED...', error);
+       alert('メール送信に失敗しました。設定を確認してください。');
+    });
 
+  // 3. 画面上の成功アニメーションとマイページへの移動
   const banner = document.getElementById('success-banner');
   const formBody = document.getElementById('request-form-body');
   if (banner) banner.classList.add('show');
@@ -1380,3 +1405,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 </body>
 </html>
+
