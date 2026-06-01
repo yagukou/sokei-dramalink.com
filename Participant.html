@@ -515,6 +515,10 @@
             <label class="form-label">メールアドレス</label>
             <input type="email" class="form-input" id="login-email" value="soul.member@example.com">
           </div>
+          <div class="form-row">
+            <label class="form-label">パスワード</label>
+            <input type="password" class="form-input" id="login-password" placeholder="••••••••">
+          </div>
           <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="handleLogin()"><i class="ti ti-login"></i>ログインする</button>
         </div>
         <div style="border-left: 0.5px solid var(--border-neutral); padding-left: 1.5rem;">
@@ -534,6 +538,10 @@
           <div class="form-row">
             <label class="form-label">担当者メールアドレス<span class="form-required">*</span></label>
             <input type="email" class="form-input" id="reg-troupe-email" placeholder="example@gmail.com">
+          </div>
+          <div class="form-row">
+            <label class="form-label">パスワード<span class="form-required">*</span></label>
+            <input type="password" class="form-input" id="reg-troupe-password" placeholder="パスワードを設定してください">
           </div>
           <button class="btn-secondary" style="width: 100%; justify-content: center; background: var(--crimson-pale); color: var(--crimson);" onclick="handleRegisterAccount()"><i class="ti ti-user-plus"></i>アカウントを作成する</button>
         </div>
@@ -654,46 +662,72 @@ function goBack() {
 // ==========================================
 // 3. アカウント管理
 // ==========================================
+// 📝 新規劇団アカウント作成（安全版）
 function handleRegisterAccount() {
-  const name = document.getElementById('reg-troupe-name').value;
+  const name = document.getElementById('reg-troupe-name').value.trim();
   const univ = document.getElementById('reg-troupe-univ').value;
-  const email = document.getElementById('reg-troupe-email').value;
+  const email = document.getElementById('reg-troupe-email').value.trim();
+  const password = document.getElementById('reg-troupe-password').value.trim();
 
-  if (!name || !email) { alert('劇団名とメールアドレスを入力してください！'); return; }
-  if (troupesData.some(t => t.email === email)) { alert('このメールアドレスは既に登録されています。'); return; }
+  if (!name || !email || !password) {
+    alert('❌ 必須項目（*）をすべて入力してください。');
+    return;
+  }
 
-  const colors = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  let troupes = JSON.parse(localStorage.getItem('troupes')) || [];
+  
+  if (troupes.some(t => t.email === email)) {
+    alert('❌ このメールアドレスは既に登録されています。');
+    return;
+  }
 
+  // 新しい劇団データにパスワードを含めて保存
   const newTroupe = {
-    id: 'troupe-' + Date.now(), name, univ, est: '2026年', count: '0公演', accept: true,
-    tags: ['新規'], cls: randomColor, statusText: '折り込み受付中', statusCls: 'status-open', email
+    id: 'troupe_' + Date.now(),
+    name: name,
+    univ: univ,
+    email: email,
+    password: password // 💡 パスワードをしっかり保存
   };
 
-  troupesData.push(newTroupe);
-  currentUser = newTroupe; 
-  saveAllData();
+  troupes.push(newTroupe);
+  localStorage.setItem('troupes', JSON.stringify(troupes));
   
-  alert(`劇団「${name}」のアカウントを作成しました！マイページに移動します。`);
-  
-  updateFilterDropdown();
-  renderLegend();
-  showPage('mypage'); 
+  alert(`✨ 劇団「${name}」のアカウントを作成しました！\n作成したパスワードでログインしてください。`);
+  location.reload();
 }
 
+// 🔐 ログイン処理（安全版）
 function handleLogin() {
-  const email = document.getElementById('login-email').value;
-  if (!email) { alert('メールアドレスを入力してください'); return; }
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value.trim();
 
-  const found = troupesData.find(t => t.email === email);
-  if (found) {
-    currentUser = found;
-    saveAllData();
-    showPage('mypage');
-    alert(`劇団「${found.name}」としてログインしました。専用管理ページに切り替えます。`);
-  } else {
-    alert('登録されていないメールアドレスです。');
+  if (!email || !password) {
+    alert('❌ メールアドレスとパスワードを入力してください。');
+    return;
   }
+
+  // ローカルストレージから劇団一覧を取得
+  const troupes = JSON.parse(localStorage.getItem('troupes')) || [];
+  const troupe = troupes.find(t => t.email === email);
+
+  if (!troupe) {
+    alert('❌ 登録されていないメールアドレスです。');
+    return;
+  }
+
+  // 💡 シンプルに、登録されているパスワードと一致するかだけをチェック
+  if (password !== troupe.password) {
+    alert('❌ パスワードが間違っています。');
+    return;
+  }
+
+  // ログイン成功処理（元のアプリのログイン状態と同期させます）
+  currentUser = troupe;
+  localStorage.setItem('currentUser', JSON.stringify(currentUser));
+  
+  alert(`🔑 ${troupe.name} としてログインしました！`);
+  location.reload(); // 画面を更新してログイン状態を反映
 }
 
 function handleLogout() {
