@@ -218,6 +218,18 @@
       background: #fff;
     }
 
+    /* フォーム内の小見出しスタイル */
+    .form-section-title {
+      font-size: 14px;
+      font-weight: bold;
+      color: #b90e0e;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 5px;
+      margin-top: 25px;
+      margin-bottom: 15px;
+      font-family: sans-serif;
+    }
+
     /* 写真添付エリア */
     .file-input-wrapper {
       position: relative;
@@ -587,6 +599,7 @@
             <h2 class="page-title">新規公演チケット公式登録</h2>
             
             <form onsubmit="handleCreateTicket(event)">
+              <div class="form-section-title">基本情報の入力</div>
               <div class="form-group">
                 <label>公演タイトル</label>
                 <input type="text" id="new-title" required placeholder="例：早稲田大学出場団体公演 『劇タイトル』">
@@ -598,7 +611,7 @@
                   <input type="date" id="new-date" required>
                 </div>
                 <div class="form-group">
-                  <label>開場 / 開演時間 【追加】</label>
+                  <label>開場 / 開演時間</label>
                   <input type="text" id="new-time" required placeholder="例：13:30開場 / 14:00開演">
                 </div>
               </div>
@@ -615,15 +628,38 @@
               </div>
 
               <div class="form-group">
-                <label>販売予定枚数（総在庫数） 【追加】</label>
+                <label>販売予定枚数（総在庫数）</label>
                 <input type="number" id="new-stock" required placeholder="例：150" min="1">
               </div>
 
               <div class="form-group">
-                <label>公演の紹介・詳細説明（出演者・あらすじ等） 【追加】</label>
+                <label>公演の紹介・詳細説明（出演者・あらすじ等）</label>
                 <textarea id="new-desc" rows="4" placeholder="ここに公演の詳細情報を入力します。お客様のチケット詳細画面に表示されます。" required></textarea>
               </div>
 
+              <div class="form-section-title">チケット代金 振込先口座の設定</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>金融機関名</label>
+                  <input type="text" id="new-bank-name" required placeholder="例：早慶中央銀行">
+                </div>
+                <div class="form-group">
+                  <label>支店名</label>
+                  <input type="text" id="new-branch-name" required placeholder="例：演劇支店（店番123）">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>口座種別・口座番号</label>
+                  <input type="text" id="new-account-number" required placeholder="例：普通 1234567">
+                </div>
+                <div class="form-group">
+                  <label>口座名義 (カナ)</label>
+                  <input type="text" id="new-account-name" required placeholder="例：ソウケイエンゲキサイジムキョク">
+                </div>
+              </div>
+
+              <div class="form-section-title">ビジュアル設定</div>
               <div class="form-group">
                 <label>公演イメージ写真添付</label>
                 <div class="file-input-wrapper">
@@ -633,7 +669,7 @@
                 </div>
               </div>
               
-              <button type="submit" class="submit-btn" style="background:#b90e0e; color:white; border:none;">この内容で公式発売・一般公開する</button>
+              <button type="submit" class="submit-btn" style="background:#b90e0e; color:white; border:none; margin-top:20px;">この内容で公式発売・一般公開する</button>
             </form>
           </div>
         </div>
@@ -669,7 +705,7 @@
           <p style="margin:0 0 10px 0; font-size:13px; font-weight:bold; color:#111;">【購入者情報の入力】</p>
           
           <div class="form-group" style="margin-bottom: 12px;">
-            <label>購入枚数 【追加】</label>
+            <label>購入枚数</label>
             <select id="buy-quantity" onchange="updateTotalPrice()" style="padding: 8px;">
               <option value="1">1枚</option>
               <option value="2">2枚</option>
@@ -680,12 +716,12 @@
           </div>
 
           <div class="form-group" style="margin-bottom: 12px;">
-            <label>お名前（カタカナ） 【追加】</label>
+            <label>お名前（カタカナ）</label>
             <input type="text" id="buy-name" required placeholder="ソウケイ タロウ" style="padding: 8px;">
           </div>
 
           <div class="form-group" style="margin-bottom: 5px;">
-            <label>電話番号（緊急連絡用） 【追加】</label>
+            <label>電話番号（緊急連絡用）</label>
             <input type="text" id="buy-tel" required placeholder="090-0000-0000" style="padding: 8px;">
           </div>
         </div>
@@ -693,17 +729,36 @@
         <div class="form-group">
           <label>お支払い方法の選択</label>
           <select id="payment-select" onchange="handlePaymentChange()">
-            <option value="bank">銀行振込 (窓口・ATM・ネットバンキング)</option>
+            <option value="bank">銀行振込 (登録された公式口座への送金)</option>
+            <option value="credit">クレジットカード決済 (即時オンライン決済・デモ)</option>
             <option value="venue">当日会場受付精算 (現金のみ)</option>
           </select>
         </div>
 
         <div class="bank-info-box" id="bank-info-area">
           <p style="margin-top:0; font-weight:bold; color:#c5a059; border-bottom:1px solid #e5dfd5; padding-bottom:5px;">【お振込み先口座】</p>
-          <div style="display:flex; margin-bottom:4px;"><div style="width:80px;color:#666;">金融機関名</div><div style="color:#aaa;">（※未定のため空欄）</div></div>
-          <div style="display:flex; margin-bottom:4px;"><div style="width:80px;color:#666;">支店名</div><div></div></div>
-          <div style="display:flex; margin-bottom:4px;"><div style="width:80px;color:#666;">口座番号</div><div></div></div>
-          <div style="display:flex;"><div style="width:80px;color:#666;">口座名義</div><div></div></div>
+          <div style="display:flex; margin-bottom:4px;"><div style="width:100px;color:#666;">金融機関名</div><div id="modal-bank-name">-</div></div>
+          <div style="display:flex; margin-bottom:4px;"><div style="width:100px;color:#666;">支店名</div><div id="modal-branch-name">-</div></div>
+          <div style="display:flex; margin-bottom:4px;"><div style="width:100px;color:#666;">口座番号</div><div id="modal-account-number">-</div></div>
+          <div style="display:flex;"><div style="width:100px;color:#666;">口座名義</div><div id="modal-account-name">-</div></div>
+        </div>
+
+        <div class="bank-info-box" id="credit-info-area" style="display:none;">
+          <p style="margin-top:0; font-weight:bold; color:#b90e0e; border-bottom:1px solid #e5dfd5; padding-bottom:5px;">【クレジットカード情報の入力 (デモ)】</p>
+          <div class="form-group" style="margin-bottom: 10px;">
+            <label>カード番号</label>
+            <input type="text" id="credit-card-num" placeholder="1234 5678 1234 5678" style="padding: 8px;">
+          </div>
+          <div style="display:flex; gap:10px;">
+            <div class="form-group" style="flex:1; margin-bottom:0;">
+              <label>有効期限 (月/年)</label>
+              <input type="text" id="credit-card-expiry" placeholder="12/28" style="padding: 8px;">
+            </div>
+            <div class="form-group" style="flex:1; margin-bottom:0;">
+              <label>CVC (セキュリティコード)</label>
+              <input type="password" id="credit-card-cvc" placeholder="123" style="padding: 8px;">
+            </div>
+          </div>
         </div>
 
         <div style="text-align: right; font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #b90e0e;">
@@ -715,7 +770,7 @@
     </div>
 
     <script>
-    // 初期データベース（項目を大幅に増やしました）
+    // 初期データベース（既存のモック公演データにもサンプル口座を設定）
     let ticketDatabase = [
       {
         id: 1,
@@ -726,7 +781,11 @@
         price: "3000",
         stock: "200",
         desc: "早慶の演劇サークルが総力を挙げてお届けする、2026年度演劇祭のオープニングを飾る記念碑的大公演です。圧巻の群像劇をお楽しみください。",
-        image: "media1.jpg"
+        image: "media1.jpg",
+        bankName: "早慶中央銀行",
+        branchName: "早稲田支店 (店番001)",
+        accountNumber: "普通 1234567",
+        accountName: "ソウケイエンゲキサイジムキョク"
       },
       {
         id: 2,
@@ -737,7 +796,11 @@
         price: "2500",
         stock: "120",
         desc: "伝統と革新が交差する三田の地で、若き役者たちが紡ぐ情熱的な人間ドラマ。現代社会を生きるすべての人に捧げるメッセージソング劇。",
-        image: "media2.jpg"
+        image: "media2.jpg",
+        bankName: "三井慶応銀行",
+        branchName: "三田支店 (店番002)",
+        accountNumber: "普通 7654321",
+        accountName: "ケイオウブタイジムキョク"
       }
     ];
 
@@ -805,7 +868,7 @@
       }
     }
 
-    // 管理者：拡張された入力値を受け取って登録
+    // 管理者：追加された「口座情報」を受け取って登録処理
     function handleCreateTicket(e) {
       e.preventDefault();
       const title = document.getElementById('new-title').value;
@@ -815,6 +878,12 @@
       const price = document.getElementById('new-price').value;
       const stock = document.getElementById('new-stock').value;
       const desc = document.getElementById('new-desc').value;
+      
+      // 💰 口座情報の値を取得
+      const bankName = document.getElementById('new-bank-name').value;
+      const branchName = document.getElementById('new-branch-name').value;
+      const accountNumber = document.getElementById('new-account-number').value;
+      const accountName = document.getElementById('new-account-name').value;
 
       const newTicket = {
         id: Date.now(),
@@ -825,11 +894,15 @@
         price: price,
         stock: stock,
         desc: desc,
+        bankName: bankName,
+        branchName: branchName,
+        accountNumber: accountNumber,
+        accountName: accountName,
         image: attachedImageBase64 || "https://via.placeholder.com/240x180/e5dfd5/111111?text=No+Image"
       };
 
       ticketDatabase.unshift(newTicket);
-      alert("✨ 入力された全項目（写真・詳細説明・時間設定含む）を公式チケットとして一般発売開始しました！");
+      alert("✨ 口座設定を含むすべての項目を公式チケットとして登録し、一般発売を開始しました！");
       
       e.target.reset();
       document.getElementById('img-preview').style.display = 'none';
@@ -868,7 +941,7 @@
       });
     }
 
-    // モーダル表示制御とリアルタイム金額計算
+    // モーダル表示制御と口座情報の動的割り当て
     function openPurchaseModal(id) {
       selectedTicket = ticketDatabase.find(t => t.id === id);
       if (!selectedTicket) return;
@@ -878,12 +951,21 @@
       document.getElementById('modal-perf-venue').innerText = selectedTicket.venue;
       document.getElementById('modal-perf-price').innerText = `¥${Number(selectedTicket.price).toLocaleString()}`;
       
-      // 入力初期化
+      // 💡 該当公演に登録されている固有口座を動的に流し込む
+      document.getElementById('modal-bank-name').innerText = selectedTicket.bankName || "指定なし";
+      document.getElementById('modal-branch-name').innerText = selectedTicket.branchName || "-";
+      document.getElementById('modal-account-number').innerText = selectedTicket.accountNumber || "-";
+      document.getElementById('modal-account-name').innerText = selectedTicket.accountName || "-";
+
+      // 入力フィールド群の初期化
       document.getElementById('buy-quantity').value = "1";
       document.getElementById('buy-name').value = "";
       document.getElementById('buy-tel').value = "";
       document.getElementById('payment-select').value = "bank";
+      
+      // 表示エリアの初期化
       document.getElementById('bank-info-area').style.display = "block";
+      document.getElementById('credit-info-area').style.display = "none";
 
       updateTotalPrice();
 
@@ -902,18 +984,21 @@
       selectedTicket = null;
     }
 
+    // 💡 支払い方法のセレクト変更で、口座情報とクレカ入力を切り替える
     function handlePaymentChange() {
       const type = document.getElementById('payment-select').value;
       document.getElementById('bank-info-area').style.display = (type === 'bank') ? 'block' : 'none';
+      document.getElementById('credit-info-area').style.display = (type === 'credit') ? 'block' : 'none';
     }
 
-    // 最終予約確定
+    // 最終予約確定処理
     function confirmPurchase() {
       if (!selectedTicket) return;
       
       const qty = document.getElementById('buy-quantity').value;
       const name = document.getElementById('buy-name').value;
       const tel = document.getElementById('buy-tel').value;
+      const paymentType = document.getElementById('payment-select').value;
 
       // 必須入力チェック
       if (!name || !tel) {
@@ -921,7 +1006,26 @@
         return;
       }
 
-      alert(`🎉 チケットの申し込みが確定しました！\n\n【公演名】\n${selectedTicket.title}\n【予約枚数】 ${qty}枚\n【申込者】 ${name} 様\n\nご登録のメールアドレス、および携帯番号（${tel}）へ引換用の案内メールを自動送信しました。ご確認ください。`);
+      // クレジットカード選択時のダミーバリデーション
+      if (paymentType === 'credit') {
+        const cardNum = document.getElementById('credit-card-num').value;
+        if (!cardNum) {
+          alert("クレジットカード情報を入力してください。");
+          return;
+        }
+      }
+
+      // 支払い方法に応じたメッセージ分岐
+      let paymentGuide = "";
+      if (paymentType === 'bank') {
+        paymentGuide = `\n\n【お振込みのお願い】\n上記の[${selectedTicket.bankName}]口座へ、期日までに合計金額をお振込みください。入金確認後に正式チケットを配信します。`;
+      } else if (paymentType === 'credit') {
+        paymentGuide = `\n\n【クレジットカード決済】\nオンラインでの即時決済が正常に完了いたしました。`;
+      } else {
+        paymentGuide = `\n\n【当日精算】\n代金は公演当日、会場の受付にて現金でお支払いください。`;
+      }
+
+      alert(`🎉 チケットの申し込みが確定しました！\n\n【公演名】\n${selectedTicket.title}\n【予約枚数】 ${qty}枚\n【申込者】 ${name} 様${paymentGuide}\n\nご登録のメールアドレス、および携帯番号（${tel}）へ引換案内メールを自動送信しました。ご確認ください。`);
       closeModal();
     }
 
