@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" translate="no">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate">
+    <title>メニュー・チケット案内｜早慶演劇祭</title>
 
-     <style>
+    <style>
+    /* --- 全体設定：ブランド世界観の統一 --- */
     body {
       margin: 0;
-      font-family: sans-serif;
+      font-family: "Times New Roman", "Yu Mincho", "游明朝", "Noto Serif JP", serif;
       background: #111;  
       color: white; 
+      -webkit-font-smoothing: antialiased;
+      top: 0px !important;         
+      position: static !important; 
     }
 
+    /* --- 【完全同期】ヘッダースタイル --- */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background-color: #b90e0e;
       padding: 10px 20px;
+      position: relative;
     }
 
     .menu-left, .menu-right {
@@ -30,20 +38,18 @@
 
     .menu-left div, .menu-right div {
       display: flex;
-      flex-direction: column;  /* ←縦にする */
+      flex-direction: column;
       align-items: center;
       text-align: center;
-}
+    }
 
     .menu-left img, .menu-right img {
        width: 30px;
        height: 30px;
        margin-bottom: 5px;
-}
+    }
 
     .logo {
-      font-size: 24px;
-      font-weight: bold;
       font-family: "Times New Roman", serif;
       font-size: 28px;
       font-weight: bold;
@@ -55,27 +61,28 @@
       flex-direction: column;  
       align-items: center;
       position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-
-  max-width: 40%;  /* ←これ超重要 */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      max-width: 40%;  
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-decoration: none;
     }
 
     .logo-main {
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #ffffff;
+    }
 
-.logo-sub {   
-  font-size: 16px;   
-  letter-spacing: 2px;
-  color: #d4af37;      
-}
+    .logo-sub {   
+      font-size: 16px;   
+      letter-spacing: 2px;
+      color: #d4af37;      
+    }
 
     a {
       text-decoration: none;
@@ -84,428 +91,530 @@
       font-size: 12px;
     }
 
-        .menu-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    .menu-1 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #b90e0e;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 80px;   
+      height: 80px;  
+      justify-content: center;
+      box-sizing: border-box;
+      color: rgb(8, 8, 8);
+      transition: 0.3s;
+    }
 
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 80px;   /* 横幅固定 */
-  height: 80px;  /* 高さ固定 */
-  justify-content: center;
-}
+    .menu-1:hover {
+      transform: translateY(-3px);
+    }
 
-.menu-1, .language-btn {
-  background: #b90e0e;; /* 好きな色 */
-  color: rgb(8, 8, 8);
-}
+    .menu-1 span {
+      display: block;
+      width: 100%;
+      text-align: center;       
+      margin-top: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 11px;
+      color: #fff;
+    }
 
-.goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate,
-  .goog-te-gadget-icon,
-  .goog-te-gadget-simple,
-  .goog-te-balloon-frame,
-  .skiptranslate {
-    display: none !important;
-  }
+    .lang-wrapper {
+      position: relative;
+      display: inline-block;
+    }
 
-  body {
-    top: 0px !important;
-    position: static !important;
-  }
+    .lang-menu {
+      position: absolute;
+      top: 110%;   
+      left: 0;
+      width: 140px;
+      background: #f0f0f0;
+      border-radius: 12px;
+      display: none;
+      overflow: hidden;
+      z-index: 9999;
+    }
 
-/* ホバー効果 */
-.menu-1:hover {
-  transform: translateY(-3px);
-  transition: 0.3s;
-}
+    .lang-menu div {
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: black;
+    }
 
-.menu-1 img {
-  width: 30px !important;
-  height: 30px !important;
-}
+    .lang-menu div:hover {
+      background: #ddd;
+    }
 
-.slider {
-  position: relative;
-  width: 80%;
-  margin: 30px auto;
-  overflow: hidden;
-}
+    /* --------------------------------------------------
+       ✨ メインコンテンツ：宝塚＆劇団四季インスパイア
+    ----------------------------------------------------- */
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
 
-.slides {
-  position: relative;
-}
+    .section-title {
+      font-size: 24px;
+      text-align: center;
+      letter-spacing: 2px;
+      color: #c5a059; /* 上品な公式ゴールド */
+      margin-bottom: 30px;
+      position: relative;
+      font-family: "Yu Mincho", serif;
+    }
+    
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 1px;
+      background: #c5a059;
+      margin: 10px auto 0;
+    }
 
-.slide {
-  width: 100%;
-  display: none;
-  border-radius: 10px;
-  opacity: 0;
-  transition: 0.5s;
-  position: absolute;
-}
+    /* 🧭 劇団四季風：直感的な目的別ナビゲーション */
+    .shiki-nav-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 50px;
+    }
 
-.slide.active {
-  display: block;
-  opacity: 1;
-  position: relative;
-}
+    .shiki-btn {
+      background: linear-gradient(135deg, #222, #1a1a1a);
+      border: 1px solid #333;
+      padding: 25px 15px;
+      text-align: center;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-button.prev, button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
+    .shiki-btn:hover {
+      border-color: #c5a059;
+      background: #2a2215;
+      transform: translateY(-2px);
+    }
 
-.prev { left: 10px; }
-.next { right: 10px; }
+    .shiki-btn .icon-title {
+      font-size: 16px;
+      color: #fff;
+      font-weight: bold;
+      margin-bottom: 5px;
+      letter-spacing: 1px;
+    }
 
-.lang-wrapper {
-  position: relative;
-  display: inline-block;
-}
+    .shiki-btn .icon-sub {
+      font-size: 11px;
+      color: #888;
+      font-family: sans-serif;
+    }
 
-/* ↓ 下にポップアップさせる */
-.lang-menu {
-  position: absolute;
-  top: 110%;   /* ←ボタンの真下 */
-  left: 0;
-  width: 140px;
+    /* 🌸 宝塚風：華やかなチケット情報・公演カード */
+    .taka-card {
+      background: #1a1a1a;
+      border: 1px solid #2c2519;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 50px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
 
-  background: #f0f0f0;
-  border-radius: 12px;
-  display: none;
-  overflow: hidden;
-  z-index: 9999;
-}
+    .taka-hero-banner {
+      width: 100%;
+      height: 260px;
+      background: linear-gradient(to right, #4a0e0e, #1a1a1a), url('media-hero.jpg');
+      background-size: cover;
+      background-position: center;
+      background-blend-mode: multiply;
+      padding: 30px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      position: relative;
+    }
 
-/* 中身 */
-.lang-menu div {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 13px;
-  color: black
-}
+    /* 宝塚でおなじみのステータスタグ */
+    .status-badge {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #b90e0e;
+      color: white;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 5px 12px;
+      border-radius: 3px;
+      letter-spacing: 1px;
+      font-family: sans-serif;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
 
-/* ホバー */
-.lang-menu div:hover {
-  background: #ddd;
-}
+    .taka-title {
+      font-size: 26px;
+      margin: 0 0 10px 0;
+      color: #ffffff;
+      font-family: "Yu Mincho", serif;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
 
-.lang-wrapper .lang-menu {
-  display: none;
-}
+    .taka-sub-info {
+      font-size: 13px;
+      color: #d4af37;
+      letter-spacing: 1px;
+      margin: 0;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    }
 
-.menu-1 span {
-  display: block;
-  width: 100%;
-  text-align: center;       /* 真ん中に */
-  margin-top: 5px;
+    .taka-details-box {
+      padding: 25px;
+      background: #161616;
+      border-top: 1px solid #222;
+    }
 
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11px;
-}
+    /* 宝塚風のエレガントなスケジュール案内枠 */
+    .schedule-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      font-family: sans-serif;
+      margin-bottom: 20px;
+    }
 
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
+    .schedule-table th, .schedule-table td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #222;
+    }
 
-.goog-te-banner-frame {
-  display: none !important;
-}
+    .schedule-table th {
+      color: #999;
+      width: 140px;
+      font-weight: normal;
+    }
 
-body {
-  top: 0px !important;
-  position: static !important;
-}
+    .schedule-table td b {
+      color: #fff;
+    }
 
-body.translated-ltr .logo-main {
-  font-size: 22px;
-}
+    .action-row {
+      display: flex;
+      gap: 15px;
+      justify-content: flex-end;
+    }
 
-body.translated-ltr .logo-sub {
-  font-size: 14px;
-}
+    .btn-gold {
+      background: linear-gradient(135deg, #c5a059, #aa843d);
+      color: #111;
+      padding: 12px 30px;
+      font-weight: bold;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: "Yu Mincho", serif;
+      transition: 0.3s;
+    }
 
-.hamburger {
-  display: none;
-}
+    .btn-gold:hover {
+      background: #fff;
+      box-shadow: 0 0 15px rgba(197,160,89,0.4);
+    }
 
-.mega-menu {
-  position: fixed;
-  top: 100px; /* ヘッダーの高さに合わせる */
-  left: 0;
+    /* 🗺️ 総合サイトメニュー（全ページへの美しい導線カード） */
+    .portal-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 60px;
+    }
 
-  width: 100%;
-  background: rgba(0,0,0,0.96);
+    .portal-card {
+      background: #1c1c1c;
+      border: 1px solid #222;
+      border-radius: 4px;
+      padding: 25px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+    }
 
-  overflow: hidden;
+    .portal-card:hover {
+      border-color: #b90e0e;
+      background: #221515;
+      transform: scale(1.01);
+    }
 
-  max-height: 0;
+    .portal-icon-area {
+      width: 50px;
+      height: 50px;
+      background: #2a2a2a;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #c5a059;
+      font-size: 20px;
+    }
 
-  transition: max-height 0.5s ease;
+    .portal-text-area {
+      flex: 1;
+    }
 
-  z-index: 999;
-  pointer-events: none;
-  opacity: 0;
-}
+    .portal-card-title {
+      font-size: 16px;
+      color: #fff;
+      margin: 0 0 4px 0;
+      font-family: "Yu Mincho", serif;
+      font-weight: bold;
+    }
 
-.mega-menu.active {
-  max-height: 500px;
-  pointer-events: auto;
-  opacity: 1;
-}
+    .portal-card-desc {
+      font-size: 11px;
+      color: #888;
+      margin: 0;
+      font-family: sans-serif;
+      line-height: 1.4;
+    }
 
-.mega-content {
-  display: flex;
-  justify-content: center;
-  gap: 80px;
+    /* Google翻訳用 */
+    .goog-te-banner-frame, .goog-te-banner, .goog-te-balloon-frame, #goog-gt-tt, .goog-gt-tt, iframe[id^=":1."] {
+      display: none !important;
+      visibility: hidden !important;
+    }
 
-  padding: 50px;
-}
+    .hamburger { display: none; }
 
-.mega-column {
-  display: flex;
-  flex-direction: column;
-}
+    /* レスポンシブ */
+    @media (max-width: 768px) {
+      header { position: relative; height: 70px; }
+      .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
+      .menu-left, .menu-right { display: none; }
+      .hamburger { position: absolute; top: 15px; right: 20px; font-size: 30px; color: white; cursor: pointer; z-index: 1000; display: block; }
+      
+      .shiki-nav-grid { grid-template-columns: 1fr; gap: 10px; }
+      .portal-menu-grid { grid-template-columns: 1fr; gap: 15px; }
+      .taka-hero-banner { height: 200px; padding: 15px; }
+      .taka-title { font-size: 20px; }
+      .action-row { flex-direction: column; }
+      .btn-gold { width: 100%; text-align: center; }
+    }
+    </style>
 
-.mega-column h3 {
-  color: gold;
-  margin-bottom: 20px;
-  font-size: 20px;
-}
-
-.mega-column a {
-  color: white;
-  text-decoration: none;
-
-  margin-bottom: 14px;
-
-  transition: 0.3s;
-}
-
-.mega-column a:hover {
-  color: gold;
-  transform: translateX(5px);
-}
-
-@media (max-width: 768px) {
-
-  header {
-    position: relative;
-    height: 70px;
-  }
-
-  /* ロゴ中央 */
-  .logo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-  }
-
-  /* 左メニュー消す */
-  .menu-left {
-    display: none;
-  }
-
-  /* 右メニューも消す */
-  .menu-right {
-    display: none;
-  }
-
-  /* ハンバーガー（右上） */
-  .hamburger {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1000;
-    display: block;
-  }
-}
-
-  </style>
- </head>
-
- <script>
-function toggleLangMenu(e) {
-  if (e) e.stopPropagation();
-
-  const menu = document.getElementById("lang-menu");
-
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "block";
-  }
-}
-
-/* 外クリックで閉じる */
-document.addEventListener("click", function() {
-  const menu = document.getElementById("lang-menu");
-  if (menu) menu.style.display = "none";
-});
-
-/* ←これが無かったから翻訳されてない */
-function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
-}
-</script>
-
-<div id="google_translate_element" style="display:none;"></div>
-
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
-</script>
-
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    <!-- Google翻訳ロジック -->
+    <script>
+    function toggleLangMenu(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById("lang-menu");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+    document.addEventListener("click", function() {
+      const menu = document.getElementById("lang-menu");
+      if (menu) menu.style.display = "none";
+    });
+    function setLang(lang) {
+      document.cookie = "googtrans=/ja/" + lang + "; path=/";
+      location.reload();
+    }
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'ja',
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false
+      }, 'google_translate_element');
+    }
+    </script>
+    <div id="google_translate_element" style="display:none;"></div>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  </head>
 
   <body>
+
+    <!-- 【完全同期】ヘッダー -->
     <header>
-  <!-- 左 -->
-   <div class="menu-left">
-    <a href="ticket.html" class="menu-1">
-  <img src="ticket3.png" width="50">
-  <span>チケット</span>
-  </a>
-  <a href="what.html" class="menu-1">
-  <img src="what3.png" width="50">
-  <span>公演紹介</span>
-  </a>
-      <a href="Participant.html" class="menu-1">
-  <img src="Participant3.png" width="50">
-  <span>出場団体</span>
-  </a>
-    <a href="Schedule.html" class="menu-1">
-  <img src="Schedule3.png" width="50">
-  <span>スケジュール</span>
-</a>
-  </div>
+      <div class="menu-left">
+        <a href="ticket.html" class="menu-1">
+          <img src="ticket3.png">
+          <span>チケット</span>
+        </a>
+        <a href="what.html" class="menu-1">
+          <img src="what3.png">
+          <span>公演紹介</span>
+        </a>
+        <a href="Participant.html" class="menu-1">
+          <img src="Participant3.png">
+          <span>出場団体</span>
+        </a>
+        <a href="Schedule.html" class="menu-1">
+          <img src="Schedule3.png">
+          <span>スケジュール</span>
+        </a>
+      </div>
 
-  <!-- 真ん中 -->
-  <a href="index.html" class="logo">
-  <div class="logo-main">早慶演劇祭</div>
-  <div class="logo-sub">Waseda–Keio Theatre Festival</div>
-</a>
+      <a href="index.html" class="logo">
+        <div class="logo-main">早慶演劇祭</div>
+        <div class="logo-sub">Waseda–Keio Theatre Festival</div>
+      </a>
 
-  <!-- 右 -->
-  <div class="menu-right">
-     <a href="news.html" class="menu-1">
-  <img src="news3.png" width="50">
-  <span>ニュース</span>
-  </a>
-     <div class="lang-wrapper">
-    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-      <img src="Language3.png">
-      <span>Language</span>
-    </a>
+      <div class="menu-right">
+        <a href="news.html" class="menu-1">
+          <img src="news3.png">
+          <span>ニュース</span>
+        </a>
+        <div class="lang-wrapper">
+          <a class="menu-1" onclick="toggleLangMenu(event); return false;">
+            <img src="Language3.png">
+            <span>Language</span>
+          </a>
+          <div id="lang-menu" class="lang-menu">
+            <div onclick="setLang('ja')">日本語</div>
+            <div onclick="setLang('en')">ENGLISH</div>
+            <div onclick="setLang('zh-CN')">简体中文</div>
+            <div onclick="setLang('ko')">한국어</div>
+          </div>
+        </div>
+        <a href="Inquiry.html" class="menu-1">
+          <img src="Inquiry3.png">
+          <span>お問い合わせ</span>
+        </a>
+        <a href="menu.html" class="menu-1">
+          <img src="menu3.png">
+          <span>メニュー</span>
+        </a>
+      </div>
+      <div class="hamburger">☰</div>
+    </header>
 
-  <div id="lang-menu" class="lang-menu">
-    <div onclick="setLang('ja')">日本語</div>
-    <div onclick="setLang('en')">ENGLISH</div>
-    <div onclick="setLang('zh-CN')">简体中文</div>
-    <div onclick="setLang('ko')">한국어</div>
-  </div>
-</div>
-   <a href="Inquiry.html" class="menu-1">
-  <img src="Inquiry3.png" width="50">
-  <span>お問い合わせ</span>
-  </a>
-   <a class="menu-1" onclick="toggleMenu(); return false;">
-  <img src="menu3.png" width="50">
-  <span>メニュー</span>
-  </a>
-  </div>
-  <div class="hamburger">
-  ☰
-  </div>
-</header>
+    <!-- メイン -->
+    <div class="container">
+      
+      <!-- 🧭 劇団四季風ナビ：スムーズな入り口 -->
+      <h2 class="section-title">TICKET GUIDE</h2>
+      <div class="shiki-nav-grid">
+        <div class="shiki-btn" onclick="location.href='ticket.html'">
+          <span class="icon-title">作品から選ぶ</span>
+          <span class="icon-sub">Show Selection</span>
+        </div>
+        <div class="shiki-btn" onclick="location.href='Schedule.html'">
+          <span class="icon-title">日程から選ぶ</span>
+          <span class="icon-sub">Date & Time</span>
+        </div>
+        <div class="shiki-btn" onclick="location.href='Participant.html'">
+          <span class="icon-title">出場団体から選ぶ</span>
+          <span class="icon-sub">Troupe & Theatre</span>
+        </div>
+      </div>
 
-<div id="mega-menu" class="mega-menu">
+      <!-- 🌸 宝塚風：華やかな注目公演の案内枠 -->
+      <h2 class="section-title">NOW ON SALE</h2>
+      <div class="taka-card">
+        <!-- メインビジュアルエリア -->
+        <div class="taka-hero-banner">
+          <span class="status-badge">一般発売中</span>
+          <h3 class="taka-title">早慶演劇祭2026 合同開幕大公演</h3>
+          <p class="taka-sub-info">作・演出：早慶合同祭実行委員会 ｜ 会場：大隈記念講堂</p>
+        </div>
+        <!-- 詳細・スケジュール枠 -->
+        <div class="taka-details-box">
+          <table class="schedule-table">
+            <tr>
+              <th>公演期間</th>
+              <td><b>2026年8月10日（月）〜 8月16日（日）</b></td>
+            </tr>
+            <tr>
+              <th>チケット料金</th>
+              <td>全席指定席 ： 3,000円（税込） ｜ 学生割引 ： 2,000円（税込）</td>
+            </tr>
+            <tr>
+              <th>販売スケジュール</th>
+              <td>【最速先行】受付終了 ｜ 【一般発売】<b>発売中</b>（オンラインにて24時間受付）</td>
+            </tr>
+          </table>
+          <div class="action-row">
+            <button class="btn-gold" onclick="location.href='ticket.html'">この公演のチケットを購入する</button>
+          </div>
+        </div>
+      </div>
 
-  <div class="mega-content">
+      <!-- 🗺️ 総合メニュー：サイト内ポータルマップ -->
+      <h2 class="section-title">CONTENTS MENU</h2>
+      <div class="portal-menu-grid">
+        
+        <a href="ticket.html" class="portal-card">
+          <div class="portal-icon-area">🎟️</div>
+          <div class="portal-text-area">
+            <h4 class="portal-card-title">チケット予約・購入</h4>
+            <p class="portal-card-desc">オンラインでのチケット予約、及びリアルタイムの在庫照会・購入者手続きはこちらから。</p>
+          </div>
+        </a>
 
-    <div class="mega-column">
-      <h3>公演情報</h3>
-      <a href="#">上演作品</a>
-      <a href="#">出演団体</a>
-      <a href="#">スケジュール</a>
+        <a href="what.html" class="portal-card">
+          <div class="portal-icon-area">🎭</div>
+          <div class="portal-text-area">
+            <h4 class="portal-card-title">公演紹介（演劇祭とは）</h4>
+            <p class="portal-card-desc">早慶演劇祭2026の開催趣旨や見どころ、歴史についてご紹介いたします。</p>
+          </div>
+        </a>
+
+        <a href="Participant.html" class="portal-card">
+          <div class="portal-icon-area">🏛️</div>
+          <div class="portal-text-area">
+            <h4 class="portal-card-title">出場団体一覧</h4>
+            <p class="portal-card-desc">早稲田大学・慶應義塾大学から厳選されて出場する、劇団サークルのプロフィール一覧。</p>
+          </div>
+        </a>
+
+        <a href="Schedule.html" class="portal-card">
+          <div class="portal-icon-area">📅</div>
+          <div class="portal-text-area">
+            <h4 class="portal-card-title">タイムスケジュール</h4>
+            <p class="portal-card-desc">開幕から千秋楽までの全ステージの開場・開演時間、アフタートークの有無を確認できます。</p>
+          </div>
+        </a>
+
+        <a href="news.html" class="portal-card">
+          <div class="portal-icon-area">📢</div>
+          <div class="portal-text-area">
+            <h4 class="portal-card-title">公式ニュース</h4>
+            <p class="portal-card-desc">メディア掲載情報、追加販売、当日券の有無、および公演に関する重要なお知らせ。</p>
+          </div>
+        </a>
+
+        <a href="Inquiry.html" class="portal-card">
+          <div class="portal-icon-area">✉️</div>
+          <div class="portal-text-area">
+            <h4 class="portal-card-title">お問い合わせ</h4>
+            <p class="portal-card-desc">取材の申し込み、団体窓口へのお問い合わせ、トラブル等のご相談はこちらの窓口まで。</p>
+          </div>
+        </a>
+
+      </div>
     </div>
 
-    <div class="mega-column">
-      <h3>チケット</h3>
-      <a href="#">予約方法</a>
-      <a href="#">料金</a>
-      <a href="#">注意事項</a>
-    </div>
-
-    <div class="mega-column">
-      <h3>アクセス</h3>
-      <a href="#">会場案内</a>
-      <a href="#">周辺情報</a>
-    </div>
-
-    <div class="mega-column">
-      <h3>その他</h3>
-      <a href="#">ニュース</a>
-      <a href="#">お問い合わせ</a>
-    </div>
-
-  </div>
-</div>
-
-<script>
-function removeGoogleUI() {
-  // バナー
-  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
-
-  // ポップアップ（翻訳されました表示）
-  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
-
-  // その他UI
-  document.querySelectorAll('.skiptranslate').forEach(el => {
-    if (el.innerText.includes("翻訳")) el.remove();
-  });
-
-  // 位置ズレ修正
-  document.body.style.top = '0px';
-}
-
-/* ずっと監視して消す */
-setInterval(removeGoogleUI, 300);
-</script>
-
+    <!-- Google翻訳ツールバー強制非表示スクリプト -->
+    <script>
+    function removeGoogleUI() {
+      document.querySelectorAll('.goog-te-banner-frame, .goog-te-banner, .goog-te-balloon-frame, #goog-gt-tt, .goog-gt-tt').forEach(el => el.remove());
+      document.body.style.top = '0px';
+    }
+    setInterval(removeGoogleUI, 200);
+    </script>
   </body>
-
-</html>
-
-<script>
-function toggleMenu() {
-  document
-    .getElementById("mega-menu")
-    .classList.toggle("active");
-}
-</script>
-
-</body>
 </html>
