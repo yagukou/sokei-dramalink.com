@@ -6,14 +6,16 @@
     <meta name="google" content="notranslate">
 
     <style>
+    /* --- 全体設定：明朝体をベースに格式高さを演出 --- */
     body {
       margin: 0;
-      font-family: sans-serif;
-      background: #111;  
-      color: white; 
+      font-family: "Times New Roman", "Yu Mincho", "游明朝", "Noto Serif JP", serif;
+      background: #0b0b0b;  
+      color: #ffffff; 
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* --- ヘッダー：赤背景 --- */
+    /* --- 【維持】ヘッダー：赤背景・チケット左配置 --- */
     header {
       display: flex;
       justify-content: space-between;
@@ -22,7 +24,8 @@
       padding: 0 30px;
       height: 90px;
       position: relative;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-family: sans-serif; /* ヘッダーのみ視認性重視でゴシック */
     }
 
     .menu-left, .menu-right {
@@ -40,7 +43,6 @@
       text-align: center;
     }
 
-    /* アイコン画像をすべて「白」に自動反転するCSS */
     .menu-left img, .menu-right img {
        width: 30px;
        height: 30px;
@@ -48,7 +50,6 @@
        filter: brightness(0) invert(1); 
     }
 
-    /* --- ロゴ：白×ゴールド --- */
     .logo {
       text-decoration: none;
       font-family: "Times New Roman", serif;
@@ -89,7 +90,6 @@
       font-size: 12px;
     }
 
-    /* --- メニューボタン：すべて共通の背景透過デザイン --- */
     .menu-1 {
       display: flex;
       flex-direction: column;
@@ -113,36 +113,14 @@
       text-overflow: ellipsis;
       font-size: 12px;
       font-weight: 600;
-      color: #ffffff !important; /* 文字はすべて白 */
+      color: #ffffff !important; 
     }
 
-    /* ホバー効果 */
     .menu-1:hover {
       transform: translateY(-3px);
     }
 
-    /* Google翻訳関連の非表示設定 */
-    .goog-te-banner-frame,
-    .goog-te-gadget-icon,
-    .goog-te-gadget-simple,
-    .goog-te-balloon-frame,
-    .goog-te-banner-frame.skiptranslate {
-      display: none !important;
-    }
-
-    body {
-      top: 0px !important;
-      position: static !important;
-    }
-
-    body.translated-ltr .logo-main { font-size: 22px; }
-    body.translated-ltr .logo-sub { font-size: 14px; }
-
-    .hamburger {
-      display: none;
-    }
-
-    /* メインコンテンツ・スライダー等 */
+    /* 【維持】スライダーエリア */
     .slider {
       position: relative;
       width: 100%;
@@ -151,9 +129,7 @@
       overflow: hidden;
     }
 
-    .slides {
-      position: relative;
-    }
+    .slides { position: relative; }
 
     .slide {
       width: 100%;
@@ -187,36 +163,6 @@
     .prev { left: 10px; }
     .next { right: 10px; }
 
-    .lang-wrapper {
-      position: relative;
-      display: inline-block;
-    }
-
-    /* 言語ドロップダウンメニューの初期設定 */
-    .lang-menu {
-      position: absolute;
-      top: 110%;   
-      left: 0;
-      width: 140px;
-      background: #f0f0f0;
-      border-radius: 12px;
-      overflow: hidden;
-      z-index: 9999;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .lang-menu div {
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 13px;
-      color: black;
-    }
-
-    .lang-menu div:hover {
-      background: #ddd;
-    }
-
     .hero-text {
       position: absolute;
       bottom: 12%;
@@ -227,225 +173,452 @@
 
     .hero-text h1 {
       font-size: 72px;
-      font-family: serif;
+      font-family: "Times New Roman", "Yu Mincho", serif;
+      margin: 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
     .hero-text p {
-      letter-spacing: 4px;
+      letter-spacing: 6px;
       color: #d4af37;
+      margin-bottom: 10px;
+      font-weight: bold;
     }
 
     .slider::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.15));
+      background: linear-gradient(to top, rgba(11,11,11,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
       z-index: 2;
     }
 
+    /* --------------------------------------------------
+       ✨ ここから劇団四季・宝塚風の高級デザインアップデート
+    ----------------------------------------------------- */
+
+    /* セクション共通見出し：宝塚・四季オマージュの上品なタイポグラフィ */
+    .section-head {
+      text-align: center;
+      margin-bottom: 70px;
+      position: relative;
+    }
+
+    .section-en {
+      color: #c5a059; /* 落ち着いたアンティークゴールド */
+      letter-spacing: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      font-size: 38px;
+      margin: 0;
+      font-family: "Yu Mincho", serif;
+      color: inherit;
+      font-weight: 500;
+      letter-spacing: 2px;
+    }
+
+    /* 見出しの下に繊細なゴールドの飾り線 */
+    .section-head::after {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: #c5a059;
+      margin: 20px auto 0;
+    }
+
+    /* ① トップニュース：洗練されたインフォメーションバー */
     .top-news {
       display: flex;
-      background: white;
-      color: black;
-      padding: 20px 8%;
+      align-items: center;
+      justify-content: center;
+      background: #161616;
+      border-top: 1px solid #2a2a2a;
+      border-bottom: 1px solid #2a2a2a;
+      padding: 22px 8%;
+      font-size: 15px;
+      letter-spacing: 1px;
     }
 
     .news-label {
       color: #b90e0e;
-      margin-right: 30px;
+      margin-right: 25px;
       font-weight: bold;
+      border: 1px solid #b90e0e;
+      padding: 2px 10px;
+      font-size: 12px;
+      letter-spacing: 2px;
     }
 
+    .news-text {
+      color: #ddd;
+    }
+
+    /* ② スケジュール：漆黒の舞台をイメージした厳かなデザイン */
     .schedule-section {
-      background: #111;
-      padding: 140px 8%;
+      background: #0b0b0b;
+      padding: 120px 10%;
     }
 
-    .schedule-section h2 { color: white; }
-    .schedule-list { margin-top: 60px; }
+    .schedule-list {
+      max-width: 1000px;
+      margin: 60px auto 0;
+    }
 
     .schedule-item {
       display: flex;
       align-items: center;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-      padding: 35px 0;
+      border-bottom: 1px solid #222;
+      padding: 40px 20px;
+      transition: 0.4s;
+    }
+
+    .schedule-item:hover {
+      background: rgba(197, 160, 89, 0.03); /* ほんのりゴールドに輝く */
     }
 
     .schedule-date {
-      color: #d4af37;
-      font-size: 22px;
-      width: 140px;
-      line-height: 1.3;
+      color: #c5a059;
+      font-size: 16px;
+      width: 160px;
+      line-height: 1.2;
       letter-spacing: 2px;
+      border-right: 1px solid #333;
     }
 
-    .schedule-date span { font-size: 52px; }
+    .schedule-date span {
+      font-size: 46px;
+      font-family: "Times New Roman", serif;
+      display: block;
+      font-weight: 300;
+    }
+
+    .schedule-info {
+      flex: 1;
+      padding-left: 40px;
+    }
 
     .schedule-info h3 {
+      color: #ffffff;
+      font-size: 24px;
+      margin: 0 0 12px 0;
+      font-family: "Yu Mincho", serif;
+      font-weight: 500;
+    }
+
+    /* 四季・宝塚特有の「会場」や「状態」のラベル分け */
+    .schedule-meta {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    .schedule-venue {
+      color: #c5a059;
+    }
+
+    .status-tag {
+      background: #b90e0e;
       color: white;
-      font-size: 30px;
-      margin-bottom: 10px;
-      font-family: serif;
+      font-size: 11px;
+      padding: 2px 8px;
+      font-family: sans-serif;
+      font-weight: bold;
     }
 
-    .schedule-info p { color: #aaa; }
-
+    /* ③ ガイド（ご観劇の際に）：劇場の案内パンフレット風オフホワイト */
     .guide-section {
-      background: white;
-      padding: 140px 8%;
+      background: #fbf9f6; /* 高級感のある極薄のクラシックホワイト */
+      color: #1a1a1a;
+      padding: 120px 10%;
     }
+
+    .guide-section .section-en { color: #b90e0e; }
+    .guide-section .section-head::after { background: #b90e0e; }
 
     .guide-grid {
       display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 30px;
-      margin-top: 60px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      max-width: 1200px;
+      margin: 60px auto 0;
     }
 
     .guide-card {
-      background: #f5f5f5;
-      padding: 40px;
-      border-radius: 20px;
-      color: #111;
+      background: #ffffff;
+      padding: 45px 35px;
+      border-radius: 0px; /* あえて角丸にせず、劇団四季のような凛とした直線美に */
+      color: #1a1a1a;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      border-top: 3px solid #c5a059; /* 上部にゴールドの細いライン */
+      transition: 0.3s;
+    }
+
+    .guide-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(185,14,14,0.08);
     }
 
     .guide-card h3 {
-      font-size: 24px;
+      font-size: 20px;
+      margin-top: 0;
       margin-bottom: 20px;
-      font-family: serif;
+      font-family: "Yu Mincho", serif;
+      color: #b90e0e;
     }
 
     .guide-card p {
-      color: #444;
+      color: #555;
       line-height: 1.8;
-    }
-
-    .news-section {
-      background: white;
-      padding: 140px 8%;
-    }
-
-    .section-head { margin-bottom: 60px; }
-    .section-en {
-      color: #b90e0e;
-      letter-spacing: 4px;
-      margin-bottom: 10px;
-    }
-
-    .section-head h2 {
-      font-size: 54px;
+      font-size: 14px;
       margin: 0;
-      font-family: serif;
-      color: black;
     }
 
-    .news-list { border-top: 1px solid rgba(0,0,0,0.15); }
+    /* ④ ニュースセクション：クラシックホテルや劇場の掲示板のような美しさ */
+    .news-section {
+      background: #ffffff;
+      color: #1a1a1a;
+      padding: 120px 10%;
+      border-top: 1px solid #f0e9e0;
+    }
+
+    .news-section .section-en { color: #c5a059; }
+    .news-section .section-head::after { background: #c5a059; }
+
+    .news-list {
+      max-width: 1000px;
+      margin: 60px auto 0;
+      border-top: 1px solid #e5dfd5;
+    }
 
     .news-item {
       display: flex;
       align-items: center;
-      padding: 35px 10px;
-      border-bottom: 1px solid rgba(0,0,0,0.15);
+      padding: 30px 15px;
+      border-bottom: 1px solid #e5dfd5;
       text-decoration: none;
       transition: 0.35s;
     }
 
     .news-item:hover {
-      background: #f7f7f7;
-      padding-left: 25px;
+      background: #fbf9f6;
+      padding-left: 30px;
     }
 
     .news-date {
-      width: 180px;
+      width: 140px;
       color: #888;
-      font-size: 15px;
+      font-size: 14px;
       letter-spacing: 1px;
+      font-family: "Times New Roman", serif;
+    }
+
+    /* 宝塚風のニュースカテゴリタグ */
+    .news-category {
+      font-size: 11px;
+      padding: 3px 10px;
+      border: 1px solid #ccc;
+      color: #666;
+      margin-right: 30px;
+      font-family: sans-serif;
+      min-width: 70px;
+      text-align: center;
+    }
+    
+    .news-item:hover .news-category {
+      border-color: #b90e0e;
+      color: #b90e0e;
     }
 
     .news-title {
       flex: 1;
-      color: black;
-      font-size: 24px;
-      font-family: serif;
+      color: #1a1a1a;
+      font-size: 18px;
+      font-family: "Yu Mincho", serif;
+      letter-spacing: 0.5px;
     }
 
     .news-arrow {
-      color: #b90e0e;
-      font-size: 28px;
+      color: #c5a059;
+      font-size: 20px;
       transition: 0.3s;
+      font-family: sans-serif;
     }
 
-    .news-item:hover .news-arrow { transform: translateX(8px); }
+    .news-item:hover .news-arrow {
+      color: #b90e0e;
+      transform: translateX(8px);
+    }
 
+    /* ⑤ メディア（ギャラリー）：大迫力の舞台フォトを美しく切り取るフレーム */
     .media-section {
-      background: #111;
-      padding: 140px 8%;
+      background: #0b0b0b;
+      padding: 120px 10%;
     }
-
-    .media-section h2 { color: white; }
 
     .media-grid {
       display: grid;
-      grid-template-columns: repeat(2,1fr);
-      gap: 40px;
-      margin-top: 60px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 50px;
+      max-width: 1200px;
+      margin: 60px auto 0;
     }
 
     .media-card {
       text-decoration: none;
       overflow: hidden;
-      border-radius: 20px;
-      background: #1a1a1a;
+      background: #121212;
+      border: 1px solid #222;
+      transition: 0.4s;
     }
 
+    .media-card:hover {
+      border-color: #c5a059;
+      box-shadow: 0 10px 30px rgba(197,160,89,0.1);
+    }
+
+    .media-thumb-wrapper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 340px;
+    }
+
+    /* 宝塚・四季の臨場感を出す写真ホバー（じわっと拡大） */
     .media-card img {
       width: 100%;
-      height: 320px;
+      height: 100%;
       object-fit: cover;
-      transition: 0.6s;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    .media-card:hover img { transform: scale(1.05); }
-    .media-text { padding: 30px; }
-    .media-text p { color: #d4af37; letter-spacing: 3px; }
+    .media-card:hover img {
+      transform: scale(1.06);
+    }
+
+    /* 写真の上に被せるメディア種別タグ（MOVIE / PHOTO） */
+    .media-tag {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(11,11,11,0.85);
+      color: #c5a059;
+      font-size: 11px;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      border: 1px solid #c5a059;
+      font-family: sans-serif;
+    }
+
+    .media-text {
+      padding: 30px 25px;
+    }
+
     .media-text h3 {
       color: white;
-      font-size: 28px;
-      margin-top: 10px;
-      font-family: serif;
+      font-size: 22px;
+      margin: 0;
+      font-family: "Yu Mincho", serif;
+      font-weight: 500;
+      line-height: 1.4;
     }
 
-    /* フッターSNS用 */
+    /* フッター・SNSエリア */
+    footer {
+      background: #070707;
+      border-top: 1px solid #1a1a1a;
+      padding: 60px 5% 40px;
+      text-align: center;
+    }
+
     .sns {
       display: flex;
       justify-content: center;
-      gap: 40px;
-      margin: 50px 0;
+      gap: 35px;
+      margin-bottom: 40px;
     }
 
     .sns-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: inline-block;
+      transition: 0.3s;
+    }
+
+    .sns-item:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.2);
     }
 
     .sns-item img {
-      width: 40px;   
-      height: 40px;
+      width: 36px;   
+      height: 36px;
     }
 
-    /* レスポンシブ */
+    .footer-copy {
+      font-size: 11px;
+      color: #555;
+      letter-spacing: 1px;
+      font-family: sans-serif;
+    }
+
+    /* Google翻訳ポップアップ等の強制非表示 */
+    .goog-te-banner-frame,
+    .goog-te-gadget-icon,
+    .goog-te-gadget-simple,
+    .goog-te-balloon-frame,
+    .goog-te-banner-frame.skiptranslate {
+      display: none !important;
+    }
+
+    body {
+      top: 0px !important;
+      position: static !important;
+    }
+
+    .lang-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .lang-menu {
+      position: absolute;
+      top: 110%;   
+      left: 0;
+      width: 140px;
+      background: #f0f0f0;
+      border-radius: 12px;
+      overflow: hidden;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-family: sans-serif;
+    }
+
+    .lang-menu div {
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: black;
+    }
+
+    .lang-menu div:hover { background: #ddd; }
+    .hamburger { display: none; }
+
+    /* レレスポンシブ（スマホ対応） */
+    @media (max-width: 960px) {
+      .guide-grid { grid-template-columns: 1fr; gap: 25px; }
+      .media-grid { grid-template-columns: 1fr; gap: 35px; }
+    }
+
     @media (max-width: 768px) {
-      header {
-        height: 70px;
-      }
-      .logo {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        margin: 0;
-      }
+      header { height: 70px; }
+      .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
       .menu-left, .menu-right { display: none; }
       .hamburger {
         position: absolute;
@@ -456,13 +629,19 @@
         cursor: pointer;
         z-index: 1000;
         display: block;
+        font-family: sans-serif;
       }
+      .hero-text h1 { font-size: 42px; }
+      .schedule-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+      .schedule-date { border-right: none; border-bottom: 1px solid #333; padding-bottom: 10px; width: 100%; }
+      .schedule-info { padding-left: 0; }
+      .news-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .news-date { width: auto; }
     }
     </style>
   </head>
 
   <body>
-    <!-- Dify Chatbot 設定 -->
     <script>
     window.difyChatbotConfig = {
       token: 'cfUgpimDdajARduo',
@@ -477,7 +656,6 @@
       #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
     </style>
 
-    <!-- Google 翻訳設定 -->
     <div id="google_translate_element" style="display:none;"></div>
     <script>
     function googleTranslateElementInit() {
@@ -486,9 +664,7 @@
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <!-- ヘッダーエリア -->
     <header>
-      <!-- 左ナビ：チケット予約を「一番左」へ移動し、他と同じ共通デザインに統一 -->
       <div class="menu-left">
         <a href="ticket.html" class="menu-1">
           <img src="ticket3.png">
@@ -508,13 +684,11 @@
         </a>
       </div>
 
-      <!-- 真ん中ロゴ -->
       <a href="index.html" class="logo">
         <div class="logo-main">早慶演劇祭</div>
         <div class="logo-sub">Waseda–Keio Theatre Festival</div>
       </a>
 
-      <!-- 右ナビ -->
       <div class="menu-right">
         <a href="news.html" class="menu-1">
           <img src="news3.png">
@@ -525,7 +699,6 @@
             <img src="Language3.png">
             <span>Language</span>
           </a>
-          <!-- バグ対策：初期状態で絶対に表示されないよう、HTML側で直接非表示に指定 -->
           <div id="lang-menu" class="lang-menu" style="display: none;">
             <div onclick="setLang('ja')">日本語</div>
             <div onclick="setLang('en')">ENGLISH</div>
@@ -543,11 +716,9 @@
         </a>
       </div>
 
-      <!-- スマホ用三本線 -->
       <div class="hamburger">☰</div>
     </header>
 
-    <!-- メインビジュアルスライダー -->
     <div class="slider">
       <div class="slides">
         <img src="img1.jpg" class="slide active">
@@ -558,127 +729,135 @@
       <button class="next">▶</button>
     </div>
 
-    <!-- ヒーローテキスト -->
     <div class="hero-text">
       <p>Waseda–Keio Theatre Festival</p>
       <h1>早慶演劇祭2026</h1>
     </div>
 
-    <!-- トップニュース -->
     <section class="top-news">
-      <div class="news-label">NEWS</div>
-      <div class="news-text">2026.08.10　チケット販売開始</div>
+      <div class="news-label">INFO</div>
+      <div class="news-text">2026.08.10　早慶演劇祭2026 電子チケット販売受付を開始いたしました</div>
     </section>
 
-    <!-- スケジュール -->
-    <section class="schedule-section fade">
+    <section class="schedule-section">
       <div class="section-head">
-        <p class="section-en">SCHEDULE</p>
-        <h2>スケジュール</h2>
+        <p class="section-en">Schedule</p>
+        <h2>上演スケジュール</h2>
       </div>
       <div class="schedule-list">
         <div class="schedule-item">
           <div class="schedule-date">AUG<br><span>10</span></div>
           <div class="schedule-info">
-            <h3>開幕公演</h3>
-            <p>早稲田大学大隈講堂</p>
+            <h3>オープニングアクト / 合同開幕公演</h3>
+            <div class="schedule-meta">
+              <span class="schedule-venue">早稲田大学 大隈記念講堂</span>
+              <span class="status-tag">チケット発売中</span>
+            </div>
           </div>
         </div>
         <div class="schedule-item">
           <div class="schedule-date">AUG<br><span>12</span></div>
           <div class="schedule-info">
-            <h3>慶應義塾大学公演</h3>
-            <p>三田キャンパスホール</p>
+            <h3>慶應義塾大学 出場団体公演</h3>
+            <div class="schedule-meta">
+              <span class="schedule-venue">三田キャンパス ホール</span>
+              <span class="status-tag">チケット発売中</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ガイド -->
-    <section class="guide-section fade">
+    <section class="guide-section">
       <div class="section-head">
-        <p class="section-en">GUIDE</p>
+        <p class="section-en">Attendance Guide</p>
         <h2>ご観劇の際に</h2>
       </div>
       <div class="guide-grid">
         <div class="guide-card">
-          <h3>開場時間について</h3>
-          <p>開演30分前よりご入場いただけます。</p>
+          <h3>開場時間のご案内</h3>
+          <p>各公演とも、開演の30分前よりロビー開場いたします。お時間に余裕を持ってお越しください。</p>
         </div>
         <div class="guide-card">
-          <h3>写真撮影について</h3>
-          <p>上演中の撮影・録音は禁止です。</p>
+          <h3>撮影・録音について</h3>
+          <p>客席内での許可のない写真撮影・録音・録画は、演出の妨げおよび著作権保護のため固くお断りいたします。</p>
         </div>
         <div class="guide-card">
-          <h3>チケットについて</h3>
-          <p>電子チケットをご提示ください。</p>
+          <h3>電子チケットの提示</h3>
+          <p>当日はスマートフォンの画面にて電子チケット（QRコード）をご提示のうえ、ご入場ください。</p>
         </div>
       </div>
     </section>
 
-    <!-- ニュースセクション -->
-    <section class="news-section fade">
+    <section class="news-section">
       <div class="section-head">
-        <p class="section-en">NEWS</p>
+        <p class="section-en">News & Topics</p>
         <h2>ニュース</h2>
       </div>
       <div class="news-list">
         <a href="#" class="news-item">
           <div class="news-date">2026.08.10</div>
-          <div class="news-title">チケット販売開始のお知らせ</div>
+          <div class="news-category">チケット</div>
+          <div class="news-title">早慶演劇祭2026 一般観劇チケット販売開始のお知らせ</div>
           <div class="news-arrow">→</div>
         </a>
         <a href="#" class="news-item">
           <div class="news-date">2026.08.05</div>
-          <div class="news-title">出演団体情報を公開しました</div>
+          <div class="news-category">公演情報</div>
+          <div class="news-title">早稲田・慶應 両校の出場団体プロフィールおよび演目を解禁</div>
           <div class="news-arrow">→</div>
         </a>
         <a href="#" class="news-item">
           <div class="news-date">2026.07.30</div>
-          <div class="news-title">キービジュアル解禁</div>
+          <div class="news-category">トピックス</div>
+          <div class="news-title">メインビジュアルおよび公式プロモーション映像を同時公開</div>
           <div class="news-arrow">→</div>
         </a>
       </div>
     </section>
 
-    <!-- メディアセクション -->
-    <section class="media-section fade">
+    <section class="media-section">
       <div class="section-head">
-        <p class="section-en">MEDIA</p>
+        <p class="section-en">Official Media</p>
         <h2>メディア</h2>
       </div>
       <div class="media-grid">
         <a href="#" class="media-card">
-          <img src="media1.jpg">
+          <div class="media-thumb-wrapper">
+            <span class="media-tag">INTERVIEW</span>
+            <img src="media1.jpg" alt="インタビュー">
+          </div>
           <div class="media-text">
-            <p>INTERVIEW</p>
-            <h3>出演者インタビュー公開</h3>
+            <h3>舞台にかける想い：主宰・出演者特別インタビュー連載</h3>
           </div>
         </a>
         <a href="#" class="media-card">
-          <img src="media2.jpg">
+          <div class="media-thumb-wrapper">
+            <span class="media-tag">MOVIE</span>
+            <img src="media2.jpg" alt="PV動画">
+          </div>
           <div class="media-text">
-            <p>MOVIE</p>
-            <h3>PV映像を公開しました</h3>
+            <h3>【公式PV】早慶演劇祭2026 開幕予告プロモーション映像</h3>
           </div>
         </a>
       </div>
     </section>
 
-    <!-- SNSエリア -->
-    <div class="sns">
-      <a href="https://x.com/sokei_dramalink?s=21" class="sns-item" target="_blank">
-        <img src="x.png">
-      </a>
-      <a href="https://line.me/ti/g2/561sydqS-m-x2OiOUTy8kvMgwhPWF58wPEW7ug?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" class="sns-item" target="_blank">
-        <img src="line.png">
-      </a>
-      <a href="https://www.instagram.com/soukei_dramalink2026?igsh=emg2c2o1MmYwMXV2&utm_source=qr/" class="sns-item" target="_blank">
-        <img src="instagram.png">
-      </a>
-    </div>
+    <footer>
+      <div class="sns">
+        <a href="https://x.com/sokei_dramalink?s=21" class="sns-item" target="_blank">
+          <img src="x.png" alt="X">
+        </a>
+        <a href="https://line.me/ti/g2/561sydqS-m-x2OiOUTy8kvMgwhPWF58wPEW7ug?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" class="sns-item" target="_blank">
+          <img src="line.png" alt="LINE">
+        </a>
+        <a href="https://www.instagram.com/soukei_dramalink2026?igsh=emg2c2o1MmYwMXV2&utm_source=qr/" class="sns-item" target="_blank">
+          <img src="instagram.png" alt="Instagram">
+        </a>
+      </div>
+      <div class="footer-copy">© 2026 早慶演劇祭 / Waseda–Keio Theatre Festival. All Rights Reserved.</div>
+    </footer>
 
-    <!-- JavaScript 処理 -->
     <script>
     /* Google翻訳の強制UIを排除 */
     function removeGoogleUI() {
@@ -691,7 +870,7 @@
     }
     setInterval(removeGoogleUI, 300);
 
-    /* 言語メニューのトグル（バグが出ないように判定ロジックを強化） */
+    /* 言語メニューのトグル */
     function toggleLangMenu(e) {
       if (e) e.stopPropagation();
       const menu = document.getElementById("lang-menu");
@@ -702,7 +881,7 @@
       }
     }
 
-    /* 外クリックで言語メニューを閉じる */
+    /* 外クリックで閉じる */
     document.addEventListener("click", function() {
       const menu = document.getElementById("lang-menu");
       if (menu) menu.style.display = "none";
