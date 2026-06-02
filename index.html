@@ -13,12 +13,12 @@
       color: white; 
     }
 
-    /* --- ヘッダー：ご要望通り「赤背景」のまま劇団四季風の高級感へ --- */
+    /* --- ヘッダー：赤背景 --- */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #b90e0e !important; /* 赤背景をキープ */
+      background-color: #b90e0e !important; 
       padding: 0 30px;
       height: 90px;
       position: relative;
@@ -40,7 +40,7 @@
       text-align: center;
     }
 
-    /* 赤背景で見えやすくするため、通常のアイコン画像をすべて「白」に自動反転するCSS */
+    /* アイコン画像をすべて「白」に自動反転するCSS */
     .menu-left img, .menu-right img {
        width: 30px;
        height: 30px;
@@ -48,7 +48,7 @@
        filter: brightness(0) invert(1); 
     }
 
-    /* --- ロゴ：赤背景に美しく映える「白×ゴールド」 --- */
+    /* --- ロゴ：白×ゴールド --- */
     .logo {
       text-decoration: none;
       font-family: "Times New Roman", serif;
@@ -61,7 +61,7 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -50%); /* 上下左右中央配置 */
+      transform: translate(-50%, -50%); 
       z-index: 1;
       max-width: 40%;  
       overflow: hidden;
@@ -73,13 +73,13 @@
       font-size: 22px;
       font-weight: bold;
       letter-spacing: 3px;
-      color: #ffffff; /* 赤に映える白文字 */
+      color: #ffffff; 
     }
 
     .logo-sub {   
       font-size: 14px;   
       letter-spacing: 2px;
-      color: #d4af37; /* 演劇の高級感を出すゴールド */
+      color: #d4af37; 
     }
 
     a {
@@ -89,13 +89,13 @@
       font-size: 12px;
     }
 
-    /* --- 通常メニュー：背景を透明にして赤に馴染ませる --- */
+    /* --- メニューボタン：すべて共通の背景透過デザイン --- */
     .menu-1 {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: transparent !important; /* 赤い四角を消してスッキリ */
+      background: transparent !important; 
       box-shadow: none !important;
       width: auto !important;   
       height: auto !important;  
@@ -113,29 +113,12 @@
       text-overflow: ellipsis;
       font-size: 12px;
       font-weight: 600;
-      color: #ffffff !important; /* 文字を白にして視認性アップ */
+      color: #ffffff !important; /* 文字はすべて白 */
     }
 
-    /* ホバー時に少し浮き上がらせる演出 */
+    /* ホバー効果 */
     .menu-1:hover {
       transform: translateY(-3px);
-    }
-
-    /* --- 【最重要】劇団四季風：赤背景の中で「最も目立つ白抜きチケットボタン」 --- */
-    .menu-ticket-special {
-      background: #ffffff !important; /* 白背景にして圧倒的な存在感に */
-      border-radius: 4px !important;
-      padding: 10px 20px !important; /* ボタンらしい形に */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
-    }
-
-    .menu-ticket-special span {
-      color: #b90e0e !important; /* 文字をヘッダーと同じ赤に反転 */
-      font-weight: bold !important;
-    }
-
-    .menu-ticket-special:hover {
-      background: #f0f0f0 !important; /* ホバーで少しグレーに */
     }
 
     /* Google翻訳関連の非表示設定 */
@@ -209,6 +192,7 @@
       display: inline-block;
     }
 
+    /* 言語ドロップダウンメニューの初期設定 */
     .lang-menu {
       position: absolute;
       top: 110%;   
@@ -216,9 +200,9 @@
       width: 140px;
       background: #f0f0f0;
       border-radius: 12px;
-      display: none;
       overflow: hidden;
       z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
     .lang-menu div {
@@ -468,7 +452,7 @@
         top: 20px;
         right: 20px;
         font-size: 30px;
-        color: white !important; /* 赤背景に合わせてスマホの三本線は白に */
+        color: white !important; 
         cursor: pointer;
         z-index: 1000;
         display: block;
@@ -478,6 +462,7 @@
   </head>
 
   <body>
+    <!-- Dify Chatbot 設定 -->
     <script>
     window.difyChatbotConfig = {
       token: 'cfUgpimDdajARduo',
@@ -492,6 +477,7 @@
       #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
     </style>
 
+    <!-- Google 翻訳設定 -->
     <div id="google_translate_element" style="display:none;"></div>
     <script>
     function googleTranslateElementInit() {
@@ -500,8 +486,14 @@
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
+    <!-- ヘッダーエリア -->
     <header>
+      <!-- 左ナビ：チケット予約を「一番左」へ移動し、他と同じ共通デザインに統一 -->
       <div class="menu-left">
+        <a href="ticket.html" class="menu-1">
+          <img src="ticket3.png">
+          <span>チケット予約</span>
+        </a>
         <a href="what.html" class="menu-1">
           <img src="what3.png">
           <span>公演紹介</span>
@@ -516,11 +508,13 @@
         </a>
       </div>
 
+      <!-- 真ん中ロゴ -->
       <a href="index.html" class="logo">
         <div class="logo-main">早慶演劇祭</div>
         <div class="logo-sub">Waseda–Keio Theatre Festival</div>
       </a>
 
+      <!-- 右ナビ -->
       <div class="menu-right">
         <a href="news.html" class="menu-1">
           <img src="news3.png">
@@ -531,7 +525,8 @@
             <img src="Language3.png">
             <span>Language</span>
           </a>
-          <div id="lang-menu" class="lang-menu">
+          <!-- バグ対策：初期状態で絶対に表示されないよう、HTML側で直接非表示に指定 -->
+          <div id="lang-menu" class="lang-menu" style="display: none;">
             <div onclick="setLang('ja')">日本語</div>
             <div onclick="setLang('en')">ENGLISH</div>
             <div onclick="setLang('zh-CN')">简体中文</div>
@@ -546,15 +541,13 @@
           <img src="menu3.png">
           <span>メニュー</span>
         </a>
-        
-        <a href="ticket.html" class="menu-1 menu-ticket-special">
-          <span>チケット予約</span>
-        </a>
       </div>
 
+      <!-- スマホ用三本線 -->
       <div class="hamburger">☰</div>
     </header>
 
+    <!-- メインビジュアルスライダー -->
     <div class="slider">
       <div class="slides">
         <img src="img1.jpg" class="slide active">
@@ -565,16 +558,19 @@
       <button class="next">▶</button>
     </div>
 
+    <!-- ヒーローテキスト -->
     <div class="hero-text">
       <p>Waseda–Keio Theatre Festival</p>
       <h1>早慶演劇祭2026</h1>
     </div>
 
+    <!-- トップニュース -->
     <section class="top-news">
       <div class="news-label">NEWS</div>
       <div class="news-text">2026.08.10　チケット販売開始</div>
     </section>
 
+    <!-- スケジュール -->
     <section class="schedule-section fade">
       <div class="section-head">
         <p class="section-en">SCHEDULE</p>
@@ -598,6 +594,7 @@
       </div>
     </section>
 
+    <!-- ガイド -->
     <section class="guide-section fade">
       <div class="section-head">
         <p class="section-en">GUIDE</p>
@@ -619,6 +616,7 @@
       </div>
     </section>
 
+    <!-- ニュースセクション -->
     <section class="news-section fade">
       <div class="section-head">
         <p class="section-en">NEWS</p>
@@ -643,6 +641,7 @@
       </div>
     </section>
 
+    <!-- メディアセクション -->
     <section class="media-section fade">
       <div class="section-head">
         <p class="section-en">MEDIA</p>
@@ -666,6 +665,7 @@
       </div>
     </section>
 
+    <!-- SNSエリア -->
     <div class="sns">
       <a href="https://x.com/sokei_dramalink?s=21" class="sns-item" target="_blank">
         <img src="x.png">
@@ -678,8 +678,9 @@
       </a>
     </div>
 
+    <!-- JavaScript 処理 -->
     <script>
-    /* 一定時間ごとにGoogle翻訳の強制UIを監視して消す処理 */
+    /* Google翻訳の強制UIを排除 */
     function removeGoogleUI() {
       document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
       document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
@@ -690,14 +691,18 @@
     }
     setInterval(removeGoogleUI, 300);
 
-    /* 言語メニューのトグル */
+    /* 言語メニューのトグル（バグが出ないように判定ロジックを強化） */
     function toggleLangMenu(e) {
       if (e) e.stopPropagation();
       const menu = document.getElementById("lang-menu");
-      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+      if (menu.style.display === "none" || menu.style.display === "") {
+        menu.style.display = "block";
+      } else {
+        menu.style.display = "none";
+      }
     }
 
-    /* 外クリックで閉じる */
+    /* 外クリックで言語メニューを閉じる */
     document.addEventListener("click", function() {
       const menu = document.getElementById("lang-menu");
       if (menu) menu.style.display = "none";
@@ -737,7 +742,7 @@
     setInterval(() => {
       index = (index + 1) % slides.length;
       showSlide(index);
-    }, 9000); // 9秒ごと
+    }, 9000); 
 
     /* ハンバーガーボタンメニュー */
     document.querySelector(".hamburger").onclick = function() {
