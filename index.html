@@ -3,10 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <meta name="google" content="notranslate">
 
-     <style>
+    <style>
     body {
       margin: 0;
       font-family: sans-serif;
@@ -14,17 +13,22 @@
       color: white; 
     }
 
+    /* --- 劇団四季風：白ベースの洗練されたヘッダー --- */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #b90e0e;
-      padding: 10px 20px;
+      background-color: #ffffff !important; /* 赤から白へ */
+      padding: 0 30px;
+      height: 90px;
+      border-bottom: 2px solid #111; /* 下線で引き締める */
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      position: relative;
     }
 
     .menu-left, .menu-right {
       display: flex;
-      gap: 10px;
+      gap: 15px;
       justify-content: space-around;
       align-items: center;
       z-index: 2;
@@ -32,52 +36,50 @@
 
     .menu-left div, .menu-right div {
       display: flex;
-      flex-direction: column;  /* ←縦にする */
+      flex-direction: column;
       align-items: center;
       text-align: center;
-}
+    }
 
     .menu-left img, .menu-right img {
        width: 30px;
        height: 30px;
        margin-bottom: 5px;
-}
+    }
 
+    /* --- ロゴの文字色を黒にして高級感を演出 --- */
     .logo {
-      font-size: 24px;
-      font-weight: bold;
+      text-decoration: none;
       font-family: "Times New Roman", serif;
-      font-size: 28px;
-      font-weight: bold;
       letter-spacing: 3px;
-      color: #222;
       text-align: center;
       line-height: 1.2;
       display: flex;
       flex-direction: column;  
       align-items: center;
       position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-
-  max-width: 40%;  /* ←これ超重要 */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%); /* 上下左右中央配置 */
+      z-index: 1;
+      max-width: 40%;  
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     .logo-main {
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #111; /* 黒文字 */
+    }
 
-.logo-sub {   
-  font-size: 16px;   
-  letter-spacing: 2px;
-  color: #d4af37;      
-}
+    .logo-sub {   
+      font-size: 14px;   
+      letter-spacing: 2px;
+      color: #b90e0e; /* アクセントの四季カラー赤 */
+    }
 
     a {
       text-decoration: none;
@@ -86,949 +88,675 @@
       font-size: 12px;
     }
 
-        .menu-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 80px;   /* 横幅固定 */
-  height: 80px;  /* 高さ固定 */
-  justify-content: center;
-}
-
-.menu-1, .language-btn {
-  background: #b90e0e;; /* 好きな色 */
-  color: rgb(8, 8, 8);
-}
-
-.goog-te-banner-frame,
-  .goog-te-banner-frame,
-  .goog-te-gadget-icon,
-  .goog-te-gadget-simple,
-  .goog-te-balloon-frame{
-    display: none !important;
-  }
-
-  body {
-    top: 0px !important;
-    position: static !important;
-  }
-
-/* ホバー効果 */
-.menu-1:hover {
-  transform: translateY(-3px);
-  transition: 0.3s;
-}
-
-.menu-1 img {
-  width: 30px !important;
-  height: 30px !important;
-}
-
-.slider {
-  position: relative;
-  width: 80%;
-  margin: 30px auto;
-  overflow: hidden;
-}
-
-.slides {
-  position: relative;
-}
-
-.slide {
-  width: 100%;
-  display: none;
-  border-radius: 10px;
-  opacity: 0;
-  transition: 0.5s;
-  position: absolute;
-}
-
-.slide.active {
-  display: block;
-  opacity: 1;
-  position: relative;
-}
-
-button.prev, button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: #b90e0e;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.prev { left: 10px; }
-.next { right: 10px; }
-
-.lang-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-/* ↓ 下にポップアップさせる */
-.lang-menu {
-  position: absolute;
-  top: 110%;   /* ←ボタンの真下 */
-  left: 0;
-  width: 140px;
-
-  background: #f0f0f0;
-  border-radius: 12px;
-  display: none;
-  overflow: hidden;
-  z-index: 9999;
-}
-
-/* 中身 */
-.lang-menu div {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 13px;
-  color: black
-}
-
-/* ホバー */
-.lang-menu div:hover {
-  background: #ddd;
-}
-
-.lang-wrapper .lang-menu {
-  display: none;
-}
-
-.menu-1 span {
-  display: block;
-  width: 100%;
-  text-align: center;       /* 真ん中に */
-  margin-top: 5px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11px;
-}
-
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-.goog-te-banner-frame {
-  display: none !important;
-}
-
-body {
-  top: 0px !important;
-  position: static !important;
-}
-
-body.translated-ltr .logo-main {
-  font-size: 22px;
-}
-
-body.translated-ltr .logo-sub {
-  font-size: 14px;
-}
-
-.hamburger {
-  display: none;
-}
-
-.sns {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin: 50px 0;
-}
-
-.sns-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.sns-item img {
-  width: 40px;   /* 少し小さくするといい感じ */
-  height: 40px;
-  padding: 0;    /* ←削除 */
-  background: none;  /* ←削除 */
-  border-radius: 0;  /* ←削除 */
-}
-
-.sns-item span {
-  margin-top: 10px;
-}
-
-.slider {
-  width: 100%;
-  height: 100vh;
-  margin: 0;
-}
-
-.slide {
-  width: 100%;
-  height: 100vh;
-  object-fit: cover;
-}
-
-.hero-text {
-  position: absolute;
-
-  bottom: 12%;
-  left: 8%;
-
-  z-index: 10;
-
-  color: white;
-}
-
-.hero-text h1 {
-  font-size: 72px;
-  font-family: serif;
-}
-
-.hero-text p {
-  letter-spacing: 4px;
-  color: #d4af37;
-}
-
-.slider::after {
-  content: "";
-
-  position: absolute;
-  inset: 0;
-
-  background:
-  linear-gradient(
-    to top,
-    rgba(0,0,0,0.8),
-    rgba(0,0,0,0.15)
-  );
-
-  z-index: 2;
-}
-
-.sns-area {
-  position: absolute;
-
-  bottom: 40px;
-  right: 60px;
-
-  display: flex;
-  gap: 25px;
-
-  z-index: 20;
-}
-
-.top-news {
-  display: flex;
-
-  background: white;
-  color: black;
-
-  padding: 20px 8%;
-}
-
-.news-label {
-  color: #b90e0e;
-
-  margin-right: 30px;
-
-  font-weight: bold;
-}
-
-.schedule-section {
-  background: #111;
-  padding: 140px 8%;
-}
-
-.schedule-section h2 {
-  color: white;
-}
-
-.schedule-list {
-  margin-top: 60px;
-}
-
-.schedule-item {
-  display: flex;
-
-  align-items: center;
-
-  border-bottom: 1px solid rgba(255,255,255,0.15);
-
-  padding: 35px 0;
-}
-
-.schedule-date {
-  color: #d4af37;
-
-  font-size: 22px;
-
-  width: 140px;
-
-  line-height: 1.3;
-
-  letter-spacing: 2px;
-}
-
-.schedule-date span {
-  font-size: 52px;
-}
-
-.schedule-info h3 {
-  color: white;
-
-  font-size: 30px;
-
-  margin-bottom: 10px;
-
-  font-family: serif;
-}
-
-.schedule-info p {
-  color: #aaa;
-}
-
-.guide-section {
-  background: white;
-
-  padding: 140px 8%;
-}
-
-.guide-grid {
-  display: grid;
-
-  grid-template-columns: repeat(3,1fr);
-
-  gap: 30px;
-
-  margin-top: 60px;
-}
-
-.guide-card {
-  background: #f5f5f5;
-
-  padding: 40px;
-
-  border-radius: 20px;
-}
-
-.guide-card h3 {
-  font-size: 24px;
-
-  margin-bottom: 20px;
-
-  font-family: serif;
-}
-
-.guide-card p {
-  color: #444;
-
-  line-height: 1.8;
-}
-
-.news-section {
-  background: white;
-
-  padding: 140px 8%;
-}
-
-.section-head {
-  margin-bottom: 60px;
-}
-
-.section-en {
-  color: #b90e0e;
-
-  letter-spacing: 4px;
-
-  margin-bottom: 10px;
-}
-
-.section-head h2 {
-  font-size: 54px;
-
-  margin: 0;
-
-  font-family: serif;
-
-  color: black;
-}
-
-.news-list {
-  border-top: 1px solid rgba(0,0,0,0.15);
-}
-
-.news-item {
-  display: flex;
-
-  align-items: center;
-
-  padding: 35px 10px;
-
-  border-bottom: 1px solid rgba(0,0,0,0.15);
-
-  text-decoration: none;
-
-  transition: 0.35s;
-}
-
-.news-item:hover {
-  background: #f7f7f7;
-
-  padding-left: 25px;
-}
-
-.news-date {
-  width: 180px;
-
-  color: #888;
-
-  font-size: 15px;
-
-  letter-spacing: 1px;
-}
-
-.news-title {
-  flex: 1;
-
-  color: black;
-
-  font-size: 24px;
-
-  font-family: serif;
-}
-
-.news-arrow {
-  color: #b90e0e;
-
-  font-size: 28px;
-
-  transition: 0.3s;
-}
-
-.news-item:hover .news-arrow {
-  transform: translateX(8px);
-}
-
-.media-section {
-  background: #111;
-
-  padding: 140px 8%;
-}
-
-.media-section h2 {
-  color: white;
-}
-
-.media-grid {
-  display: grid;
-
-  grid-template-columns: repeat(2,1fr);
-
-  gap: 40px;
-
-  margin-top: 60px;
-}
-
-.media-card {
-  text-decoration: none;
-
-  overflow: hidden;
-
-  border-radius: 20px;
-
-  background: #1a1a1a;
-}
-
-.media-card img {
-  width: 100%;
-  height: 320px;
-
-  object-fit: cover;
-
-  transition: 0.6s;
-}
-
-.media-card:hover img {
-  transform: scale(1.05);
-}
-
-.media-text {
-  padding: 30px;
-}
-
-.media-text p {
-  color: #d4af37;
-
-  letter-spacing: 3px;
-}
-
-.media-text h3 {
-  color: white;
-
-  font-size: 28px;
-
-  margin-top: 10px;
-
-  font-family: serif;
-}
-
-@media (max-width: 768px) {
-
-  header {
-    position: relative;
-    height: 70px;
-  }
-
-  /* ロゴ中央 */
-  .logo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-  }
-
-  /* 左メニュー消す */
-  .menu-left {
-    display: none;
-  }
-
-  /* 右メニューも消す */
-  .menu-right {
-    display: none;
-  }
-
-  /* ハンバーガー（右上） */
-  .hamburger {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1000;
-    display: block;
-  }
-}
-
-  </style>
- </head>
-
- <script>
-function toggleLangMenu(e) {
-  if (e) e.stopPropagation();
-
-  const menu = document.getElementById("lang-menu");
-
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "block";
-  }
-}
-
-/* 外クリックで閉じる */
-document.addEventListener("click", function() {
-  const menu = document.getElementById("lang-menu");
-  if (menu) menu.style.display = "none";
-});
-
-/* ←これが無かったから翻訳されてない */
-function setLang(lang) {
-  const interval = setInterval(() => {
-    const select = document.querySelector(".goog-te-combo");
-
-    if (select) {
-      select.value = lang;
-      select.dispatchEvent(new Event("change"));
-      clearInterval(interval);
+    /* --- 通常メニューの背景を透明にしてスッキリ --- */
+    .menu-1 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent !important; /* 赤い四角を消す */
+      width: auto !important;   
+      height: auto !important;  
+      padding: 5px 10px;
+      transition: 0.3s;
     }
-  }, 200);
-}
 
-</script>
+    .menu-1 span {
+      display: block;
+      width: 100%;
+      text-align: center;       
+      margin-top: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+      font-weight: 600;
+      color: #333 !important; /* 文字を読みやすいダークグレーに */
+    }
 
-<div id="google_translate_element" style="display:none;"></div>
+    /* ホバー時に文字を赤くする演出 */
+    .menu-1:hover {
+      transform: translateY(-2px);
+    }
+    .menu-1:hover span {
+      color: #b90e0e !important;
+    }
 
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
-</script>
+    /* --- 【重要】劇団四季オマージュ：右端のチケット予約ボタン --- */
+    .menu-ticket-special {
+      background: #b90e0e !important; /* 目立つ赤 */
+      border-radius: 4px !important;
+      padding: 10px 20px !important; /* しっかりとしたボタン型に */
+      box-shadow: 0 4px 10px rgba(185, 14, 14, 0.3) !important;
+    }
 
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    .menu-ticket-special span {
+      color: #fff !important; /* 文字を白に */
+      font-weight: bold;
+    }
 
-<body>
+    .menu-ticket-special:hover {
+      background: #900a0a !important;
+    }
 
-<script>
-window.difyChatbotConfig = {
-  token: 'cfUgpimDdajARduo',
-  inputs: {},
-  systemVariables: {},
-  userVariables: {}
-}
-</script>
+    /* Google翻訳関連の非表示設定 */
+    .goog-te-banner-frame,
+    .goog-te-gadget-icon,
+    .goog-te-gadget-simple,
+    .goog-te-balloon-frame,
+    .goog-te-banner-frame.skiptranslate {
+      display: none !important;
+    }
 
-<script
- src="https://udify.app/embed.min.js"
- id="cfUgpimDdajARduo"
- defer>
-</script>
+    body {
+      top: 0px !important;
+      position: static !important;
+    }
 
-<style>
-  #dify-chatbot-bubble-button {
-    background-color: #b90e0e !important;
-  }
+    body.translated-ltr .logo-main { font-size: 22px; }
+    body.translated-ltr .logo-sub { font-size: 14px; }
 
-  #dify-chatbot-bubble-window {
-    width: 24rem !important;
-    height: 40rem !important;
-  }
-</style>
+    .hamburger {
+      display: none;
+    }
 
+    /* メインコンテンツ・スライダー等 */
+    .slider {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .slides {
+      position: relative;
+    }
+
+    .slide {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      display: none;
+      border-radius: 0;
+      opacity: 0;
+      transition: 0.5s;
+      position: absolute;
+    }
+
+    .slide.active {
+      display: block;
+      opacity: 1;
+      position: relative;
+    }
+
+    button.prev, button.next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: #b90e0e;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .prev { left: 10px; }
+    .next { right: 10px; }
+
+    .lang-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .lang-menu {
+      position: absolute;
+      top: 110%;   
+      left: 0;
+      width: 140px;
+      background: #f0f0f0;
+      border-radius: 12px;
+      display: none;
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    .lang-menu div {
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: black;
+    }
+
+    .lang-menu div:hover {
+      background: #ddd;
+    }
+
+    .hero-text {
+      position: absolute;
+      bottom: 12%;
+      left: 8%;
+      z-index: 10;
+      color: white;
+    }
+
+    .hero-text h1 {
+      font-size: 72px;
+      font-family: serif;
+    }
+
+    .hero-text p {
+      letter-spacing: 4px;
+      color: #d4af37;
+    }
+
+    .slider::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0.15));
+      z-index: 2;
+    }
+
+    .top-news {
+      display: flex;
+      background: white;
+      color: black;
+      padding: 20px 8%;
+    }
+
+    .news-label {
+      color: #b90e0e;
+      margin-right: 30px;
+      font-weight: bold;
+    }
+
+    .schedule-section {
+      background: #111;
+      padding: 140px 8%;
+    }
+
+    .schedule-section h2 { color: white; }
+    .schedule-list { margin-top: 60px; }
+
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+      padding: 35px 0;
+    }
+
+    .schedule-date {
+      color: #d4af37;
+      font-size: 22px;
+      width: 140px;
+      line-height: 1.3;
+      letter-spacing: 2px;
+    }
+
+    .schedule-date span { font-size: 52px; }
+
+    .schedule-info h3 {
+      color: white;
+      font-size: 30px;
+      margin-bottom: 10px;
+      font-family: serif;
+    }
+
+    .schedule-info p { color: #aaa; }
+
+    .guide-section {
+      background: white;
+      padding: 140px 8%;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 30px;
+      margin-top: 60px;
+    }
+
+    .guide-card {
+      background: #f5f5f5;
+      padding: 40px;
+      border-radius: 20px;
+      color: #111;
+    }
+
+    .guide-card h3 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      font-family: serif;
+    }
+
+    .guide-card p {
+      color: #444;
+      line-height: 1.8;
+    }
+
+    .news-section {
+      background: white;
+      padding: 140px 8%;
+    }
+
+    .section-head { margin-bottom: 60px; }
+    .section-en {
+      color: #b90e0e;
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+    }
+
+    .section-head h2 {
+      font-size: 54px;
+      margin: 0;
+      font-family: serif;
+      color: black;
+    }
+
+    .news-list { border-top: 1px solid rgba(0,0,0,0.15); }
+
+    .news-item {
+      display: flex;
+      align-items: center;
+      padding: 35px 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      text-decoration: none;
+      transition: 0.35s;
+    }
+
+    .news-item:hover {
+      background: #f7f7f7;
+      padding-left: 25px;
+    }
+
+    .news-date {
+      width: 180px;
+      color: #888;
+      font-size: 15px;
+      letter-spacing: 1px;
+    }
+
+    .news-title {
+      flex: 1;
+      color: black;
+      font-size: 24px;
+      font-family: serif;
+    }
+
+    .news-arrow {
+      color: #b90e0e;
+      font-size: 28px;
+      transition: 0.3s;
+    }
+
+    .news-item:hover .news-arrow { transform: translateX(8px); }
+
+    .media-section {
+      background: #111;
+      padding: 140px 8%;
+    }
+
+    .media-section h2 { color: white; }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2,1fr);
+      gap: 40px;
+      margin-top: 60px;
+    }
+
+    .media-card {
+      text-decoration: none;
+      overflow: hidden;
+      border-radius: 20px;
+      background: #1a1a1a;
+    }
+
+    .media-card img {
+      width: 100%;
+      height: 320px;
+      object-fit: cover;
+      transition: 0.6s;
+    }
+
+    .media-card:hover img { transform: scale(1.05); }
+    .media-text { padding: 30px; }
+    .media-text p { color: #d4af37; letter-spacing: 3px; }
+    .media-text h3 {
+      color: white;
+      font-size: 28px;
+      margin-top: 10px;
+      font-family: serif;
+    }
+
+    /* フッターSNS用 */
+    .sns {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 50px 0;
+    }
+
+    .sns-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .sns-item img {
+      width: 40px;   
+      height: 40px;
+    }
+
+    /* レスポンシブ */
+    @media (max-width: 768px) {
+      header {
+        height: 70px;
+      }
+      .logo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+      }
+      .menu-left, .menu-right { display: none; }
+      .hamburger {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 30px;
+        color: #111 !important; /* 背景白に合わせて黒に */
+        cursor: pointer;
+        z-index: 1000;
+        display: block;
+      }
+    }
+    </style>
+  </head>
+
+  <body>
+    <!-- Dify Chatbot 設定 -->
+    <script>
+    window.difyChatbotConfig = {
+      token: 'cfUgpimDdajARduo',
+      inputs: {},
+      systemVariables: {},
+      userVariables: {}
+    }
+    </script>
+    <script src="https://udify.app/embed.min.js" id="cfUgpimDdajARduo" defer></script>
+    <style>
+      #dify-chatbot-bubble-button { background-color: #b90e0e !important; }
+      #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
+    </style>
+
+    <!-- Google 翻訳設定 -->
     <div id="google_translate_element" style="display:none;"></div>
+    <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'ja' }, 'google_translate_element');
+    }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <!-- ヘッダーエリア（ここが劇団四季風に大改造されています） -->
     <header>
-  <!-- 左 -->
-  <div class="menu-left">
-    <a href="ticket.html" class="menu-1">
-  <img src="ticket3.png" width="50">
-  <span>チケット</span>
-  </a>
-  <a href="what.html" class="menu-1">
-  <img src="what3.png" width="50">
-  <span>公演紹介</span>
-  </a>
-      <a href="Participant.html" class="menu-1">
-  <img src="Participant3.png" width="50">
-  <span>出場団体</span>
-  </a>
-    <a href="Schedule.html" class="menu-1">
-  <img src="Schedule3.png" width="50">
-  <span>スケジュール</span>
-</a>
-  </div>
-
-  <!-- 真ん中 -->
-  <a href="index.html" class="logo">
-  <div class="logo-main">早慶演劇祭</div>
-  <div class="logo-sub">Waseda–Keio Theatre Festival</div>
-</a>
-
-  <!-- 右 -->
-  <div class="menu-right">
-     <a href="news.html" class="menu-1">
-  <img src="news3.png" width="50">
-  <span>ニュース</span>
-  </a>
-     <div class="lang-wrapper">
-    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-      <img src="Language3.png">
-      <span>Language</span>
-    </a>
-
-  <div id="lang-menu" class="lang-menu">
-    <div onclick="setLang('ja')">日本語</div>
-    <div onclick="setLang('en')">ENGLISH</div>
-    <div onclick="setLang('zh-CN')">简体中文</div>
-    <div onclick="setLang('ko')">한국어</div>
-  </div>
-</div>
-   <a href="Inquiry.html" class="menu-1">
-  <img src="Inquiry3.png" width="50">
-  <span>お問い合わせ</span>
-  </a>
-    <a href="menu.html" class="menu-1">
-  <img src="menu3.png" width="50">
-  <span>メニュー</span>
-  </a>
-  </div>
-  <div class="hamburger">
-  ☰
-  </div>
-</header>
-
-<div class="slider">
-  <div class="slides">
-    <img src="img1.jpg" class="slide active">
-    <img src="img2.jpg" class="slide">
-    <img src="img3.jpg" class="slide">
-  </div>
-
-  <button class="prev">◀</button>
-  <button class="next">▶</button>
-</div>
-
-<div class="hero-text">
-  <p>Waseda–Keio Theatre Festival</p>
-  <h1>早慶演劇祭2026</h1>
-</div>
-
-<section class="top-news">
-
-  <div class="news-label">
-    NEWS
-  </div>
-
-  <div class="news-text">
-    2026.08.10　チケット販売開始
-  </div>
-
-</section>
-
-<section class="schedule-section fade">
-
-  <div class="section-head">
-    <p class="section-en">SCHEDULE</p>
-    <h2>スケジュール</h2>
-  </div>
-
-  <div class="schedule-list">
-
-    <div class="schedule-item">
-      <div class="schedule-date">
-        AUG<br><span>10</span>
+      <!-- 左：公演に繋がるメイン導線 -->
+      <div class="menu-left">
+        <a href="what.html" class="menu-1">
+          <img src="what3.png">
+          <span>公演紹介</span>
+        </a>
+        <a href="Participant.html" class="menu-1">
+          <img src="Participant3.png">
+          <span>出場団体</span>
+        </a>
+        <a href="Schedule.html" class="menu-1">
+          <img src="Schedule3.png">
+          <span>スケジュール</span>
+        </a>
       </div>
 
-      <div class="schedule-info">
-        <h3>開幕公演</h3>
-        <p>早稲田大学大隈講堂</p>
+      <!-- 真ん中：白背景に映えるスッキリロゴ -->
+      <a href="index.html" class="logo">
+        <div class="logo-main">早慶演劇祭</div>
+        <div class="logo-sub">Waseda–Keio Theatre Festival</div>
+      </a>
+
+      <!-- 右：インフォメーション ＋ 右端に目立つチケット予約ボタン -->
+      <div class="menu-right">
+        <a href="news.html" class="menu-1">
+          <img src="news3.png">
+          <span>ニュース</span>
+        </a>
+        <div class="lang-wrapper">
+          <a class="menu-1" onclick="toggleLangMenu(event); return false;">
+            <img src="Language3.png">
+            <span>Language</span>
+          </a>
+          <div id="lang-menu" class="lang-menu">
+            <div onclick="setLang('ja')">日本語</div>
+            <div onclick="setLang('en')">ENGLISH</div>
+            <div onclick="setLang('zh-CN')">简体中文</div>
+            <div onclick="setLang('ko')">한국어</div>
+          </div>
+        </div>
+        <a href="Inquiry.html" class="menu-1">
+          <img src="Inquiry3.png">
+          <span>お問い合わせ</span>
+        </a>
+        
+        <!-- ★劇団四季風：独立した特別なチケット予約ボタン -->
+        <a href="ticket.html" class="menu-1 menu-ticket-special">
+          <span>チケット予約</span>
+        </a>
       </div>
+
+      <!-- スマホ用三本線 -->
+      <div class="hamburger">☰</div>
+    </header>
+
+    <!-- メインビジュアルスライダー -->
+    <div class="slider">
+      <div class="slides">
+        <img src="img1.jpg" class="slide active">
+        <img src="img2.jpg" class="slide">
+        <img src="img3.jpg" class="slide">
+      </div>
+      <button class="prev">◀</button>
+      <button class="next">▶</button>
     </div>
 
-    <div class="schedule-item">
-      <div class="schedule-date">
-        AUG<br><span>12</span>
-      </div>
-
-      <div class="schedule-info">
-        <h3>慶應義塾大学公演</h3>
-        <p>三田キャンパスホール</p>
-      </div>
+    <!-- ヒーローテキスト -->
+    <div class="hero-text">
+      <p>Waseda–Keio Theatre Festival</p>
+      <h1>早慶演劇祭2026</h1>
     </div>
 
-  </div>
+    <!-- トップニュース -->
+    <section class="top-news">
+      <div class="news-label">NEWS</div>
+      <div class="news-text">2026.08.10　チケット販売開始</div>
+    </section>
 
-</section>
+    <!-- スケジュール -->
+    <section class="schedule-section fade">
+      <div class="section-head">
+        <p class="section-en">SCHEDULE</p>
+        <h2>スケジュール</h2>
+      </div>
+      <div class="schedule-list">
+        <div class="schedule-item">
+          <div class="schedule-date">AUG<br><span>10</span></div>
+          <div class="schedule-info">
+            <h3>開幕公演</h3>
+            <p>早稲田大学大隈講堂</p>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-date">AUG<br><span>12</span></div>
+          <div class="schedule-info">
+            <h3>慶應義塾大学公演</h3>
+            <p>三田キャンパスホール</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<section class="guide-section fade">
+    <!-- ガイド -->
+    <section class="guide-section fade">
+      <div class="section-head">
+        <p class="section-en">GUIDE</p>
+        <h2>ご観劇の際に</h2>
+      </div>
+      <div class="guide-grid">
+        <div class="guide-card">
+          <h3>開場時間について</h3>
+          <p>開演30分前よりご入場いただけます。</p>
+        </div>
+        <div class="guide-card">
+          <h3>写真撮影について</h3>
+          <p>上演中の撮影・録音は禁止です。</p>
+        </div>
+        <div class="guide-card">
+          <h3>チケットについて</h3>
+          <p>電子チケットをご提示ください。</p>
+        </div>
+      </div>
+    </section>
 
-  <div class="section-head">
-    <p class="section-en">GUIDE</p>
-    <h2>ご観劇の際に</h2>
-  </div>
+    <!-- ニュースセクション -->
+    <section class="news-section fade">
+      <div class="section-head">
+        <p class="section-en">NEWS</p>
+        <h2>ニュース</h2>
+      </div>
+      <div class="news-list">
+        <a href="#" class="news-item">
+          <div class="news-date">2026.08.10</div>
+          <div class="news-title">チケット販売開始のお知らせ</div>
+          <div class="news-arrow">→</div>
+        </a>
+        <a href="#" class="news-item">
+          <div class="news-date">2026.08.05</div>
+          <div class="news-title">出演団体情報を公開しました</div>
+          <div class="news-arrow">→</div>
+        </a>
+        <a href="#" class="news-item">
+          <div class="news-date">2026.07.30</div>
+          <div class="news-title">キービジュアル解禁</div>
+          <div class="news-arrow">→</div>
+        </a>
+      </div>
+    </section>
 
-  <div class="guide-grid">
+    <!-- メディアセクション -->
+    <section class="media-section fade">
+      <div class="section-head">
+        <p class="section-en">MEDIA</p>
+        <h2>メディア</h2>
+      </div>
+      <div class="media-grid">
+        <a href="#" class="media-card">
+          <img src="media1.jpg">
+          <div class="media-text">
+            <p>INTERVIEW</p>
+            <h3>出演者インタビュー公開</h3>
+          </div>
+        </a>
+        <a href="#" class="media-card">
+          <img src="media2.jpg">
+          <div class="media-text">
+            <p>MOVIE</p>
+            <h3>PV映像を公開しました</h3>
+          </div>
+        </a>
+      </div>
+    </section>
 
-    <div class="guide-card">
-      <h3>開場時間について</h3>
-      <p>
-        開演30分前よりご入場いただけます。
-      </p>
+    <!-- SNSエリア（外にはみ出していたのをbody内に正しく収納しました） -->
+    <div class="sns">
+      <a href="https://x.com/sokei_dramalink?s=21" class="sns-item" target="_blank">
+        <img src="x.png">
+      </a>
+      <a href="https://line.me/ti/g2/561sydqS-m-x2OiOUTy8kvMgwhPWF58wPEW7ug?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" class="sns-item" target="_blank">
+        <img src="line.png">
+      </a>
+      <a href="https://www.instagram.com/soukei_dramalink2026?igsh=emg2c2o1MmYwMXV2&utm_source=qr/" class="sns-item" target="_blank">
+        <img src="instagram.png">
+      </a>
     </div>
 
-    <div class="guide-card">
-      <h3>写真撮影について</h3>
-      <p>
-        上演中の撮影・録音は禁止です。
-      </p>
-    </div>
+    <!-- JavaScript 処理 -->
+    <script>
+    /* 言語メニューのトグル */
+    function toggleLangMenu(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById("lang-menu");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
 
-    <div class="guide-card">
-      <h3>チケットについて</h3>
-      <p>
-        電子チケットをご提示ください。
-      </p>
-    </div>
+    /* 外クリックで閉じる */
+    document.addEventListener("click", function() {
+      const menu = document.getElementById("lang-menu");
+      if (menu) menu.style.display = "none";
+    });
 
-  </div>
+    /* 翻訳切り替え */
+    function setLang(lang) {
+      const interval = setInterval(() => {
+        const select = document.querySelector(".goog-te-combo");
+        if (select) {
+          select.value = lang;
+          select.dispatchEvent(new Event("change"));
+          clearInterval(interval);
+        }
+      }, 200);
+    }
 
-</section>
+    /* Google翻訳の強制UI削除 */
+    function removeGoogleUI() {
+      document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+      document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+      document.querySelectorAll('.skiptranslate').forEach(el => {
+        if (el.innerText.includes("翻訳")) el.remove();
+      });
+      document.body.style.top = '0px';
+    }
+    setInterval(removeGoogleUI, 300);
 
-<section class="news-section fade">
+    /* スライダー制御 */
+    let index = 0;
+    const slides = document.querySelectorAll(".slide");
 
-  <div class="section-head">
+    function showSlide(n) {
+      slides.forEach(slide => slide.classList.remove("active"));
+      slides[n].classList.add("active");
+    }
 
-    <p class="section-en">
-      NEWS
-    </p>
+    document.querySelector(".next").onclick = () => {
+      index = (index + 1) % slides.length;
+      showSlide(index);
+    };
 
-    <h2>
-      ニュース
-    </h2>
+    document.querySelector(".prev").onclick = () => {
+      index = (index - 1 + slides.length) % slides.length;
+      showSlide(index);
+    };
 
-  </div>
+    setInterval(() => {
+      index = (index + 1) % slides.length;
+      showSlide(index);
+    }, 9000); // 9秒ごと
 
-  <div class="news-list">
-
-    <a href="#" class="news-item">
-
-      <div class="news-date">
-        2026.08.10
-      </div>
-
-      <div class="news-title">
-        チケット販売開始のお知らせ
-      </div>
-
-      <div class="news-arrow">
-        →
-      </div>
-
-    </a>
-
-    <a href="#" class="news-item">
-
-      <div class="news-date">
-        2026.08.05
-      </div>
-
-      <div class="news-title">
-        出演団体情報を公開しました
-      </div>
-
-      <div class="news-arrow">
-        →
-      </div>
-
-    </a>
-
-    <a href="#" class="news-item">
-
-      <div class="news-date">
-        2026.07.30
-      </div>
-
-      <div class="news-title">
-        キービジュアル解禁
-      </div>
-
-      <div class="news-arrow">
-        →
-      </div>
-
-    </a>
-
-  </div>
-
-</section>
-
-<section class="media-section fade">
-
-  <div class="section-head">
-    <p class="section-en">MEDIA</p>
-    <h2>メディア</h2>
-  </div>
-
-  <div class="media-grid">
-
-    <a href="#" class="media-card">
-
-      <img src="media1.jpg">
-
-      <div class="media-text">
-        <p>INTERVIEW</p>
-        <h3>出演者インタビュー公開</h3>
-      </div>
-
-    </a>
-
-    <a href="#" class="media-card">
-
-      <img src="media2.jpg">
-
-      <div class="media-text">
-        <p>MOVIE</p>
-        <h3>PV映像を公開しました</h3>
-      </div>
-
-    </a>
-
-  </div>
-
-</section>
-
-<script>
-function removeGoogleUI() {
-  // バナー
-  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
-
-  // ポップアップ（翻訳されました表示）
-  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
-
-  // その他UI
-  document.querySelectorAll('.skiptranslate').forEach(el => {
-    if (el.innerText.includes("翻訳")) el.remove();
-  });
-
-  // 位置ズレ修正
-  document.body.style.top = '0px';
-}
-
-/* ずっと監視して消す */
-setInterval(removeGoogleUI, 300);
-</script>
-
+    /* ハンバーガーボタンメニュー */
+    document.querySelector(".hamburger").onclick = function() {
+      alert("ここにメニュー開く処理");
+    };
+    </script>
   </body>
-
 </html>
-
-<div class="sns">
-  <a href="https://x.com/sokei_dramalink?s=21 " class="sns-item" target="_blank">
-    <img src="x.png">\
-  </a>
-
-  <a href="オープンチャット「早慶演劇祭」
-https://line.me/ti/g2/561sydqS-m-x2OiOUTy8kvMgwhPWF58wPEW7ug?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" class="sns-item" target="_blank">
-    <img src="line.png">
-  </a>
-
-  <a href="https://www.instagram.com/soukei_dramalink2026?igsh=emg2c2o1MmYwMXV2&utm_source=qr/" class="sns-item" target="_blank">
-    <img src="instagram.png">
-  </a>
-</div>
-
-<script>
-let index = 0;
-const slides = document.querySelectorAll(".slide");
-
-function showSlide(n) {
-  slides.forEach(slide => slide.classList.remove("active"));
-  slides[n].classList.add("active");
-}
-
-document.querySelector(".next").onclick = () => {
-  index = (index + 1) % slides.length;
-  showSlide(index);
-};
-
-document.querySelector(".prev").onclick = () => {
-  index = (index - 1 + slides.length) % slides.length;
-  showSlide(index);
-};
-
-setInterval(() => {
-  index = (index + 1) % slides.length;
-  showSlide(index);
-}, 9000); // 9秒ごと
-
-document.querySelector(".hamburger").onclick = function() {
-  alert("ここにメニュー開く処理");
-};
-
-</script>
-
-</body>
