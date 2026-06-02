@@ -1,28 +1,37 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" translate="no">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate">
+    <title>チケット予約・管理｜早慶演劇祭</title>
 
-     <style>
+    <style>
+    /* --- 全体設定：トップページと統一した高級明朝体 --- */
     body {
       margin: 0;
-      font-family: sans-serif;
-      background: #111;  
-      color: white; 
+      font-family: "Times New Roman", "Yu Mincho", "游明朝", "Noto Serif JP", serif;
+      background: #0b0b0b;  
+      color: #ffffff; 
+      -webkit-font-smoothing: antialiased;
     }
 
+    /* --- 【完全同期】ヘッダー：赤背景・チケット左配置 --- */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #b90e0e;
-      padding: 10px 20px;
+      background-color: #b90e0e !important; 
+      padding: 0 30px;
+      height: 90px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-family: sans-serif;
     }
 
     .menu-left, .menu-right {
       display: flex;
-      gap: 10px;
+      gap: 15px;
       justify-content: space-around;
       align-items: center;
       z-index: 2;
@@ -30,52 +39,47 @@
 
     .menu-left div, .menu-right div {
       display: flex;
-      flex-direction: column;  /* ←縦にする */
+      flex-direction: column;
       align-items: center;
       text-align: center;
-}
+    }
 
     .menu-left img, .menu-right img {
        width: 30px;
        height: 30px;
        margin-bottom: 5px;
-}
+       filter: brightness(0) invert(1); 
+    }
 
     .logo {
-      font-size: 24px;
-      font-weight: bold;
+      text-decoration: none;
       font-family: "Times New Roman", serif;
-      font-size: 28px;
-      font-weight: bold;
       letter-spacing: 3px;
-      color: #222;
       text-align: center;
       line-height: 1.2;
       display: flex;
       flex-direction: column;  
       align-items: center;
       position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-
-  max-width: 40%;  /* ←これ超重要 */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%); 
+      z-index: 1;
+      max-width: 40%;  
     }
 
     .logo-main {
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #ffffff; 
+    }
 
-.logo-sub {   
-  font-size: 16px;   
-  letter-spacing: 2px;
-  color: #d4af37;      
-}
+    .logo-sub {   
+      font-size: 14px;   
+      letter-spacing: 2px;
+      color: #d4af37; 
+    }
 
     a {
       text-decoration: none;
@@ -84,569 +88,622 @@
       font-size: 12px;
     }
 
-        .menu-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 80px;   /* 横幅固定 */
-  height: 80px;  /* 高さ固定 */
-  justify-content: center;
-}
-
-.menu-1, .language-btn {
-  background: #b90e0e;; /* 好きな色 */
-  color: rgb(8, 8, 8);
-}
-
-.goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate,
-  .goog-te-gadget-icon,
-  .goog-te-gadget-simple,
-  .goog-te-balloon-frame,
-  .skiptranslate {
-    display: none !important;
-  }
-
-  body {
-    top: 0px !important;
-    position: static !important;
-  }
-
-/* ホバー効果 */
-.menu-1:hover {
-  transform: translateY(-3px);
-  transition: 0.3s;
-}
-
-.menu-1 img {
-  width: 30px !important;
-  height: 30px !important;
-}
-
-.slider {
-  position: relative;
-  width: 80%;
-  margin: 30px auto;
-  overflow: hidden;
-}
-
-.slides {
-  position: relative;
-}
-
-.slide {
-  width: 100%;
-  display: none;
-  border-radius: 10px;
-  opacity: 0;
-  transition: 0.5s;
-  position: absolute;
-}
-
-.slide.active {
-  display: block;
-  opacity: 1;
-  position: relative;
-}
-
-button.prev, button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.prev { left: 10px; }
-.next { right: 10px; }
-
-.lang-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-/* ↓ 下にポップアップさせる */
-.lang-menu {
-  position: absolute;
-  top: 110%;   /* ←ボタンの真下 */
-  left: 0;
-  width: 140px;
-
-  background: #f0f0f0;
-  border-radius: 12px;
-  display: none;
-  overflow: hidden;
-  z-index: 9999;
-}
-
-/* 中身 */
-.lang-menu div {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 13px;
-  color: black
-}
-
-/* ホバー */
-.lang-menu div:hover {
-  background: #ddd;
-}
-
-.lang-wrapper .lang-menu {
-  display: none;
-}
-
-.menu-1 span {
-  display: block;
-  width: 100%;
-  text-align: center;       /* 真ん中に */
-  margin-top: 5px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11px;
-}
-
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-.goog-te-banner-frame {
-  display: none !important;
-}
-
-body {
-  top: 0px !important;
-  position: static !important;
-}
-
-body.translated-ltr .logo-main {
-  font-size: 22px;
-}
-
-body.translated-ltr .logo-sub {
-  font-size: 14px;
-}
-
-.hamburger {
-  display: none;
-}
-
-.ticket-hero {
-  background-image: url("your-image.png"); /* ←背景画像 */
-  background-size: cover;
-  background-position: center;
-
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 白いフィルター */
-.ticket-hero .overlay {
-  background: rgba(255, 255, 255, 0.85); /* ←透明な白 */
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* タイトル */
-.ticket-hero h1 {
-  font-size: 40px;
-  letter-spacing: 8px;
-  color: rgb(255, 255, 255);
-  margin-bottom: 30px;
-}
-
-/* 説明文 */
-.ticket-hero p {
-  text-align: center;
-  color: #ffffff;
-  line-height: 2;
-  font-size: 16px;
-}
-
-.ticket-page {
-  background: #ffffff;
-  padding: 120px 8%;
-  min-height: 100vh;
-}
-
-.ticket-title {
-  text-align: center;
-  font-size: 70px;
-  letter-spacing: 8px;
-  color: rgb(0, 0, 0);
-  margin-bottom: 10px;
-
-  font-family: "Times New Roman", serif;
-}
-
-.ticket-sub {
-  text-align: center;
-  color: #d4af37;
-  letter-spacing: 3px;
-  margin-bottom: 70px;
-}
-
-.ticket-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 40px;
-}
-
-.ticket-card {
-  background: #ffffff;
-
-  border-radius: 20px;
-
-  overflow: hidden;
-
-  transition: 0.4s;
-
-  position: relative;
-
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-}
-
-.ticket-card:hover {
-  transform: translateY(-10px);
-}
-
-.ticket-image {
-  width: 100%;
-  height: 420px;
-  object-fit: cover;
-}
-
-.ticket-content {
-  padding: 30px;
-}
-
-.ticket-category {
-  color: #d4af37;
-  font-size: 14px;
-  letter-spacing: 2px;
-  margin-bottom: 10px;
-}
-
-.ticket-card h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-  color: rgb(1, 1, 1);
-
-  font-family: serif;
-}
-
-.ticket-date {
-  color: #555;
-  margin-bottom: 30px;
-}
-
-.ticket-btn {
-  display: inline-block;
-
-  padding: 14px 28px;
-
-  border: 1px solid #b90e0e;
-
-  color: #b90e0e;
-
-  text-decoration: none;
-
-  transition: 0.3s;
-}
-
-.ticket-btn:hover {
-  background: #b90e0e;
-  color: rgb(255, 255, 255);
-}
-
-.ticket-status {
-  position: absolute;
-
-  top: 20px;
-  left: 20px;
-
-  background: #b90e0e;
-
-  padding: 8px 16px;
-
-  font-size: 12px;
-  letter-spacing: 1px;
-
-  z-index: 2;
-}
-
-.ticket-status.sold {
-  background: #666;
-}
-
-@media (max-width: 768px) {
-
-  .ticket-title {
-    font-size: 42px;
-  }
-
-  .ticket-image {
-    height: 300px;
-  }
-
-}
-
-@media (max-width: 768px) {
-
-  header {
-    position: relative;
-    height: 70px;
-  }
-
-  /* ロゴ中央 */
-  .logo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-  }
-
-  /* 左メニュー消す */
-  .menu-left {
-    display: none;
-  }
-
-  /* 右メニューも消す */
-  .menu-right {
-    display: none;
-  }
-
-  /* ハンバーガー（右上） */
-  .hamburger {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1000;
-    display: block;
-  }
-}
-
-  </style>
- </head>
-
- <script>
-function toggleLangMenu(e) {
-  if (e) e.stopPropagation();
-
-  const menu = document.getElementById("lang-menu");
-
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "block";
-  }
-}
-
-/* 外クリックで閉じる */
-document.addEventListener("click", function() {
-  const menu = document.getElementById("lang-menu");
-  if (menu) menu.style.display = "none";
-});
-
-/* ←これが無かったから翻訳されてない */
-function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
-}
-</script>
-
-<div id="google_translate_element" style="display:none;"></div>
-
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
-</script>
-
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+    .menu-1 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent !important; 
+      padding: 5px 10px;
+      transition: 0.3s;
+    }
+
+    .menu-1 span {
+      display: block;
+      width: 100%;
+      text-align: center;       
+      margin-top: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffffff !important; 
+    }
+
+    .menu-1:hover { transform: translateY(-3px); }
+
+    /* --------------------------------------------------
+       ✨ チケットページ専用：宝塚・四季風の洗練されたUI
+    ----------------------------------------------------- */
+    .container {
+      max-width: 900px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+
+    /* モード切り替えスイッチ（客・管理者を瞬時に切り替える） */
+    .mode-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 5px;
+    }
+
+    .mode-btn {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #aaa;
+      padding: 12px 30px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: sans-serif;
+      letter-spacing: 1px;
+      transition: 0.3s;
+    }
+
+    .mode-btn.active {
+      background: #b90e0e;
+      color: white;
+      border-color: #b90e0e;
+      box-shadow: 0 4px 15px rgba(185,14,14,0.3);
+    }
+
+    /* メインカード枠 */
+    .ticket-box {
+      background: #ffffff;
+      color: #1a1a1a;
+      padding: 50px 40px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+      border-top: 4px solid #c5a059; /* 高級感のゴールドライン */
+    }
+
+    .page-title {
+      text-align: center;
+      font-family: "Yu Mincho", serif;
+      color: #b90e0e;
+      margin-bottom: 40px;
+      font-size: 28px;
+      letter-spacing: 2px;
+    }
+
+    /* フォームスタイル（共通） */
+    .form-group {
+      margin-bottom: 25px;
+      font-family: sans-serif;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      color: #444;
+      margin-bottom: 8px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"],
+    .form-group input[type="number"],
+    .form-group input[type="date"] {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      background: #fbf9f6;
+      font-size: 15px;
+      box-sizing: border-box;
+      border-radius: 0;
+      transition: 0.3s;
+    }
+
+    .form-group input:focus {
+      border-color: #c5a059;
+      outline: none;
+      background: #fff;
+    }
+
+    /* ファイル添付（画像）のカスタムデザイン */
+    .file-input-wrapper {
+      position: relative;
+      border: 2px dashed #ccc;
+      background: #fbf9f6;
+      padding: 30px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .file-input-wrapper input[type="file"] {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* 高級感のある決定ボタン */
+    .submit-btn {
+      width: 100%;
+      background: #111;
+      color: #c5a059;
+      border: 1px solid #c5a059;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: 0.3s;
+      font-family: "Yu Mincho", serif;
+    }
+
+    .submit-btn:hover {
+      background: #c5a059;
+      color: #111;
+    }
+
+    /* ログイン後ステータス表示 */
+    .user-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f4eee1;
+      padding: 15px 25px;
+      margin-bottom: 30px;
+      font-size: 14px;
+      color: #555;
+      font-family: sans-serif;
+    }
+
+    .logout-link {
+      color: #b90e0e;
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    /* 客側：販売チケットカード一覧（劇団四季の座席選択前画面オマージュ） */
+    .ticket-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+      margin-top: 30px;
+    }
+
+    .ticket-card {
+      display: flex;
+      background: #fbf9f6;
+      border: 1px solid #e5dfd5;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    .ticket-card:hover {
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+      border-color: #c5a059;
+    }
+
+    .ticket-img {
+      width: 240px;
+      height: 180px;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .ticket-details {
+      padding: 25px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .ticket-title {
+      font-size: 20px;
+      margin: 0 0 10px 0;
+      font-family: "Yu Mincho", serif;
+      color: #111;
+    }
+
+    .ticket-meta {
+      font-size: 14px;
+      color: #666;
+      font-family: sans-serif;
+      line-height: 1.6;
+    }
+
+    .ticket-price {
+      color: #b90e0e;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .buy-btn {
+      background: #b90e0e;
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      cursor: pointer;
+      font-weight: bold;
+      letter-spacing: 1px;
+      font-family: sans-serif;
+      transition: 0.3s;
+    }
+
+    .buy-btn:hover { background: #900b0b; }
+
+    /* 管理者：プレビュー用画像 */
+    #img-preview {
+      max-width: 100%;
+      height: 150px;
+      object-fit: cover;
+      margin-top: 15px;
+      display: none;
+    }
+
+    /* フッター */
+    footer {
+      background: #070707;
+      border-top: 1px solid #1a1a1a;
+      padding: 40px 5%;
+      text-align: center;
+      margin-top: 100px;
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: #555;
+      letter-spacing: 1px;
+      font-family: sans-serif;
+    }
+
+    .hamburger { display: none; }
+    @media (max-width: 768px) {
+      .ticket-card { flex-direction: column; }
+      .ticket-img { width: 100%; height: 200px; }
+      header { height: 70px; }
+      .menu-left, .menu-right { display: none; }
+    }
+    </style>
+  </head>
 
   <body>
+
+    <!-- 【完全同期】ヘッダーエリア -->
     <header>
-  <!-- 左 -->
-   <div class="menu-left">
-    <a href="ticket.html" class="menu-1">
-  <img src="ticket3.png" width="50">
-  <span>チケット</span>
-  </a>
-  <a href="what.html" class="menu-1">
-  <img src="what3.png" width="50">
-  <span>公演紹介</span>
-  </a>
-      <a href="Participant.html" class="menu-1">
-  <img src="Participant3.png" width="50">
-  <span>出場団体</span>
-  </a>
-    <a href="Schedule.html" class="menu-1">
-  <img src="Schedule3.png" width="50">
-  <span>スケジュール</span>
-</a>
-  </div>
-
-  <!-- 真ん中 -->
-  <a href="index.html" class="logo">
-  <div class="logo-main">早慶演劇祭</div>
-  <div class="logo-sub">Waseda–Keio Theatre Festival</div>
-</a>
-
-  <!-- 右 -->
-  <div class="menu-right">
-     <a href="news.html" class="menu-1">
-  <img src="news3.png" width="50">
-  <span>ニュース</span>
-  </a>
-     <div class="lang-wrapper">
-    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-      <img src="Language3.png">
-      <span>Language</span>
-    </a>
-
-  <div id="lang-menu" class="lang-menu">
-    <div onclick="setLang('ja')">日本語</div>
-    <div onclick="setLang('en')">ENGLISH</div>
-    <div onclick="setLang('zh-CN')">简体中文</div>
-    <div onclick="setLang('ko')">한국어</div>
-  </div>
-</div>
-   <a href="Inquiry.html" class="menu-1">
-  <img src="Inquiry3.png" width="50">
-  <span>お問い合わせ</span>
-  </a>
-    <a href="menu.html" class="menu-1">
-  <img src="menu3.png" width="50">
-  <span>メニュー</span>
-  </a>
-  </div>
-  <div class="hamburger">
-  ☰
-  </div>
-</header>
-
-<section class="ticket-page">
-
-  <h1 class="ticket-title">
-    TICKET
-  </h1>
-
-  <p class="ticket-sub">
-    チケット購入
-  </p>
-
-  <div class="ticket-grid">
-
-    <!-- 公演カード -->
-    <div class="ticket-card">
-
-      <div class="ticket-status">
-        NOW ON SALE
+      <div class="menu-left">
+        <a href="ticket.html" class="menu-1">
+          <img src="ticket3.png">
+          <span>チケット予約</span>
+        </a>
+        <a href="what.html" class="menu-1">
+          <img src="what3.png">
+          <span>公演紹介</span>
+        </a>
+        <a href="Participant.html" class="menu-1">
+          <img src="Participant3.png">
+          <span>出場団体</span>
+        </a>
+        <a href="Schedule.html" class="menu-1">
+          <img src="Schedule3.png">
+          <span>スケジュール</span>
+        </a>
       </div>
 
-      <img src="play1.jpg" class="ticket-image">
+      <a href="index.html" class="logo">
+        <div class="logo-main">早慶演劇祭</div>
+        <div class="logo-sub">Waseda–Keio Theatre Festival</div>
+      </a>
 
-      <div class="ticket-content">
+      <div class="menu-right">
+        <a href="news.html" class="menu-1">
+          <img src="news3.png">
+          <span>ニュース</span>
+        </a>
+        <div class="lang-wrapper">
+          <a class="menu-1" onclick="return false;">
+            <img src="Language3.png">
+            <span>Language</span>
+          </a>
+        </div>
+        <a href="Inquiry.html" class="menu-1">
+          <img src="Inquiry3.png">
+          <span>お問い合わせ</span>
+        </a>
+        <a href="menu.html" class="menu-1">
+          <img src="menu3.png">
+          <span>メニュー</span>
+        </a>
+      </div>
+    </header>
 
-        <div class="ticket-category">
-          早稲田大学
+    <!-- メインコンテンツ -->
+    <div class="container">
+      
+      <!-- テスト・開発用：客側と管理者側の画面切替スイッチ -->
+      <div class="mode-switcher">
+        <button class="mode-btn active" onclick="switchMode('customer')">お客様用ページ</button>
+        <button class="mode-btn" onclick="switchMode('admin')">管理者用ページ</button>
+      </div>
+
+      <!-- チケットメインボックス -->
+      <div class="ticket-box">
+        
+        <!-- ==========================================
+             👤 客側（購入者）エリア 
+             ========================================== -->
+        <div id="customer-section">
+          <!-- 客側：未ログイン状態 -->
+          <div id="customer-login-form">
+            <h2 class="page-title">チケット購入・ログイン</h2>
+            <p style="text-align:center; font-size:13px; color:#666; margin-top:-30px; margin-bottom:30px; font-family:sans-serif;">
+              ※テスト用アカウント： <b>user@example.com</b> / パスワード： <b>1234</b>
+            </p>
+            <form onsubmit="handleCustomerLogin(event)">
+              <div class="form-group">
+                <label>メールアドレス</label>
+                <input type="email" id="customer-email" required placeholder="example@sokei.com">
+              </div>
+              <div class="form-group">
+                <label>パスワード</label>
+                <input type="password" id="customer-pw" required placeholder="••••••••">
+              </div>
+              <button type="submit" class="submit-btn">ログインして進む</button>
+            </form>
+          </div>
+
+          <!-- 客側：ログイン後（チケット購入画面） -->
+          <div id="customer-dashboard" style="display: none;">
+            <div class="user-status">
+              <div>ログイン中: <b id="display-user-email"></b> (一般会員)</div>
+              <div class="logout-link" onclick="logout()">ログアウト</div>
+            </div>
+            <h2 class="page-title">チケット予約受付一覧</h2>
+            
+            <!-- チケットがここに動的に追加される -->
+            <div class="ticket-grid" id="ticket-list-container"></div>
+          </div>
         </div>
 
-        <h2>
-          『ロミオとジュリエット』
-        </h2>
+        <!-- ==========================================
+             🛠️ 管理者側エリア
+             ========================================== -->
+        <div id="admin-section" style="display: none;">
+          <!-- 管理者側：未ログイン -->
+          <div id="admin-login-form">
+            <h2 class="page-title">運営管理者 ログイン</h2>
+            <p style="text-align:center; font-size:13px; color:#666; margin-top:-30px; margin-bottom:30px; font-family:sans-serif;">
+              ※管理者用アカウント： <b>admin@example.com</b> / パスワード： <b>5678</b>
+            </p>
+            <form onsubmit="handleAdminLogin(event)">
+              <div class="form-group">
+                <label>管理者ID (メールアドレス)</label>
+                <input type="email" id="admin-email" required placeholder="admin@sokei.com">
+              </div>
+              <div class="form-group">
+                <label>管理者パスワード</label>
+                <input type="password" id="admin-pw" required placeholder="••••••••">
+              </div>
+              <button type="submit" class="submit-btn">管理画面へログイン</button>
+            </form>
+          </div>
 
-        <p class="ticket-date">
-          2026.08.14 - 08.16
-        </p>
-
-        <a href="#" class="ticket-btn">
-          チケット購入
-        </a>
+          <!-- 管理者側：ログイン後（情報登録フォーム） -->
+          <div id="admin-dashboard" style="display: none;">
+            <div class="user-status">
+              <div>最高管理権限：ログイン中</div>
+              <div class="logout-link" onclick="logout()">ログアウト</div>
+            </div>
+            <h2 class="page-title">新規公演・チケット登録</h2>
+            
+            <form onsubmit="handleCreateTicket(event)">
+              <div class="form-group">
+                <label>公演タイトル</label>
+                <input type="text" id="new-title" required placeholder="例：早稲田大学出場団体公演 『新劇タイトル』">
+              </div>
+              <div class="form-group">
+                <label>公演日時</label>
+                <input type="date" id="new-date" required>
+              </div>
+              <div class="form-group">
+                <label>会場名</label>
+                <input type="text" id="new-venue" required placeholder="例：大隈記念講堂 / 三田キャンパスホール">
+              </div>
+              <div class="form-group">
+                <label>チケット価格 (円)</label>
+                <input type="number" id="new-price" required placeholder="2500">
+              </div>
+              <div class="form-group">
+                <label>公演イメージ写真添付</label>
+                <div class="file-input-wrapper">
+                  <span id="file-label" style="color:#777; font-size:14px;">ここに写真をドロップするか、クリックして選択</span>
+                  <input type="file" id="new-image" accept="image/*" onchange="previewImage(this)">
+                  <img id="img-preview" alt="プレビュー">
+                </div>
+              </div>
+              <button type="submit" class="submit-btn" style="background:#b90e0e; color:white; border:none;">この内容で公式発売する</button>
+            </form>
+          </div>
+        </div>
 
       </div>
     </div>
 
-    <!-- 公演カード -->
-    <div class="ticket-card">
+    <!-- フッター -->
+    <footer>
+      <div class="footer-copy">© 2026 早慶演劇祭 / Waseda–Keio Theatre Festival. All Rights Reserved.</div>
+    </footer>
 
-      <div class="ticket-status sold">
-        SOLD OUT
-      </div>
+    <!-- システムJavaScript -->
+    <script>
+    // 💡 初期データの登録（劇団四季風のデフォルト公演）
+    let ticketDatabase = [
+      {
+        id: 1,
+        title: "早慶演劇祭2026 合同開幕大公演",
+        date: "2026-08-10",
+        venue: "早稲田大学 大隈記念講堂",
+        price: "3000",
+        image: "media1.jpg" // 既存の画像がなければダミーが表示されます
+      },
+      {
+        id: 2,
+        title: "慶應義塾大学 出場団体劇 『若き血の躍動』",
+        date: "2026-08-12",
+        venue: "三田キャンパス ホール",
+        price: "2500",
+        image: "media2.jpg"
+      }
+    ];
 
-      <img src="play2.jpg" class="ticket-image">
+    // 添付された写真を記憶する一時変数
+    let attachedImageBase64 = "";
 
-      <div class="ticket-content">
+    // ログイン状態管理
+    let currentLoginUser = null; // 'customer' or 'admin' or null
 
-        <div class="ticket-category">
-          慶應義塾大学
-        </div>
+    // 1. 【客側・管理者側】の画面タブ切り替え
+    function switchMode(mode) {
+      document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+      if (mode === 'customer') {
+        document.querySelectorAll('.mode-btn')[0].classList.add('active');
+        document.getElementById('customer-section').style.display = 'block';
+        document.getElementById('admin-section').style.display = 'none';
+      } else {
+        document.querySelectorAll('.mode-btn')[1].classList.add('active');
+        document.getElementById('customer-section').style.display = 'none';
+        document.getElementById('admin-section').style.display = 'block';
+      }
+    }
 
-        <h2>
-          『ハムレット』
-        </h2>
+    // 2. 客側ログイン処理
+    function handleCustomerLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('customer-email').value;
+      const pw = document.getElementById('customer-pw').value;
 
-        <p class="ticket-date">
-          2026.08.20 - 08.22
-        </p>
+      // テスト用バリデーション
+      if (email === "user@example.com" && pw === "1234") {
+        currentLoginUser = 'customer';
+        document.getElementById('customer-login-form').style.display = 'none';
+        document.getElementById('customer-dashboard').style.display = 'block';
+        document.getElementById('display-user-email').innerText = email;
+        renderTickets();
+      } else {
+        alert("メールアドレスまたはパスワードが違います。\n(テスト用: user@example.com / 1234)");
+      }
+    }
 
-        <a href="#" class="ticket-btn">
-          詳細を見る
-        </a>
+    // 3. 管理者側ログイン処理
+    function handleAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('admin-email').value;
+      const pw = document.getElementById('admin-pw').value;
 
-      </div>
-    </div>
+      if (email === "admin@example.com" && pw === "5678") {
+        currentLoginUser = 'admin';
+        document.getElementById('admin-login-form').style.display = 'none';
+        document.getElementById('admin-dashboard').style.display = 'block';
+      } else {
+        alert("管理者認証に失敗しました。\n(テスト用: admin@example.com / 5678)");
+      }
+    }
 
-  </div>
+    // 4. ログアウト処理
+    function logout() {
+      currentLoginUser = null;
+      // 両方リセット
+      document.getElementById('customer-login-form').style.display = 'block';
+      document.getElementById('customer-dashboard').style.display = 'none';
+      document.getElementById('admin-login-form').style.display = 'block';
+      document.getElementById('admin-dashboard').style.display = 'none';
+      alert("ログアウトしました。");
+    }
 
-</section>
+    // 5. 管理者：写真のプレビューとデータ化(Base64)
+    function previewImage(input) {
+      const file = input.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('img-preview');
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          document.getElementById('file-label').style.display = 'none';
+          attachedImageBase64 = e.target.result; // 画像データを保存
+        }
+        reader.readAsDataURL(file);
+      }
+    }
 
-<script>
-function removeGoogleUI() {
-  // バナー
-  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+    // 6. 管理者：新しい公演情報を登録（チケット追加）
+    function handleCreateTicket(e) {
+      e.preventDefault();
+      
+      const title = document.getElementById('new-title').value;
+      const date = document.getElementById('new-date').value;
+      const venue = document.getElementById('new-venue').value;
+      const price = document.getElementById('new-price').value;
 
-  // ポップアップ（翻訳されました表示）
-  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+      // 新しいチケットオブジェクト
+      const newTicket = {
+        id: Date.now(),
+        title: title,
+        date: date,
+        venue: venue,
+        price: price,
+        image: attachedImageBase64 || "https://via.placeholder.com/240x180/e5dfd5/111111?text=No+Image"
+      };
 
-  // その他UI
-  document.querySelectorAll('.skiptranslate').forEach(el => {
-    if (el.innerText.includes("翻訳")) el.remove();
-  });
+      // データベース（配列）の先頭に追加
+      ticketDatabase.unshift(newTicket);
+      
+      alert("✨ 公演チケットを公式システムへ登録・発売開始しました！\n「お客様用ページ」タブを切り替えると即座に反映されています。");
+      
+      // フォームをリセット
+      e.target.reset();
+      document.getElementById('img-preview').style.display = 'none';
+      document.getElementById('file-label').style.display = 'block';
+      document.getElementById('file-label').innerText = "ここに写真をドロップするか、クリックして選択";
+      attachedImageBase64 = "";
+      
+      // 客側のリストも更新
+      renderTickets();
+    }
 
-  // 位置ズレ修正
-  document.body.style.top = '0px';
-}
+    // 7. 客側：チケット一覧を画面に表示する
+    function renderTickets() {
+      const container = document.getElementById('ticket-list-container');
+      container.innerHTML = ""; // 一旦クリア
 
-/* ずっと監視して消す */
-setInterval(removeGoogleUI, 300);
-</script>
+      if (ticketDatabase.length === 0) {
+        container.innerHTML = "<p style='text-align:center;color:#999;'>現在、発売中のチケットはありません。</p>";
+        return;
+      }
 
+      ticketDatabase.forEach(ticket => {
+        const card = document.createElement('div');
+        card.className = 'ticket-card';
+        card.innerHTML = `
+          <img src="${ticket.image}" class="ticket-img" onerror="this.src='https://via.placeholder.com/240x180/e5dfd5/111111?text=Sokei+Theatre'">
+          <div class="ticket-details">
+            <div>
+              <h3 class="ticket-title">${ticket.title}</h3>
+              <div class="ticket-meta">
+                日時：${ticket.date}<br>
+                会場：${ticket.venue}
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+              <span class="ticket-price">¥${Number(ticket.price).toLocaleString()} <span style="font-size:11px; color:#777;">(税込)</span></span>
+              <button class="buy-btn" onclick="buyTicket('${ticket.title}')">購入する</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // 8. 客側：購入ボタンを押したとき
+    function buyTicket(title) {
+      alert(`🎉 チケット購入が完了しました！\n\n【対象公演】\n${title}\n\n登録されたメールアドレス宛てに、QRコード電子チケットを送信しました。当日はスマホに表示してご来場ください。`);
+    }
+
+    // 初回読み込み時にチケット一覧を生成しておく
+    renderTickets();
+    </script>
   </body>
-
 </html>
