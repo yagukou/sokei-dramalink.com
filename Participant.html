@@ -55,7 +55,7 @@
       z-index: 100;
       height: 64px;
     }
-    
+
     .nav-logo {
       font-size: 22px; /* 「ビラネットワーク」の文字を 16px → 22px に拡大 */
       font-weight: 700;
@@ -1008,6 +1008,9 @@ function handleRegisterPerformance() {
 // ==========================================
 // 6. 折り込み依頼送信
 // ==========================================
+// ==========================================
+// 6. 折り込み依頼送信（セキュリティ強化版）
+// ==========================================
 function updateRequestFormUI() {
   const perf = performancesData.find(p => p.id === selectedPerfId);
   if (!perf) return;
@@ -1015,22 +1018,44 @@ function updateRequestFormUI() {
  
   document.getElementById('request-target-info').innerText = `宛先：${troupe ? troupe.name : ''} 「${perf.title}」`;
   
-  if (currentUser) {
-    document.getElementById('req-from-name').value = currentUser.name;
-    document.getElementById('req-from-email').value = currentUser.email;
-  } else {
-    document.getElementById('req-from-name').value = '';
-    document.getElementById('req-from-email').value = '';
+  // 🔒【強化1】ログインしていない野良ユーザーは、依頼画面に進ませずログインへ強制誘導
+  if (!currentUser) {
+    alert("❌ セキュリティエラー：\n折り込み依頼を送信するには、まず「マイページ」から自劇団のアカウントでログインしてください。");
+    showPage('mypage');
+    return;
   }
+
+  const nameInput = document.getElementById('req-from-name');
+  const emailInput = document.getElementById('req-from-email');
+
+  // 🔒【強化2】手入力を完全に禁止し、ログイン中の「本物のデータ」を強制セット
+  nameInput.value = currentUser.name;
+  emailInput.value = currentUser.email;
+ 
+  // 🔒【強化3】画面上でも入力欄をグレーアウト（編集不可）にして改ざんを防ぐ
+  nameInput.readOnly = true;
+  emailInput.readOnly = true;
+  nameInput.style.background = "var(--surface2)";
+  emailInput.style.background = "var(--surface2)";
+  nameInput.style.color = "var(--muted)";
+  emailInput.style.color = "var(--muted)";
 }
  
 function submitRequestForm() {
+  // 🔒【強化4】送信ボタンが押された瞬間にも、再度ログイン状態をチェック
+  if (!currentUser) {
+    alert('❌ エラー：セッションが切れています。ログインし直してください。');
+    showPage('mypage');
+    return;
+  }
+
   const perf = performancesData.find(p => p.id === selectedPerfId);
   if (!perf) return;
   const targetTroupe = troupesData.find(t => t.id === perf.troupeId); 
  
-  const fromName = document.getElementById('req-from-name').value;
-  const fromEmail = document.getElementById('req-from-email').value;
+  // 🔒【強化5】フォームの入力値ではなく、ログイン中のデータをプログラム側で100%信用して使用
+  const fromName = currentUser.name;
+  const fromEmail = currentUser.email;
   const copies = parseInt(document.getElementById('req-copies').value);
   const size = document.getElementById('req-size').value;
   const notes = document.getElementById('req-notes').value;
@@ -1068,7 +1093,6 @@ function submitRequestForm() {
   const serviceID = 'service_4gfx3qf';
   const templateID = 'template_rzattmh'; 
  
-  // 💡 文字切れしていたEmailJS送信処理を完全に修復しました
   emailjs.send(serviceID, templateID, templateParams)
     .then(function(response) {
       document.getElementById('success-banner').style.display = 'block';
