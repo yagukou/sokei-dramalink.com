@@ -111,7 +111,7 @@
     .menu-1:hover { transform: translateY(-3px); }
 
     /* --------------------------------------------------
-       ✨ チケットページ専用：宝塚・四季風の洗練されたUI
+       チケットページ専用：UIデザイン
     ----------------------------------------------------- */
     .container {
       max-width: 900px;
@@ -119,7 +119,6 @@
       padding: 0 20px;
     }
 
-    /* モード切り替えスイッチ（客・管理者を瞬時に切り替える） */
     .mode-switcher {
       display: flex;
       justify-content: center;
@@ -146,13 +145,12 @@
       box-shadow: 0 4px 15px rgba(185,14,14,0.3);
     }
 
-    /* メインカード枠 */
     .ticket-box {
       background: #ffffff;
       color: #1a1a1a;
       padding: 50px 40px;
       box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-      border-top: 4px solid #c5a059; /* 高級感のゴールドライン */
+      border-top: 4px solid #c5a059; 
     }
 
     .page-title {
@@ -164,7 +162,6 @@
       letter-spacing: 2px;
     }
 
-    /* フォームスタイル（共通） */
     .form-group {
       margin-bottom: 25px;
       font-family: sans-serif;
@@ -178,11 +175,7 @@
       margin-bottom: 8px;
     }
 
-    .form-group input[type="text"],
-    .form-group input[type="email"],
-    .form-group input[type="password"],
-    .form-group input[type="number"],
-    .form-group input[type="date"] {
+    .form-group input, .form-group select {
       width: 100%;
       padding: 14px;
       border: 1px solid #ddd;
@@ -193,13 +186,12 @@
       transition: 0.3s;
     }
 
-    .form-group input:focus {
+    .form-group input:focus, .form-group select:focus {
       border-color: #c5a059;
       outline: none;
       background: #fff;
     }
 
-    /* ファイル添付（画像）のカスタムデザイン */
     .file-input-wrapper {
       position: relative;
       border: 2px dashed #ccc;
@@ -215,7 +207,6 @@
       cursor: pointer;
     }
 
-    /* 高級感のある決定ボタン */
     .submit-btn {
       width: 100%;
       background: #111;
@@ -235,7 +226,6 @@
       color: #111;
     }
 
-    /* ログイン後ステータス表示 */
     .user-status {
       display: flex;
       justify-content: space-between;
@@ -255,7 +245,6 @@
       font-weight: bold;
     }
 
-    /* 客側：販売チケットカード一覧（劇団四季の座席選択前画面オマージュ） */
     .ticket-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -311,10 +300,11 @@
       font-size: 18px;
     }
 
-    .buy-btn {
-      background: #b90e0e;
-      color: white;
-      border: none;
+    /* 「購入詳細」ボタン（四季・宝塚らしいゴールド×黒の気品あるボタンに変更） */
+    .detail-btn {
+      background: #111;
+      color: #c5a059;
+      border: 1px solid #c5a059;
       padding: 10px 25px;
       cursor: pointer;
       font-weight: bold;
@@ -323,9 +313,11 @@
       transition: 0.3s;
     }
 
-    .buy-btn:hover { background: #900b0b; }
+    .detail-btn:hover {
+      background: #c5a059;
+      color: #111;
+    }
 
-    /* 管理者：プレビュー用画像 */
     #img-preview {
       max-width: 100%;
       height: 150px;
@@ -334,7 +326,116 @@
       display: none;
     }
 
-    /* フッター */
+    /* --------------------------------------------------
+       ✨ 新設：劇団四季風の購入詳細確認モーダル（ポップアップ）
+    ----------------------------------------------------- */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.3s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      color: #1a1a1a;
+      width: 90%;
+      max-width: 550px;
+      padding: 40px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      border-top: 4px solid #b90e0e;
+      position: relative;
+      transform: translateY(-20px);
+      transition: 0.3s ease;
+    }
+
+    .modal-overlay.open .modal-content {
+      transform: translateY(0);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 20px; right: 25px;
+      font-size: 30px;
+      cursor: pointer;
+      color: #999;
+      transition: 0.2s;
+    }
+    .close-modal:hover { color: #111; }
+
+    .modal-subtitle {
+      font-size: 13px;
+      color: #b90e0e;
+      letter-spacing: 2px;
+      margin: 0 0 5px 0;
+      font-family: sans-serif;
+      font-weight: bold;
+    }
+
+    .modal-title-text {
+      font-size: 22px;
+      font-family: "Yu Mincho", serif;
+      margin: 0 0 25px 0;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 15px;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 25px;
+      font-family: sans-serif;
+      font-size: 14px;
+    }
+
+    .info-table th, .info-table td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-table th {
+      color: #666;
+      width: 100px;
+      font-weight: bold;
+    }
+
+    /* 銀行振込案内ボックス */
+    .bank-info-box {
+      background: #fbf9f6;
+      border: 1px solid #e5dfd5;
+      padding: 20px;
+      margin-bottom: 30px;
+      font-family: sans-serif;
+      font-size: 14px;
+    }
+
+    .bank-row {
+      display: flex;
+      margin-bottom: 8px;
+    }
+    .bank-label {
+      width: 100px;
+      color: #555;
+      font-weight: bold;
+    }
+    .bank-value {
+      flex: 1;
+      color: #111;
+    }
+
     footer {
       background: #070707;
       border-top: 1px solid #1a1a1a;
@@ -356,13 +457,13 @@
       .ticket-img { width: 100%; height: 200px; }
       header { height: 70px; }
       .menu-left, .menu-right { display: none; }
+      .modal-content { padding: 30px 20px; }
     }
     </style>
   </head>
 
   <body>
 
-    <!-- 【完全同期】ヘッダーエリア -->
     <header>
       <div class="menu-left">
         <a href="ticket.html" class="menu-1">
@@ -410,23 +511,16 @@
       </div>
     </header>
 
-    <!-- メインコンテンツ -->
     <div class="container">
       
-      <!-- テスト・開発用：客側と管理者側の画面切替スイッチ -->
       <div class="mode-switcher">
         <button class="mode-btn active" onclick="switchMode('customer')">お客様用ページ</button>
         <button class="mode-btn" onclick="switchMode('admin')">管理者用ページ</button>
       </div>
 
-      <!-- チケットメインボックス -->
       <div class="ticket-box">
         
-        <!-- ==========================================
-             👤 客側（購入者）エリア 
-             ========================================== -->
         <div id="customer-section">
-          <!-- 客側：未ログイン状態 -->
           <div id="customer-login-form">
             <h2 class="page-title">チケット購入・ログイン</h2>
             <p style="text-align:center; font-size:13px; color:#666; margin-top:-30px; margin-bottom:30px; font-family:sans-serif;">
@@ -445,24 +539,17 @@
             </form>
           </div>
 
-          <!-- 客側：ログイン後（チケット購入画面） -->
           <div id="customer-dashboard" style="display: none;">
             <div class="user-status">
               <div>ログイン中: <b id="display-user-email"></b> (一般会員)</div>
               <div class="logout-link" onclick="logout()">ログアウト</div>
             </div>
             <h2 class="page-title">チケット予約受付一覧</h2>
-            
-            <!-- チケットがここに動的に追加される -->
             <div class="ticket-grid" id="ticket-list-container"></div>
           </div>
         </div>
 
-        <!-- ==========================================
-             🛠️ 管理者側エリア
-             ========================================== -->
         <div id="admin-section" style="display: none;">
-          <!-- 管理者側：未ログイン -->
           <div id="admin-login-form">
             <h2 class="page-title">運営管理者 ログイン</h2>
             <p style="text-align:center; font-size:13px; color:#666; margin-top:-30px; margin-bottom:30px; font-family:sans-serif;">
@@ -481,7 +568,6 @@
             </form>
           </div>
 
-          <!-- 管理者側：ログイン後（情報登録フォーム） -->
           <div id="admin-dashboard" style="display: none;">
             <div class="user-status">
               <div>最高管理権限：ログイン中</div>
@@ -522,14 +608,76 @@
       </div>
     </div>
 
-    <!-- フッター -->
+    <div class="modal-overlay" id="purchase-modal">
+      <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <p class="modal-subtitle">TICKET DETAILS</p>
+        <h3 class="modal-title-text">チケット購入詳細確認</h3>
+        
+        <table class="info-table">
+          <tr>
+            <th>対象公演</th>
+            <td id="modal-perf-title" style="font-weight: bold; color: #b90e0e;">-</td>
+          </tr>
+          <tr>
+            <th>日時</th>
+            <td id="modal-perf-date">-</td>
+          </tr>
+          <tr>
+            <th>会場</th>
+            <td id="modal-perf-venue">-</td>
+          </tr>
+          <tr>
+            <th>料金</th>
+            <td id="modal-perf-price" style="font-weight: bold;">-</td>
+          </tr>
+        </table>
+
+        <div class="form-group">
+          <label>お支払い方法の選択</label>
+          <select id="payment-select" onchange="handlePaymentChange()">
+            <option value="bank">銀行振込 (窓口・ATM・ネットバンキング)</option>
+            <option value="venue">当日会場受付精算 (現金のみ)</option>
+          </select>
+        </div>
+
+        <div class="bank-info-box" id="bank-info-area">
+          <p style="margin-top:0; font-weight:bold; color:#c5a059; border-bottom:1px solid #e5dfd5; padding-bottom:5px;">【お振込み先口座】</p>
+          <div class="bank-row">
+            <div class="bank-label">金融機関名</div>
+            <div class="bank-value" style="color:#aaa;">（※未定のため空欄）</div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">支店名</div>
+            <div class="bank-value" style="color:#aaa;"></div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">口座種別</div>
+            <div class="bank-value" style="color:#aaa;"></div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">口座番号</div>
+            <div class="bank-value" style="color:#aaa;"></div>
+          </div>
+          <div class="bank-row">
+            <div class="bank-label">口座名義</div>
+            <div class="bank-value" style="color:#aaa;"></div>
+          </div>
+          <p style="font-size:12px; color:#777; margin-bottom:0; margin-top:15px; line-height:1.5;">
+            ※現在、振込先口座の調整中となります。正式に決定しだい、ご登録のメールアドレス宛てに確定した口座情報をお送りいたします。
+          </p>
+        </div>
+
+        <button class="submit-btn" onclick="confirmPurchase()" style="background:#b90e0e; color:white; border:none;">この内容で予約・購入を確定する</button>
+      </div>
+    </div>
+
     <footer>
       <div class="footer-copy">© 2026 早慶演劇祭 / Waseda–Keio Theatre Festival. All Rights Reserved.</div>
     </footer>
 
-    <!-- システムJavaScript -->
     <script>
-    // 💡 初期データの登録（劇団四季風のデフォルト公演）
+    // 初期データの登録
     let ticketDatabase = [
       {
         id: 1,
@@ -537,7 +685,7 @@
         date: "2026-08-10",
         venue: "早稲田大学 大隈記念講堂",
         price: "3000",
-        image: "media1.jpg" // 既存の画像がなければダミーが表示されます
+        image: "media1.jpg"
       },
       {
         id: 2,
@@ -549,13 +697,11 @@
       }
     ];
 
-    // 添付された写真を記憶する一時変数
     let attachedImageBase64 = "";
+    let currentLoginUser = null; 
+    let selectedTicket = null; // 現在詳細を見ているチケットを一時保存
 
-    // ログイン状態管理
-    let currentLoginUser = null; // 'customer' or 'admin' or null
-
-    // 1. 【客側・管理者側】の画面タブ切り替え
+    // 1. 客側・管理者側の画面タブ切り替え
     function switchMode(mode) {
       document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
       if (mode === 'customer') {
@@ -569,13 +715,12 @@
       }
     }
 
-    // 2. 客側ログイン処理
+    // 2. 客側ログイン
     function handleCustomerLogin(e) {
       e.preventDefault();
       const email = document.getElementById('customer-email').value;
       const pw = document.getElementById('customer-pw').value;
 
-      // テスト用バリデーション
       if (email === "user@example.com" && pw === "1234") {
         currentLoginUser = 'customer';
         document.getElementById('customer-login-form').style.display = 'none';
@@ -587,7 +732,7 @@
       }
     }
 
-    // 3. 管理者側ログイン処理
+    // 3. 管理者側ログイン
     function handleAdminLogin(e) {
       e.preventDefault();
       const email = document.getElementById('admin-email').value;
@@ -602,10 +747,9 @@
       }
     }
 
-    // 4. ログアウト処理
+    // 4. ログアウト
     function logout() {
       currentLoginUser = null;
-      // 両方リセット
       document.getElementById('customer-login-form').style.display = 'block';
       document.getElementById('customer-dashboard').style.display = 'none';
       document.getElementById('admin-login-form').style.display = 'block';
@@ -613,7 +757,7 @@
       alert("ログアウトしました。");
     }
 
-    // 5. 管理者：写真のプレビューとデータ化(Base64)
+    // 5. 管理者：写真のプレビュー
     function previewImage(input) {
       const file = input.files[0];
       if (file) {
@@ -623,13 +767,13 @@
           preview.src = e.target.result;
           preview.style.display = 'block';
           document.getElementById('file-label').style.display = 'none';
-          attachedImageBase64 = e.target.result; // 画像データを保存
+          attachedImageBase64 = e.target.result; 
         }
         reader.readAsDataURL(file);
       }
     }
 
-    // 6. 管理者：新しい公演情報を登録（チケット追加）
+    // 6. 管理者：新しいチケット登録
     function handleCreateTicket(e) {
       e.preventDefault();
       
@@ -638,7 +782,6 @@
       const venue = document.getElementById('new-venue').value;
       const price = document.getElementById('new-price').value;
 
-      // 新しいチケットオブジェクト
       const newTicket = {
         id: Date.now(),
         title: title,
@@ -648,26 +791,21 @@
         image: attachedImageBase64 || "https://via.placeholder.com/240x180/e5dfd5/111111?text=No+Image"
       };
 
-      // データベース（配列）の先頭に追加
       ticketDatabase.unshift(newTicket);
+      alert("✨ 公演チケットを登録・発売開始しました！");
       
-      alert("✨ 公演チケットを公式システムへ登録・発売開始しました！\n「お客様用ページ」タブを切り替えると即座に反映されています。");
-      
-      // フォームをリセット
       e.target.reset();
       document.getElementById('img-preview').style.display = 'none';
       document.getElementById('file-label').style.display = 'block';
-      document.getElementById('file-label').innerText = "ここに写真をドロップするか、クリックして選択";
       attachedImageBase64 = "";
       
-      // 客側のリストも更新
       renderTickets();
     }
 
-    // 7. 客側：チケット一覧を画面に表示する
+    // 7. 客側：チケット一覧を表示（ボタンを「購入詳細」に改修）
     function renderTickets() {
       const container = document.getElementById('ticket-list-container');
-      container.innerHTML = ""; // 一旦クリア
+      container.innerHTML = ""; 
 
       if (ticketDatabase.length === 0) {
         container.innerHTML = "<p style='text-align:center;color:#999;'>現在、発売中のチケットはありません。</p>";
@@ -689,7 +827,7 @@
             </div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
               <span class="ticket-price">¥${Number(ticket.price).toLocaleString()} <span style="font-size:11px; color:#777;">(税込)</span></span>
-              <button class="buy-btn" onclick="buyTicket('${ticket.title}')">購入する</button>
+              <button class="detail-btn" onclick="openPurchaseModal(${ticket.id})">購入詳細</button>
             </div>
           </div>
         `;
@@ -697,12 +835,63 @@
       });
     }
 
-    // 8. 客側：購入ボタンを押したとき
-    function buyTicket(title) {
-      alert(`🎉 チケット購入が完了しました！\n\n【対象公演】\n${title}\n\n登録されたメールアドレス宛てに、QRコード電子チケットを送信しました。当日はスマホに表示してご来場ください。`);
+    /* --------------------------------------------------
+       モーダル制御用スクリプト
+    ----------------------------------------------------- */
+    // モーダルを開く（購入詳細画面の表示）
+    function openPurchaseModal(id) {
+      // データベースから対象のチケットを検索
+      selectedTicket = ticketDatabase.find(t => t.id === id);
+      if (!selectedTicket) return;
+
+      // モーダル内の表示テキストを書き換え
+      document.getElementById('modal-perf-title').innerText = selectedTicket.title;
+      document.getElementById('modal-perf-date').innerText = selectedTicket.date;
+      document.getElementById('modal-perf-venue').innerText = selectedTicket.venue;
+      document.getElementById('modal-perf-price').innerText = `¥${Number(selectedTicket.price).toLocaleString()} (税込)`;
+
+      // 初期状態は銀行振込表示にリセット
+      document.getElementById('payment-select').value = "bank";
+      document.getElementById('bank-info-area').style.display = "block";
+
+      // モーダルを表示
+      document.getElementById('purchase-modal').classList.add('open');
     }
 
-    // 初回読み込み時にチケット一覧を生成しておく
+    // モーダルを閉じる
+    function closeModal() {
+      document.getElementById('purchase-modal').classList.remove('open');
+      selectedTicket = null;
+    }
+
+    // お支払い方法の切り替え（当日精算なら振込先欄を非表示にする等の制御）
+    function handlePaymentChange() {
+      const type = document.getElementById('payment-select').value;
+      const bankArea = document.getElementById('bank-info-area');
+      if (type === 'bank') {
+        bankArea.style.display = 'block';
+      } else {
+        bankArea.style.display = 'none'; // 当日精算のときは振込欄を表示しない
+      }
+    }
+
+    // 最終購入の確定
+    function confirmPurchase() {
+      if (!selectedTicket) return;
+      const paymentMethod = document.getElementById('payment-select').value;
+      let methodText = "【銀行振込】";
+      let subMessage = "※口座情報が確定しだい、メールにて振込先をご案内いたします。";
+
+      if (paymentMethod === "venue") {
+        methodText = "【当日会場精算】";
+        subMessage = "※当日は受付にてチケット代金を現金でお支払いください。";
+      }
+
+      alert(`🎉 チケットの予約・お申し込みが完了しました！\n\n【公演名】\n${selectedTicket.title}\n\n【お支払い方法】\n${methodText}\n\n${subMessage}\n\n登録されたメールアドレス宛てに、詳細メール（自動送信）をお送りしました。内容をご確認ください。`);
+      
+      closeModal();
+    }
+
     renderTickets();
     </script>
   </body>
