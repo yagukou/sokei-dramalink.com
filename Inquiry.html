@@ -1,27 +1,29 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" translate="no">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate">
+    <title>お問い合わせ｜早慶演劇祭</title>
 
-     <style>
+    <style>
+    /* --- 全体設定：トップページやチケットページと完全統一 --- */
     body {
       margin: 0;
-      font-family: sans-serif;
+      font-family: "Times New Roman", "Yu Mincho", "游明朝", "Noto Serif JP", serif;
       background: #111;  
       color: white; 
+      -webkit-font-smoothing: antialiased;
     }
 
-    .form-container {
-  color: black;
-}
-
+    /* --- ヘッダースタイル --- */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background-color: #b90e0e;
       padding: 10px 20px;
+      position: relative;
     }
 
     .menu-left, .menu-right {
@@ -34,20 +36,18 @@
 
     .menu-left div, .menu-right div {
       display: flex;
-      flex-direction: column;  /* ←縦にする */
+      flex-direction: column;
       align-items: center;
       text-align: center;
-}
+    }
 
     .menu-left img, .menu-right img {
        width: 30px;
        height: 30px;
        margin-bottom: 5px;
-}
+    }
 
     .logo {
-      font-size: 24px;
-      font-weight: bold;
       font-family: "Times New Roman", serif;
       font-size: 28px;
       font-weight: bold;
@@ -59,27 +59,28 @@
       flex-direction: column;  
       align-items: center;
       position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-
-  max-width: 40%;  /* ←これ超重要 */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      max-width: 40%;  
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-decoration: none;
     }
 
     .logo-main {
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
+      font-size: 22px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #ffffff;
+    }
 
-.logo-sub {   
-  font-size: 16px;   
-  letter-spacing: 2px;
-  color: #d4af37;      
-}
+    .logo-sub {   
+      font-size: 16px;   
+      letter-spacing: 2px;
+      color: #d4af37;      
+    }
 
     a {
       text-decoration: none;
@@ -88,409 +89,333 @@
       font-size: 12px;
     }
 
-        .menu-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    .menu-1 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #b90e0e;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 80px;   
+      height: 80px;  
+      justify-content: center;
+      box-sizing: border-box;
+      color: rgb(8, 8, 8);
+      transition: 0.3s;
+    }
 
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 80px;   /* 横幅固定 */
-  height: 80px;  /* 高さ固定 */
-  justify-content: center;
-}
+    .menu-1:hover {
+      transform: translateY(-3px);
+    }
 
-.menu-1, .language-btn {
-  background: #b90e0e;; /* 好きな色 */
-  color: rgb(8, 8, 8);
-}
+    .menu-1 span {
+      display: block;
+      width: 100%;
+      text-align: center;       
+      margin-top: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 11px;
+      color: #fff;
+    }
 
-.goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate,
-  .goog-te-gadget-icon,
-  .goog-te-gadget-simple,
-  .goog-te-balloon-frame,
-  .skiptranslate {
-    display: none !important;
-  }
+    /* 言語メニュー切り替え */
+    .lang-wrapper {
+      position: relative;
+      display: inline-block;
+    }
 
-  body {
-    top: 0px !important;
-    position: static !important;
-  }
+    .lang-menu {
+      position: absolute;
+      top: 110%;   
+      left: 0;
+      width: 140px;
+      background: #f0f0f0;
+      border-radius: 12px;
+      display: none;
+      overflow: hidden;
+      z-index: 9999;
+    }
 
-/* ホバー効果 */
-.menu-1:hover {
-  transform: translateY(-3px);
-  transition: 0.3s;
-}
+    .lang-menu div {
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: black;
+    }
 
-.menu-1 img {
-  width: 30px !important;
-  height: 30px !important;
-}
+    .lang-menu div:hover {
+      background: #ddd;
+    }
 
-.slider {
-  position: relative;
-  width: 80%;
-  margin: 30px auto;
-  overflow: hidden;
-}
-
-.slides {
-  position: relative;
-}
-
-.slide {
-  width: 100%;
-  display: none;
-  border-radius: 10px;
-  opacity: 0;
-  transition: 0.5s;
-  position: absolute;
-}
-
-.slide.active {
-  display: block;
-  opacity: 1;
-  position: relative;
-}
-
-button.prev, button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.prev { left: 10px; }
-.next { right: 10px; }
-
-.lang-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-/* ↓ 下にポップアップさせる */
-.lang-menu {
-  position: absolute;
-  top: 110%;   /* ←ボタンの真下 */
-  left: 0;
-  width: 140px;
-
-  background: #f0f0f0;
-  border-radius: 12px;
-  display: none;
-  overflow: hidden;
-  z-index: 9999;
-}
-
-/* 中身 */
-.lang-menu div {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 13px;
-  color: black
-}
-
-/* ホバー */
-.lang-menu div:hover {
-  background: #ddd;
-}
-
-.lang-wrapper .lang-menu {
-  display: none;
-}
-
-.menu-1 span {
-  display: block;
-  width: 100%;
-  text-align: center;       /* 真ん中に */
-  margin-top: 5px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11px;
-}
-
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-.goog-te-banner-frame {
-  display: none !important;
-}
-
-body {
-  top: 0px !important;
-  position: static !important;
-}
-
-body.translated-ltr .logo-main {
-  font-size: 22px;
-}
-
-body.translated-ltr .logo-sub {
-  font-size: 14px;
-}
-
-.hamburger {
-  display: none;
-}
-
-@media (max-width: 768px) {
-
-  header {
-    position: relative;
-    height: 70px;
-  }
-
-  /* ロゴ中央 */
-  .logo {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-  }
-
-  /* 左メニュー消す */
-  .menu-left {
-    display: none;
-  }
-
-  /* 右メニューも消す */
-  .menu-right {
-    display: none;
-  }
-
-  /* ハンバーガー（右上） */
-  .hamburger {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1000;
-    display: block;
-  }
-}
-
-  </style>
- </head>
-
- <script>
-function toggleLangMenu(e) {
-  if (e) e.stopPropagation();
-
-  const menu = document.getElementById("lang-menu");
-
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "block";
-  }
-}
-
-/* 外クリックで閉じる */
-document.addEventListener("click", function() {
-  const menu = document.getElementById("lang-menu");
-  if (menu) menu.style.display = "none";
-});
-
-/* ←これが無かったから翻訳されてない */
-function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
-}
-</script>
-
-<div id="google_translate_element" style="display:none;"></div>
-
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
-</script>
-
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
-  <body>
-    <header>
-  <!-- 左 -->
-  <div class="menu-left">
-    <a href="ticket.html" class="menu-1">
-  <img src="ticket3.png" width="50">
-  <span>チケット</span>
-  </a>
-  <a href="what.html" class="menu-1">
-  <img src="what3.png" width="50">
-  <span>公演紹介</span>
-  </a>
-      <a href="Participant.html" class="menu-1">
-  <img src="Participant3.png" width="50">
-  <span>出場団体</span>
-  </a>
-    <a href="Schedule.html" class="menu-1">
-  <img src="Schedule3.png" width="50">
-  <span>スケジュール</span>
-</a>
-  </div>
-
-  <!-- 真ん中 -->
-  <a href="index.html" class="logo">
-  <div class="logo-main">早慶演劇祭</div>
-  <div class="logo-sub">Waseda–Keio Theatre Festival</div>
-</a>
-
-  <!-- 右 -->
-  <div class="menu-right">
-     <a href="news.html" class="menu-1">
-  <img src="news3.png" width="50">
-  <span>ニュース</span>
-  </a>
-     <div class="lang-wrapper">
-    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-      <img src="Language3.png">
-      <span>Language</span>
-    </a>
-
-  <div id="lang-menu" class="lang-menu">
-    <div onclick="setLang('ja')">日本語</div>
-    <div onclick="setLang('en')">ENGLISH</div>
-    <div onclick="setLang('zh-CN')">简体中文</div>
-    <div onclick="setLang('ko')">한국어</div>
-  </div>
-</div>
-   <a href="Inquiry.html" class="menu-1">
-  <img src="Inquiry3.png" width="50">
-  <span>お問い合わせ</span>
-  </a>
-    <a href="menu.html" class="menu-1">
-  <img src="menu3.png" width="50">
-  <span>メニュー</span>
-  </a>
-  </div>
-  <div class="hamburger">
-  ☰
-  </div>
-</header>
-
-<script>
-function removeGoogleUI() {
-  // バナー
-  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
-
-  // ポップアップ（翻訳されました表示）
-  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
-
-  // その他UI
-  document.querySelectorAll('.skiptranslate').forEach(el => {
-    if (el.innerText.includes("翻訳")) el.remove();
-  });
-
-  // 位置ズレ修正
-  document.body.style.top = '0px';
-}
-
-/* ずっと監視して消す */
-setInterval(removeGoogleUI, 300);
-</script>
-
-  </body>
-
-</html>
-
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>お問い合わせ</title>
-
-  <style>
-    body {
-      font-family: sans-serif;
-      background: linear-gradient(135deg, #eaeaea, #c1c1c1);
-      margin: 0;
-      padding: 20px;
+    /* --------------------------------------------------
+       ✉️ お問い合わせフォーム専用：公式ブランドデザイン
+    ----------------------------------------------------- */
+    .container {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 0 20px;
+      box-sizing: border-box;
     }
 
     .form-container {
-      max-width: 500px;
-      margin: 50px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      background: #ffffff;
+      color: #1a1a1a;
+      padding: 40px 30px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+      border-top: 4px solid #c5a059; /* 公式ゴールドのアクセントライン */
+      border-radius: 8px;
+      box-sizing: border-box;
     }
 
     h2 {
       text-align: center;
+      font-family: "Yu Mincho", serif;
+      color: #b90e0e;
+      margin-bottom: 30px;
+      font-size: 26px;
+      letter-spacing: 1px;
+      margin-top: 0;
     }
 
     label {
       display: block;
-      margin-top: 10px;
+      font-size: 13px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 20px;
+      margin-bottom: 6px;
+      font-family: sans-serif;
     }
 
     input, textarea {
       width: 100%;
-      padding: 8px;
+      padding: 12px;
       margin-top: 5px;
       border: 1px solid #ccc;
-      border-radius: 5px;
+      background: #fbf9f6;
+      font-size: 14px;
+      box-sizing: border-box;
+      border-radius: 4px;
+      transition: 0.3s;
+      font-family: sans-serif;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #b90e0e;
+      outline: none;
+      background: #fff;
     }
 
     textarea {
       resize: vertical;
-      height: 100px;
+      height: 140px;
     }
 
-    button {
+    button.submit-btn {
       width: 100%;
-      margin-top: 15px;
-      padding: 10px;
-      background: #ff7e5f;
-      color: white;
-      border: none;
-      border-radius: 5px;
+      margin-top: 30px;
+      background: #111;
+      color: #c5a059;
+      border: 1px solid #c5a059;
+      padding: 14px;
       font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: 0.3s;
+      font-family: "Yu Mincho", serif;
+      border-radius: 4px;
     }
 
-    button:hover {
-      background: #eb6750;
+    button.submit-btn:hover {
+      background: #c5a059;
+      color: #111;
     }
-  </style>
-</head>
 
-<body>
+    /* Google翻訳関連の非表示設定 */
+    .goog-te-banner-frame,
+    .goog-te-banner-frame.skiptranslate,
+    .goog-te-gadget-icon,
+    .goog-te-gadget-simple,
+    .goog-te-balloon-frame,
+    .skiptranslate {
+      display: none !important;
+    }
 
-<div class="form-container">
-  <h2>お問い合わせ</h2>
+    body {
+      top: 0px !important;
+      position: static !important;
+    }
 
-  <form action="https://formspree.io/mgodpzjw" method="POST">
-    <label>お名前</label>
-    <input type="text" name="name" required>
+    .hamburger {
+      display: none;
+    }
 
-    <label>メールアドレス</label>
-    <input type="email" name="email" required>
+    /* レスポンシブ：スマホ対応 */
+    @media (max-width: 768px) {
+      header {
+        position: relative;
+        height: 70px;
+      }
+      .logo {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        margin: 0;
+      }
+      .menu-left, .menu-right {
+        display: none;
+      }
+      .hamburger {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 30px;
+        color: white;
+        cursor: pointer;
+        z-index: 1000;
+        display: block;
+      }
+      .container {
+        margin: 30px auto;
+      }
+      .form-container {
+        padding: 30px 20px;
+      }
+    }
+    </style>
 
-    <label>お問い合わせ内容</label>
-    <textarea name="message" required></textarea>
+    <!-- Google翻訳スクリプト関係 -->
+    <script>
+    function toggleLangMenu(e) {
+      if (e) e.stopPropagation();
+      const menu = document.getElementById("lang-menu");
+      if (menu.style.display === "block") {
+        menu.style.display = "none";
+      } else {
+        menu.style.display = "block";
+      }
+    }
 
-    <button type="submit">送信</button>
-  </form>
-</div>
+    document.addEventListener("click", function() {
+      const menu = document.getElementById("lang-menu");
+      if (menu) menu.style.display = "none";
+    });
 
-</body>
+    function setLang(lang) {
+      document.cookie = "googtrans=/ja/" + lang + "; path=/";
+      location.reload();
+    }
+
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({
+        pageLanguage: 'ja'
+      }, 'google_translate_element');
+    }
+    </script>
+    <div id="google_translate_element" style="display:none;"></div>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  </head>
+
+  <body>
+
+    <!-- ヘッダーエリア -->
+    <header>
+      <!-- 左メニュー -->
+      <div class="menu-left">
+        <a href="ticket.html" class="menu-1">
+          <img src="ticket3.png">
+          <span>チケット</span>
+        </a>
+        <a href="what.html" class="menu-1">
+          <img src="what3.png">
+          <span>公演紹介</span>
+        </a>
+        <a href="Participant.html" class="menu-1">
+          <img src="Participant3.png">
+          <span>出場団体</span>
+        </a>
+        <a href="Schedule.html" class="menu-1">
+          <img src="Schedule3.png">
+          <span>スケジュール</span>
+        </a>
+      </div>
+
+      <!-- 中央ロゴ -->
+      <a href="index.html" class="logo">
+        <div class="logo-main">早慶演劇祭</div>
+        <div class="logo-sub">Waseda–Keio Theatre Festival</div>
+      </a>
+
+      <!-- 右メニュー -->
+      <div class="menu-right">
+        <a href="news.html" class="menu-1">
+          <img src="news3.png">
+          <span>ニュース</span>
+        </a>
+        <div class="lang-wrapper">
+          <a class="menu-1" onclick="toggleLangMenu(event); return false;">
+            <img src="Language3.png">
+            <span>Language</span>
+          </a>
+          <div id="lang-menu" class="lang-menu">
+            <div onclick="setLang('ja')">日本語</div>
+            <div onclick="setLang('en')">ENGLISH</div>
+            <div onclick="setLang('zh-CN')">简体中文</div>
+            <div onclick="setLang('ko')">한국어</div>
+          </div>
+        </div>
+        <a href="Inquiry.html" class="menu-1">
+          <img src="Inquiry3.png">
+          <span>お問い合わせ</span>
+        </a>
+        <a href="menu.html" class="menu-1">
+          <img src="menu3.png">
+          <span>メニュー</span>
+        </a>
+      </div>
+      
+      <div class="hamburger">☰</div>
+    </header>
+
+    <!-- メインコンテンツエリア -->
+    <div class="container">
+      <div class="form-container">
+        <h2>お問い合わせ</h2>
+
+        <!-- Formspreeの宛先と機能をそのまま維持 -->
+        <form action="https://formspree.io/mgodpzjw" method="POST">
+          <label>お名前</label>
+          <input type="text" name="name" required placeholder="演劇 太郎">
+
+          <label>メールアドレス</label>
+          <input type="email" name="email" required placeholder="example@sokei.com">
+
+          <label>お問い合わせ内容</label>
+          <textarea name="message" required placeholder="こちらにお問い合わせ内容をご記入ください。"></textarea>
+
+          <button type="submit" class="submit-btn">上記の内容で送信する</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Google翻訳のUI強制排除監視スクリプト -->
+    <script>
+    function removeGoogleUI() {
+      document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+      document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+      document.querySelectorAll('.skiptranslate').forEach(el => {
+        if (el.innerText.includes("翻訳")) el.remove();
+      });
+      document.body.style.top = '0px';
+    }
+    setInterval(removeGoogleUI, 300);
+    </script>
+
+  </body>
+</html>
