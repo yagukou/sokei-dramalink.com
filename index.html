@@ -13,17 +13,16 @@
       color: white; 
     }
 
-    /* --- 劇団四季風：白ベースの洗練されたヘッダー --- */
+    /* --- ヘッダー：ご要望通り「赤背景」のまま劇団四季風の高級感へ --- */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: #ffffff !important; /* 赤から白へ */
+      background-color: #b90e0e !important; /* 赤背景をキープ */
       padding: 0 30px;
       height: 90px;
-      border-bottom: 2px solid #111; /* 下線で引き締める */
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
       position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
     .menu-left, .menu-right {
@@ -41,13 +40,15 @@
       text-align: center;
     }
 
+    /* 赤背景で見えやすくするため、通常のアイコン画像をすべて「白」に自動反転するCSS */
     .menu-left img, .menu-right img {
        width: 30px;
        height: 30px;
        margin-bottom: 5px;
+       filter: brightness(0) invert(1); 
     }
 
-    /* --- ロゴの文字色を黒にして高級感を演出 --- */
+    /* --- ロゴ：赤背景に美しく映える「白×ゴールド」 --- */
     .logo {
       text-decoration: none;
       font-family: "Times New Roman", serif;
@@ -72,13 +73,13 @@
       font-size: 22px;
       font-weight: bold;
       letter-spacing: 3px;
-      color: #111; /* 黒文字 */
+      color: #ffffff; /* 赤に映える白文字 */
     }
 
     .logo-sub {   
       font-size: 14px;   
       letter-spacing: 2px;
-      color: #b90e0e; /* アクセントの四季カラー赤 */
+      color: #d4af37; /* 演劇の高級感を出すゴールド */
     }
 
     a {
@@ -88,13 +89,14 @@
       font-size: 12px;
     }
 
-    /* --- 通常メニューの背景を透明にしてスッキリ --- */
+    /* --- 通常メニュー：背景を透明にして赤に馴染ませる --- */
     .menu-1 {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: transparent !important; /* 赤い四角を消す */
+      background: transparent !important; /* 赤い四角を消してスッキリ */
+      box-shadow: none !important;
       width: auto !important;   
       height: auto !important;  
       padding: 5px 10px;
@@ -111,32 +113,29 @@
       text-overflow: ellipsis;
       font-size: 12px;
       font-weight: 600;
-      color: #333 !important; /* 文字を読みやすいダークグレーに */
+      color: #ffffff !important; /* 文字を白にして視認性アップ */
     }
 
-    /* ホバー時に文字を赤くする演出 */
+    /* ホバー時に少し浮き上がらせる演出 */
     .menu-1:hover {
-      transform: translateY(-2px);
-    }
-    .menu-1:hover span {
-      color: #b90e0e !important;
+      transform: translateY(-3px);
     }
 
-    /* --- 【重要】劇団四季オマージュ：右端のチケット予約ボタン --- */
+    /* --- 【最重要】劇団四季風：赤背景の中で「最も目立つ白抜きチケットボタン」 --- */
     .menu-ticket-special {
-      background: #b90e0e !important; /* 目立つ赤 */
+      background: #ffffff !important; /* 白背景にして圧倒的な存在感に */
       border-radius: 4px !important;
-      padding: 10px 20px !important; /* しっかりとしたボタン型に */
-      box-shadow: 0 4px 10px rgba(185, 14, 14, 0.3) !important;
+      padding: 10px 20px !important; /* ボタンらしい形に */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
     }
 
     .menu-ticket-special span {
-      color: #fff !important; /* 文字を白に */
-      font-weight: bold;
+      color: #b90e0e !important; /* 文字をヘッダーと同じ赤に反転 */
+      font-weight: bold !important;
     }
 
     .menu-ticket-special:hover {
-      background: #900a0a !important;
+      background: #f0f0f0 !important; /* ホバーで少しグレーに */
     }
 
     /* Google翻訳関連の非表示設定 */
@@ -469,7 +468,7 @@
         top: 20px;
         right: 20px;
         font-size: 30px;
-        color: #111 !important; /* 背景白に合わせて黒に */
+        color: white !important; /* 赤背景に合わせてスマホの三本線は白に */
         cursor: pointer;
         z-index: 1000;
         display: block;
@@ -479,7 +478,6 @@
   </head>
 
   <body>
-    <!-- Dify Chatbot 設定 -->
     <script>
     window.difyChatbotConfig = {
       token: 'cfUgpimDdajARduo',
@@ -494,7 +492,6 @@
       #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
     </style>
 
-    <!-- Google 翻訳設定 -->
     <div id="google_translate_element" style="display:none;"></div>
     <script>
     function googleTranslateElementInit() {
@@ -503,9 +500,7 @@
     </script>
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-    <!-- ヘッダーエリア（ここが劇団四季風に大改造されています） -->
     <header>
-      <!-- 左：公演に繋がるメイン導線 -->
       <div class="menu-left">
         <a href="what.html" class="menu-1">
           <img src="what3.png">
@@ -521,13 +516,11 @@
         </a>
       </div>
 
-      <!-- 真ん中：白背景に映えるスッキリロゴ -->
       <a href="index.html" class="logo">
         <div class="logo-main">早慶演劇祭</div>
         <div class="logo-sub">Waseda–Keio Theatre Festival</div>
       </a>
 
-      <!-- 右：インフォメーション ＋ 右端に目立つチケット予約ボタン -->
       <div class="menu-right">
         <a href="news.html" class="menu-1">
           <img src="news3.png">
@@ -549,18 +542,19 @@
           <img src="Inquiry3.png">
           <span>お問い合わせ</span>
         </a>
+        <a href="menu.html" class="menu-1">
+          <img src="menu3.png">
+          <span>メニュー</span>
+        </a>
         
-        <!-- ★劇団四季風：独立した特別なチケット予約ボタン -->
         <a href="ticket.html" class="menu-1 menu-ticket-special">
           <span>チケット予約</span>
         </a>
       </div>
 
-      <!-- スマホ用三本線 -->
       <div class="hamburger">☰</div>
     </header>
 
-    <!-- メインビジュアルスライダー -->
     <div class="slider">
       <div class="slides">
         <img src="img1.jpg" class="slide active">
@@ -571,19 +565,16 @@
       <button class="next">▶</button>
     </div>
 
-    <!-- ヒーローテキスト -->
     <div class="hero-text">
       <p>Waseda–Keio Theatre Festival</p>
       <h1>早慶演劇祭2026</h1>
     </div>
 
-    <!-- トップニュース -->
     <section class="top-news">
       <div class="news-label">NEWS</div>
       <div class="news-text">2026.08.10　チケット販売開始</div>
     </section>
 
-    <!-- スケジュール -->
     <section class="schedule-section fade">
       <div class="section-head">
         <p class="section-en">SCHEDULE</p>
@@ -607,7 +598,6 @@
       </div>
     </section>
 
-    <!-- ガイド -->
     <section class="guide-section fade">
       <div class="section-head">
         <p class="section-en">GUIDE</p>
@@ -629,7 +619,6 @@
       </div>
     </section>
 
-    <!-- ニュースセクション -->
     <section class="news-section fade">
       <div class="section-head">
         <p class="section-en">NEWS</p>
@@ -654,7 +643,6 @@
       </div>
     </section>
 
-    <!-- メディアセクション -->
     <section class="media-section fade">
       <div class="section-head">
         <p class="section-en">MEDIA</p>
@@ -678,7 +666,6 @@
       </div>
     </section>
 
-    <!-- SNSエリア（外にはみ出していたのをbody内に正しく収納しました） -->
     <div class="sns">
       <a href="https://x.com/sokei_dramalink?s=21" class="sns-item" target="_blank">
         <img src="x.png">
@@ -691,8 +678,18 @@
       </a>
     </div>
 
-    <!-- JavaScript 処理 -->
     <script>
+    /* 一定時間ごとにGoogle翻訳の強制UIを監視して消す処理 */
+    function removeGoogleUI() {
+      document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+      document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+      document.querySelectorAll('.skiptranslate').forEach(el => {
+        if (el.innerText.includes("翻訳")) el.remove();
+      });
+      document.body.style.top = '0px';
+    }
+    setInterval(removeGoogleUI, 300);
+
     /* 言語メニューのトグル */
     function toggleLangMenu(e) {
       if (e) e.stopPropagation();
@@ -717,17 +714,6 @@
         }
       }, 200);
     }
-
-    /* Google翻訳の強制UI削除 */
-    function removeGoogleUI() {
-      document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
-      document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
-      document.querySelectorAll('.skiptranslate').forEach(el => {
-        if (el.innerText.includes("翻訳")) el.remove();
-      });
-      document.body.style.top = '0px';
-    }
-    setInterval(removeGoogleUI, 300);
 
     /* スライダー制御 */
     let index = 0;
