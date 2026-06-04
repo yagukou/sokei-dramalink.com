@@ -655,15 +655,9 @@
 
       <div class="section-title"><i class="ti ti-inbox"></i>折り込み依頼インボックス</div>
       <div class="inbox-list" id="dashboard-inbox"></div>
-
-      <div id="admin-hide-zone" style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral); text-align: right;">
-        <button class="btn-secondary" style="background: #fef2f2; border-color: #fca5a5; color: #b91c1c; font-size: 12px; padding: 6px 12px;" onclick="deleteTroupeAccount()">
-          <i class="ti ti-alert-triangle"></i> 劇団アカウントを削除する
-        </button>
-      </div>
     </div>
 
-    <!-- テスト用のデータ全リセットセクション -->
+    <!-- 開発・管理用データリセット -->
     <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-neutral);">
       <div class="form-section-title" style="color: var(--crimson); font-size: 13px; font-weight: 600;"><i class="ti ti-refresh"></i> 開発・管理用データリセット</div>
       <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">データが不整合を起こしたり、最初から動作テストをやり直したい場合は、以下のボタンより全てのデータを消去し、最初の初期デモデータに戻すことができます。</p>
@@ -693,7 +687,6 @@
   ];
 
   let troupesData = JSON.parse(localStorage.getItem('troupesData_v4')) || DEFAULT_TROUPES;
-  // 過去データの互換性のためにapprovedプロパティを保証
   troupesData.forEach(t => { if(t.approved === undefined) t.approved = true; });
 
   let performancesData = JSON.parse(localStorage.getItem('performancesData_v4')) || DEFAULT_PERFORMANCES;
@@ -830,7 +823,7 @@
         if (filterValue && perf.troupeId !== filterValue) return;
         if (currentStr >= perf.dateStart && currentStr <= perf.dateEnd) {
           const troupe = troupesData.find(t => t.id === perf.troupeId);
-          if (!troupe || !troupe.approved) return; // 承認済み劇団のみ表示
+          if (!troupe || !troupe.approved) return; 
           const ev = document.createElement('div');
           ev.className = `cal-event ${troupe.cls}`;
           ev.innerText = perf.title;
@@ -1085,13 +1078,12 @@
     showPage('request-form');
   }
 
-  /* 劇団一覧の生成（承認済み劇団のみレンダリング） */
+  /* 劇団一覧の生成（管理者ログイン時のみ全劇団に削除×ボタンを配置） */
   function renderTroupes(data) {
     const container = document.getElementById('troupe-grid');
     if (!container) return;
     container.innerHTML = '';
 
-    // 承認済みの劇団のみを対象にする
     const approvedTroupes = data.filter(t => t.approved);
 
     if (approvedTroupes.length === 0) {
@@ -1108,9 +1100,10 @@
         showPage('calendar');
       };
 
-      const showDeleteBtn = currentUser && currentUser.id === t.id;
+      // ⭕ 管理者（admin）の場合のみ削除ボタンを出す
+      const showDeleteBtn = currentUser && currentUser.role === 'admin';
       const deleteBtnHtml = showDeleteBtn ? `
-        <button class="troupe-delete-btn" onclick="handleDeleteTroupeDirect(event, '${t.id}', '${t.name}')" title="アカウントを削除">
+        <button class="troupe-delete-btn" onclick="handleDeleteTroupeDirect(event, '${t.id}', '${t.name}')" title="管理権限でアカウントを削除">
           <i class="ti ti-x" style="font-size:16px;"></i>
         </button>
       ` : '';
@@ -1134,26 +1127,26 @@
     });
   }
 
+  /* ⭕ 管理者専用：劇団完全消去・退会処理 */
   function handleDeleteTroupeDirect(event, id, name) {
-    event.stopPropagation(); 
+    if (event && event.stopPropagation) event.stopPropagation(); 
 
-    if (!currentUser || currentUser.id !== id) {
-      alert('権限がありません。自身の劇団アカウントのみ削除できます。');
+    if (!currentUser || currentUser.role !== 'admin') {
+      alert('権限がありません。劇団の消去はシステム管理者のみ行えます。');
       return;
     }
 
-    if (confirm(`本当にご自身の劇団「${name}」のアカウントを削除しますか？\n（この劇団が登録した公演情報や折り込み依頼も一緒にすべて削除されます）`)) {
+    if (confirm(`【管理者権限】本当に劇団「${name}」を完全に消去しますか？\n（この劇団に関連する公演、折り込みリクエスト、すべて一緒に破壊・消去されます。この操作は取り消せません）`)) {
       troupesData = troupesData.filter(t => t.id !== id);
       performancesData = performancesData.filter(p => p.troupeId !== id);
-      incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
+      incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id && r.fromTroupe !== name);
 
-      currentUser = null; 
       saveAllData();
-      alert(`劇団「${name}」のアカウントデータをすべて完全に削除しました。`);
+      alert(`劇団「${name}」に関わる全てのデータを完全に消去しました。`);
 
       updateFilterDropdown();
       renderLegend();
-      renderTroupes(troupesData);
+      renderTroupes(troupesData.filter(t => t.approved));
       updateAuthUI();
       renderCalendar();
     }
@@ -1165,7 +1158,7 @@
     const acceptFilter = document.getElementById('accept-filter').value;
 
     const filtered = troupesData.filter(t => {
-      if (!t.approved) return false; // 未承認劇団は検索に含めない
+      if (!t.approved) return false; 
       const matchKwd = t.name.toLowerCase().includes(keyword) || t.univ.toLowerCase().includes(keyword);
       const matchUniv = !univFilter || t.univ === univFilter;
       const matchAcc = !acceptFilter || String(t.accept) === acceptFilter;
@@ -1193,7 +1186,6 @@
     }
   }
 
-  /* ログイン処理（管理者用アカウント判定追加） */
   function handleLogin() {
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value.trim();
@@ -1203,7 +1195,6 @@
       return;
     }
 
-    // ⭕ 管理者用ログイン判定
     if (email === 'admin@sokei-dramalink.com') {
       if (password === 'adminpass') {
         currentUser = { id: 'admin', name: 'システム管理者', email: email, role: 'admin' };
@@ -1222,7 +1213,6 @@
         alert('パスワードが間違っています。');
         return;
       }
-      // ⭕ 承認状態のチェック
       if (!found.approved) {
         alert('この団体は現在、管理者（admin@sokei-dramalink.com）による承認待ちです。承認が完了するまでログインできません。');
         return;
@@ -1237,7 +1227,6 @@
     }
   }
 
-  /* 新規登録処理（承認制への移行にともなう修正） */
   function handleRegisterTroupe() {
     const name = document.getElementById('reg-troupe-name').value.trim();
     const univ = document.getElementById('reg-troupe-univ').value;
@@ -1262,7 +1251,7 @@
       name, univ, est: '2026年', count: '0公演', accept: true,
       cls: randomColor, statusText: '折り込み受付中', statusCls: 'status-open',
       email, password,
-      approved: false // ⭕ 初期状態は未承認に設定
+      approved: false 
     };
 
     troupesData.push(newTroupe);
@@ -1270,7 +1259,6 @@
     
     alert(`劇団「${name}」の登録申請を送信しました！\n管理者（admin@sokei-dramalink.com）による承認が完了するまでしばらくお待ちください。`);
     
-    // 入力欄のクリア
     document.getElementById('reg-troupe-name').value = '';
     document.getElementById('reg-troupe-email').value = '';
     document.getElementById('reg-troupe-password').value = '';
@@ -1289,33 +1277,27 @@
     alert('ログアウトしました。');
   }
 
-  /* 認証UI切り替え（管理者ログイン時の表示をサポート） */
   function updateAuthUI() {
     const auth = document.getElementById('auth-section');
     const dash = document.getElementById('dashboard-section');
     const navBtn = document.getElementById('nav-login-btn');
-    const adminHideZone = document.getElementById('admin-hide-zone');
 
     if (currentUser) {
       if(auth) auth.style.display = 'none';
       if(dash) dash.style.display = 'block';
       
       if(currentUser.role === 'admin') {
-        // 管理者用表示
         document.getElementById('welcome-message').innerText = `こんにちは、${currentUser.name} ページ`;
         document.getElementById('account-status-info').innerText = `管理者権限でログイン中 (${currentUser.email})`;
         if(navBtn) navBtn.innerHTML = `<i class="ti ti-user-check"></i> ${currentUser.name}`;
-        document.querySelector('.stat-grid').style.display = 'none'; // 統計枠を非表示
+        document.querySelector('.stat-grid').style.display = 'none'; 
         document.querySelector('.section-title').innerHTML = `<i class="ti ti-users"></i> 新規登録団体の承認待ちリスト`;
-        if(adminHideZone) adminHideZone.style.display = 'none';
       } else {
-        // 一般団体用表示
         document.getElementById('welcome-message').innerText = `こんにちは、${currentUser.name} の管理マイページ`;
         document.getElementById('account-status-info').innerText = `通知用メールアドレス: ${currentUser.email}`;
         if(navBtn) navBtn.innerHTML = `<i class="ti ti-user"></i> ${currentUser.name}`;
         document.querySelector('.stat-grid').style.display = 'grid';
         document.querySelector('.section-title').innerHTML = `<i class="ti ti-inbox"></i> 折り込み依頼インボックス`;
-        if(adminHideZone) adminHideZone.style.display = 'block';
       }
       renderDashboardInbox();
     } else {
@@ -1326,7 +1308,6 @@
     updateRegisterFormUI();
   }
 
-  /* インボックス描画（管理者ログイン時は承認待ちリストをレンダリング） */
   function renderDashboardInbox() {
     const container = document.getElementById('dashboard-inbox');
     if (!container) return;
@@ -1334,7 +1315,6 @@
     if (!currentUser) return;
 
     if (currentUser.role === 'admin') {
-      // ⭕ 管理者の場合：未承認の劇団を表示
       const pendingTroupes = troupesData.filter(t => !t.approved);
 
       if (pendingTroupes.length === 0) {
@@ -1353,15 +1333,15 @@
               <span style="font-size:11px; color:var(--muted)">登録申請中</span>
             </div>
           </div>
-          <div class="inbox-actions">
-            <button class="inbox-btn inbox-btn-accept" onclick="approveTroupe('${t.id}')">承認する</button>
+          <div class="inbox-actions" style="display:flex; gap:6px;">
+            <button class="inbox-btn inbox-btn-accept" onclick="approveTroupe('${t.id}')">承認</button>
+            <button class="inbox-btn inbox-btn-decline" onclick="handleDeleteTroupeDirect(null, '${t.id}', '${t.name}')">削除</button>
           </div>
         `;
         container.appendChild(item);
       });
 
     } else {
-      // 一般劇団の場合：折り込み依頼を表示
       const myRequests = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
       const pendingRequests = myRequests.filter(r => r.status === 'pending');
       const acceptedRequests = myRequests.filter(r => r.status === 'accepted');
@@ -1405,14 +1385,13 @@
     }
   }
 
-  /* ⭕ 管理者専用：団体アカウント承認関数 */
   function approveTroupe(id) {
     const troupe = troupesData.find(t => t.id === id);
     if (!troupe) return;
 
     troupe.approved = true;
     saveAllData();
-    alert(`劇団「${troupe.name}」の登録を承認しました。ログインが可能になります。`);
+    alert(`劇団「${troupe.name}」の登録を承認しました。`);
 
     updateFilterDropdown();
     renderLegend();
@@ -1427,38 +1406,11 @@
     req.status = status;
     saveAllData();
     renderDashboardInbox();
-    alert(status === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否（辞退）しました。');
-  }
-
-  function deleteTroupeAccount() {
-    if (!currentUser) {
-      alert('ログインしていません。');
-      return;
-    }
-    
-    if (!confirm('本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報も一緒に削除されます）')) {
-      return;
-    }
-
-    const id = currentUser.id;
-    troupesData = troupesData.filter(t => t.id !== id);
-    performancesData = performancesData.filter(p => p.troupeId !== id);
-    incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
-    
-    currentUser = null;
-    saveAllData();
-    alert('アカウント情報をすべて完全に削除しました。');
-    
-    updateFilterDropdown();
-    renderLegend();
-    renderTroupes(troupesData);
-    updateAuthUI();
-    renderCalendar();
-    showPage('troupes');
+    alert(status === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否しました。');
   }
 
   function resetAllDataToDefault() {
-    if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期劇団・公演データ（デモデータ）の状態に復元しますか？\n作成したアカウントや申請履歴は削除されます。')) {
+    if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期デモデータの状態に復元しますか？')) {
       localStorage.removeItem('troupesData_v4');
       localStorage.removeItem('performancesData_v4');
       localStorage.removeItem('incomingRequests_v4');
