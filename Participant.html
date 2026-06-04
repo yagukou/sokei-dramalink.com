@@ -698,7 +698,16 @@
 
   let performancesData = JSON.parse(localStorage.getItem('performancesData_v4')) || DEFAULT_PERFORMANCES;
   let incomingRequests = JSON.parse(localStorage.getItem('incomingRequests_v4')) || DEFAULT_REQUESTS;
-  let currentUser = JSON.parse(localStorage.getItem('currentUser_v4')) || null;
+  let currentUser = null;
+try {
+  const savedData = localStorage.getItem('currentUser_v4');
+  if (savedData) {
+    currentUser = JSON.parse(savedData);
+  }
+} catch (error) {
+  console.error("保存データが破損していたためリセットします:", error);
+  localStorage.removeItem('currentUser_v4'); // 壊れたデータを削除してエラー回避
+}
 
   let currentYear = 2026;
   let currentMonth = 5; 
