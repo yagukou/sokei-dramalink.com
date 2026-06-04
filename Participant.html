@@ -507,6 +507,15 @@
               </select>
             </div>
           </div>
+          <!-- 📥 任意ファイル添付用の行を追加 -->
+          <div class="form-row">
+            <label class="form-label">ビラ・チラシのデータ添付 <span style="color:var(--muted); font-size:11px;">(任意 / 画像またはPDF / 2MB以内)</span></label>
+            <input type="file" class="form-input" id="req-file" accept="image/*,.pdf" onchange="handleFileSelect(event)">
+            <div id="file-preview-wrap" style="margin-top: 8px; display: none; font-size: 12px; color: var(--muted); align-items: center; gap: 8px;">
+              <i class="ti ti-file-check" style="color: var(--crimson); font-size: 16px;"></i>
+              <span id="file-preview-name" style="font-weight: 500;"></span>
+            </div>
+          </div>
           <div class="form-row">
             <label class="form-label">備考・特記事項</label>
             <textarea class="form-textarea" id="req-notes" placeholder="搬入方法のご相談などがあれば記載してください"></textarea>
@@ -686,8 +695,12 @@
   ];
 
   const DEFAULT_REQUESTS = [
-    { id: 101, toTroupeId: 'a', perfId: 1, fromTroupe: 'ステージクロス', copies: 120, date: '2026/06/01', preview: 'A4ペラ / 定期公演のビラ折り込みをお願いします。', status: 'pending' }
+    { id: 101, toTroupeId: 'a', perfId: 1, fromTroupe: 'ステージクロス', copies: 120, date: '2026/06/01', preview: 'A4ペラ / 定期公演のビラ折り込みをお願いします。', status: 'pending', fileName: null, fileData: null }
   ];
+
+  // 📥 ファイル一時保存用バッファ
+  let uploadedFileData = null;
+  let uploadedFileName = null;
 
   let troupesData = JSON.parse(localStorage.getItem('troupesData_v4')) || DEFAULT_TROUPES;
   let performancesData = JSON.parse(localStorage.getItem('performancesData_v4')) || DEFAULT_PERFORMANCES;
@@ -1011,6 +1024,41 @@
     showPage('calendar');
   }
 
+  /* 📥 ファイル選択時のBase64変換・バリデーション処理 */
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    const previewWrap = document.getElementById('file-preview-wrap');
+    const previewName = document.getElementById('file-preview-name');
+    
+    if (!file) {
+      uploadedFileData = null;
+      uploadedFileName = null;
+      if (previewWrap) previewWrap.style.display = 'none';
+      return;
+    }
+
+    // ブラウザの容量圧迫を防ぐため、2MBの上限ガードを設定
+    if (file.size > 2 * 1024 * 1024) {
+      alert('ブラウザのデータ制限を保護するため、2MBを超えるファイルは添付できません。\n軽量化した画像やPDFをご利用ください。');
+      event.target.value = '';
+      uploadedFileData = null;
+      uploadedFileName = null;
+      if (previewWrap) previewWrap.style.display = 'none';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedFileData = e.target.result; // DataURL形式のBase64文字列
+      uploadedFileName = file.name;
+      if (previewWrap && previewName) {
+        previewName.innerText = file.name;
+        previewWrap.style.display = 'flex';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
   function submitRequestForm() {
     const perf = performancesData.find(p => p.id === selectedPerfId);
     if (!perf) return;
@@ -1027,6 +1075,7 @@
       return;
     }
 
+    // 📥 保存対象オブジェクトにファイルのメタ・実データを追加
     incomingRequests.push({
       id: Date.now(),
       perfId: selectedPerfId,
@@ -1035,7 +1084,9 @@
       copies: copies,
       date: '2026/06/04',
       preview: `${size} / ${notes || '備考なし'}`,
-      status: 'pending'
+      status: 'pending',
+      fileName: uploadedFileName,
+      fileData: uploadedFileData
     });
     saveAllData();
 
@@ -1045,7 +1096,7 @@
       reply_to: fromEmail,
       copies: copies,
       size: size,
-      notes: notes || '特になし'
+      notes: `${notes || '特になし'}${uploadedFileName ? `\n（添付ファイルあり: ${uploadedFileName} ※マイページからダウンロード確認できます）` : ''}`
     };
 
     const serviceID = 'service_4gfx3qf';
@@ -1076,10 +1127,18 @@
     if(!selectedPerfId) return;
     const perf = performancesData.find(p => p.id === selectedPerfId);
     document.getElementById('req-form-title').innerText = `「${perf.title}」への折り込み依頼`;
+    
+    // 📥 フォームを開く際に添付バッファと表示をリセット
+    uploadedFileData = null;
+    uploadedFileName = null;
+    const fileInput = document.getElementById('req-file');
+    if (fileInput) fileInput.value = '';
+    const previewWrap = document.getElementById('file-preview-wrap');
+    if (previewWrap) previewWrap.style.display = 'none';
+
     showPage('request-form');
   }
 
-  /* ⭕ 劇団一覧の生成（ログイン中の劇団カードにのみ、右上に×ボタンを表示する制限仕様） */
   function renderTroupes(data) {
     const container = document.getElementById('troupe-grid');
     if (!container) return;
@@ -1099,7 +1158,6 @@
         showPage('calendar');
       };
 
-      // ⭕ ログイン中の劇団かつ自分のIDと一致する場合のみ削除ボタンをレンダリング
       const showDeleteBtn = currentUser && currentUser.id === t.id;
       const deleteBtnHtml = showDeleteBtn ? `
         <button class="troupe-delete-btn" onclick="handleDeleteTroupeDirect(event, '${t.id}', '${t.name}')" title="アカウントを削除">
@@ -1126,11 +1184,9 @@
     });
   }
 
-  /* ⭕ 劇団一覧の×ボタンからアカウントを削除する関数（自分自身のみ実行可能） */
   function handleDeleteTroupeDirect(event, id, name) {
-    event.stopPropagation(); // カレンダー遷移の防止
+    event.stopPropagation(); 
 
-    // ⭕ セキュリティガード：ログインしていない、もしくは他団体のIDを操作しようとした場合は拒否
     if (!currentUser || currentUser.id !== id) {
       alert('権限がありません。自身の劇団アカウントのみ削除できます。');
       return;
@@ -1141,11 +1197,10 @@
       performancesData = performancesData.filter(p => p.troupeId !== id);
       incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
 
-      currentUser = null; // 削除されたので自動的にログアウト
+      currentUser = null; 
       saveAllData();
       alert(`劇団「${name}」のアカウントデータをすべて完全に削除しました。`);
 
-      // 状態変更に伴うUI全パーツのリフレッシュ
       updateFilterDropdown();
       renderLegend();
       renderTroupes(troupesData);
@@ -1200,7 +1255,7 @@
       currentUser = found;
       saveAllData();
       updateAuthUI();
-      renderTroupes(troupesData); // ⭕ 表示をログイン劇団用に切り替え
+      renderTroupes(troupesData); 
       alert(`劇団「${found.name}」としてログインしました。`);
     } else {
       alert('登録されていないメールアドレスです。');
@@ -1239,7 +1294,7 @@
     updateFilterDropdown();
     renderLegend();
     updateAuthUI();
-    renderTroupes(troupesData); // ⭕ 表示更新
+    renderTroupes(troupesData); 
     alert(`劇団「${name}」のアカウントを開設しました！`);
   }
 
@@ -1247,7 +1302,7 @@
     currentUser = null;
     saveAllData();
     updateAuthUI();
-    renderTroupes(troupesData); // ⭕ 全ての劇団から×ボタンを外す
+    renderTroupes(troupesData); 
     alert('ログアウトしました。');
   }
 
@@ -1271,6 +1326,7 @@
     updateRegisterFormUI();
   }
 
+  /* 📥 マイページの依頼インボックスに添付ダウンロード機構を追加 */
   function renderDashboardInbox() {
     const container = document.getElementById('dashboard-inbox');
     if (!container) return;
@@ -1293,6 +1349,19 @@
       const perf = performancesData.find(p => p.id === r.perfId);
       const isPending = r.status === 'pending';
       
+      // 📄 添付ファイルが存在する場合、ローカルダウンロードボタンのHTMLを生成
+      let fileAttachmentHtml = '';
+      if (r.fileName && r.fileData) {
+        fileAttachmentHtml = `
+          <div style="margin-top: 8px;">
+            <a href="${r.fileData}" download="${r.fileName}" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; font-size: 11px; background: var(--surface2); border-color: var(--border-neutral); border-radius: var(--radius-sm); text-decoration: none; font-weight: 500;">
+              <i class="ti ti-download" style="font-size: 13px; color: var(--crimson);"></i>
+              添付ビラ: ${r.fileName}
+            </a>
+          </div>
+        `;
+      }
+      
       const item = document.createElement('div');
       item.className = `inbox-item ${isPending ? 'unread' : ''}`;
       
@@ -1300,7 +1369,8 @@
         <div class="inbox-body">
           <div class="inbox-from">申請元: ${r.fromTroupe} ➔ 対象公演: 「${perf ? perf.title : '不明な公演'}」</div>
           <div class="inbox-preview">条件: ${r.preview}</div>
-          <div class="inbox-meta">
+          ${fileAttachmentHtml}
+          <div class="inbox-meta" style="margin-top: 8px;">
             <span class="inbox-copies">${r.copies} 部</span>
             <span style="font-size:11px; color:var(--muted)">申請日: ${r.date}</span>
             <span style="font-size:11px; font-weight:600; color:${r.status==='accepted'?'#1A6B4A':r.status==='declined'?'#A32D2D':'var(--gold)'}">
