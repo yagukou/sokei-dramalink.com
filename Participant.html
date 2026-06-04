@@ -206,7 +206,6 @@
     .search-input { width: 100%; padding: 9px 14px 9px 36px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; }
     .troupe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
     
-    /* ⭕ 劇団カードに相対配置を明示、削除ボタン用スタイル */
     .troupe-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.25rem; cursor: pointer; position: relative; transition: border-color 0.2s; }
     .troupe-card:hover { border-color: var(--crimson-light); }
     .troupe-delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; }
@@ -324,6 +323,7 @@
     </div>
   </nav>
 
+  <!-- 使い方（ガイド）ページ -->
   <div class="page" id="page-guide">
     <div class="page-header">
       <div class="page-title">ビラネットワークの使い方</div>
@@ -359,6 +359,7 @@
     </div>
   </div>
  
+  <!-- カレンダーページ -->
   <div class="page active" id="page-calendar">
     <div class="page-header">
       <div class="page-title">公演カレンダー</div>
@@ -384,6 +385,7 @@
     <div class="legend" id="calendar-legend"></div>
   </div>
  
+  <!-- 劇団一覧ページ -->
   <div class="page" id="page-troupes">
     <div class="page-header">
       <div class="page-title">劇団一覧</div>
@@ -408,6 +410,7 @@
     <div class="troupe-grid" id="troupe-grid"></div>
   </div>
  
+  <!-- 公演詳細ページ -->
   <div class="page" id="page-perf-detail">
     <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i>戻る</button>
     <div class="perf-detail-grid">
@@ -465,6 +468,7 @@
     </div>
   </div>
 
+  <!-- 折り込み依頼送信フォーム -->
   <div class="page" id="page-request-form">
     <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i>戻る</button>
     <div class="form-card">
@@ -513,11 +517,12 @@
     </div>
   </div>
 
+  <!-- 公演登録・修正ページ -->
   <div class="page" id="page-register">
     <div class="form-card">
       <div class="page-header" style="margin-bottom:1.5rem;">
         <div class="page-title" id="register-page-title">公演の登録</div>
-        <div class="page-sub" id="register-page-sub">自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します</div>
+        <div class="page-sub">自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します</div>
       </div>
       
       <div id="register-need-login-msg" class="info-banner" style="display:none;">
@@ -576,6 +581,7 @@
     </div>
   </div>
 
+  <!-- マイページ -->
   <div class="page" id="page-mypage">
     <div class="page-header">
       <div class="page-title">団体アカウント・管理マイページ</div>
@@ -654,6 +660,7 @@
       </div>
     </div>
 
+    <!-- テスト用のデータ全リセットセクション -->
     <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-neutral);">
       <div class="form-section-title" style="color: var(--crimson); font-size: 13px; font-weight: 600;"><i class="ti ti-refresh"></i> 開発・管理用データリセット</div>
       <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">データが不整合を起こしたり、最初から動作テストをやり直したい場合は、以下のボタンより全てのデータを消去し、最初の初期デモデータに戻すことができます。</p>
@@ -729,7 +736,7 @@
     if (pageId === 'calendar') renderCalendar();
     if (pageId === 'mypage') updateAuthUI();
     if (pageId === 'register') updateRegisterFormUI();
-    if (pageId === 'troupes') renderTroupes(troupesData); // 一覧表示時に最新化
+    if (pageId === 'troupes') renderTroupes(troupesData);
 
     window.scrollTo(0, 0);
   }
@@ -817,7 +824,7 @@
         if (filterValue && perf.troupeId !== filterValue) return;
         if (currentStr >= perf.dateStart && currentStr <= perf.dateEnd) {
           const troupe = troupesData.find(t => t.id === perf.troupeId);
-          if (!troupe) return; // 削除された劇団の公演は描画スキップ
+          if (!troupe) return;
           const ev = document.createElement('div');
           ev.className = `cal-event ${troupe.cls}`;
           ev.innerText = perf.title;
@@ -923,7 +930,6 @@
     document.getElementById('new-perf-desc').value = perf.desc || '';
 
     document.getElementById('register-page-title').innerText = '公演情報の修正';
-    document.getElementById('register-page-sub').innerText = '登録済みの公演内容、および折り込み受付期間の変更保存を行います';
     document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-check"></i>変更内容を保存する';
 
     showPage('register');
@@ -956,7 +962,6 @@
     document.getElementById('new-perf-desc').value = '';
 
     document.getElementById('register-page-title').innerText = '公演の登録';
-    document.getElementById('register-page-sub').innerText = '自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します';
     document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-plus"></i>この公演をカレンダーに登録する';
   }
 
@@ -1074,7 +1079,7 @@
     showPage('request-form');
   }
 
-  /* ⭕ 劇団一覧の生成（カード右上に×ボタンを設置、かつバブリングを止めて削除実行） */
+  /* ⭕ 劇団一覧の生成（ログイン中の劇団カードにのみ、右上に×ボタンを表示する制限仕様） */
   function renderTroupes(data) {
     const container = document.getElementById('troupe-grid');
     if (!container) return;
@@ -1094,10 +1099,16 @@
         showPage('calendar');
       };
 
-      card.innerHTML = `
-        <button class="troupe-delete-btn" onclick="handleDeleteTroupeDirect(event, '${t.id}', '${t.name}')" title="この劇団を削除">
+      // ⭕ ログイン中の劇団かつ自分のIDと一致する場合のみ削除ボタンをレンダリング
+      const showDeleteBtn = currentUser && currentUser.id === t.id;
+      const deleteBtnHtml = showDeleteBtn ? `
+        <button class="troupe-delete-btn" onclick="handleDeleteTroupeDirect(event, '${t.id}', '${t.name}')" title="アカウントを削除">
           <i class="ti ti-x" style="font-size:16px;"></i>
         </button>
+      ` : '';
+
+      card.innerHTML = `
+        ${deleteBtnHtml}
         <div class="troupe-card-head" style="padding-right: 24px;">
           <div class="troupe-avatar ${t.cls}">${t.name[0]}</div>
           <div>
@@ -1115,25 +1126,26 @@
     });
   }
 
-  /* ⭕ 劇団一覧の×ボタンから直接劇団を削除する関数（全画面完全同期仕様） */
+  /* ⭕ 劇団一覧の×ボタンからアカウントを削除する関数（自分自身のみ実行可能） */
   function handleDeleteTroupeDirect(event, id, name) {
-    event.stopPropagation(); // カレンダー遷移（カードクリック）が走るのを完全に防止
+    event.stopPropagation(); // カレンダー遷移の防止
 
-    if (confirm(`本当に劇団「${name}」のアカウントを削除しますか？\n（この劇団が登録した公演情報や折り込み依頼も一緒にすべて削除されます）`)) {
-      // データのフィルタリング
+    // ⭕ セキュリティガード：ログインしていない、もしくは他団体のIDを操作しようとした場合は拒否
+    if (!currentUser || currentUser.id !== id) {
+      alert('権限がありません。自身の劇団アカウントのみ削除できます。');
+      return;
+    }
+
+    if (confirm(`本当にご自身の劇団「${name}」のアカウントを削除しますか？\n（この劇団が登録した公演情報や折り込み依頼も一緒にすべて削除されます）`)) {
       troupesData = troupesData.filter(t => t.id !== id);
       performancesData = performancesData.filter(p => p.troupeId !== id);
       incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
 
-      // 削除対象が現在ログイン中ならログアウト
-      if (currentUser && currentUser.id === id) {
-        currentUser = null;
-      }
-
+      currentUser = null; // 削除されたので自動的にログアウト
       saveAllData();
-      alert(`劇団「${name}」のデータをすべて削除しました。`);
+      alert(`劇団「${name}」のアカウントデータをすべて完全に削除しました。`);
 
-      // 全UIの同期更新
+      // 状態変更に伴うUI全パーツのリフレッシュ
       updateFilterDropdown();
       renderLegend();
       renderTroupes(troupesData);
@@ -1188,6 +1200,7 @@
       currentUser = found;
       saveAllData();
       updateAuthUI();
+      renderTroupes(troupesData); // ⭕ 表示をログイン劇団用に切り替え
       alert(`劇団「${found.name}」としてログインしました。`);
     } else {
       alert('登録されていないメールアドレスです。');
@@ -1226,6 +1239,7 @@
     updateFilterDropdown();
     renderLegend();
     updateAuthUI();
+    renderTroupes(troupesData); // ⭕ 表示更新
     alert(`劇団「${name}」のアカウントを開設しました！`);
   }
 
@@ -1233,6 +1247,7 @@
     currentUser = null;
     saveAllData();
     updateAuthUI();
+    renderTroupes(troupesData); // ⭕ 全ての劇団から×ボタンを外す
     alert('ログアウトしました。');
   }
 
@@ -1314,7 +1329,6 @@
     alert(status === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否（辞退）しました。');
   }
 
-  // マイページ内からのアカウント削除
   function deleteTroupeAccount() {
     if (!currentUser) {
       alert('ログインしていません。');
@@ -1342,7 +1356,6 @@
     showPage('troupes');
   }
 
-  /* ⭕【新設】すべてのローカルキャッシュデータをクリアして最初のデモ状態にリセットする関数 */
   function resetAllDataToDefault() {
     if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期劇団・公演データ（デモデータ）の状態に復元しますか？\n作成したアカウントや申請履歴は削除されます。')) {
       localStorage.removeItem('troupesData_v4');
@@ -1350,7 +1363,6 @@
       localStorage.removeItem('incomingRequests_v4');
       localStorage.removeItem('currentUser_v4');
       
-      // グローバル変数を初期化
       troupesData = [...DEFAULT_TROUPES];
       performancesData = [...DEFAULT_PERFORMANCES];
       incomingRequests = [...DEFAULT_REQUESTS];
@@ -1358,7 +1370,6 @@
       
       saveAllData();
       
-      // 全画面パーツのリレンダリング
       updateFilterDropdown();
       renderLegend();
       renderTroupes(troupesData);
