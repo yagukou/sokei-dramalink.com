@@ -162,7 +162,6 @@
     .new-perf-btn { margin-left: auto; padding: 7px 16px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; }
     .new-perf-btn:hover { background: var(--crimson-light); }
     
-    /* ⭕【①の改善】カレンダーコンテナのサイズ固定＆歪み・土曜日見切れ対策 */
     .calendar-container {
       width: 100%;
       overflow-x: auto;
@@ -172,13 +171,13 @@
     }
     .cal-grid { 
       display: grid; 
-      grid-template-columns: repeat(7, minmax(120px, 1fr)); /* セル幅を完全に均等化 */
+      grid-template-columns: repeat(7, minmax(120px, 1fr)); 
       gap: 1px; 
     }
     .cal-dow { background: var(--surface2); padding: 10px 4px; text-align: center; font-size: 12px; font-weight: 600; color: var(--muted); }
     .cal-cell { 
       background: var(--white); 
-      min-height: 120px; /* セルの最小高さを統一していびつな変形を防止 */
+      min-height: 120px; 
       padding: 8px; 
       position: relative; 
       display: flex;
@@ -296,6 +295,10 @@
     </div>
     
     <div class="nav-tabs">
+      <!-- ⭕「使い方」タブをメニューの先頭に復活 -->
+      <button class="nav-tab" onclick="showPage('guide')" id="tab-guide">
+        <i class="ti ti-help"></i>使い方
+      </button>
       <button class="nav-tab active" onclick="showPage('calendar')" id="tab-calendar">
         <i class="ti ti-calendar"></i>カレンダー
       </button>
@@ -316,7 +319,44 @@
       </button>
     </div>
   </nav>
+
+  <!-- ⭕【復活】使い方（ガイド）ページ -->
+  <div class="page" id="page-guide">
+    <div class="page-header">
+      <div class="page-title">ビラネットワークの使い方</div>
+      <div class="page-sub">早慶演劇祭におけるビラ（チラシ）折り込みを円滑に行うための共有プラットフォームです</div>
+    </div>
+    
+    <div class="form-card" style="max-width: 100%; display: flex; flex-direction: column; gap: 24px;">
+      <div class="form-section">
+        <div class="form-section-title" style="font-size: 14px; color: var(--crimson); font-weight: 600;"><i class="ti ti-send"></i> 1. 他劇団の束にビラを「挟ませてほしい」場合（折り込み依頼側）</div>
+        <ol style="margin-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-mid);">
+          <li><strong>公演を探索：</strong> 「公演カレンダー」や「劇団一覧」から、時期やターゲットが合う他劇団の公演を探します。</li>
+          <li><strong>受付状況・条件の確認：</strong> 各公演の個別ページを開き、現在の「折り込み受付状況」「受付期間」「上限部数」を確認します。</li>
+          <li><strong>リクエスト送信：</strong> 受付中の場合、「折り込みを依頼する」ボタンから自団体名、部数、サイズ等を入力して送信します。相手劇団に自動通知が届きます。</li>
+        </ol>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title" style="font-size: 14px; color: var(--crimson); font-weight: 600;"><i class="ti ti-box"></i> 2. 自劇団の公演で他劇団のビラを「受け入れる」場合（ホスト劇団側）</div>
+        <ol style="margin-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-mid);">
+          <li><strong>アカウント管理：</strong> 「マイページ」より自劇団のアカウントを作成、またはログインを行います。</li>
+          <li><strong>公演情報の登録：</strong> 「公演登録」から、直近の公演日程や会場に加え、<b>「折り込みの個別受付開始日・終了日」</b>、受け入れ可能な最大部数を設定してカレンダーに公開します。</li>
+          <li><strong>依頼の管理：</strong> 他団体からリクエストが入ると、マイページの「折り込み依頼インボックス」にリアルタイムで蓄積されます。部数メーターを見ながら「承認」または「拒否」を選択して束をコントロールします。</li>
+        </ol>
+      </div>
+
+      <div class="info-banner" style="margin: 0;">
+        <div class="info-banner-title"><i class="ti ti-info-circle"></i> 運用上の注意点</div>
+        <p style="font-size: 13px; line-height: 1.6;">
+          ※ 本システム上のステータスや部数計算は自動で行われますが、実際のビラ搬入方法や最終確認は、承認後に担当者同士で直接メール等を用いて行ってください。<br>
+          ※ 本システムの日付判定は2026年6月4日（本日）を基準に自動でステータスが切り替わります。
+        </p>
+      </div>
+    </div>
+  </div>
  
+  <!-- カレンダーページ -->
   <div class="page active" id="page-calendar">
     <div class="page-header">
       <div class="page-title">公演カレンダー</div>
@@ -342,6 +382,7 @@
     <div class="legend" id="calendar-legend"></div>
   </div>
  
+  <!-- 劇団一覧ページ -->
   <div class="page" id="page-troupes">
     <div class="page-header">
       <div class="page-title">劇団一覧</div>
@@ -366,6 +407,7 @@
     <div class="troupe-grid" id="troupe-grid"></div>
   </div>
  
+  <!-- 公演詳細ページ -->
   <div class="page" id="page-perf-detail">
     <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i>戻る</button>
     <div class="perf-detail-grid">
@@ -423,6 +465,7 @@
     </div>
   </div>
 
+  <!-- 折り込み依頼送信フォーム -->
   <div class="page" id="page-request-form">
     <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i>戻る</button>
     <div class="form-card">
@@ -471,6 +514,7 @@
     </div>
   </div>
 
+  <!-- 公演登録・修正ページ -->
   <div class="page" id="page-register">
     <div class="form-card">
       <div class="page-header" style="margin-bottom:1.5rem;">
@@ -534,6 +578,7 @@
     </div>
   </div>
 
+  <!-- マイページ -->
   <div class="page" id="page-mypage">
     <div class="page-header">
       <div class="page-title">団体アカウント・管理マイページ</div>
@@ -616,7 +661,6 @@
 </div>
 
 <script>
-  // 基準データ
   const DEFAULT_TROUPES = [
     { id: 'a', name: '劇団ソウルメンバー', univ: '早稲田大学', est: '1998年', count: '84公演', accept: true, tags: ['ストレート', '伝統'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open', email: 'soul.member@example.com', password: 'password' },
     { id: 'b', name: 'エンゲキ研究会', univ: '慶應義塾大学', est: '2005年', count: '42公演', accept: true, tags: ['現代劇', '実験的'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open', email: 'enken@example.com', password: 'password' },
@@ -633,16 +677,15 @@
     { id: 101, toTroupeId: 'a', perfId: 1, fromTroupe: 'ステージクロス', copies: 120, date: '2026/06/01', preview: 'A4ペラ / 定期公演のビラ折り込みをお願いします。', status: 'pending' }
   ];
 
-  // ローカルストレージ
   let troupesData = JSON.parse(localStorage.getItem('troupesData_v4')) || DEFAULT_TROUPES;
   let performancesData = JSON.parse(localStorage.getItem('performancesData_v4')) || DEFAULT_PERFORMANCES;
   let incomingRequests = JSON.parse(localStorage.getItem('incomingRequests_v4')) || DEFAULT_REQUESTS;
   let currentUser = JSON.parse(localStorage.getItem('currentUser_v4')) || null;
 
   let currentYear = 2026;
-  let currentMonth = 5; // 6月
+  let currentMonth = 5; 
   let selectedPerfId = null;
-  let editingPerfId = null; // ⭕【③の改善】現在修正中の公演IDを受け止める変数
+  let editingPerfId = null; 
   let pageHistory = ['calendar'];
 
   window.addEventListener('DOMContentLoaded', () => {
@@ -661,7 +704,6 @@
     localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
   }
 
-  // ナビゲーション
   function showPage(pageId) {
     if (pageHistory[pageHistory.length - 1] !== pageId) {
       pageHistory.push(pageId);
@@ -675,7 +717,6 @@
     const tab = document.getElementById(`tab-${pageId}`);
     if (tab) tab.classList.add('active');
 
-    // 修正モードでなく新規登録として開く場合はリセット
     if (pageId === 'register' && !editingPerfId) {
       resetRegisterForm();
     }
@@ -720,7 +761,6 @@
     });
   }
 
-  // カレンダー描画
   function changeMonth(dir) {
     currentMonth += dir;
     if (currentMonth > 11) { currentMonth = 0; currentYear++; }
@@ -785,7 +825,6 @@
     }
   }
 
-  // 公演詳細の表示
   function openPerformanceDetail(id) {
     selectedPerfId = id;
     const perf = performancesData.find(p => p.id === id);
@@ -800,12 +839,10 @@
     document.getElementById('detail-venue').innerText = perf.venue;
     document.getElementById('detail-email').innerText = troupe ? troupe.email : '-';
 
-    // ⭕【②の改善】個別に登録された受付期間のテキスト表示
     const startStr = perf.dateAcceptStart ? formatJapaneseDate(perf.dateAcceptStart) : '未設定';
     const endStr = perf.dateAcceptEnd ? formatJapaneseDate(perf.dateAcceptEnd) : '未設定';
     document.getElementById('detail-accept-period').innerText = `${startStr} 〜 ${endStr}`;
 
-    // 部数メーター
     const maxQuota = perf.maxQuota || 300;
     const approvedQuota = incomingRequests.filter(r => r.perfId === id && r.status === 'accepted').reduce((sum, r) => sum + r.copies, 0);
     const totalRequestedQuota = incomingRequests.filter(r => r.perfId === id).reduce((sum, r) => sum + r.copies, 0);
@@ -815,7 +852,6 @@
     document.getElementById('detail-quota-bar').style.width = `${pct}%`;
     document.getElementById('detail-quota-summary').innerText = `${totalRequestedQuota} / ${maxQuota} 部（申請中含む）`;
 
-    // ⭕【③の改善】該当公演が自劇団のものであれば、修正・削除領域を可視化
     const myActionsArea = document.getElementById('perf-my-actions');
     if (currentUser && currentUser.id === perf.troupeId) {
       myActionsArea.style.display = 'flex';
@@ -823,10 +859,9 @@
       myActionsArea.style.display = 'none';
     }
 
-    // ⭕【②の改善】設定された日付に基づく厳密な受付状況ステータス制御
     const badge = document.getElementById('detail-status-badge');
     const reqBtn = document.getElementById('detail-request-btn');
-    const todayStr = '2026-06-04'; // 本日判定用
+    const todayStr = '2026-06-04'; 
 
     if (totalRequestedQuota >= maxQuota) {
       badge.innerText = '上限到達・締切';
@@ -850,7 +885,6 @@
       reqBtn.disabled = false;
     }
 
-    // 新規依頼用フォーム初期化
     const banner = document.getElementById('success-banner');
     const formBody = document.getElementById('request-form-body');
     if(banner) banner.style.display = 'none';
@@ -865,15 +899,13 @@
     return `${parseInt(p[1])}月${parseInt(p[2])}日`;
   }
 
-  // ⭕【③の改善】修正（編集）処理への橋渡し
   function startEditPerformance() {
     if (!selectedPerfId) return;
     const perf = performancesData.find(p => p.id === selectedPerfId);
     if (!perf) return;
 
-    editingPerfId = perf.id; // 修正モードにセット
+    editingPerfId = perf.id; 
 
-    // フォームに既存データを復元
     document.getElementById('new-perf-title').value = perf.title;
     document.getElementById('new-perf-start').value = perf.dateStart;
     document.getElementById('new-perf-end').value = perf.dateEnd;
@@ -883,7 +915,6 @@
     document.getElementById('new-perf-quota').value = perf.maxQuota;
     document.getElementById('new-perf-desc').value = perf.desc || '';
 
-    // 見出しと決定ボタンのデザインを修正仕様に
     document.getElementById('register-page-title').innerText = '公演情報の修正';
     document.getElementById('register-page-sub').innerText = '登録済みの公演内容、および折り込み受付期間の変更保存を行います';
     document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-check"></i>変更内容を保存する';
@@ -891,7 +922,6 @@
     showPage('register');
   }
 
-  // ⭕【③の改善】公演削除処理
   function deletePerformanceClick() {
     if (!selectedPerfId) return;
     const perf = performancesData.find(p => p.id === selectedPerfId);
@@ -923,7 +953,6 @@
     document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-plus"></i>この公演をカレンダーに登録する';
   }
 
-  // ⭕【②＆③の改善統合】公演登録 兼 修正データ処理
   function handleRegisterPerformance() {
     if (!currentUser) {
       alert('権限がありません。ログインしてください。');
@@ -945,7 +974,6 @@
     }
 
     if (editingPerfId) {
-      // 修正上書きモード
       const idx = performancesData.findIndex(p => p.id === editingPerfId);
       if (idx !== -1) {
         performancesData[idx] = {
@@ -956,7 +984,6 @@
       }
       editingPerfId = null;
     } else {
-      // 新規登録モード
       const newPerf = {
         id: Date.now(),
         troupeId: currentUser.id,
@@ -972,7 +999,6 @@
     showPage('calendar');
   }
 
-  // ⭕【保持機能】EmailJS連動付き折り込み申請処理
   function submitRequestForm() {
     const perf = performancesData.find(p => p.id === selectedPerfId);
     if (!perf) return;
@@ -1001,7 +1027,6 @@
     });
     saveAllData();
 
-    // 元々のEmailJS送信パラメータ設定の維持
     const templateParams = {
       to_email: targetTroupe ? targetTroupe.email : '',
       from_name: fromName,
@@ -1042,7 +1067,6 @@
     showPage('request-form');
   }
 
-  // 劇団一覧まわり
   function renderTroupes(data) {
     const container = document.getElementById('troupe-grid');
     if (!container) return;
@@ -1108,7 +1132,6 @@
     }
   }
 
-  // 認証関連
   function handleLogin() {
     const email = document.getElementById('login-email').value.trim();
     const password = document.getElementById('login-password').value.trim();
@@ -1253,7 +1276,6 @@
     alert(status === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否（辞退）しました。');
   }
 
-  // ⭕【保持機能】劇団アカウント削除の内部ロジック
   function deleteTroupeAccount() {
     if (!currentUser) {
       alert('ログインしていません。');
@@ -1278,26 +1300,6 @@
     renderTroupes(troupesData);
     updateAuthUI();
     showPage('troupes');
-  }
-
-  function deleteTroupeById(id, name) {
-    if (confirm(`本当に劇団「${name}」のアカウントを削除しますか？\n（この劇団が登録した公演情報や依頼も一緒に削除されます）`)) {
-      troupesData = troupesData.filter(t => t.id !== id);
-      performancesData = performancesData.filter(p => p.troupeId !== id);
-      incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
-
-      if (currentUser && currentUser.id === id) {
-        currentUser = null;
-      }
-      saveAllData();
-      alert(`劇団「${name}」のデータをすべて削除しました。`);
-      
-      updateFilterDropdown();
-      renderLegend();
-      renderTroupes(troupesData);
-      updateAuthUI();
-      showPage('troupes'); 
-    }
   }
 </script>
 </body>
