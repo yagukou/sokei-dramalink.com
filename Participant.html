@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script>
     (function() {
-      emailjs.init("G7zBiW5JvckByX5DB");
+      // 必要に応じて emailjs.init("YOUR_PUBLIC_KEY") をここに記述してください
     })();
   </script>
   <style>
@@ -1065,7 +1065,6 @@
   }
 
   function finalizeRequestFormSuccess() {
-    alert("🎉 折込依頼が完了しました！メールも送信されました。");
     const banner = document.getElementById('success-banner');
     const formBody = document.getElementById('request-form-body');
     if (banner) banner.style.display = 'flex';
@@ -1438,5 +1437,4 @@
 </script>
 </body>
 </html>
-
 
