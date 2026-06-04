@@ -343,7 +343,7 @@
       <div class="form-section">
         <div class="form-section-title" style="font-size: 14px; color: var(--crimson); font-weight: 600;"><i class="ti ti-box"></i> 2. 自劇団の公演で他劇団のビラを「受け入れる」場合（ホスト劇団側）</div>
         <ol style="margin-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-mid);">
-          <li><strong>アカウント管理：</strong> 「マイページ」より自劇団のアカウント作成、またはログインを行います。</li>
+          <li><strong>アカウント管理：</strong> 「マイページ」より自劇団のアカウントを作成、またはログインを行います。</li>
           <li><strong>公演情報の登録：</strong> 「公演登録」から、直近の公演日程や会場に加え、<b>「折り込みの個別受付開始日・終了日」</b>、受け入れ可能な最大部数を設定してカレンダーに公開します。</li>
           <li><strong>依頼の管理：</strong> 他団体からリクエストが入ると、マイページの「折り込み依頼インボックス」にリアルタイムで蓄積されます。部数メーターを見ながら「承認」または「拒否」を選択して束をコントロールします。</li>
         </ol>
@@ -507,6 +507,15 @@
               </select>
             </div>
           </div>
+          <!-- 📥 任意ファイル添付用の行を追加 -->
+          <div class="form-row">
+            <label class="form-label">ビラ・チラシのデータ添付 <span style="color:var(--muted); font-size:11px;">(任意 / 画像またはPDF / 2MB以内)</span></label>
+            <input type="file" class="form-input" id="req-file" accept="image/*,.pdf" onchange="handleFileSelect(event)">
+            <div id="file-preview-wrap" style="margin-top: 8px; display: none; font-size: 12px; color: var(--muted); align-items: center; gap: 8px;">
+              <i class="ti ti-file-check" style="color: var(--crimson); font-size: 16px;"></i>
+              <span id="file-preview-name" style="font-weight: 500;"></span>
+            </div>
+          </div>
           <div class="form-row">
             <label class="form-label">備考・特記事項</label>
             <textarea class="form-textarea" id="req-notes" placeholder="搬入方法のご相談などがあれば記載してください"></textarea>
@@ -592,9 +601,6 @@
       <div class="form-2col">
         <div>
           <div class="form-section-title">登録団体 ログイン</div>
-          <div style="font-size:11px; color:var(--muted); margin-bottom:8px;">
-            ※管理者ログイン: admin@sokei-dramalink.com / パスワード: KfgR5zGF%iK5
-          </div>
           <div class="form-row">
             <label class="form-label">メールアドレス</label>
             <input type="email" class="form-input" id="login-email" value="soul.member@example.com">
@@ -655,9 +661,15 @@
 
       <div class="section-title"><i class="ti ti-inbox"></i>折り込み依頼インボックス</div>
       <div class="inbox-list" id="dashboard-inbox"></div>
+
+      <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral); text-align: right;">
+        <button class="btn-secondary" style="background: #fef2f2; border-color: #fca5a5; color: #b91c1c; font-size: 12px; padding: 6px 12px;" onclick="deleteTroupeAccount()">
+          <i class="ti ti-alert-triangle"></i> 劇団アカウントを削除する
+        </button>
+      </div>
     </div>
 
-    <!-- 開発・管理用データリセット -->
+    <!-- テスト用のデータ全リセットセクション -->
     <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-neutral);">
       <div class="form-section-title" style="color: var(--crimson); font-size: 13px; font-weight: 600;"><i class="ti ti-refresh"></i> 開発・管理用データリセット</div>
       <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">データが不整合を起こしたり、最初から動作テストをやり直したい場合は、以下のボタンより全てのデータを消去し、最初の初期デモデータに戻すことができます。</p>
@@ -671,9 +683,9 @@
 
 <script>
   const DEFAULT_TROUPES = [
-    { id: 'a', name: '劇団ソウルメンバー', univ: '早稲田大学', est: '1998年', count: '84公演', accept: true, tags: ['ストレート', '伝統'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open', email: 'soul.member@example.com', password: 'password', approved: true },
-    { id: 'b', name: 'エンゲキ研究会', univ: '慶應義塾大学', est: '2005年', count: '42公演', accept: true, tags: ['現代劇', '実験的'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open', email: 'enken@example.com', password: 'password', approved: true },
-    { id: 'd', name: '慶應ドラマクラブ', univ: '慶應義塾大学', est: '1965年', count: '110公演', accept: true, tags: ['翻訳劇'], cls: 'troupe-d', statusText: 'まもなく締切', statusCls: 'status-soon', email: 'drama@example.com', password: 'password', approved: true }
+    { id: 'a', name: '劇団ソウルメンバー', univ: '早稲田大学', est: '1998年', count: '84公演', accept: true, tags: ['ストレート', '伝統'], cls: 'troupe-a', statusText: '折り込み受付中', statusCls: 'status-open', email: 'soul.member@example.com', password: 'password' },
+    { id: 'b', name: 'エンゲキ研究会', univ: '慶應義塾大学', est: '2005年', count: '42公演', accept: true, tags: ['現代劇', '実験的'], cls: 'troupe-b', statusText: '折り込み受付中', statusCls: 'status-open', email: 'enken@example.com', password: 'password' },
+    { id: 'd', name: '慶應ドラマクラブ', univ: '慶應義塾大学', est: '1965年', count: '110公演', accept: true, tags: ['翻訳劇'], cls: 'troupe-d', statusText: 'まもなく締切', statusCls: 'status-soon', email: 'drama@example.com', password: 'password' }
   ];
 
   const DEFAULT_PERFORMANCES = [
@@ -683,12 +695,14 @@
   ];
 
   const DEFAULT_REQUESTS = [
-    { id: 101, toTroupeId: 'a', perfId: 1, fromTroupe: 'ステージクロス', copies: 120, date: '2026/06/01', preview: 'A4ペラ / 定期公演のビラ折り込みをお願いします。', status: 'pending' }
+    { id: 101, toTroupeId: 'a', perfId: 1, fromTroupe: 'ステージクロス', copies: 120, date: '2026/06/01', preview: 'A4ペラ / 定期公演のビラ折り込みをお願いします。', status: 'pending', fileName: null, fileData: null }
   ];
 
-  let troupesData = JSON.parse(localStorage.getItem('troupesData_v4')) || DEFAULT_TROUPES;
-  troupesData.forEach(t => { if(t.approved === undefined) t.approved = true; });
+  // 📥 ファイル一時保存用バッファ
+  let uploadedFileData = null;
+  let uploadedFileName = null;
 
+  let troupesData = JSON.parse(localStorage.getItem('troupesData_v4')) || DEFAULT_TROUPES;
   let performancesData = JSON.parse(localStorage.getItem('performancesData_v4')) || DEFAULT_PERFORMANCES;
   let incomingRequests = JSON.parse(localStorage.getItem('incomingRequests_v4')) || DEFAULT_REQUESTS;
   let currentUser = JSON.parse(localStorage.getItem('currentUser_v4')) || null;
@@ -703,7 +717,7 @@
     updateFilterDropdown();
     renderLegend();
     renderCalendar();
-    renderTroupes(troupesData.filter(t => t.approved));
+    renderTroupes(troupesData);
     updateAuthUI();
     updateRegisterFormUI();
   });
@@ -735,7 +749,7 @@
     if (pageId === 'calendar') renderCalendar();
     if (pageId === 'mypage') updateAuthUI();
     if (pageId === 'register') updateRegisterFormUI();
-    if (pageId === 'troupes') renderTroupes(troupesData.filter(t => t.approved));
+    if (pageId === 'troupes') renderTroupes(troupesData);
 
     window.scrollTo(0, 0);
   }
@@ -759,7 +773,7 @@
     const filter = document.getElementById('cal-filter');
     if (!filter) return;
     filter.innerHTML = '<option value="">すべての劇団</option>';
-    troupesData.filter(t => t.approved).forEach(t => {
+    troupesData.forEach(t => {
       filter.innerHTML += `<option value="${t.id}">${t.name}</option>`;
     });
   }
@@ -768,7 +782,7 @@
     const legend = document.getElementById('calendar-legend');
     if (!legend) return;
     legend.innerHTML = '';
-    troupesData.filter(t => t.approved).forEach(t => {
+    troupesData.forEach(t => {
       legend.innerHTML += `<div class="legend-item"><div class="legend-dot ${t.cls}"></div>${t.name}</div>`;
     });
   }
@@ -823,7 +837,7 @@
         if (filterValue && perf.troupeId !== filterValue) return;
         if (currentStr >= perf.dateStart && currentStr <= perf.dateEnd) {
           const troupe = troupesData.find(t => t.id === perf.troupeId);
-          if (!troupe || !troupe.approved) return; 
+          if (!troupe) return;
           const ev = document.createElement('div');
           ev.className = `cal-event ${troupe.cls}`;
           ev.innerText = perf.title;
@@ -965,7 +979,7 @@
   }
 
   function handleRegisterPerformance() {
-    if (!currentUser || currentUser.role === 'admin') {
+    if (!currentUser) {
       alert('権限がありません。ログインしてください。');
       return;
     }
@@ -1010,6 +1024,41 @@
     showPage('calendar');
   }
 
+  /* 📥 ファイル選択時のBase64変換・バリデーション処理 */
+  function handleFileSelect(event) {
+    const file = event.target.files[0];
+    const previewWrap = document.getElementById('file-preview-wrap');
+    const previewName = document.getElementById('file-preview-name');
+    
+    if (!file) {
+      uploadedFileData = null;
+      uploadedFileName = null;
+      if (previewWrap) previewWrap.style.display = 'none';
+      return;
+    }
+
+    // ブラウザの容量圧迫を防ぐため、2MBの上限ガードを設定
+    if (file.size > 2 * 1024 * 1024) {
+      alert('ブラウザのデータ制限を保護するため、2MBを超えるファイルは添付できません。\n軽量化した画像やPDFをご利用ください。');
+      event.target.value = '';
+      uploadedFileData = null;
+      uploadedFileName = null;
+      if (previewWrap) previewWrap.style.display = 'none';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      uploadedFileData = e.target.result; // DataURL形式のBase64文字列
+      uploadedFileName = file.name;
+      if (previewWrap && previewName) {
+        previewName.innerText = file.name;
+        previewWrap.style.display = 'flex';
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
   function submitRequestForm() {
     const perf = performancesData.find(p => p.id === selectedPerfId);
     if (!perf) return;
@@ -1026,6 +1075,7 @@
       return;
     }
 
+    // 📥 保存対象オブジェクトにファイルのメタ・実データを追加
     incomingRequests.push({
       id: Date.now(),
       perfId: selectedPerfId,
@@ -1034,7 +1084,9 @@
       copies: copies,
       date: '2026/06/04',
       preview: `${size} / ${notes || '備考なし'}`,
-      status: 'pending'
+      status: 'pending',
+      fileName: uploadedFileName,
+      fileData: uploadedFileData
     });
     saveAllData();
 
@@ -1044,7 +1096,7 @@
       reply_to: fromEmail,
       copies: copies,
       size: size,
-      notes: notes || '特になし'
+      notes: `${notes || '特になし'}${uploadedFileName ? `\n（添付ファイルあり: ${uploadedFileName} ※マイページからダウンロード確認できます）` : ''}`
     };
 
     const serviceID = 'service_4gfx3qf';
@@ -1075,23 +1127,29 @@
     if(!selectedPerfId) return;
     const perf = performancesData.find(p => p.id === selectedPerfId);
     document.getElementById('req-form-title').innerText = `「${perf.title}」への折り込み依頼`;
+    
+    // 📥 フォームを開く際に添付バッファと表示をリセット
+    uploadedFileData = null;
+    uploadedFileName = null;
+    const fileInput = document.getElementById('req-file');
+    if (fileInput) fileInput.value = '';
+    const previewWrap = document.getElementById('file-preview-wrap');
+    if (previewWrap) previewWrap.style.display = 'none';
+
     showPage('request-form');
   }
 
-  /* 劇団一覧の生成（管理者ログイン時のみ全劇団に削除×ボタンを配置） */
   function renderTroupes(data) {
     const container = document.getElementById('troupe-grid');
     if (!container) return;
     container.innerHTML = '';
 
-    const approvedTroupes = data.filter(t => t.approved);
-
-    if (approvedTroupes.length === 0) {
+    if (data.length === 0) {
       container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="ti ti-users"></i>該当する劇団が見つかりませんでした</div>`;
       return;
     }
 
-    approvedTroupes.forEach(t => {
+    data.forEach(t => {
       const card = document.createElement('div');
       card.className = 'troupe-card';
       card.onclick = () => {
@@ -1100,10 +1158,9 @@
         showPage('calendar');
       };
 
-      // ⭕ 管理者（admin）の場合のみ削除ボタンを出す
-      const showDeleteBtn = currentUser && currentUser.role === 'admin';
+      const showDeleteBtn = currentUser && currentUser.id === t.id;
       const deleteBtnHtml = showDeleteBtn ? `
-        <button class="troupe-delete-btn" onclick="handleDeleteTroupeDirect(event, '${t.id}', '${t.name}')" title="管理権限でアカウントを削除">
+        <button class="troupe-delete-btn" onclick="handleDeleteTroupeDirect(event, '${t.id}', '${t.name}')" title="アカウントを削除">
           <i class="ti ti-x" style="font-size:16px;"></i>
         </button>
       ` : '';
@@ -1127,26 +1184,26 @@
     });
   }
 
-  /* ⭕ 管理者専用：劇団完全消去・退会処理 */
   function handleDeleteTroupeDirect(event, id, name) {
-    if (event && event.stopPropagation) event.stopPropagation(); 
+    event.stopPropagation(); 
 
-    if (!currentUser || currentUser.role !== 'admin') {
-      alert('権限がありません。劇団の消去はシステム管理者のみ行えます。');
+    if (!currentUser || currentUser.id !== id) {
+      alert('権限がありません。自身の劇団アカウントのみ削除できます。');
       return;
     }
 
-    if (confirm(`【管理者権限】本当に劇団「${name}」を完全に消去しますか？\n（この劇団に関連する公演、折り込みリクエスト、すべて一緒に破壊・消去されます。この操作は取り消せません）`)) {
+    if (confirm(`本当にご自身の劇団「${name}」のアカウントを削除しますか？\n（この劇団が登録した公演情報や折り込み依頼も一緒にすべて削除されます）`)) {
       troupesData = troupesData.filter(t => t.id !== id);
       performancesData = performancesData.filter(p => p.troupeId !== id);
-      incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id && r.fromTroupe !== name);
+      incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
 
+      currentUser = null; 
       saveAllData();
-      alert(`劇団「${name}」に関わる全てのデータを完全に消去しました。`);
+      alert(`劇団「${name}」のアカウントデータをすべて完全に削除しました。`);
 
       updateFilterDropdown();
       renderLegend();
-      renderTroupes(troupesData.filter(t => t.approved));
+      renderTroupes(troupesData);
       updateAuthUI();
       renderCalendar();
     }
@@ -1158,7 +1215,6 @@
     const acceptFilter = document.getElementById('accept-filter').value;
 
     const filtered = troupesData.filter(t => {
-      if (!t.approved) return false; 
       const matchKwd = t.name.toLowerCase().includes(keyword) || t.univ.toLowerCase().includes(keyword);
       const matchUniv = !univFilter || t.univ === univFilter;
       const matchAcc = !acceptFilter || String(t.accept) === acceptFilter;
@@ -1172,17 +1228,12 @@
     const msg = document.getElementById('register-need-login-msg');
     if (!form || !msg) return;
 
-    if (currentUser && currentUser.role !== 'admin') {
+    if (currentUser) {
       form.style.display = 'block';
       msg.style.display = 'none';
     } else {
       form.style.display = 'none';
       msg.style.display = 'block';
-      if (currentUser && currentUser.role === 'admin') {
-        msg.querySelector('p').innerText = '管理者アカウントでは公演情報の登録はできません。';
-      } else {
-        msg.querySelector('p').innerText = '公演情報を登録・修正するには、マイページから劇団アカウントでログインしてください。';
-      }
     }
   }
 
@@ -1195,26 +1246,10 @@
       return;
     }
 
-    if (email === 'admin@sokei-dramalink.com') {
-      if (password === 'KfgR5zGF%iK5') {
-        currentUser = { id: 'admin', name: 'システム管理者', email: email, role: 'admin' };
-        saveAllData();
-        updateAuthUI();
-        alert('管理者としてログインしました。');
-      } else {
-        alert('管理者パスワードが間違っています。');
-      }
-      return;
-    }
-
     const found = troupesData.find(t => t.email === email);
     if (found) {
       if (found.password && found.password !== password) {
         alert('パスワードが間違っています。');
-        return;
-      }
-      if (!found.approved) {
-        alert('この団体は現在、管理者（admin@sokei-dramalink.com）による承認待ちです。承認が完了するまでログインできません。');
         return;
       }
       currentUser = found;
@@ -1238,8 +1273,8 @@
       return;
     }
 
-    if (email === 'admin@sokei-dramalink.com' || troupesData.some(t => t.email === email)) {
-      alert('このメールアドレスは既に登録されているか、使用できません。');
+    if (troupesData.some(t => t.email === email)) {
+      alert('このメールアドレスは既に登録されています。');
       return;
     }
 
@@ -1250,23 +1285,17 @@
       id: 'tr_' + Date.now(),
       name, univ, est: '2026年', count: '0公演', accept: true,
       cls: randomColor, statusText: '折り込み受付中', statusCls: 'status-open',
-      email, password,
-      approved: false 
+      email, password
     };
 
     troupesData.push(newTroupe);
+    currentUser = newTroupe;
     saveAllData();
-    
-    alert(`劇団「${name}」の登録申請を送信しました！\n管理者（admin@sokei-dramalink.com）による承認が完了するまでしばらくお待ちください。`);
-    
-    document.getElementById('reg-troupe-name').value = '';
-    document.getElementById('reg-troupe-email').value = '';
-    document.getElementById('reg-troupe-password').value = '';
-    
     updateFilterDropdown();
     renderLegend();
     updateAuthUI();
     renderTroupes(troupesData); 
+    alert(`劇団「${name}」のアカウントを開設しました！`);
   }
 
   function handleLogout() {
@@ -1285,20 +1314,9 @@
     if (currentUser) {
       if(auth) auth.style.display = 'none';
       if(dash) dash.style.display = 'block';
-      
-      if(currentUser.role === 'admin') {
-        document.getElementById('welcome-message').innerText = `こんにちは、${currentUser.name} ページ`;
-        document.getElementById('account-status-info').innerText = `管理者権限でログイン中 (${currentUser.email})`;
-        if(navBtn) navBtn.innerHTML = `<i class="ti ti-user-check"></i> ${currentUser.name}`;
-        document.querySelector('.stat-grid').style.display = 'none'; 
-        document.querySelector('.section-title').innerHTML = `<i class="ti ti-users"></i> 新規登録団体の承認待ちリスト`;
-      } else {
-        document.getElementById('welcome-message').innerText = `こんにちは、${currentUser.name} の管理マイページ`;
-        document.getElementById('account-status-info').innerText = `通知用メールアドレス: ${currentUser.email}`;
-        if(navBtn) navBtn.innerHTML = `<i class="ti ti-user"></i> ${currentUser.name}`;
-        document.querySelector('.stat-grid').style.display = 'grid';
-        document.querySelector('.section-title').innerHTML = `<i class="ti ti-inbox"></i> 折り込み依頼インボックス`;
-      }
+      document.getElementById('welcome-message').innerText = `こんにちは、${currentUser.name} の管理マイページ`;
+      document.getElementById('account-status-info').innerText = `通知用メールアドレス: ${currentUser.email}`;
+      if(navBtn) navBtn.innerHTML = `<i class="ti ti-user"></i> ${currentUser.name}`;
       renderDashboardInbox();
     } else {
       if(auth) auth.style.display = 'block';
@@ -1308,95 +1326,67 @@
     updateRegisterFormUI();
   }
 
+  /* 📥 マイページの依頼インボックスに添付ダウンロード機構を追加 */
   function renderDashboardInbox() {
     const container = document.getElementById('dashboard-inbox');
     if (!container) return;
     container.innerHTML = '';
     if (!currentUser) return;
 
-    if (currentUser.role === 'admin') {
-      const pendingTroupes = troupesData.filter(t => !t.approved);
+    const myRequests = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
+    const pendingRequests = myRequests.filter(r => r.status === 'pending');
+    const acceptedRequests = myRequests.filter(r => r.status === 'accepted');
 
-      if (pendingTroupes.length === 0) {
-        container.innerHTML = `<div class="empty-state"><i class="ti ti-checkbox"></i>現在、承認待ちの新規登録団体はありません。</div>`;
-        return;
-      }
+    document.getElementById('stat-incoming-pending').innerText = pendingRequests.length;
+    document.getElementById('stat-incoming-accepted').innerText = acceptedRequests.length;
 
-      pendingTroupes.forEach(t => {
-        const item = document.createElement('div');
-        item.className = `inbox-item unread`;
-        item.innerHTML = `
-          <div class="inbox-body">
-            <div class="inbox-from">劇団名: <strong>${t.name}</strong> (${t.univ})</div>
-            <div class="inbox-preview">申請メールアドレス: ${t.email}</div>
-            <div class="inbox-meta">
-              <span style="font-size:11px; color:var(--muted)">登録申請中</span>
-            </div>
-          </div>
-          <div class="inbox-actions" style="display:flex; gap:6px;">
-            <button class="inbox-btn inbox-btn-accept" onclick="approveTroupe('${t.id}')">承認</button>
-            <button class="inbox-btn inbox-btn-decline" onclick="handleDeleteTroupeDirect(null, '${t.id}', '${t.name}')">削除</button>
-          </div>
-        `;
-        container.appendChild(item);
-      });
-
-    } else {
-      const myRequests = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
-      const pendingRequests = myRequests.filter(r => r.status === 'pending');
-      const acceptedRequests = myRequests.filter(r => r.status === 'accepted');
-
-      document.getElementById('stat-incoming-pending').innerText = pendingRequests.length;
-      document.getElementById('stat-incoming-accepted').innerText = acceptedRequests.length;
-
-      if (myRequests.length === 0) {
-        container.innerHTML = `<div class="empty-state"><i class="ti ti-mailbox"></i>まだ折り込みの申請リクエストはありません</div>`;
-        return;
-      }
-
-      myRequests.forEach(r => {
-        const perf = performancesData.find(p => p.id === r.perfId);
-        const isPending = r.status === 'pending';
-        
-        const item = document.createElement('div');
-        item.className = `inbox-item ${isPending ? 'unread' : ''}`;
-        
-        item.innerHTML = `
-          <div class="inbox-body">
-            <div class="inbox-from">申請元: ${r.fromTroupe} ➔ 対象公演: 「${perf ? perf.title : '不明な公演'}」</div>
-            <div class="inbox-preview">条件: ${r.preview}</div>
-            <div class="inbox-meta">
-              <span class="inbox-copies">${r.copies} 部</span>
-              <span style="font-size:11px; color:var(--muted)">申請日: ${r.date}</span>
-              <span style="font-size:11px; font-weight:600; color:${r.status==='accepted'?'#1A6B4A':r.status==='declined'?'#A32D2D':'var(--gold)'}">
-                [${r.status==='accepted'?'承認済み':r.status==='declined'?'拒否':'回答待ち'}]
-              </span>
-            </div>
-          </div>
-          ${isPending ? `
-            <div class="inbox-actions">
-              <button class="inbox-btn inbox-btn-accept" onclick="respondRequest(${r.id}, 'accepted')">承認</button>
-              <button class="inbox-btn inbox-btn-decline" onclick="respondRequest(${r.id}, 'declined')">拒否</button>
-            </div>
-          ` : ''}
-        `;
-        container.appendChild(item);
-      });
+    if (myRequests.length === 0) {
+      container.innerHTML = `<div class="empty-state"><i class="ti ti-mailbox"></i>まだ折り込みの申請リクエストはありません</div>`;
+      return;
     }
-  }
 
-  function approveTroupe(id) {
-    const troupe = troupesData.find(t => t.id === id);
-    if (!troupe) return;
-
-    troupe.approved = true;
-    saveAllData();
-    alert(`劇団「${troupe.name}」の登録を承認しました。`);
-
-    updateFilterDropdown();
-    renderLegend();
-    renderCalendar();
-    renderDashboardInbox();
+    myRequests.forEach(r => {
+      const perf = performancesData.find(p => p.id === r.perfId);
+      const isPending = r.status === 'pending';
+      
+      // 📄 添付ファイルが存在する場合、ローカルダウンロードボタンのHTMLを生成
+      let fileAttachmentHtml = '';
+      if (r.fileName && r.fileData) {
+        fileAttachmentHtml = `
+          <div style="margin-top: 8px;">
+            <a href="${r.fileData}" download="${r.fileName}" class="btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; font-size: 11px; background: var(--surface2); border-color: var(--border-neutral); border-radius: var(--radius-sm); text-decoration: none; font-weight: 500;">
+              <i class="ti ti-download" style="font-size: 13px; color: var(--crimson);"></i>
+              添付ビラ: ${r.fileName}
+            </a>
+          </div>
+        `;
+      }
+      
+      const item = document.createElement('div');
+      item.className = `inbox-item ${isPending ? 'unread' : ''}`;
+      
+      item.innerHTML = `
+        <div class="inbox-body">
+          <div class="inbox-from">申請元: ${r.fromTroupe} ➔ 対象公演: 「${perf ? perf.title : '不明な公演'}」</div>
+          <div class="inbox-preview">条件: ${r.preview}</div>
+          ${fileAttachmentHtml}
+          <div class="inbox-meta" style="margin-top: 8px;">
+            <span class="inbox-copies">${r.copies} 部</span>
+            <span style="font-size:11px; color:var(--muted)">申請日: ${r.date}</span>
+            <span style="font-size:11px; font-weight:600; color:${r.status==='accepted'?'#1A6B4A':r.status==='declined'?'#A32D2D':'var(--gold)'}">
+              [${r.status==='accepted'?'承認済み':r.status==='declined'?'拒否':'回答待ち'}]
+            </span>
+          </div>
+        </div>
+        ${isPending ? `
+          <div class="inbox-actions">
+            <button class="inbox-btn inbox-btn-accept" onclick="respondRequest(${r.id}, 'accepted')">承認</button>
+            <button class="inbox-btn inbox-btn-decline" onclick="respondRequest(${r.id}, 'declined')">拒否</button>
+          </div>
+        ` : ''}
+      `;
+      container.appendChild(item);
+    });
   }
 
   function respondRequest(reqId, status) {
@@ -1406,18 +1396,44 @@
     req.status = status;
     saveAllData();
     renderDashboardInbox();
-    alert(status === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否しました。');
+    alert(status === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否（辞退）しました。');
+  }
+
+  function deleteTroupeAccount() {
+    if (!currentUser) {
+      alert('ログインしていません。');
+      return;
+    }
+    
+    if (!confirm('本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報も一緒に削除されます）')) {
+      return;
+    }
+
+    const id = currentUser.id;
+    troupesData = troupesData.filter(t => t.id !== id);
+    performancesData = performancesData.filter(p => p.troupeId !== id);
+    incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
+    
+    currentUser = null;
+    saveAllData();
+    alert('アカウント情報をすべて完全に削除しました。');
+    
+    updateFilterDropdown();
+    renderLegend();
+    renderTroupes(troupesData);
+    updateAuthUI();
+    renderCalendar();
+    showPage('troupes');
   }
 
   function resetAllDataToDefault() {
-    if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期デモデータの状態に復元しますか？')) {
+    if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期劇団・公演データ（デモデータ）の状態に復元しますか？\n作成したアカウントや申請履歴は削除されます。')) {
       localStorage.removeItem('troupesData_v4');
       localStorage.removeItem('performancesData_v4');
       localStorage.removeItem('incomingRequests_v4');
       localStorage.removeItem('currentUser_v4');
       
       troupesData = [...DEFAULT_TROUPES];
-      troupesData.forEach(t => t.approved = true);
       performancesData = [...DEFAULT_PERFORMANCES];
       incomingRequests = [...DEFAULT_REQUESTS];
       currentUser = null;
@@ -1437,4 +1453,3 @@
 </script>
 </body>
 </html>
-
