@@ -728,11 +728,36 @@ try {
     updateRegisterFormUI();
   });
 
-  function saveAllData() {
-    localStorage.setItem('troupesData_v4', JSON.stringify(troupesData));
-    localStorage.setItem('performancesData_v4', JSON.stringify(performancesData));
-    localStorage.setItem('incomingRequests_v4', JSON.stringify(incomingRequests));
-    localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
+  async function saveAllData() {
+    try {
+      await setDoc(doc(window.db, "data", "sharedData"), {
+        troupes: troupesData,
+        performances: performancesData,
+        incomingRequests: incomingRequests
+      });
+      console.log("クラウド保存成功");
+    } catch (e) {
+      console.error("保存失敗:", e);
+    }
+  }
+
+  async function loadAllData() {
+    try {
+      const docSnap = await getDoc(doc(window.db, "data", "sharedData"));
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        troupesData = data.troupes;
+        performancesData = data.performances;
+        incomingRequests = data.incomingRequests;
+        
+        // データ読み込み後に再描画
+        renderTroupes(troupesData);
+        renderCalendar();
+        console.log("クラウドからデータ読み込み完了");
+      }
+    } catch (e) {
+      console.error("データ読み込みエラー:", e);
+    }
   }
 
   function showPage(pageId) {
