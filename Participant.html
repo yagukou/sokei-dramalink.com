@@ -507,6 +507,10 @@
               </select>
             </div>
           </div>
+            <div class="form-group">
+              <label for="flyerFile">ビラ画像を添付 (任意):</label>
+              <input type="file" id="flyerFile" accept="image/*" class="form-control">
+            </div>
           <div class="form-row">
             <label class="form-label">備考・特記事項</label>
             <textarea class="form-textarea" id="req-notes" placeholder="搬入方法のご相談などがあれば記載してください"></textarea>
@@ -1041,6 +1045,27 @@ try {
       alert('必須項目をすべて入力してください。');
       return;
     }
+
+    // 関数全体を以下のように書き換え（または追記）
+async function submitRequest() {
+  const fileInput = document.getElementById('flyerFile');
+  const file = fileInput.files[0];
+  let base64Image = "";
+
+  if (file) {
+    base64Image = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // --- この後の送信処理（emailjs.send など）のパラメータに以下を含める ---
+  // templateParams の中に attachment_html: base64Image を追加してください
+  
+  alert("折り込みリクエストを送信しました！");
+  document.getElementById('requestForm').reset();
+}
 
     incomingRequests.push({
       id: Date.now(),
