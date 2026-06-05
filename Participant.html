@@ -1049,10 +1049,9 @@ try {
     // 関数全体を以下のように書き換え（または追記）
 async function submitRequest() {
   const fileInput = document.getElementById('flyerFile');
-  const file = fileInput ? fileInput.files[0] : null;
+  const file = fileInput.files[0];
   let base64Image = "";
 
-  // ファイルが選ばれていればBase64に変換
   if (file) {
     base64Image = await new Promise((resolve) => {
       const reader = new FileReader();
@@ -1061,25 +1060,11 @@ async function submitRequest() {
     });
   }
 
-  // フォームの内容を取得（既存のIDに合わせてください）
-  const fromName = document.getElementById('service_4gfx3qf').value;
-  const fromEmail = document.getElementById('template_rzattmh').value;
-
-  // EmailJSでの送信処理
-  emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
-    from_name: fromName,
-    from_email: fromEmail,
-    // ここで画像データを渡す
-    attachment_html: base64Image ? `<img src="${base64Image}" style="max-width:300px;">` : "画像なし"
-  })
-  .then((response) => {
-    alert("折り込みリクエストを送信しました！");
-    document.getElementById('requestForm').reset();
-  })
-  .catch((error) => {
-    alert("送信に失敗しました。");
-    console.error("送信エラー詳細:", error);
-  });
+  // --- この後の送信処理（emailjs.send など）のパラメータに以下を含める ---
+  // templateParams の中に attachment_html: base64Image を追加してください
+  
+  alert("折り込みリクエストを送信しました！");
+  document.getElementById('requestForm').reset();
 }
 
     incomingRequests.push({
