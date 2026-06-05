@@ -1335,6 +1335,26 @@ async function submitRequestForm() {
     renderLegend();
     updateAuthUI();
     renderTroupes(troupesData); 
+
+    // 新規団体作成依頼の関数内
+async function submitNewTroupeRequest() {
+    // ...（中略：フォームから団体名や代表者名を取得する処理）...
+
+    // ★追加：管理者への通知処理
+    const adminEmail = "admin@sokei-dramalink.com"; 
+    
+    const adminTemplateParams = {
+        to_email: adminEmail, // ここを固定の管理者に設定
+        from_name: "新規団体作成依頼",
+        details: `団体名：${troupeName}\n代表者：${representativeName}\nメール：${contactEmail}`
+    };
+
+    // 管理者へメールを送信
+    emailjs.send('service_4gfx3qf', 'template_ac080cp', adminTemplateParams)
+        .then(() => {
+            alert("管理者へ通知を送信しました。");
+        });
+}
   }
 
   function handleLogout() {
