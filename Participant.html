@@ -719,14 +719,20 @@ try {
   let editingPerfId = null; 
   let pageHistory = ['calendar'];
 
-  window.addEventListener('DOMContentLoaded', () => {
-    updateFilterDropdown();
-    renderLegend();
-    renderCalendar();
-    renderTroupes(troupesData.filter(t => t.approved));
-    updateAuthUI();
-    updateRegisterFormUI();
-  });
+// 💡 async を追加し、内部で await を使えるようにします
+window.addEventListener('DOMContentLoaded', async () => {
+  
+  // 🌟【最重要】まず最初にクラウドから最新データを強制的に読み込む
+  await loadAllData(); 
+  
+  // データロード完了後にUIを組み立てる
+  updateFilterDropdown();
+  renderLegend();
+  renderCalendar();
+  renderTroupes(troupesData.filter(t => t.approved));
+  updateAuthUI();
+  updateRegisterFormUI();
+});
 
   async function saveAllData() {
     try {
@@ -1319,47 +1325,49 @@ async function submitRequestForm() {
   }
 
   /* 新規登録処理（承認制への移行にともなう修正） */
-  function handleRegisterTroupe() {
-    const name = document.getElementById('reg-troupe-name').value.trim();
-    const univ = document.getElementById('reg-troupe-univ').value;
-    const email = document.getElementById('reg-troupe-email').value.trim();
-    const password = document.getElementById('reg-troupe-password').value.trim();
+// 💡 関数の頭に async を追加
+async function handleRegisterTroupe() {
+  const name = document.getElementById('reg-troupe-name').value.trim();
+  const univ = document.getElementById('reg-troupe-univ').value;
+  const email = document.getElementById('reg-troupe-email').value.trim();
+  const password = document.getElementById('reg-troupe-password').value.trim();
 
-    if (!name || !email || !password) {
-      alert('必須項目をすべて入力してください。');
-      return;
-    }
+  if (!name || !email || !password) {
+    alert('必須項目をすべて入力してください。');
+    return;
+  }
+  if (email === 'admin@sokei-dramalink.com' || troupesData.some(t => t.email === email)) {
+    alert('このメールアドレスは既に登録されているか、使用できません。');
+    return;
+  }
 
-    if (email === 'admin@sokei-dramalink.com' || troupesData.some(t => t.email === email)) {
-      alert('このメールアドレスは既に登録されているか、使用できません。');
-      return;
-    }
+  const colors = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
+  const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
-    const colors = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  const newTroupe = {
+    id: 'tr_' + Date.now(),
+    name, univ, est: '2026年', count: '0公演', accept: true, cls: randomColor,
+    statusText: '折り込み受付中', statusCls: 'status-open',
+    email, password, approved: false
+  };
 
-    const newTroupe = {
-      id: 'tr_' + Date.now(),
-      name, univ, est: '2026年', count: '0公演', accept: true,
-      cls: randomColor, statusText: '折り込み受付中', statusCls: 'status-open',
-      email, password,
-      approved: false // ⭕ 初期状態は未承認に設定
-    };
+  troupesData.push(newTroupe);
 
-    troupesData.push(newTroupe);
-    saveAllData();
-    
-    alert(`劇団「${name}」の登録申請を送信しました！\n管理者（admin@sokei-dramalink.com）による承認が完了するまでしばらくお待ちください。`);
-    
-    // 入力欄のクリア
-    document.getElementById('reg-troupe-name').value = '';
-    document.getElementById('reg-troupe-email').value = '';
-    document.getElementById('reg-troupe-password').value = '';
-    
-    updateFilterDropdown();
-    renderLegend();
-    updateAuthUI();
-    renderTroupes(troupesData); 
+  // 🌟【修正】クラウドへの保存完了を完全に待機する
+  await saveAllData(); 
+
+  alert(`劇団「${name}」の登録申請を送信しました！\n管理者（admin@sokei-dramalink.com）による承認が完了するまでしばらくお待ちください。`);
+
+  // 入力欄のクリア
+  document.getElementById('reg-troupe-name').value = '';
+  document.getElementById('reg-troupe-email').value = '';
+  document.getElementById('reg-troupe-password').value = '';
+
+  updateFilterDropdown();
+  renderLegend();
+  updateAuthUI();
+  renderTroupes(troupesData);
+}
 
     // 新規団体作成依頼の関数内
 async function submitNewTroupeRequest() {
@@ -1380,7 +1388,6 @@ async function submitNewTroupeRequest() {
             alert("管理者へ通知を送信しました。");
         });
 }
-  }
 
   function handleLogout() {
     currentUser = null;
