@@ -1344,19 +1344,25 @@ async function handleRegisterTroupe() {
   const colors = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
   const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
+// 変更後：
   const newTroupe = {
     id: 'tr_' + Date.now(),
     name, univ, est: '2026年', count: '0公演', accept: true, cls: randomColor,
     statusText: '折り込み受付中', statusCls: 'status-open',
-    email, password, approved: false
+    email, password, approved: true // 💡 最初から「承認済み（true）」にする
   };
 
   troupesData.push(newTroupe);
+  saveAllData();
 
-  // 🌟【修正】クラウドへの保存完了を完全に待機する
-  await saveAllData(); 
+  // 💡 登録完了と同時に自動でログイン状態（currentUser）にする
+  currentUser = newTroupe;
+  localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
 
-  alert(`劇団「${name}」の登録申請を送信しました！\n管理者（admin@sokei-dramalink.com）による承認が完了するまでしばらくお待ちください。`);
+  alert(`劇団「${name}」の登録が完了しました！マイページへログインしました。`);
+  
+  // 💡 登録完了後、自動的にマイページ（dashboard）を表示させる
+  showPage('dashboard');
 
   // 入力欄のクリア
   document.getElementById('reg-troupe-name').value = '';
