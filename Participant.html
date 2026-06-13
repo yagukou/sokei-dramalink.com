@@ -6,6 +6,8 @@
   <title>ビラネットワーク｜早慶演劇祭</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <!-- Supabase CDNを読み込む -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     (function() {
       // 必要に応じて emailjs.init("YOUR_PUBLIC_KEY") をここに記述してください
@@ -736,7 +738,15 @@
   </div>
 </div>
 
-<script>
+
+  <script>
+const SUPABASE_URL = 'https://azdvqobryrpxriftaale.supabase.co/rest/v1/'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6ZHZxb2JyeXJweHJpZnRhYWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzIzNjYsImV4cCI6MjA5NjkwODM2Nn0.tLopMSF670ok2jXHq6_G-MYtIajdCrxmsQ4TDIv5u_A'; // 例: eyJhbGciOiJIUzI1NiI...（長い文字列 ）
+
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+console.log('Supabaseクライアントが初期化されました。');
+  
   // ===================== CORE DATABASE (DEMO DATA) =====================
   const DEFAULT_TROUPES = [
     { 
@@ -847,43 +857,105 @@
   ];
 
   // ===================== STATE STATE STATE =====================
-  let troupesData = [];
-  let performancesData = [];
-  let incomingRequests = [];
-  let currentUser = null;
+ // Supabaseクライアントの初期化（ステップ2で追加したコード）
+const SUPABASE_URL = 'https://azdvqobryrpxriftaale.supabase.co/rest/v1/';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6ZHZxb2JyeXJweHJpZnRhYWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzIzNjYsImV4cCI6MjA5NjkwODM2Nn0.tLopMSF670ok2jXHq6_G-MYtIajdCrxmsQ4TDIv5u_A';
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  let currentDate = new Date(2026, 5, 13); // デフォルト固定 2026年6月13日
-  let selectedPerformanceId = null;
-  let pageHistory = [];
+// データを保持するグローバル変数（初期値は空配列またはnullに）
+let troupesData = [];
+let performancesData = [];
+let incomingRequests = [];
+let currentUser = null; // ログインユーザー情報
+
+// その他のグローバル変数や定数はそのまま
+const currentMonth = new Date();
+let selectedPerformanceId = null; // 以前のselectedPerfIdから変更
+let editingPerfId = null;
+let pageHistory = [];
+
+// デフォルトデータは、Supabaseにデータがない場合のフォールバックとして残しておくか、
+// Supabaseに初期データを投入した後は削除しても良い
+const DEFAULT_TROUPES = [
+  // ... 既存のデフォルトデータ
+];
+const DEFAULT_PERFORMANCES = [
+  // ... 既存のデフォルトデータ
+];
+const DEFAULT_REQUESTS = [
+  // ... 既存のデフォルトデータ
+];
 
   // ===================== APP INITIALIZATION =====================
-  function initApp() {
-    if (!localStorage.getItem('troupesData_v4')) {
-      localStorage.setItem('troupesData_v4', JSON.stringify(DEFAULT_TROUPES));
-      localStorage.setItem('performancesData_v4', JSON.stringify(DEFAULT_PERFORMANCES));
-      localStorage.setItem('incomingRequests_v4', JSON.stringify(DEFAULT_REQUESTS));
-      localStorage.setItem('currentUser_v4', JSON.stringify(null));
-    }
+ // ページ初期化関数をSupabaseからデータを読み込むように変更
+async function initApp() {
+  // Supabaseからデータを読み込む
+  await loadAllData();
 
-    troupesData = JSON.parse(localStorage.getItem('troupesData_v4'));
-    performancesData = JSON.parse(localStorage.getItem('performancesData_v4'));
-    incomingRequests = JSON.parse(localStorage.getItem('incomingRequests_v4'));
-    currentUser = JSON.parse(localStorage.getItem('currentUser_v4'));
+  // UIの初期描画
+  updateFilterDropdown();
+  renderLegend();
+  renderTroupes(troupesData);
+  renderCalendar();
+  updateAuthUI();
+  showPage('calendar'); // 初期表示ページ
+}
 
-    updateFilterDropdown();
-    renderLegend();
-    renderCalendar();
-    renderTroupes(troupesData);
-    updateAuthUI();
+// データをSupabaseから読み込む新しい関数
+async function loadAllData() {
+  try {
+    // 劇団情報をSupabaseから取得
+    const { data: troupes, error: troupesError } = await supabase
+      .from('troupes')
+      .select('*');
+    if (troupesError) throw troupesError;
+    troupesData = troupes;
+
+    // 公演情報をSupabaseから取得
+    const { data: performances, error: performancesError } = await supabase
+      .from('performances')
+      .select('*');
+    if (performancesError) throw performancesError;
+    performancesData = performances;
+
+    // 折り込み依頼情報をSupabaseから取得
+    const { data: requests, error: requestsError } = await supabase
+      .from('requests')
+      .select('*');
+    if (requestsError) throw requestsError;
+    incomingRequests = requests;
+
+    // ログインユーザー情報の復元（必要であれば）
+    // 今回は認証システムを無視するため、currentUserはログイン時に設定されると仮定
+    // もしセッション管理を行う場合は、Supabase Authの機能を利用する
+
+    console.log('Supabaseからデータを読み込みました。');
+
+  } catch (error) {
+    console.error('データの読み込み中にエラーが発生しました:', error.message);
+    alert('データの読み込みに失敗しました。インターネット接続を確認してください。');
+    // エラー時はデフォルトデータを表示するなどのフォールバック処理
+    troupesData = [...DEFAULT_TROUPES];
+    performancesData = [...DEFAULT_PERFORMANCES];
+    incomingRequests = [...DEFAULT_REQUESTS];
   }
+}
 
-  function saveAllData() {
-    localStorage.setItem('troupesData_v4', JSON.stringify(troupesData));
-    localStorage.setItem('performancesData_v4', JSON.stringify(performancesData));
-    localStorage.setItem('incomingRequests_v4', JSON.stringify(incomingRequests));
-    localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
-  }
+// saveAllData関数は、各データが更新されるたびに呼び出されていますが、
+// Supabaseではテーブルごとに操作を行うため、この関数は不要になるか、
+// 各データタイプごとの保存関数に分割されます。基本的には削除して問題ありません。
+// もし残す場合は、localStorageへの保存処理を削除してください。
+function saveAllData() {
+  // localStorage.setItem('troupesData_v4', JSON.stringify(troupesData));
+  // localStorage.setItem('performancesData_v4', JSON.stringify(performancesData));
+  // localStorage.setItem('incomingRequests_v4', JSON.stringify(incomingRequests));
+  // localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
+  console.log('saveAllData: Supabase連携ではこの関数は通常使用しません。');
+}
 
+// ページ読み込み時に実行
+// 進行中1html.txt の 1706行目付近
+window.onload = initApp;
   // ===================== ROUTING & UTILS =====================
   function showPage(pageId, pushToHistory = true) {
     const activePage = document.querySelector('.page.active');
@@ -1298,57 +1370,104 @@
   }
 
   // 💡 リクエスト送信処理に住所と受け渡し方法の抽出・格納を追加
-  function submitRequestForm() {
-    const fromName = document.getElementById('req-from-name').value.trim();
-    const fromEmail = document.getElementById('req-from-email').value.trim();
-    const address = document.getElementById('req-address').value.trim(); // 住所（任意）
-    const copies = parseInt(document.getElementById('req-copies').value);
-    const size = document.getElementById('req-size').value;
-    const notes = document.getElementById('req-notes').value;
+  async function submitRequestForm() {
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (!perf) return;
 
-    // ラジオボタンの選択値を取得（対面 or 郵送）
-    const radioMethods = document.getElementsByName('req-delivery-method');
-    let deliveryMethod = "対面";
-    for (let i = 0; i < radioMethods.length; i++) {
-      if (radioMethods[i].checked) {
-        deliveryMethod = radioMethods[i].value;
-        break;
-      }
+  const fromName = document.getElementById('req-from-name').value.trim();
+  const fromEmail = document.getElementById('req-from-email').value.trim();
+  const address = document.getElementById('req-address').value.trim(); // 住所（任意）
+  const copies = parseInt(document.getElementById('req-copies').value);
+  const size = document.getElementById('req-size').value;
+  const notes = document.getElementById('req-notes').value;
+
+  // ラジオボタンの選択値を取得（対面 or 郵送）
+  const radioMethods = document.getElementsByName('req-delivery-method');
+  let deliveryMethod = "対面";
+  for (let i = 0; i < radioMethods.length; i++) {
+    if (radioMethods[i].checked) {
+      deliveryMethod = radioMethods[i].value;
+      break;
     }
-
-    if (!fromName || !fromEmail || !copies) {
-      alert('必須項目(*)を入力してください。');
-      return;
-    }
-
-    const perf = performancesData.find(p => p.id === selectedPerformanceId);
-    if (!perf) return;
-
-    const newReq = {
-      id: "req-" + Date.now(),
-      perfId: selectedPerformanceId,
-      toTroupeId: perf.troupeId,
-      fromName,
-      fromEmail,
-      address,          // 💡 追加
-      deliveryMethod,   // 💡 追加
-      copies,
-      size,
-      notes,
-      status: "pending",
-      timestamp: new Date().toLocaleString()
-    };
-
-    incomingRequests.push(newReq);
-    saveAllData();
-
-    document.getElementById('success-banner').classList.add('show');
-    document.getElementById('request-form-body').style.display = 'none';
-
-    setTimeout(() => {
-      openPerformanceDetail(selectedPerformanceId);
-    }, 1800);
   }
+
+  if (!fromName || !fromEmail || isNaN(copies) || copies <= 0) {
+    alert('必須項目をすべて入力し、部数は正しく入力してください。');
+    return;
+  }
+
+  const newRequest = {
+    id: 'req_' + Date.now(),
+    perfId: selectedPerformanceId,
+    toTroupeId: perf.troupeId,
+    fromName: fromName, // fromTroupeからfromNameに変更
+    fromEmail: fromEmail, // 追加
+    address: address, // 追加
+    deliveryMethod: deliveryMethod, // 追加
+    copies: copies,
+    size: size,
+    notes: notes,
+    timestamp: new Date().toLocaleString('ja-JP'), // 日付形式を調整
+    status: 'pending'
+  };
+
+  try {
+    // Supabaseに新しい依頼を挿入
+    const { data, error } = await supabase
+      .from('requests')
+      .insert([newRequest]);
+
+    if (error) throw error;
+
+    // 公演の現在の折り込み枚数を更新
+    const updatedCurrent = perf.current + copies;
+    const { error: updatePerfError } = await supabase
+      .from('performances')
+      .update({ current: updatedCurrent })
+      .eq('id', selectedPerformanceId);
+    
+    if (updatePerfError) throw updatePerfError;
+
+    // グローバル変数も更新
+    incomingRequests.push(newRequest);
+    perf.current = updatedCurrent; // グローバル変数内の公演情報も更新
+
+    // EmailJSの送信処理はそのまま残す（非同期で実行）
+    const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
+    const templateParams = {
+      to_email: targetTroupe ? targetTroupe.email : '',
+      from_name: fromName,
+      reply_to: fromEmail,
+      copies: copies,
+      size: size,
+      notes: notes || '特になし',
+      delivery_method: deliveryMethod,
+      address: address || 'なし'
+    };
+    const serviceID = 'service_4gfx3qf';
+    const templateID = 'template_rzattmh';
+
+    if (typeof emailjs !== 'undefined' && emailjs.send) {
+      emailjs.send(serviceID, templateID, templateParams)
+        .then(function(response) {
+          console.log('EmailJS Success!', response.status, response.text);
+          finalizeRequestFormSuccess();
+        }, function(error) {
+          console.error('EmailJS Error:', error);
+          alert('通知メール送信に一部エラーが出ましたが、システム内の依頼ボックスには確実に保存されました。');
+          finalizeRequestFormSuccess();
+        });
+    } else {
+      finalizeRequestFormSuccess();
+    }
+
+    await loadAllData(); // 全データを再読み込みしてUIを最新化
+
+  } catch (error) {
+    console.error('折り込み依頼送信エラー:', error.message);
+    alert('折り込み依頼の送信に失敗しました。');
+  }
+}
 
   // ===================== REGISTER & EDIT PERFORMANCE =====================
   function prepareRegisterPage() {
@@ -1380,41 +1499,60 @@
     document.getElementById('new-perf-desc').value = '';
   }
 
-  function handleRegisterPerformance() {
-    const title = document.getElementById('new-perf-title').value.trim();
-    const start = document.getElementById('new-perf-start').value;
-    const end = document.getElementById('new-perf-end').value;
-    const acceptStart = document.getElementById('new-perf-accept-start').value;
-    const acceptEnd = document.getElementById('new-perf-accept-end').value;
-    const venue = document.getElementById('new-perf-venue').value.trim();
-    const maxQuota = parseInt(document.getElementById('new-perf-quota').value);
-    const desc = document.getElementById('new-perf-desc').value;
+  async function handleRegisterPerformance() {
+  if (!currentUser) {
+    alert('公演を登録するにはログインが必要です。');
+    return;
+  }
 
-    if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || !maxQuota) {
-      alert('必須マークの項目をすべて正しく入力してください。');
-      return;
+  const title = document.getElementById('perf-title').value.trim();
+  const start = document.getElementById('perf-start-date').value;
+  const end = document.getElementById('perf-end-date').value;
+  const acceptStart = document.getElementById('perf-accept-start-date').value;
+  const acceptEnd = document.getElementById('perf-accept-end-date').value;
+  const venue = document.getElementById('perf-venue').value.trim();
+  const maxQuota = parseInt(document.getElementById('perf-max-quota').value);
+  const desc = document.getElementById('perf-desc').value.trim();
+  const email = document.getElementById('perf-contact-email').value.trim();
+
+  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || isNaN(maxQuota) || !email) {
+    alert('必須項目をすべて入力してください。');
+    return;
+  }
+
+  const newPerfData = {
+    troupeId: currentUser.id,
+    title, start, end, acceptStart, acceptEnd, venue, maxQuota, current: 0, desc, email
+  };
+
+  try {
+    let result;
+    if (editingPerfId) {
+      // 既存公演の更新
+      result = await supabase
+        .from('performances')
+        .update(newPerfData)
+        .eq('id', editingPerfId);
+    } else {
+      // 新規公演の登録
+      newPerfData.id = 'perf_' + Date.now(); // 新規登録時のみIDを生成
+      result = await supabase
+        .from('performances')
+        .insert([newPerfData]);
     }
 
-    const newPerf = {
-      id: "perf-" + Date.now(),
-      troupeId: currentUser.id,
-      title,
-      start,
-      end,
-      acceptStart,
-      acceptEnd,
-      venue,
-      maxQuota,
-      desc,
-      email: currentUser.email
-    };
+    if (result.error) throw result.error;
 
-    performancesData.push(newPerf);
-    saveAllData();
+    alert(editingPerfId ? '公演情報を更新しました！' : '新しい公演を登録しました！');
+    editingPerfId = null; // 編集モードを終了
+    await loadAllData(); // 全データを再読み込みしてUIを最新化
+    showPage('calendar'); // カレンダーページへ遷移
 
-    alert('新しい公演スケジュールを登録し、全体カレンダーに反映しました。');
-    showPage('calendar');
+  } catch (error) {
+    console.error('公演登録/更新エラー:', error.message);
+    alert('公演の登録または更新に失敗しました。');
   }
+}
 
   function startEditPerformance() {
     const perf = performancesData.find(p => p.id === selectedPerformanceId);
@@ -1475,67 +1613,106 @@
     }
   }
 
-  function handleRegisterTroupe() {
-    const name = document.getElementById('reg-troupe-name').value.trim();
-    const affiliation = document.getElementById('reg-troupe-univ').value;
-    const email = document.getElementById('reg-troupe-email').value.trim();
-    const password = document.getElementById('reg-troupe-password').value;
+  async function handleRegisterTroupe() {
+  const name = document.getElementById('reg-troupe-name').value.trim();
+  const affiliation = document.getElementById('reg-troupe-univ').value; // univからaffiliationに変更
+  const email = document.getElementById('reg-troupe-email').value.trim();
+  const password = document.getElementById('reg-troupe-password').value.trim();
+  const description = document.getElementById('reg-troupe-desc').value.trim();
+  const homepage = document.getElementById('reg-troupe-hp').value.trim();
+  const sns = document.getElementById('reg-troupe-sns').value.trim();
+
+  if (!name || !email || !password) {
+    alert('必須項目をすべて入力してください。');
+    return;
+  }
+
+  // 既存メールアドレスのチェック（Supabase側でもユニーク制約を設定済み）
+  const { data: existingTroupe, error: checkError } = await supabase
+    .from('troupes')
+    .select('id')
+    .eq('email', email);
+
+  if (checkError) {
+    console.error('既存劇団チェックエラー:', checkError.message);
+    alert('劇団登録中にエラーが発生しました。');
+    return;
+  }
+  if (existingTroupe && existingTroupe.length > 0) {
+    alert('このメールアドレスは既に登録されています。');
+    return;
+  }
+
+  const newId = 'tr_' + Date.now(); // ユニークIDを生成
+  const newTroupe = {
+    id: newId,
+    name,
+    affiliation,
+    email,
+    password, // パスワードは本来ハッシュ化すべき
+    description,
+    homepage,
+    sns
+  };
+
+  // Supabaseに新しい劇団を挿入
+  const { data, error } = await supabase
+    .from('troupes')
+    .insert([newTroupe]);
+
+  if (error) {
+    console.error('劇団登録エラー:', error.message);
+    alert('劇団の登録に失敗しました。');
+    return;
+  }
+
+  // 成功したらグローバル変数も更新し、UIをリフレッシュ
+  troupesData.push(newTroupe);
+  currentUser = newTroupe; // 登録と同時にログイン状態に
+  
+  alert(`劇団「${name}」のアカウントを作成し、ログインしました！`);
+  await loadAllData(); // 全データを再読み込みしてUIを最新化
+  updateAuthUI();
+  showPage('mypage');
+}
+
+  async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+
+  if (!email || !pass) {
+    alert('メールアドレスとパスワードを入力してください');
+    return;
+  }
+
+  // Supabaseからメールアドレスに一致する劇団情報を取得
+  const { data: foundTroupes, error } = await supabase
+    .from('troupes')
+    .select('*')
+    .eq('email', email);
+
+  if (error) {
+    console.error('ログインエラー:', error.message);
+    alert('ログイン中にエラーが発生しました。');
+    return;
+  }
+
+  if (foundTroupes && foundTroupes.length > 0) {
+    const found = foundTroupes[0];
+    if (found.password && found.password === pass) {
+      currentUser = found;
+      alert(`劇団「${found.name}」としてログインしました。`);
+      await loadAllData(); // ログイン後、念のため全データを再読み込み
+      updateAuthUI();
+      showPage('mypage'); // ログイン後マイページへ
+    } else {
+      alert('パスワードが間違っています。');
+    }
+  } else {
+    alert('登録されていないメールアドレスです。');
+  }
+}
     
-    const description = document.getElementById('reg-troupe-desc').value.trim();
-    const homepage = document.getElementById('reg-troupe-hp').value.trim();
-    const sns = document.getElementById('reg-troupe-sns').value.trim();
-
-    if (!name || !email || !password) {
-      alert('劇団名、メールアドレス、パスワードは必須入力項目です。');
-      return;
-    }
-
-    if (troupesData.some(t => t.email === email)) {
-      alert('このメールアドレスは既に他の劇団アカウントで登録されています。');
-      return;
-    }
-
-    const newId = "troupe-" + Date.now();
-    const newTroupe = {
-      id: newId,
-      name,
-      affiliation,
-      email,
-      password,
-      description,
-      homepage,
-      sns
-    };
-
-    troupesData.push(newTroupe);
-    currentUser = newTroupe;
-    saveAllData();
-
-    alert(`劇団「${name}」のアカウントを作成し、ログインしました！`);
-    updateFilterDropdown();
-    renderLegend();
-    renderTroupes(troupesData);
-    updateAuthUI();
-    showPage('mypage');
-  }
-
-  function handleLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass = document.getElementById('login-password').value;
-
-    const found = troupesData.find(t => t.email === email && t.password === pass);
-    if (!found) {
-      alert('メールアドレスまたはパスワードが正しくありません。');
-      return;
-    }
-
-    currentUser = found;
-    saveAllData();
-    alert(`劇団「${found.name}」としてログインしました。`);
-    updateAuthUI();
-    renderMyPage();
-  }
-
   function handleLogout() {
     currentUser = null;
     saveAllData();
@@ -1633,49 +1810,98 @@
     });
   }
 
-  function processRequest(reqId, newStatus) {
-    const req = incomingRequests.find(r => r.id === reqId);
-    if (!req) return;
+ async function processRequest(reqId, newStatus) {
+  const req = incomingRequests.find(r => r.id === reqId);
+  if (!req) return;
 
-    if (newStatus === 'accepted') {
-      const targetPerf = performancesData.find(p => p.id === req.perfId);
-      if (targetPerf) {
-        const currentTotal = incomingRequests
-          .filter(r => r.perfId === req.perfId && (r.status === 'accepted' || r.status === 'pending'))
-          .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-        
-        if (currentTotal > targetPerf.maxQuota) {
-          if (!confirm('注意: この申請を承認すると、設定されている上限受付部数枠を超過します。本当に承認しますか？')) {
-            return;
-          }
+  if (newStatus === 'accepted') {
+    const targetPerf = performancesData.find(p => p.id === req.perfId);
+    if (targetPerf) {
+      const currentTotal = incomingRequests
+        .filter(r => r.perfId === req.perfId && (r.status === 'accepted' || r.status === 'pending'))
+        .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
+      
+      // 現在のコードの超過確認ロジックを維持
+      if (currentTotal > targetPerf.maxQuota) {
+        if (!confirm('注意: この申請を承認すると、設定されている上限受付部数枠を超過します。本当に承認しますか？')) {
+          return;
         }
       }
     }
+  }
 
+  try {
+    const { data, error } = await supabase
+      .from('requests')
+      .update({ status: newStatus })
+      .eq('id', reqId);
+
+    if (error) throw error;
+
+    // グローバル変数も更新
     req.status = newStatus;
-    saveAllData();
-    renderMyPage();
+
+    alert(newStatus === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否（辞退）しました。');
+    await loadAllData(); // 全データを再読み込みしてUIを最新化
+    // renderMyPage(); // loadAllData内でUI更新が行われるため不要、または必要に応じて呼び出し
+
+  } catch (error) {
+    console.error('依頼応答エラー:', error.message);
+    alert('依頼の応答中にエラーが発生しました。');
+  }
+}
+
+ async function deleteTroupeAccount() {
+  if (!currentUser) {
+    alert('ログインしていません。');
+    return;
   }
 
-  function deleteTroupeAccount() {
-    if (confirm('【警告】本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報や、他団体からの申請履歴も一緒にすべてブラウザから削除されます）')) {
-      const id = currentUser.id;
-      troupesData = troupesData.filter(t => t.id !== id);
-      performancesData = performancesData.filter(p => p.troupeId !== id);
-      incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
-      
-      currentUser = null;
-      saveAllData();
-      alert('アカウント情報をすべて完全に削除しました。');
-      
-      updateFilterDropdown();
-      renderLegend();
-      renderTroupes(troupesData);
-      updateAuthUI();
-      renderCalendar();
-      showPage('troupes');
-    }
+  if (!confirm('【警告】本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報や、他団体からの申請履歴も一緒にすべて削除されます）')) {
+    return;
   }
+
+  const id = currentUser.id;
+
+  try {
+    // 関連する公演情報を削除
+    const { error: perfError } = await supabase
+      .from('performances')
+      .delete()
+      .eq('troupeId', id);
+    if (perfError) throw perfError;
+
+    // 関連する依頼情報を削除
+    const { error: reqError } = await supabase
+      .from('requests')
+      .delete()
+      .eq('toTroupeId', id);
+    if (reqError) throw reqError;
+
+    // 劇団自体を削除
+    const { error: troupeError } = await supabase
+      .from('troupes')
+      .delete()
+      .eq('id', id);
+    if (troupeError) throw troupeError;
+
+    // グローバル変数からも削除
+    troupesData = troupesData.filter(t => t.id !== id);
+    performancesData = performancesData.filter(p => p.troupeId !== id);
+    incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
+    
+    currentUser = null;
+    alert('アカウント情報をすべて完全に削除しました。');
+    
+    await loadAllData(); // 全データを再読み込みしてUIを最新化
+    updateAuthUI();
+    showPage('troupes');
+
+  } catch (error) {
+    console.error('劇団削除エラー:', error.message);
+    alert('劇団の削除中にエラーが発生しました。');
+  }
+}
 
   function resetAllDataToDefault() {
     if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期劇団・公演データ（デモデータ）の状態に復元しますか？\n作成したアカウントや申請履歴は削除されます。')) {
