@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google" content="notranslate">
+    
+    <!-- ファビコン設定（画像ファイル名に合わせて変更してください） -->
+    <link rel="icon" href="背景透過.png" type="image/png" />
 
     <style>
     /* --- 全体設定：明朝体をベースに格式高さを演出 --- */
@@ -15,7 +18,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* --- 【維持】ヘッダー：赤背景・チケット左配置 --- */
+    /* --- ヘッダー：赤背景・チケット左配置 --- */
     header {
       display: flex;
       justify-content: space-between;
@@ -71,16 +74,17 @@
     }
 
     .logo-main {
-      font-size: 22px;
+      font-size: 24px;
       font-weight: bold;
       letter-spacing: 3px;
       color: #ffffff; 
     }
 
     .logo-sub {   
-      font-size: 14px;   
+      font-size: 13px;   
       letter-spacing: 2px;
       color: #d4af37; 
+      margin-top: 2px;
     }
 
     a {
@@ -120,7 +124,7 @@
       transform: translateY(-3px);
     }
 
-    /* 【維持】スライダーエリア */
+    /* スライダーエリア */
     .slider {
       position: relative;
       width: 100%;
@@ -193,11 +197,7 @@
       z-index: 2;
     }
 
-    /* --------------------------------------------------
-       ✨ ここから劇団四季・宝塚風の高級デザインアップデート
-    ----------------------------------------------------- */
-
-    /* セクション共通見出し：宝塚・四季オマージュの上品なタイポグラフィ */
+    /* 劇団四季・宝塚風の高級デザイン設定 */
     .section-head {
       text-align: center;
       margin-bottom: 70px;
@@ -222,7 +222,6 @@
       letter-spacing: 2px;
     }
 
-    /* 見出しの下に繊細なゴールドの飾り線 */
     .section-head::after {
       content: "";
       display: block;
@@ -232,7 +231,7 @@
       margin: 20px auto 0;
     }
 
-    /* ① トップニュース：洗練されたインフォメーションバー */
+    /* ① トップニュース */
     .top-news {
       display: flex;
       align-items: center;
@@ -259,7 +258,7 @@
       color: #ddd;
     }
 
-    /* ② スケジュール：漆黒の舞台をイメージした厳かなデザイン */
+    /* ② スケジュール */
     .schedule-section {
       background: #0b0b0b;
       padding: 120px 10%;
@@ -279,7 +278,7 @@
     }
 
     .schedule-item:hover {
-      background: rgba(197, 160, 89, 0.03); /* ほんのりゴールドに輝く */
+      background: rgba(197, 160, 89, 0.03); 
     }
 
     .schedule-date {
@@ -311,7 +310,6 @@
       font-weight: 500;
     }
 
-    /* 四季・宝塚特有の「会場」や「状態」のラベル分け */
     .schedule-meta {
       display: flex;
       gap: 15px;
@@ -333,9 +331,9 @@
       font-weight: bold;
     }
 
-    /* ③ ガイド（ご観劇の際に）：劇場の案内パンフレット風オフホワイト */
+    /* ③ ガイド */
     .guide-section {
-      background: #fbf9f6; /* 高級感のある極薄のクラシックホワイト */
+      background: #fbf9f6; 
       color: #1a1a1a;
       padding: 120px 10%;
     }
@@ -354,10 +352,10 @@
     .guide-card {
       background: #ffffff;
       padding: 45px 35px;
-      border-radius: 0px; /* あえて角丸にせず、劇団四季のような凛とした直線美に */
+      border-radius: 0px; 
       color: #1a1a1a;
       box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-      border-top: 3px solid #c5a059; /* 上部にゴールドの細いライン */
+      border-top: 3px solid #c5a059; 
       transition: 0.3s;
     }
 
@@ -381,7 +379,7 @@
       margin: 0;
     }
 
-    /* ④ ニュースセクション：クラシックホテルや劇場の掲示板のような美しさ */
+    /* ④ ニュースセクション */
     .news-section {
       background: #ffffff;
       color: #1a1a1a;
@@ -420,7 +418,6 @@
       font-family: "Times New Roman", serif;
     }
 
-    /* 宝塚風のニュースカテゴリタグ */
     .news-category {
       font-size: 11px;
       padding: 3px 10px;
@@ -457,7 +454,7 @@
       transform: translateX(8px);
     }
 
-    /* ⑤ メディア（ギャラリー）：大迫力の舞台フォトを美しく切り取るフレーム */
+    /* ⑤ メディア（ギャラリー） */
     .media-section {
       background: #0b0b0b;
       padding: 120px 10%;
@@ -491,7 +488,6 @@
       height: 340px;
     }
 
-    /* 宝塚・四季の臨場感を出す写真ホバー（じわっと拡大） */
     .media-card img {
       width: 100%;
       height: 100%;
@@ -503,7 +499,6 @@
       transform: scale(1.06);
     }
 
-    /* 写真の上に被せるメディア種別タグ（MOVIE / PHOTO） */
     .media-tag {
       position: absolute;
       top: 20px;
@@ -610,7 +605,7 @@
     .lang-menu div:hover { background: #ddd; }
     .hamburger { display: none; }
 
-    /* レレスポンシブ（スマホ対応） */
+    /* レスポンシブ */
     @media (max-width: 960px) {
       .guide-grid { grid-template-columns: 1fr; gap: 25px; }
       .media-grid { grid-template-columns: 1fr; gap: 35px; }
@@ -685,8 +680,8 @@
       </div>
 
       <a href="index.html" class="logo">
-        <div class="logo-main">ステージリンク</div>
-        <div class="logo-sub">StageLink</div>
+        <div class="logo-main">StageLink</div>
+        <div class="logo-sub">Official Website</div>
       </a>
 
       <div class="menu-right">
@@ -731,12 +726,12 @@
 
     <div class="hero-text">
       <p>StageLink</p>
-      <h1>ステージリンク2026</h1>
+      <h1>StageLink 2026</h1>
     </div>
 
     <section class="top-news">
       <div class="news-label">INFO</div>
-      <div class="news-text">2026.08.10 ステージリンク2026 電子チケット販売受付を開始いたしました</div>
+      <div class="news-text">2026.08.10 StageLink 2026 電子チケット販売受付を開始いたしました</div>
     </section>
 
     <section class="schedule-section">
@@ -798,7 +793,7 @@
         <a href="#" class="news-item">
           <div class="news-date">2026.08.10</div>
           <div class="news-category">チケット</div>
-          <div class="news-title">ステージリンク2026 一般観劇チケット販売開始のお知らせ</div>
+          <div class="news-title">StageLink 2026 一般観劇チケット販売開始のお知らせ</div>
           <div class="news-arrow">→</div>
         </a>
         <a href="#" class="news-item">
@@ -837,7 +832,7 @@
             <img src="media2.jpg" alt="PV動画">
           </div>
           <div class="media-text">
-            <h3>【公式PV】ステージリンク2026 開幕予告プロモーション映像</h3>
+            <h3>【公式PV】StageLink 2026 開幕予告プロモーション映像</h3>
           </div>
         </a>
       </div>
@@ -855,7 +850,7 @@
           <img src="instagram.png" alt="Instagram">
         </a>
       </div>
-      <div class="footer-copy">© 2026 ステージリンク / StageLink. All Rights Reserved.</div>
+      <div class="footer-copy">© 2026 StageLink. All Rights Reserved.</div>
     </footer>
 
     <script>
