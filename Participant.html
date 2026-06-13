@@ -736,6 +736,9 @@ gap: 4px;
      JavaScript: 単一の <script> ブロック（重複なし・Supabase統合版）
      ===================================================================== -->
 <script>
+// ===================== EMAILJS 初期化 =====================
+emailjs.init("G7zBiW5JvckByX5DB");
+
 // ===================== SUPABASE 初期化 =====================
 // 【修正1】CDN版は window.supabase にモジュールが展開される。
 //           createClient を分割代入で取り出し、クライアントは別名 db に格納して
@@ -1204,17 +1207,20 @@ async function submitRequestForm() {
 
     incomingRequests.push(newRequest);
 
-    // EmailJS通知
-    const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
-    const templateParams = {
-      to_email: targetTroupe ? targetTroupe.email : '',
-      from_name: fromName, reply_to: fromEmail,
-      copies, size, notes: notes || '特になし',
-      delivery_method: deliveryMethod, address: address || 'なし'
-    };
-    if (typeof emailjs !== 'undefined' && emailjs.send) {
-      emailjs.send('service_4gfx3qf', 'template_rzattmh', templateParams)
-        .then(() => {}, () => { alert('通知メール送信に一部エラーが出ましたが、依頼ボックスには保存されました。'); });
+    // EmailJS通知（未設定・エラーでもメイン処理に影響しないよう独立したtry-catchで囲む）
+    try {
+      const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
+      const templateParams = {
+        to_email: targetTroupe ? targetTroupe.email : '',
+        from_name: fromName, reply_to: fromEmail,
+        copies, size, notes: notes || '特になし',
+        delivery_method: deliveryMethod, address: address || 'なし'
+      };
+      if (typeof emailjs !== 'undefined' && typeof emailjs.send === 'function') {
+        await emailjs.send('service_4gfx3qf', 'template_rzattmh', templateParams);
+      }
+    } catch (emailError) {
+      console.warn('EmailJS通知スキップ（依頼データは保存済み）:', emailError);
     }
 
     document.getElementById('success-banner').classList.add('show');
@@ -1222,8 +1228,8 @@ async function submitRequestForm() {
 
     setTimeout(() => { openPerformanceDetail(selectedPerformanceId); }, 1800);
   } catch (error) {
-    console.error('折り込み依頼送信エラー:', error.message);
-    alert('折り込み依頼の送信に失敗しました。');
+    console.error('折り込み依頼送信エラー:', error);
+    alert('折り込み依頼の送信に失敗しました: ' + (error.message || error.details || JSON.stringify(error)));
   }
 }
 
