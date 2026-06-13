@@ -1,1143 +1,951 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ビラネットワーク｜早慶演劇祭</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-  <script>
-    (function() {
-      // 必要に応じて emailjs.init("YOUR_PUBLIC_KEY") をここに記述してください
-    })();
-  </script>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ビラネットワーク｜早慶演劇祭</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<!-- Supabase CDNを読み込む -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function() {
+// 必要に応じて emailjs.init("YOUR_PUBLIC_KEY") をここに記述してください
+})();
+</script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --crimson: #8B1A2F;
-      --crimson-light: #C0394F;
-      --crimson-pale: #F9ECEE;
-      --gold: #B8892A;
-      --gold-light: #E8C86A;
-      --ink: #1A1410;
-      --ink-mid: #3D3028;
-      --muted: #7A6E68;
-      --surface: #FDFAF7;
-      --surface2: #F4EEE8;
-      --border: rgba(139,26,47,0.15);
-      --border-neutral: #E2DDD8;
-      --white: #ffffff;
-      --radius-sm: 4px;
-      --radius-md: 8px;
-      --radius-lg: 10px;
-    }
+:root {
+--crimson: #8B1A2F;
+--crimson-light: #C0394F;
+--crimson-pale: #F9ECEE;
+--gold: #B8892A;
+--gold-light: #E8C86A;
+--ink: #1A1410;
+--ink-mid: #3D3028;
+--muted: #7A6E68;
+--surface: #FDFAF7;
+--surface2: #F4EEE8;
+--border: rgba(139,26,47,0.15);
+--border-neutral: #E2DDD8;
+--white: #ffffff;
+--radius-sm: 4px;
+--radius-md: 8px;
+--radius-lg: 10px;
+}
 
-    html, body {
-      height: 100%;
-      font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--ink);
-      background: var(--surface);
-    }
+html, body {
+height: 100%;
+font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
+font-size: 16px;
+line-height: 1.6;
+color: var(--ink);
+background: var(--surface);
+}
 
-    a { color: inherit; text-decoration: none; }
-    button { font-family: inherit; }
-    input, select, textarea { font-family: inherit; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; }
+input, select, textarea { font-family: inherit; }
 
-    /* ===================== NAV ===================== */
-    .nav {
-      background: var(--white);
-      padding: 0 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      box-shadow: 0 2px 12px rgba(26, 20, 16, 0.04);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      height: 64px;
-    }
-    
-    .nav-logo {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--ink);
-      letter-spacing: 0.03em;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .nav-logo i {
-      color: var(--crimson); 
-      font-size: 26px;
-    }
-    .nav-logo span {
-      font-size: 13px;
-      font-weight: 600;
-      background: var(--crimson-pale);
-      color: var(--crimson);
-      padding: 3px 10px;
-      border-radius: 4px;
-      margin-left: 8px;
-      letter-spacing: 0.05em;
-      border: 1px solid rgba(139, 26, 47, 0.15);
-    }
+/* ===================== NAV ===================== */
+.nav {
+background: var(--white);
+padding: 0 2rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+box-shadow: 0 2px 12px rgba(26, 20, 16, 0.04);
+position: sticky;
+top: 0;
+z-index: 100;
+height: 64px;
+}
 
-    .nav-tabs {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin: 0 2rem;
-    }
-    .nav-tab {
-      padding: 8px 16px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--muted);
-      cursor: pointer;
-      border-radius: 20px;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border: none;
-      background: none;
-    }
-    .nav-tab:hover {
-      color: var(--ink);
-      background: var(--surface2);
-    }
-    .nav-tab.active {
-      color: var(--white);
-      background: var(--ink-mid);
-    }
-    .nav-tab i {
-      font-size: 16px;
-    }
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .nav-btn {
-      padding: 8px 16px;
-      font-size: 12px;
-      font-weight: 500;
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      height: 36px;
-    }
-    .nav-btn-primary {
-      border: none;
-      background: var(--crimson);
-      color: var(--white);
-    }
-    .nav-btn-primary:hover {
-      background: var(--crimson-light);
-      transform: translateY(-1px);
-    }
+.nav-logo {
+font-size: 22px;
+font-weight: 700;
+color: var(--ink);
+letter-spacing: 0.03em;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.nav-logo i {
+color: var(--crimson); 
+font-size: 26px;
+}
+.nav-logo span {
+font-size: 13px;
+font-weight: 600;
+background: var(--crimson-pale);
+color: var(--crimson);
+padding: 3px 10px;
+border-radius: 4px;
+margin-left: 8px;
+letter-spacing: 0.05em;
+border: 1px solid rgba(139, 26, 47, 0.15);
+}
 
-    /* ===================== LAYOUT ===================== */
-    .page { display: none; padding: 2rem 1.5rem; max-width: 1100px; margin: 0 auto; }
-    .page.active { display: block; }
-    .page-header { margin-bottom: 1.5rem; }
-    .page-title { font-size: 22px; font-weight: 500; color: var(--ink); }
-    .page-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
-    .back-btn { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--crimson); cursor: pointer; margin-bottom: 1.25rem; background: none; border: none; padding: 0; }
-    .back-btn:hover { color: var(--crimson-light); }
-    .divider { border: none; border-top: 0.5px solid var(--border-neutral); margin: 1.5rem 0; }
+.nav-tabs {
+display: flex;
+gap: 8px;
+align-items: center;
+margin: 0 2rem;
+}
+.nav-tab {
+padding: 8px 16px;
+font-size: 13px;
+font-weight: 500;
+color: var(--muted);
+cursor: pointer;
+border-radius: 20px;
+transition: all 0.2s ease;
+display: flex;
+align-items: center;
+gap: 6px;
+border: none;
+background: none;
+}
+.nav-tab:hover {
+color: var(--ink);
+background: var(--surface2);
+}
+.nav-tab.active {
+color: var(--white);
+background: var(--ink-mid);
+}
+.nav-tab i {
+font-size: 16px;
+}
+.nav-right {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.nav-btn {
+padding: 8px 16px;
+font-size: 12px;
+font-weight: 500;
+border-radius: var(--radius-md);
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 6px;
+transition: all 0.2s ease;
+height: 36px;
+}
+.nav-btn-primary {
+border: none;
+background: var(--crimson);
+color: var(--white);
+}
+.nav-btn-primary:hover {
+background: var(--crimson-light);
+transform: translateY(-1px);
+}
 
-    /* ===================== CALENDAR ===================== */
-    .calendar-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .month-nav { display: flex; align-items: center; gap: 8px; background: var(--surface2); border-radius: var(--radius-md); padding: 6px 12px; border: 0.5px solid var(--border); }
-    .month-nav button { background: none; border: none; cursor: pointer; color: var(--crimson); font-size: 18px; padding: 0 4px; }
-    .month-label { font-size: 15px; font-weight: 500; min-width: 120px; text-align: center; }
-    .cal-filter { padding: 7px 12px; font-size: 13px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); background: var(--white); color: var(--ink); cursor: pointer; }
-    .new-perf-btn { margin-left: auto; padding: 7px 16px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; }
-    .new-perf-btn:hover { background: var(--crimson-light); }
-    
-    .calendar-container {
-      width: 100%;
-      overflow-x: auto;
-      border: 1px solid var(--border-neutral);
-      border-radius: var(--radius-lg);
-      background: var(--border-neutral);
-    }
-    .cal-grid { 
-      display: grid; 
-      grid-template-columns: repeat(7, minmax(120px, 1fr)); 
-      gap: 1px; 
-    }
-    .cal-dow { background: var(--surface2); padding: 10px 4px; text-align: center; font-size: 12px; font-weight: 600; color: var(--muted); }
-    .cal-cell { 
-      background: var(--white); 
-      min-height: 120px; 
-      padding: 8px; 
-      position: relative; 
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .cal-cell.other-month { background: var(--surface2); }
-    .cal-day-num { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-    .cal-cell.today .cal-day-num { color: var(--crimson); font-weight: 600; }
-    .cal-event { font-size: 11px; padding: 3px 6px; border-radius: 4px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-weight: 500; }
-    
-    .legend { display: flex; gap: 16px; margin-top: 1rem; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
-    .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+/* ===================== LAYOUT ===================== */
+.page { display: none; padding: 2rem 1.5rem; max-width: 1100px; margin: 0 auto; }
+.page.active { display: block; }
+.page-header { margin-bottom: 1.5rem; }
+.page-title { font-size: 22px; font-weight: 500; color: var(--ink); }
+.page-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.back-btn { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--crimson); cursor: pointer; margin-bottom: 1.25rem; background: none; border: none; padding: 0; }
+.back-btn:hover { color: var(--crimson-light); }
+.divider { border: none; border-top: 0.5px solid var(--border-neutral); margin: 1.5rem 0; }
 
-    .troupe-a { background: #FFE5E8; color: #8B1A2F; border-left: 3px solid #8B1A2F; }
-    .troupe-b { background: #E5EEF9; color: #1A4A8B; border-left: 3px solid #1A4A8B; }
-    .troupe-c { background: #E5F3EE; color: #1A6B4A; border-left: 3px solid #1A6B4A; }
-    .troupe-d { background: #FFF4E5; color: #8B5A1A; border-left: 3px solid #8B5A1A; }
-    .troupe-e { background: #F0E5F9; color: #5A1A8B; border-left: 3px solid #5A1A8B; }
+/* ===================== CALENDAR ===================== */
+.calendar-controls { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.month-nav { display: flex; align-items: center; gap: 8px; background: var(--surface2); border-radius: var(--radius-md); padding: 6px 12px; border: 0.5px solid var(--border); }
+.month-nav button { background: none; border: none; cursor: pointer; color: var(--crimson); font-size: 18px; padding: 0 4px; }
+.month-label { font-size: 15px; font-weight: 500; min-width: 120px; text-align: center; }
+.cal-filter { padding: 7px 12px; font-size: 13px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); background: var(--white); color: var(--ink); cursor: pointer; }
+.new-perf-btn { margin-left: auto; padding: 7px 16px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 13px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-weight: 500; }
+.new-perf-btn:hover { background: var(--crimson-light); }
 
-    /* ===================== TROUPE LIST ===================== */
-    .search-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .search-input-wrap { position: relative; flex: 1; min-width: 200px; }
-    .search-input-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); }
-    .search-input { width: 100%; padding: 9px 14px 9px 36px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; }
-    .troupe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
-    
-    .troupe-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.25rem; cursor: pointer; position: relative; transition: border-color 0.2s; }
-    .troupe-card:hover { border-color: var(--crimson-light); }
-    .troupe-delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; }
-    .troupe-delete-btn:hover { background: #FEF0F0; color: #A32D2D; transform: scale(1.1); }
-    
-    .troupe-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
-    .troupe-avatar { width: 44px; height: 44px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 500; flex-shrink: 0; }
-    .troupe-name { font-size: 15px; font-weight: 500; }
-    .troupe-univ { font-size: 12px; color: var(--muted); }
-    .status-badge { font-size: 11px; padding: 3px 10px; border-radius: 12px; margin-left: auto; font-weight: 600; flex-shrink: 0; }
-    .status-open { background: #E5F3EE; color: #1A6B4A; }
-    .status-closed { background: #FEF0F0; color: #A32D2D; }
-    .status-soon { background: #FFF4E5; color: #8B5A1A; }
-    .troupe-stats { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); border-top: 0.5px solid var(--border-neutral); padding-top: 8px; margin-top: 8px; }
+.calendar-container {
+width: 100%;
+overflow-x: auto;
+border: 1px solid var(--border-neutral);
+border-radius: var(--radius-lg);
+background: var(--border-neutral);
+}
+.cal-grid { 
+display: grid; 
+grid-template-columns: repeat(7, minmax(120px, 1fr)); 
+gap: 1px; 
+}
+.cal-dow { background: var(--surface2); padding: 10px 4px; text-align: center; font-size: 12px; font-weight: 600; color: var(--muted); }
+.cal-cell { 
+background: var(--white); 
+min-height: 120px; 
+padding: 8px; 
+position: relative; 
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+.cal-cell.other-month { background: var(--surface2); }
+.cal-day-num { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.cal-cell.today .cal-day-num { color: var(--crimson); font-weight: 600; }
+.cal-event { font-size: 11px; padding: 3px 6px; border-radius: 4px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; font-weight: 500; }
 
-    /* ===================== PERF DETAIL ===================== */
-    .perf-detail-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
-    @media (max-width: 768px) { .perf-detail-grid { grid-template-columns: 1fr; } }
-    .perf-main { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.5rem; }
-    .perf-sidebar { display: flex; flex-direction: column; gap: 12px; }
-    .perf-title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 0.75rem; }
-    .perf-title { font-size: 20px; font-weight: 500; }
-    .perf-troupe-link { font-size: 13px; color: var(--crimson); cursor: pointer; display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
-    .perf-desc { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 1rem 0; }
-    .perf-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .perf-meta-label { font-size: 11px; color: var(--muted); margin-bottom: 3px; display: flex; align-items: center; gap: 4px; }
-    .perf-meta-val { font-size: 14px; color: var(--ink); font-weight: 500; }
-    .sidebar-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.25rem; }
-    .sidebar-card-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-    .quota-bar-bg { background: var(--surface2); height: 8px; border-radius: 4px; overflow: hidden; }
-    .quota-bar-fill { background: var(--crimson); height: 100%; transition: width 0.3s ease; }
-    .quota-text { font-size: 11px; color: var(--muted); margin-top: 4px; }
-    .request-btn { width: 100%; padding: 11px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .request-btn:disabled { background: var(--muted); cursor: not-allowed; }
+.legend { display: flex; gap: 16px; margin-top: 1rem; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
 
-    /* ===================== FORMS ===================== */
-    .form-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 680px; }
-    .form-section { margin-bottom: 1.5rem; }
-    .form-section-title { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border-neutral); }
-    .form-row { margin-bottom: 14px; }
-    .form-label { font-size: 13px; margin-bottom: 5px; display: block; }
-    .form-required { color: var(--crimson); margin-left: 2px; }
-    .form-optional { color: var(--muted); margin-left: 4px; font-size: 11px; }
-    .form-input, .form-select, .form-textarea { width: 100%; padding: 8px 12px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; background: var(--white); }
-    .form-textarea { min-height: 80px; resize: vertical; }
-    .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    @media (max-width: 600px) { .form-2col { grid-template-columns: 1fr; } }
-    
-    /* ラジオボタングループのスタイル設定 */
-    .radio-group { display: flex; gap: 20px; margin-top: 6px; }
-    .radio-label { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; font-weight: 500; }
-    .radio-label input[type="radio"] { width: 16px; height: 16px; accent-color: var(--crimson); cursor: pointer; }
+.troupe-a { background: #FFE5E8; color: #8B1A2F; border-left: 3px solid #8B1A2F; }
+.troupe-b { background: #E5EEF9; color: #1A4A8B; border-left: 3px solid #1A4A8B; }
+.troupe-c { background: #E5F3EE; color: #1A6B4A; border-left: 3px solid #1A6B4A; }
+.troupe-d { background: #FFF4E5; color: #8B5A1A; border-left: 3px solid #8B5A1A; }
+.troupe-e { background: #F0E5F9; color: #5A1A8B; border-left: 3px solid #5A1A8B; }
 
-    .submit-row { display: flex; gap: 10px; align-items: center; margin-top: 1.5rem; }
-    .btn-primary { padding: 10px 24px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 7px; }
-    .btn-secondary { padding: 10px 20px; background: var(--surface2); color: var(--ink); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; cursor: pointer; }
-    
-    .success-banner { display: none; background: #E5F3EE; border: 0.5px solid #9FDFC6; border-radius: var(--radius-md); padding: 14px 18px; font-size: 14px; color: #1A6B4A; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
-    .success-banner.show { display: flex; }
+/* ===================== TROUPE LIST ===================== */
+.search-bar { display: flex; gap: 8px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.search-input-wrap { position: relative; flex: 1; min-width: 200px; }
+.search-input-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+.search-input { width: 100%; padding: 9px 14px 9px 36px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; }
+.troupe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
 
-    /* ===================== MY PAGE ===================== */
-    .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
-    .stat-card { border-radius: var(--radius-md); padding: 1rem; }
-    .stat-card-red { background: var(--crimson-pale); border: 0.5px solid rgba(139,26,47,0.2); }
-    .stat-card-neutral { background: var(--surface2); border: 0.5px solid var(--border-neutral); }
-    .stat-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
-    .stat-value { font-size: 24px; font-weight: 500; }
-    .section-title { font-size: 16px; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
-    .section-title i { color: var(--crimson); }
-    
-    .inbox-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
-    .inbox-item { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
-    .inbox-item.unread { border-left: 3px solid var(--crimson); }
-    .inbox-body { flex: 1; min-width: 0; }
-    .inbox-from { font-size: 13px; font-weight: 500; }
-    .inbox-preview { font-size: 13px; color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .inbox-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-    .inbox-copies { font-size: 12px; font-weight: 500; color: var(--crimson); background: var(--crimson-pale); padding: 2px 8px; border-radius: 3px; }
-    .inbox-actions { display: flex; gap: 6px; flex-shrink: 0; }
-    .inbox-btn { padding: 5px 12px; font-size: 12px; border-radius: var(--radius-sm); cursor: pointer; border: 0.5px solid transparent; }
-    .inbox-btn-accept { background: #E5F3EE; color: #1A6B4A; border-color: #9FDFC6; }
-    .inbox-btn-decline { background: var(--surface2); color: var(--muted); border-color: var(--border-neutral); }
-    
-    .info-banner { background: var(--crimson-pale); border: 0.5px solid rgba(139,26,47,0.2); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
-    .info-banner-title { font-size: 14px; font-weight: 500; color: var(--crimson); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-    .info-banner p { font-size: 13px; color: var(--ink-mid); }
-    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
-    .empty-state i { font-size: 40px; margin-bottom: 12px; display: block; color: var(--border-neutral); }
-  </style>
+.troupe-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.25rem; cursor: pointer; position: relative; transition: border-color 0.2s; }
+.troupe-card:hover { border-color: var(--crimson-light); }
+.troupe-delete-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--muted); cursor: pointer; padding: 4px; border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 10; transition: all 0.2s; }
+.troupe-delete-btn:hover { background: #FEF0F0; color: #A32D2D; transform: scale(1.1); }
+
+.troupe-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
+.troupe-avatar { width: 44px; height: 44px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 500; flex-shrink: 0; }
+.troupe-name { font-size: 15px; font-weight: 500; }
+.troupe-univ { font-size: 12px; color: var(--muted); }
+.status-badge { font-size: 11px; padding: 3px 10px; border-radius: 12px; margin-left: auto; font-weight: 600; flex-shrink: 0; }
+.status-open { background: #E5F3EE; color: #1A6B4A; }
+.status-closed { background: #FEF0F0; color: #A32D2D; }
+.status-soon { background: #FFF4E5; color: #8B5A1A; }
+.troupe-stats { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); border-top: 0.5px solid var(--border-neutral); padding-top: 8px; margin-top: 8px; }
+
+/* ===================== PERF DETAIL ===================== */
+.perf-detail-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem; align-items: start; }
+@media (max-width: 768px) { .perf-detail-grid { grid-template-columns: 1fr; } }
+.perf-main { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.5rem; }
+.perf-sidebar { display: flex; flex-direction: column; gap: 12px; }
+.sidebar-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.25rem; }
+.sidebar-card-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.quota-bar-bg { background: var(--surface2); height: 8px; border-radius: 4px; overflow: hidden; }
+.quota-bar-fill { background: var(--crimson); height: 100%; transition: width 0.3s ease; }
+.quota-text { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.request-btn { width: 100%; padding: 11px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+.request-btn:disabled { background: var(--muted); cursor: not-allowed; }
+
+/* ===================== FORMS ===================== */
+.form-card { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-lg); padding: 1.5rem; max-width: 680px; }
+.form-section { margin-bottom: 1.5rem; }
+.form-section-title { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 0.5px solid var(--border-neutral); }
+.form-row { margin-bottom: 14px; }
+.form-label { font-size: 13px; margin-bottom: 5px; display: block; }
+.form-required { color: var(--crimson); margin-left: 2px; }
+.form-optional { color: var(--muted); margin-left: 4px; font-size: 11px; }
+.form-input, .form-select, .form-textarea { width: 100%; padding: 8px 12px; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; background: var(--white); }
+.form-textarea { min-height: 80px; resize: vertical; }
+.form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+@media (max-width: 600px) { .form-2col { grid-template-columns: 1fr; } }
+
+/* ラジオボタングループのスタイル設定 */
+.radio-group { display: flex; gap: 20px; margin-top: 6px; }
+.radio-label { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; font-weight: 500; }
+.radio-label input[type="radio"] { width: 16px; height: 16px; accent-color: var(--crimson); cursor: pointer; }
+
+.submit-row { display: flex; gap: 10px; align-items: center; margin-top: 1.5rem; }
+.btn-primary { padding: 10px 24px; background: var(--crimson); color: #fff; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 7px; }
+.btn-secondary { padding: 10px 20px; background: var(--surface2); color: var(--ink); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); font-size: 14px; cursor: pointer; }
+
+.success-banner { display: none; background: #E5F3EE; border: 0.5px solid #9FDFC6; border-radius: var(--radius-md); padding: 14px 18px; font-size: 14px; color: #1A6B4A; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+.success-banner.show { display: flex; }
+
+/* ===================== MY PAGE ===================== */
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+.stat-card { border-radius: var(--radius-md); padding: 1rem; }
+.stat-card-red { background: var(--crimson-pale); border: 0.5px solid rgba(139,26,47,0.2); }
+.stat-card-neutral { background: var(--surface2); border: 0.5px solid var(--border-neutral); }
+.stat-label { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+.stat-value { font-size: 24px; font-weight: 500; }
+.section-title { font-size: 16px; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; }
+.section-title i { color: var(--crimson); }
+
+.inbox-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
+.inbox-item { background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; }
+.inbox-item.unread { border-left: 3px solid var(--crimson); }
+.inbox-body { flex: 1; min-width: 0; }
+.inbox-from { font-size: 13px; font-weight: 500; }
+.inbox-preview { font-size: 13px; color: var(--muted); margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.inbox-meta { display: flex; align-items: center; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+.inbox-copies { font-size: 12px; font-weight: 500; color: var(--crimson); background: var(--crimson-pale); padding: 2px 8px; border-radius: 3px; }
+.inbox-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.inbox-btn { padding: 5px 12px; font-size: 12px; border-radius: var(--radius-sm); cursor: pointer; border: 0.5px solid transparent; }
+.inbox-btn-accept { background: #E5F3EE; color: #1A6B4A; border-color: #9FDFC6; }
+.inbox-btn-decline { background: var(--surface2); color: var(--muted); border-color: var(--border-neutral); }
+
+.info-banner { background: var(--crimson-pale); border: 0.5px solid rgba(139,26,47,0.2); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
+.info-banner-title { font-size: 14px; font-weight: 500; color: var(--crimson); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.info-banner-body { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+.empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.empty-state i { font-size: 36px; color: var(--border-neutral); }
+
+/* ===================== MODAL ===================== */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; display: none; }
+.modal-content { background: var(--white); border-radius: var(--radius-lg); max-width: 500px; width: 90%; padding: 1.5rem; box-shadow: 0 8px 24px rgba(0,0,0,0.1); position: relative; }
+.modal-close-btn { position: absolute; top: 12px; right: 12px; background: none; border: none; font-size: 20px; color: var(--muted); cursor: pointer; }
+.modal-title { font-size: 20px; font-weight: 500; margin-bottom: 1rem; }
+.modal-body { font-size: 14px; line-height: 1.6; color: var(--ink-mid); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 1.5rem; }
+
+.modal-troupe-head { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; }
+.modal-troupe-avatar { width: 60px; height: 60px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 500; flex-shrink: 0; }
+.modal-troupe-name { font-size: 20px; font-weight: 500; }
+.modal-troupe-affiliation { font-size: 13px; color: var(--muted); }
+.modal-troupe-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.6; margin-bottom: 1.5rem; }
+.modal-troupe-links { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.5rem; }
+.modal-troupe-performances-title { font-size: 15px; font-weight: 500; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; color: var(--ink-mid); }
+.modal-troupe-performances { display: flex; flex-direction: column; gap: 8px; }
+
+</style>
 </head>
 <body>
 
-<div class="app">
- 
-  <nav class="nav">
-    <div class="nav-logo">
-      <i class="ti ti-ticket"></i>ビラネットワーク <span>早慶演劇祭</span>
-    </div>
-    
-    <div class="nav-tabs">
-      <button class="nav-tab" onclick="showPage('guide')" id="tab-guide">
-        <i class="ti ti-help"></i>使い方
-      </button>
-      <button class="nav-tab active" onclick="showPage('calendar')" id="tab-calendar">
-        <i class="ti ti-calendar"></i>カレンダー
-      </button>
-      <button class="nav-tab" onclick="showPage('troupes')" id="tab-troupes">
-        <i class="ti ti-users"></i>劇団一覧
-      </button>
-      <button class="nav-tab" onclick="showPage('mypage')" id="tab-mypage">
-        <i class="ti ti-layout-dashboard"></i>マイページ
-      </button>
-      <button class="nav-tab" onclick="showPage('register')" id="tab-register">
-        <i class="ti ti-plus"></i>公演登録
-      </button>
-    </div>
-    
-    <div class="nav-right">
-      <button class="nav-btn nav-btn-primary" onclick="showPage('mypage')" id="nav-login-btn">
-        <i class="ti ti-user"></i>ログイン
-      </button>
-    </div>
-  </nav>
-
-  <div class="page" id="page-guide">
-    <div class="page-header">
-      <div class="page-title">ビラネットワークの使い方</div>
-      <div class="page-sub">早慶演劇祭におけるビラ（チラシ）折り込みを円滑に行うための共有プラットフォームです</div>
-    </div>
-    
-    <div class="form-card" style="max-width: 100%; display: flex; flex-direction: column; gap: 24px;">
-      <div class="form-section">
-        <div class="form-section-title" style="font-size: 14px; color: var(--crimson); font-weight: 600;"><i class="ti ti-send"></i> 1. 他劇団の束にビラを「挟ませてほしい」場合（折り込み依頼側）</div>
-        <ol style="margin-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-mid);">
-          <li><strong>公演を探索：</strong> 「公演カレンダー」や「劇団一覧」から、時期やターゲットが合う他劇団の公演を探します。</li>
-          <li><strong>受付状況・条件の確認：</strong> 各公演の個別ページを開き、現在の「折り込み受付状況」「受付期間」「上限部数」を確認します。</li>
-          <li><strong>リクエスト送信：</strong> 受付中の場合、「折り込みを依頼する」ボタンから自団体名、部数、サイズ等を入力して送信します。相手劇団に自動通知が届きます。</li>
-        </ol>
-      </div>
-
-      <div class="form-section">
-        <div class="form-section-title" style="font-size: 14px; color: var(--crimson); font-weight: 600;"><i class="ti ti-box"></i> 2. 自劇団の公演で他劇団のビラを「受け入れる」場合（ホスト劇団側）</div>
-        <ol style="margin-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 8px; color: var(--ink-mid);">
-          <li><strong>アカウント管理：</strong> 「マイページ」より自劇団のアカウントを作成、またはログインを行います。</li>
-          <li><strong>公演情報の登録：</strong> 「公演登録」から、直近の公演日程や会場に加え、<b>「折り込みの個別受付開始日・終了日」</b>、受け入れ可能な最大部数を設定してカレンダーに公開します。</li>
-          <li><strong>依頼の管理：</strong> 他団体からリクエストが入ると、マイページの「折り込み依頼インボックス」にリアルタイムで蓄積されます。部数メーターを見ながら「承認」または「拒否」を選択して束をコントロールします。</li>
-        </ol>
-      </div>
-
-      <div class="info-banner" style="margin: 0;">
-        <div class="info-banner-title"><i class="ti ti-info-circle"></i> 運用上の注意点</div>
-        <p style="font-size: 13px; line-height: 1.6;">
-          ※ 本システム上のステータスや部数計算は自動で行われますが、実際のビラ搬入方法や最終確認は、承認後に担当者同士で直接メール等を用いて行ってください。<br>
-          ※ 本システムの日付判定は2026年6月13日（本日）を基準に自動でステータスが切り替わります。
-        </p>
-      </div>
-    </div>
+<div class="nav">
+  <a href="#" class="nav-logo" onclick="showPage('calendar')">
+    <i class="ti ti-calendar-event"></i>
+    ビラネットワーク <span>早慶演劇祭</span>
+  </a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" id="tab-calendar" onclick="showPage('calendar')"><i class="ti ti-calendar"></i>カレンダー</button>
+    <button class="nav-tab" id="tab-troupes" onclick="showPage('troupes')"><i class="ti ti-users"></i>劇団一覧</button>
+    <button class="nav-tab" id="tab-register" onclick="showPage('register')"><i class="ti ti-plus"></i>公演登録</button>
   </div>
- 
-  <div class="page active" id="page-calendar">
-    <div class="page-header">
-      <div class="page-title">公演カレンダー</div>
-      <div class="page-sub">劇団の公演スケジュールと折り込み受付状況を確認できます</div>
-    </div>
-    <div class="calendar-controls">
-      <div class="month-nav">
-        <button onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
-        <div class="month-label" id="month-label">2026年6月</div>
-        <button onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
-      </div>
-      <select class="cal-filter" id="cal-filter" onchange="renderCalendar()">
-        <option value="">すべての劇団</option>
-      </select>
-      <button class="new-perf-btn" onclick="showPage('register')">
-        <i class="ti ti-plus" style="font-size:14px"></i>公演を登録
-      </button>
-    </div>
-    
-    <div class="calendar-container">
-      <div class="cal-grid" id="cal-grid"></div>
-    </div>
-    <div class="legend" id="calendar-legend"></div>
+  <div class="nav-right">
+    <button class="nav-btn nav-btn-primary" id="nav-login-btn" onclick="showPage('mypage')"><i class="ti ti-user"></i>ログイン</button>
   </div>
- 
-  <div class="page" id="page-troupes">
-    <div class="page-header">
-      <div class="page-title">劇団一覧</div>
-      <div class="page-sub">折り込みを依頼したい劇団を探しましょう（カードをクリックすると詳細が表示されます）</div>
-    </div>
-    <div class="search-bar">
-      <div class="search-input-wrap">
-        <i class="ti ti-search"></i>
-        <input type="text" class="search-input" placeholder="劇団名・大学名で検索" oninput="filterTroupes()">
-      </div>
-      <select class="cal-filter" id="univ-filter" onchange="filterTroupes()">
-        <option value="">すべての大学</option>
-        <option value="早稲田大学">早稲田大学</option>
-        <option value="慶應義塾大学">慶應義塾大学</option>
-      </select>
-      <select class="cal-filter" id="accept-filter" onchange="filterTroupes()">
-        <option value="">折り込み状況：すべて</option>
-        <option value="true">受付中のみ</option>
-        <option value="false">締切済みのみ</option>
-      </select>
-    </div>
-    <div class="troupe-grid" id="troupe-grid"></div>
-  </div>
- 
-  <div class="page" id="page-perf-detail">
-    <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i>戻る</button>
-    <div class="perf-detail-grid">
-      <div class="perf-main">
-        <div class="perf-title-row">
-          <div>
-            <div class="perf-troupe-link" id="detail-troupe-name" onclick="handleDetailTroupeLinkClick()"></div>
-            <div class="perf-title" id="detail-title"></div>
-          </div>
-          <div class="status-badge" id="detail-status-badge">折り込み受付中</div>
-        </div>
-        <p class="perf-desc" id="detail-desc"></p>
-        <hr class="divider">
-        <div class="perf-meta-grid">
-          <div>
-            <div class="perf-meta-label"><i class="ti ti-calendar" style="font-size:12px"></i>公演日程</div>
-            <div class="perf-meta-val" id="detail-date"></div>
-          </div>
-          <div>
-            <div class="perf-meta-label"><i class="ti ti-map-pin" style="font-size:12px"></i>会場</div>
-            <div class="perf-meta-val" id="detail-venue"></div>
-          </div>
-          <div>
-            <div class="perf-meta-label"><i class="ti ti-clock" style="font-size:12px"></i>折り込み受付期間</div>
-            <div class="perf-meta-val" id="detail-accept-period">未設定</div>
-          </div>
-          <div>
-            <div class="perf-meta-label"><i class="ti ti-mail" style="font-size:12px"></i>担当者連絡先</div>
-            <div class="perf-meta-val" id="detail-email"></div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="perf-sidebar">
-        <div id="perf-my-actions" style="display: none; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
-          <button class="btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: #eef2f7; border-color: #cbd5e1;" onclick="startEditPerformance()">
-            <i class="ti ti-edit"></i>この公演情報を修正する
-          </button>
-          <button class="btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: #fef2f2; border-color: #fca5a5; color: #b91c1c;" onclick="deletePerformanceClick()">
-            <i class="ti ti-trash"></i>この公演を削除する
-          </button>
-        </div>
-
-        <div class="sidebar-card">
-          <div class="sidebar-card-title"><i class="ti ti-stack-2"></i>折り込み枠の状況</div>
-          <div class="quota-text">受付合計上限</div>
-          <div style="font-size:22px;font-weight:500;color:var(--ink)" id="detail-max-quota">300<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span></div>
-          <div style="margin:8px 0">
-            <div class="quota-bar-bg"><div class="quota-bar-fill" id="detail-quota-bar" style="width:0%"></div></div>
-          </div>
-          <div class="quota-text" id="detail-quota-summary">0 / 300 部（申請中含む）</div>
-          <button class="request-btn" id="detail-request-btn" onclick="openRequestForm()">折り込みを依頼する</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="page" id="page-request-form">
-    <button class="back-btn" onclick="goBack()"><i class="ti ti-arrow-left"></i>戻る</button>
-    <div class="form-card">
-      <div class="success-banner" id="success-banner">
-        <i class="ti ti-circle-check" style="font-size:20px;"></i>
-        <div>折り込みリクエストの送信、および劇団インボックスへの保存が完了しました！</div>
-      </div>
-      
-      <div class="page-header" style="margin-bottom:1rem;">
-        <div class="page-title" id="req-form-title">折り込みリクエスト</div>
-        <div class="page-sub" id="req-form-sub">対象公演への折り込み条件を入力してください</div>
-      </div>
-      
-      <div id="request-form-body">
-        <div class="form-section">
-          <div class="form-row">
-            <label class="form-label">ご自身の団体名・劇団名<span class="form-required">*</span></label>
-            <input type="text" class="form-input" id="req-from-name" placeholder="例：劇団早稲田座">
-          </div>
-          <div class="form-row">
-            <label class="form-label">ご連絡先メールアドレス<span class="form-required">*</span></label>
-            <input type="email" class="form-input" id="req-from-email" placeholder="example@gmail.com">
-          </div>
-          
-          <div class="form-row">
-            <label class="form-label">ご住所 <span class="form-optional">(任意 - 見本や残部返送用)</span></label>
-            <input type="text" class="form-input" id="req-address" placeholder="例：東京都新宿区西早稲田1-1-1 〇〇ビル1F">
-          </div>
-
-          <div class="form-2col">
-            <div class="form-row">
-              <label class="form-label">折り込み希望部数<span class="form-required">*</span></label>
-              <input type="number" class="form-input" id="req-copies" value="100" min="10">
-            </div>
-            <div class="form-row">
-              <label class="form-label">チラシのサイズ・形式<span class="form-required">*</span></label>
-              <select class="form-select" id="req-size">
-                <option value="A4ペラ">A4ペラ (1枚紙)</option>
-                <option value="A4二つ折り">A4二つ折り</option>
-                <option value="B5ペラ">B5ペラ</option>
-                <option value="その他">その他（備考欄に記載）</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <label class="form-label">ビラの受け渡し方法<span class="form-required">*</span></label>
-            <div class="radio-group">
-              <label class="radio-label">
-                <input type="radio" name="req-delivery-method" value="対面" checked>
-                <i class="ti ti-box"></i> 対面（直接持込・引取）
-              </label>
-              <label class="radio-label">
-                <input type="radio" name="req-delivery-method" value="郵送">
-                <i class="ti ti-truck"></i> 郵送・宅配便（配送）
-              </label>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <label class="form-label">備考・特記事項</label>
-            <textarea class="form-textarea" id="req-notes" placeholder="搬入日時や具体的な配送手順のご相談などがあれば記載してください"></textarea>
-          </div>
-        </div>
-        <button class="btn-primary" onclick="submitRequestForm()"><i class="ti ti-send"></i>この内容で折り込みを申請する</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="page" id="page-register">
-    <div class="form-card">
-      <div class="page-header" style="margin-bottom:1.5rem;">
-        <div class="page-title" id="register-page-title">公演の登録</div>
-        <div class="page-sub" id="register-page-sub">自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します</div>
-      </div>
-      
-      <div id="register-need-login-msg" class="info-banner" style="display:none;">
-        <div class="info-banner-title"><i class="ti ti-alert-triangle"></i>ログインが必要です</div>
-        <p>公演情報を登録・修正するには、マイページから劇団アカウントでログインしてください。</p>
-      </div>
-
-      <div id="register-form-body">
-        <div class="form-section">
-          <div class="form-section-title">基本情報</div>
-          <div class="form-row">
-            <label class="form-label">公演タイトル<span class="form-required">*</span></label>
-            <input type="text" class="form-input" id="new-perf-title" placeholder="例：第50回定期公演「ハムレット」">
-          </div>
-          <div class="form-2col">
-            <div class="form-row">
-              <label class="form-label">公演開始日<span class="form-required">*</span></label>
-              <input type="date" class="form-input" id="new-perf-start" value="2026-06-14">
-            </div>
-            <div class="form-row">
-              <label class="form-label">公演終了日<span class="form-required">*</span></label>
-              <input type="date" class="form-input" id="new-perf-end" value="2026-06-22">
-            </div>
-          </div>
-          
-          <div class="form-section-title" style="margin-top:20px;">折り込み受付期間設定</div>
-          <div class="form-2col">
-            <div class="form-row">
-              <label class="form-label">折り込み受付開始日<span class="form-required">*</span></label>
-              <input type="date" class="form-input" id="new-perf-accept-start" value="2026-05-20">
-            </div>
-            <div class="form-row">
-              <label class="form-label">折り込み受付終了日<span class="form-required">*</span></label>
-              <input type="date" class="form-input" id="new-perf-accept-end" value="2026-06-10">
-            </div>
-          </div>
-
-          <div class="form-section-title" style="margin-top:20px;">会場・キャパシティ</div>
-          <div class="form-2col">
-            <div class="form-row">
-              <label class="form-label">会場名<span class="form-required">*</span></label>
-              <input type="text" class="form-input" id="new-perf-venue" placeholder="例：早稲田大学小劇場どらま館">
-            </div>
-            <div class="form-row">
-              <label class="form-label">折り込み受付上限部数<span class="form-required">*</span></label>
-              <input type="number" class="form-input" id="new-perf-quota" value="300" min="10" max="1000">
-            </div>
-          </div>
-          <div class="form-row">
-            <label class="form-label">公演概要・詳細説明</label>
-            <textarea class="form-textarea" id="new-perf-desc" placeholder="タイムテーブルやビラの納品手順詳細などがあればここに記載してください"></textarea>
-          </div>
-        </div>
-        <button class="btn-primary" id="register-submit-btn" onclick="handleRegisterPerformance()"><i class="ti ti-check"></i>この公演をカレンダーに登録する</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="page" id="page-mypage">
-    <div class="page-header">
-      <div class="page-title">団体アカウント・管理マイページ</div>
-      <div class="page-sub">アカウントの作成、ログイン、および折り込み進捗の管理ができます</div>
-    </div>
-    
-    <div id="auth-section" class="form-card" style="margin-bottom: 2rem;">
-      <div class="form-2col">
-        <div>
-          <div class="form-section-title">登録団体 ログイン</div>
-          <div class="form-row">
-            <label class="form-label">メールアドレス</label>
-            <input type="email" class="form-input" id="login-email" value="soul.member@example.com">
-          </div>
-          <div class="form-row">
-            <label class="form-label">パスワード</label>
-            <input type="password" class="form-input" id="login-password" placeholder="••••••••">
-          </div>
-          <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="handleLogin()"><i class="ti ti-login"></i>ログインする</button>
-        </div>
-        
-        <div style="border-left: 0.5px solid var(--border-neutral); padding-left: 1.5rem;">
-          <div class="form-section-title">新規団体アカウント作成</div>
-          <div class="form-row">
-            <label class="form-label">劇団名<span class="form-required">*</span></label>
-            <input type="text" class="form-input" id="reg-troupe-name" placeholder="例：劇団シアターエクスプレス">
-          </div>
-          <div class="form-row">
-            <label class="form-label">所属大学<span class="form-required">*</span></label>
-            <select class="form-select" id="reg-troupe-univ">
-              <option value="早稲田大学">早稲田大学</option>
-              <option value="慶應義塾大学">慶應義塾大学</option>
-              <option value="その他">その他</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label class="form-label">連絡先メールアドレス<span class="form-required">*</span></label>
-            <input type="email" class="form-input" id="reg-troupe-email" placeholder="example@example.com">
-          </div>
-          <div class="form-row">
-            <label class="form-label">アカウントパスワード<span class="form-required">*</span></label>
-            <input type="password" class="form-input" id="reg-troupe-password" placeholder="任意のパスワード">
-          </div>
-          
-          <div class="form-row">
-            <label class="form-label">劇団紹介文</label>
-            <textarea class="form-textarea" id="reg-troupe-desc" placeholder="劇団の特色や活動内容を入力してください"></textarea>
-          </div>
-          <div class="form-row">
-            <label class="form-label">公式ホームページURL</label>
-            <input type="url" class="form-input" id="reg-troupe-hp" placeholder="https://example.com">
-          </div>
-          <div class="form-row">
-            <label class="form-label">公式SNS (X/Twitterなど) URL</label>
-            <input type="url" class="form-input" id="reg-troupe-sns" placeholder="https://x.com/username">
-          </div>
-          
-          <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="handleRegisterTroupe()"><i class="ti ti-user-plus"></i>アカウントを作成する</button>
-        </div>
-      </div>
-    </div>
-
-    <div id="dashboard-section" style="display:none;">
-      <div class="info-banner" style="background:var(--white); border-color:var(--border-neutral); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-        <div>
-          <div class="info-banner-title" id="welcome-message" style="font-size:16px; color:var(--ink);">こんにちは、劇団の管理ページ</div>
-          <p id="account-status-info" style="color:var(--muted); margin-top:2px;">通知用メールアドレス: -</p>
-        </div>
-        <button class="btn-ghost" style="padding:6px 14px; font-size:12px; background: none; border: 0.5px solid var(--border-neutral); border-radius: var(--radius-sm); cursor: pointer;" onclick="handleLogout()"><i class="ti ti-logout"></i>ログアウト</button>
-      </div>
-
-      <div class="stat-grid">
-        <div class="stat-card stat-card-red">
-          <div class="stat-label">届いている依頼（保留中）</div>
-          <div class="stat-value" id="stat-incoming-pending" style="color:var(--crimson)">0</div>
-        </div>
-        <div class="stat-card stat-card-neutral">
-          <div class="stat-label">承認済みのビラ束</div>
-          <div class="stat-value" id="stat-incoming-accepted">0</div>
-        </div>
-      </div>
-
-      <div class="section-title"><i class="ti ti-inbox"></i>折り込み依頼インボックス</div>
-      <div class="inbox-list" id="dashboard-inbox"></div>
-      
-      <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral); text-align: right;">
-        <button class="btn-secondary" style="background: #fef2f2; border-color: #fca5a5; color: #b91c1c; font-size: 12px; padding: 6px 12px;" onclick="deleteTroupeAccount()">
-          <i class="ti ti-alert-triangle"></i> 劇団アカウントを削除する 
-        </button>
-      </div>
-    </div>
-
-    <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-neutral);">
-      <div class="form-section-title" style="color: var(--crimson); font-size: 13px; font-weight: 600;"><i class="ti ti-refresh"></i> 開発・管理用データリセット</div>
-      <p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">データが不整合を起こしたり、最初から動作テストをやり直したい場合は、以下のボタンより全てのデータを消去し、最初の初期デモデータに戻すことができます。</p>
-      <button class="btn-secondary" style="background: #fff5f5; border-color: #feb2b2; color: #c53030; font-size: 12px; padding: 6px 14px;" onclick="resetAllDataToDefault()">
-        <i class="ti ti-refresh"></i> データをすべて初期化（デモデータ復元）
-      </button>
-    </div>
-  </div>
-
 </div>
 
-<div id="troupe-detail-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; padding: 1rem;" onclick="if(event.target === this) closeTroupeModal();">
-  <div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); width: 100%; max-width: 520px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-neutral); position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
-    
-    <button onclick="closeTroupeModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; cursor: pointer; font-size: 20px; color: var(--muted); display: flex; align-items: center; justify-content: center;"><i class="ti ti-x"></i></button>
-    
-    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border-neutral);">
-      <div id="modal-troupe-avatar" class="troupe-avatar" style="width: 52px; height: 52px; font-size: 20px;"></div>
-      <div>
-        <h2 id="modal-troupe-name" style="color: var(--ink); font-size: 18px; font-weight: 600;">劇団名</h2>
-        <p id="modal-troupe-affiliation" style="font-size: 13px; color: var(--muted); margin-top: 2px;"></p>
+<div id="page-calendar" class="page active">
+  <div class="page-header">
+    <h1 class="page-title">全体カレンダー</h1>
+    <p class="page-sub">各劇団の公演スケジュールと折り込み受付状況を一覧で確認できます。</p>
+  </div>
+
+  <div class="calendar-controls">
+    <div class="month-nav">
+      <button onclick="changeMonth(-1)"><i class="ti ti-chevron-left"></i></button>
+      <span id="month-label" class="month-label">2026年6月</span>
+      <button onclick="changeMonth(1)"><i class="ti ti-chevron-right"></i></button>
+    </div>
+    <select id="cal-filter" class="cal-filter" onchange="renderCalendar()">
+      <option value="">すべての劇団</option>
+    </select>
+    <button class="new-perf-btn" onclick="showPage('register')"><i class="ti ti-plus"></i>新しい公演を登録</button>
+  </div>
+
+  <div class="calendar-container">
+    <div id="cal-grid" class="cal-grid">
+      <!-- カレンダーの日付セルがここに生成されます -->
+    </div>
+  </div>
+
+  <div id="calendar-legend" class="legend">
+    <!-- 劇団の凡例がここに生成されます -->
+  </div>
+</div>
+
+<div id="page-troupes" class="page">
+  <div class="page-header">
+    <h1 class="page-title">劇団一覧</h1>
+    <p class="page-sub">登録されている劇団を検索・閲覧できます。</p>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <i class="ti ti-search"></i>
+      <input type="text" id="troupe-search" class="search-input" placeholder="劇団名、大学名で検索" onkeyup="filterTroupes()">
+    </div>
+    <select id="univ-filter" class="cal-filter" onchange="filterTroupes()">
+      <option value="">すべての大学</option>
+      <option value="早稲田大学">早稲田大学</option>
+      <option value="慶應義塾大学">慶應義塾大学</option>
+    </select>
+    <select id="accept-filter" class="cal-filter" onchange="filterTroupes()">
+      <option value="">すべて</option>
+      <option value="true">折り込み受付中のみ</option>
+      <option value="false">折り込み受付終了/満枠のみ</option>
+    </select>
+  </div>
+
+  <div id="troupe-grid" class="troupe-grid">
+    <!-- 劇団カードがここに生成されます -->
+  </div>
+</div>
+
+<div id="page-perf-detail" class="page">
+  <button class="back-btn" onclick="goBack()"><i class="ti ti-chevron-left"></i>前のページに戻る</button>
+  <div class="page-header">
+    <h1 class="page-title" id="detail-title">公演タイトル</h1>
+    <p class="page-sub">
+      <a href="#" id="detail-troupe-name" class="perf-troupe-link" onclick="handleDetailTroupeLinkClick()">
+        <i class="ti ti-users" style="font-size:13px"></i> 劇団名を表示
+      </a>
+    </p>
+  </div>
+
+  <div class="perf-detail-grid">
+    <div class="perf-main">
+      <p class="perf-desc" id="detail-desc">公演概要・補足テキスト</p>
+      <div class="divider"></div>
+      <div class="perf-meta-grid">
+        <div>
+          <div class="perf-meta-label"><i class="ti ti-calendar"></i>公演期間</div>
+          <div class="perf-meta-val" id="detail-date"></div>
+        </div>
+        <div>
+          <div class="perf-meta-label"><i class="ti ti-map-pin"></i>会場</div>
+          <div class="perf-meta-val" id="detail-venue"></div>
+        </div>
+        <div>
+          <div class="perf-meta-label"><i class="ti ti-calendar-check"></i>折り込み受付期間</div>
+          <div class="perf-meta-val" id="detail-accept-period"></div>
+        </div>
+        <div>
+          <div class="perf-meta-label"><i class="ti ti-mail"></i>連絡先メール</div>
+          <div class="perf-meta-val" id="detail-email"></div>
+        </div>
       </div>
     </div>
-    
-    <div style="margin-bottom: 20px;">
-      <h3 style="font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em;"><i class="ti ti-file-text"></i> 劇団紹介</h3>
-      <p id="modal-troupe-description" style="white-space: pre-wrap; font-size: 14px; color: var(--ink-mid); line-height: 1.6; background: var(--surface); padding: 12px; border-radius: var(--radius-md); border: 0.5px solid var(--border-neutral);"></p>
+    <div class="perf-sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-card-title"><i class="ti ti-file-invoice"></i>折り込み受付状況</div>
+        <div class="quota-bar-bg"><div id="detail-quota-bar" class="quota-bar-fill" style="width: 0%;"></div></div>
+        <div class="quota-text" id="detail-quota-summary">0 / 0 部（承認済み＆保留中の合計）</div>
+        <span class="status-badge" id="detail-status-badge" style="margin-top:12px;"></span>
+        <button class="request-btn" id="detail-request-btn" onclick="openRequestForm()">
+          <i class="ti ti-send"></i>この公演に折り込みを依頼する
+        </button>
+      </div>
+      <div class="sidebar-card" id="perf-my-actions" style="display:none;">
+        <div class="sidebar-card-title"><i class="ti ti-settings"></i>あなたの公演管理</div>
+        <button class="btn-secondary" style="width:100%; margin-bottom:8px;" onclick="startEditPerformance()"><i class="ti ti-edit"></i>公演情報を修正する</button>
+        <button class="btn-secondary" style="width:100%; color:#A32D2D;" onclick="deletePerformanceClick()"><i class="ti ti-trash"></i>この公演を削除する</button>
+      </div>
     </div>
-    
-    <div style="margin-bottom: 20px;">
-      <h3 style="font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.05em;"><i class="ti ti-link"></i> リンク</h3>
-      <div id="modal-troupe-links" style="display: flex; flex-direction: column; gap: 8px;"></div>
+  </div>
+</div>
+
+<div id="page-request-form" class="page">
+  <button class="back-btn" onclick="goBack()"><i class="ti ti-chevron-left"></i>前のページに戻る</button>
+  <div class="page-header">
+    <h1 class="page-title" id="req-form-title">公演への折り込み申請</h1>
+    <p class="page-sub">以下のフォームに必要事項を入力し、折り込みを申請してください。</p>
+  </div>
+
+  <div id="success-banner" class="success-banner">
+    <i class="ti ti-check"></i>
+    <span>折り込み依頼を送信しました！劇団からの連絡をお待ちください。</span>
+  </div>
+
+  <div class="form-card" id="request-form-body">
+    <div class="form-section">
+      <div class="form-section-title">あなたの情報</div>
+      <div class="form-row">
+        <label for="req-from-name" class="form-label">あなたの劇団名 <span class="form-required">*</span></label>
+        <input type="text" id="req-from-name" class="form-input" placeholder="例: 劇団〇〇" required>
+      </div>
+      <div class="form-row">
+        <label for="req-from-email" class="form-label">連絡先メールアドレス <span class="form-required">*</span></label>
+        <input type="email" id="req-from-email" class="form-input" placeholder="例: your@example.com" required>
+      </div>
     </div>
 
-    <div>
-      <h3 style="font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.05em;"><i class="ti ti-calendar-event"></i> 登録されている公演一覧</h3>
-      <div id="modal-troupe-performances" style="display: flex; flex-direction: column; gap: 8px;"></div>
+    <div class="form-section">
+      <div class="form-section-title">折り込み物の情報</div>
+      <div class="form-row form-2col">
+        <div>
+          <label for="req-copies" class="form-label">部数 <span class="form-required">*</span></label>
+          <input type="number" id="req-copies" class="form-input" value="100" min="1" required>
+        </div>
+        <div>
+          <label for="req-size" class="form-label">サイズ <span class="form-required">*</span></label>
+          <select id="req-size" class="form-select" required>
+            <option value="A4ペラ">A4ペラ</option>
+            <option value="A4二つ折り">A4二つ折り</option>
+            <option value="A5ペラ">A5ペラ</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">受け渡し方法 <span class="form-required">*</span></label>
+        <div class="radio-group">
+          <label class="radio-label"><input type="radio" name="req-delivery-method" value="対面" checked> 対面で持参</label>
+          <label class="radio-label"><input type="radio" name="req-delivery-method" value="郵送"> 郵送</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="req-address" class="form-label">返送用住所 <span class="form-optional">（郵送の場合のみ）</span></label>
+        <input type="text" id="req-address" class="form-input" placeholder="例: 〒123-4567 東京都〇〇区..." >
+      </div>
+      <div class="form-row">
+        <label for="req-notes" class="form-label">備考 <span class="form-optional">（劇団へのメッセージなど）</span></label>
+        <textarea id="req-notes" class="form-textarea" placeholder="例: いつもお世話になっております。&#13;&#10;〇〇公演のチラシを100部折り込みよろしくお願いいたします。"></textarea>
+      </div>
     </div>
+
+    <div class="submit-row">
+      <button class="btn-primary" onclick="submitRequestForm()"><i class="ti ti-send"></i>この内容で申請する</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-register" class="page">
+  <button class="back-btn" onclick="goBack()"><i class="ti ti-chevron-left"></i>前のページに戻る</button>
+  <div class="page-header">
+    <h1 class="page-title" id="register-page-title">新しい公演情報の公開登録</h1>
+    <p class="page-sub">あなたの劇団の公演情報をカレンダーに登録し、他団体からの折り込み依頼を受け付けましょう。</p>
+  </div>
+
+  <div id="register-need-login-msg" class="info-banner" style="display:none;">
+    <div class="info-banner-title"><i class="ti ti-alert-circle"></i>ログインが必要です</div>
+    <div class="info-banner-body">公演を登録するには、まず劇団アカウントでログインしてください。</div>
+  </div>
+
+  <div class="form-card" id="register-form-body">
+    <div class="form-section">
+      <div class="form-section-title">公演情報</div>
+      <div class="form-row">
+        <label for="new-perf-title" class="form-label">公演タイトル <span class="form-required">*</span></label>
+        <input type="text" id="new-perf-title" class="form-input" placeholder="例: 夏期公演『〇〇の冒険』" required>
+      </div>
+      <div class="form-row form-2col">
+        <div>
+          <label for="new-perf-start" class="form-label">公演開始日 <span class="form-required">*</span></label>
+          <input type="date" id="new-perf-start" class="form-input" value="2026-06-14" required>
+        </div>
+        <div>
+          <label for="new-perf-end" class="form-label">公演終了日 <span class="form-required">*</span></label>
+          <input type="date" id="new-perf-end" class="form-input" value="2026-06-22" required>
+        </div>
+      </div>
+      <div class="form-row form-2col">
+        <div>
+          <label for="new-perf-accept-start" class="form-label">折り込み受付開始日 <span class="form-required">*</span></label>
+          <input type="date" id="new-perf-accept-start" class="form-input" value="2026-05-20" required>
+        </div>
+        <div>
+          <label for="new-perf-accept-end" class="form-label">折り込み受付終了日 <span class="form-required">*</span></label>
+          <input type="date" id="new-perf-accept-end" class="form-input" value="2026-06-10" required>
+        </div>
+      </div>
+      <div class="form-row">
+        <label for="new-perf-venue" class="form-label">会場 <span class="form-required">*</span></label>
+        <input type="text" id="new-perf-venue" class="form-input" placeholder="例: 早稲田小劇場どらま館" required>
+      </div>
+      <div class="form-row">
+        <label for="new-perf-quota" class="form-label">最大受付部数 <span class="form-required">*</span></label>
+        <input type="number" id="new-perf-quota" class="form-input" value="300" min="1" required>
+      </div>
+      <div class="form-row">
+        <label for="new-perf-desc" class="form-label">公演概要・補足テキスト <span class="form-optional">（折り込みに関する注意事項など）</span></label>
+        <textarea id="new-perf-desc" class="form-textarea" placeholder="例: ビラはA4サイズまで受け入れ可能ですが、2つ折り以上のものは事前にご相談ください。&#13;&#10;納品は劇団宛に郵送、または会場へ直接持参をお願いします。"></textarea>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn-primary" id="register-submit-btn" onclick="handleRegisterPerformance()"><i class="ti ti-check"></i>この公演をカレンダーに登録する</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-mypage" class="page">
+  <button class="back-btn" onclick="goBack()"><i class="ti ti-chevron-left"></i>前のページに戻る</button>
+  <div class="page-header">
+    <h1 class="page-title" id="welcome-message"><i class="ti ti-theater"></i> こんにちは、<strong>劇団名</strong> 管理ページ</h1>
+    <p class="page-sub" id="account-status-info">所属: 大学名 | システム通知先: email@example.com</p>
+  </div>
+
+  <div id="auth-section" style="display:none;">
+    <div class="info-banner" style="margin-bottom:1.5rem;">
+      <div class="info-banner-title"><i class="ti ti-alert-circle"></i>ログインまたは劇団登録が必要です</div>
+      <div class="info-banner-body">マイページを閲覧するには、劇団アカウントでログインするか、新しい劇団を登録してください。</div>
+    </div>
+
+    <div class="form-card" style="max-width:400px; margin:0 auto 1.5rem;">
+      <div class="form-section">
+        <div class="form-section-title">ログイン</div>
+        <div class="form-row">
+          <label for="login-email" class="form-label">メールアドレス</label>
+          <input type="email" id="login-email" class="form-input" placeholder="your@example.com">
+        </div>
+        <div class="form-row">
+          <label for="login-password" class="form-label">パスワード</label>
+          <input type="password" id="login-password" class="form-input" placeholder="********">
+        </div>
+        <div class="submit-row">
+          <button class="btn-primary" onclick="handleLogin()"><i class="ti ti-user"></i>ログイン</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-card" style="max-width:600px; margin:0 auto;">
+      <div class="form-section">
+        <div class="form-section-title">新しい劇団を登録</div>
+        <div class="form-row">
+          <label for="reg-troupe-name" class="form-label">劇団名 <span class="form-required">*</span></label>
+          <input type="text" id="reg-troupe-name" class="form-input" placeholder="例: 劇団ソウルフルズ" required>
+        </div>
+        <div class="form-row">
+          <label for="reg-troupe-univ" class="form-label">所属大学 <span class="form-required">*</span></label>
+          <select id="reg-troupe-univ" class="form-select" required>
+            <option value="">選択してください</option>
+            <option value="早稲田大学">早稲田大学</option>
+            <option value="慶應義塾大学">慶應義塾大学</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="reg-troupe-email" class="form-label">連絡先メールアドレス <span class="form-required">*</span></label>
+          <input type="email" id="reg-troupe-email" class="form-input" placeholder="例: your@example.com" required>
+        </div>
+        <div class="form-row">
+          <label for="reg-troupe-password" class="form-label">パスワード <span class="form-required">*</span></label>
+          <input type="password" id="reg-troupe-password" class="form-input" placeholder="8文字以上の半角英数字" required>
+        </div>
+        <div class="form-row">
+          <label for="reg-troupe-desc" class="form-label">劇団紹介文 <span class="form-optional">（任意）</span></label>
+          <textarea id="reg-troupe-desc" class="form-textarea" placeholder="例: 結成15年目の学生劇団です。人間の深層心理を突いた重厚なストレートプレイから、音楽をふんだんに取り入れたエンターテインメント劇まで幅広く創作を行っています。" rows="3"></textarea>
+        </div>
+        <div class="form-row form-2col">
+          <div>
+            <label for="reg-troupe-hp" class="form-label">公式ホームページURL <span class="form-optional">（任意）</span></label>
+            <input type="url" id="reg-troupe-hp" class="form-input" placeholder="例: https://example.com/your-troupe">
+          </div>
+          <div>
+            <label for="reg-troupe-sns" class="form-label">公式SNS (X/Twitter) URL <span class="form-optional">（任意）</span></label>
+            <input type="url" id="reg-troupe-sns" class="form-input" placeholder="例: https://x.com/your-troupe">
+          </div>
+        </div>
+        <div class="submit-row">
+          <button class="btn-primary" onclick="handleRegisterTroupe()"><i class="ti ti-user-plus"></i>この内容で劇団登録</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboard-section" style="display:none;">
+    <div class="stat-grid">
+      <div class="stat-card stat-card-red">
+        <div class="stat-label">未処理の依頼</div>
+        <div class="stat-value" id="stat-incoming-pending">0</div>
+      </div>
+      <div class="stat-card stat-card-neutral">
+        <div class="stat-label">承認済みの依頼</div>
+        <div class="stat-value" id="stat-incoming-accepted">0</div>
+      </div>
+    </div>
+
+    <div class="section-title"><i class="ti ti-inbox"></i>折り込み依頼インボックス</div>
+    <div id="dashboard-inbox" class="inbox-list">
+      <!-- 折り込み依頼アイテムがここに生成されます -->
+    </div>
+
+    <div class="section-title" style="margin-top:2.5rem;"><i class="ti ti-settings"></i>アカウント設定</div>
+    <div class="form-card">
+      <div class="submit-row">
+        <button class="btn-secondary" onclick="handleLogout()"><i class="ti ti-logout"></i>ログアウト</button>
+        <button class="btn-secondary" style="color:#A32D2D;" onclick="deleteTroupeAccount()"><i class="ti ti-trash"></i>劇団アカウントを完全削除</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 劇団詳細モーダル -->
+<div id="troupe-detail-modal" class="modal-overlay">
+  <div class="modal-content">
+    <button class="modal-close-btn" onclick="closeTroupeModal()"><i class="ti ti-x"></i></button>
+    <div class="modal-troupe-head">
+      <div id="modal-troupe-avatar" class="modal-troupe-avatar"></div>
+      <div>
+        <div id="modal-troupe-name" class="modal-troupe-name"></div>
+        <div id="modal-troupe-affiliation" class="modal-troupe-affiliation"></div>
+      </div>
+    </div>
+    <p id="modal-troupe-desc" class="modal-troupe-desc"></p>
+    <div id="modal-troupe-links" class="modal-troupe-links"></div>
+    <div class="modal-troupe-performances-title"><i class="ti ti-calendar-event"></i>登録公演スケジュール</div>
+    <div id="modal-troupe-performances" class="modal-troupe-performances"></div>
   </div>
 </div>
 
 <script>
-  // ===================== CORE DATABASE (DEMO DATA) =====================
-  const DEFAULT_TROUPES = [
-    { 
-      id: "troupe-a", 
-      name: "劇団ソウルフルズ", 
-      affiliation: "早稲田大学", 
-      email: "soul.member@example.com", 
-      password: "password123",
-      className: "troupe-a",
-      description: "早稲田大学を拠点とする、結成15年目の学生劇団です。人間の深層心理を突いた重厚なストレートプレイから、音楽をふんだんに取り入れたエンターテインメント劇まで幅広く創作を行っています。",
-      homepage: "https://example.com/soulfuls",
-      sns: "https://x.com/soulfuls_waseda"
-    },
-    { 
-      id: "troupe-b", 
-      name: "慶應シアターラボ", 
-      affiliation: "慶應義塾大学", 
-      email: "lab@example.com", 
-      password: "password123",
-      className: "troupe-b",
-      description: "慶應義塾大学公認の演劇サークルです。現代口語演劇の可能性を拡張することをテーマに、実験的な舞台空間デザインと緻密な対話劇を展開しています。初心者大歓迎です！",
-      homepage: "https://example.com/theater-lab",
-      sns: "https://x.com/keio_theater_lab"
-    },
-    { 
-      id: "troupe-c", 
-      name: "劇団アクトゼロ", 
-      affiliation: "早稲田大学", 
-      email: "zero@example.com", 
-      password: "password123",
-      className: "troupe-c",
-      description: "「何もない空間から、すべてを創り出す」をモットーに活動する早稲田の小劇場劇団です。フィジカルシアターやコンテンポラリーダンスの要素を融合させた独自のスタイルが特徴です。",
-      homepage: "",
-      sns: "https://x.com/act_zero_w"
-    },
-    { 
-      id: "troupe-d", 
-      name: "三田ドラマティック社会", 
-      affiliation: "慶應義塾大学", 
-      email: "mita-d@example.com", 
-      password: "password123",
-      className: "troupe-d",
-      description: "コメディ・エンタメに特化した慶應の老舗劇団です。観客が心の底から笑って、ちょっと泣ける、上質な大衆娯楽演劇を追求し続けています。年4回、三田キャンパス周辺で公演中！",
-      homepage: "https://example.com/mita-dramatic",
-      sns: ""
-    }
-  ];
+// Supabaseクライアントの初期化
+const SUPABASE_URL = 'https://azdvqobryrpxriftaale.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6ZHZxb2JyeXJweHJpZnRhYWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzIzNjYsImV4cCI6MjA5NjkwODM2Nn0.tLopMSF670ok2jXHq6_G-MYtIajdCrxmsQ4TDIv5u_A';
+const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+console.log('Supabaseクライアントが初期化されました。');
 
-  const DEFAULT_PERFORMANCES = [
-    {
-      id: "perf-1",
-      troupeId: "troupe-a",
-      title: "初夏の本公演『新緑のプレリュード』",
-      start: "2026-06-12",
-      end: "2026-06-15",
-      acceptStart: "2026-05-10",
-      acceptEnd: "2026-06-08",
-      venue: "早稲田小劇場どらま館",
-      maxQuota: 350,
-      desc: "劇団ソウルフルズが送る、若者たちの交錯する群像劇。チケット予約は公式サイトより。ビラはA4サイズまで受け入れ可能ですが、2つ折り以上のものは事前にご相談ください。納品は劇団宛に郵送、またはどらま館へ直接持参をお願いします。",
-      email: "soul.member@example.com"
-    },
-    {
-      id: "perf-2",
-      troupeId: "troupe-b",
-      title: "プロデュース公演『崩壊と再構築のメカニズム』",
-      start: "2026-06-20",
-      end: "2026-06-24",
-      acceptStart: "2026-05-15",
-      acceptEnd: "2026-06-18",
-      venue: "慶應義塾大学 塾生会館大ホール",
-      maxQuota: 200,
-      desc: "言葉の限界に挑むスリリングな会話劇。折り込みチラシは上限200部を厳守してください。束作成の関係上、締め切り後の搬入は一切受け付けられませんのでご容赦ください。",
-      email: "lab@example.com"
-    }
-  ];
+// ===================== CORE DATABASE (DEMO DATA) =====================
+// デフォルトデータは、Supabaseにデータがない場合のフォールバックとして残しておくか、
+// Supabaseに初期データを投入した後は削除しても良い
+const DEFAULT_TROUPES = [
+  { 
+    id: "troupe-a", 
+    name: "劇団ソウルフルズ", 
+    affiliation: "早稲田大学", 
+    email: "soul.member@example.com", 
+    password: "password123",
+    className: "troupe-a",
+    description: "早稲田大学を拠点とする、結成15年目の学生劇団です。人間の深層心理を突いた重厚なストレートプレイから、音楽をふんだんに取り入れたエンターテインメント劇まで幅広く創作を行っています。",
+    homepage: "https://example.com/soulfuls",
+    sns: "https://x.com/soulfuls_waseda"
+  },
+  { 
+    id: "troupe-b", 
+    name: "慶應シアターラボ", 
+    affiliation: "慶應義塾大学", 
+    email: "lab@example.com", 
+    password: "password123",
+    className: "troupe-b",
+    description: "慶應義塾大学公認の演劇サークルです。現代口語演劇の可能性を拡張することをテーマに、実験的な舞台空間デザインと緻密な対話劇を展開しています。初心者大歓迎です！",
+    homepage: "https://example.com/theater-lab",
+    sns: "https://x.com/keio_theater_lab"
+  },
+  { 
+    id: "troupe-c", 
+    name: "劇団アクトゼロ", 
+    affiliation: "早稲田大学", 
+    email: "zero@example.com", 
+    password: "password123",
+    className: "troupe-c",
+    description: "「何もない空間から、すべてを創り出す」をモットーに活動する早稲田の小劇場劇団です。フィジカルシアターやコンテンポラリーダンスの要素を融合させた独自のスタイルが特徴です。",
+    homepage: "",
+    sns: "https://x.com/act_zero_w"
+  },
+  { 
+    id: "troupe-d", 
+    name: "三田ドラマティック社会", 
+    affiliation: "慶應義塾大学", 
+    email: "mita-d@example.com", 
+    password: "password123",
+    className: "troupe-d",
+    description: "コメディ・エンタメに特化した慶應の老舗劇団です。観客が心の底から笑って、ちょっと泣ける、上質な大衆娯楽演劇を追求し続けています。年4回、三田キャンパス周辺で公演中！",
+    homepage: "https://example.com/mita-dramatic",
+    sns: ""
+  }
+];
 
-  // 💡 初期デモデータに新規項目 address と deliveryMethod を割り当て
-  const DEFAULT_REQUESTS = [
-    {
-      id: "req-mock-1",
-      perfId: "perf-1",
-      toTroupeId: "troupe-a",
-      fromName: "慶應シアターラボ",
-      fromEmail: "lab@example.com",
-      address: "東京都港区三田2-15-45 塾生会館気付",
-      deliveryMethod: "郵送",
-      copies: 120,
-      size: "A4ペラ",
-      notes: "いつもお世話になっております。6月公演のチラシを120部折り込みよろしくお願いいたします。郵送にて納品いたします。",
-      status: "pending",
-      timestamp: "2026-06-02 14:22"
-    },
-    {
-      id: "req-mock-2",
-      perfId: "perf-1",
-      toTroupeId: "troupe-a",
-      fromName: "劇団アクトゼロ",
-      fromEmail: "zero@example.com",
-      address: "",
-      deliveryMethod: "対面",
-      copies: 80,
-      size: "A4二つ折り",
-      notes: "折り込みよろしくお願いいたします！アトリエまで手持ち搬入（対面）を予定しております。",
-      status: "accepted",
-      timestamp: "2026-06-03 09:15"
-    }
-  ];
+const DEFAULT_PERFORMANCES = [
+  {
+    id: "perf-1",
+    troupeId: "troupe-a",
+    title: "初夏の本公演『新緑のプレリュード』",
+    start: "2026-06-12",
+    end: "2026-06-15",
+    acceptStart: "2026-05-10",
+    acceptEnd: "2026-06-08",
+    venue: "早稲田小劇場どらま館",
+    maxQuota: 350,
+    current: 200, // デモ用
+    desc: "劇団ソウルフルズが送る、若者たちの交錯する群像劇。チケット予約は公式サイトより。ビラはA4サイズまで受け入れ可能ですが、2つ折り以上のものは事前にご相談ください。納品は劇団宛に郵送、またはどらま館へ直接持参をお願いします。",
+    email: "soul.member@example.com"
+  },
+  {
+    id: "perf-2",
+    troupeId: "troupe-b",
+    title: "プロデュース公演『崩壊と再構築のメカニズム』",
+    start: "2026-06-20",
+    end: "2026-06-24",
+    acceptStart: "2026-05-15",
+    acceptEnd: "2026-06-18",
+    venue: "慶應義塾大学 塾生会館大ホール",
+    maxQuota: 200,
+    current: 80, // デモ用
+    desc: "言葉の限界に挑むスリリングな会話劇。折り込みチラシは上限200部を厳守してください。束作成の関係上、締め切り後の搬入は一切受け付けられませんのでご容赦ください。",
+    email: "lab@example.com"
+  }
+];
 
-  // ===================== STATE STATE STATE =====================
-  let troupesData = [];
-  let performancesData = [];
-  let incomingRequests = [];
-  let currentUser = null;
+const DEFAULT_REQUESTS = [
+  {
+    id: "req-mock-1",
+    perfId: "perf-1",
+    toTroupeId: "troupe-a",
+    fromName: "慶應シアターラボ",
+    fromEmail: "lab@example.com",
+    address: "東京都港区三田2-15-45 塾生会館気付",
+    deliveryMethod: "郵送",
+    copies: 120,
+    size: "A4ペラ",
+    notes: "いつもお世話になっております。6月公演のチラシを120部折り込みよろしくお願いいたします。郵送にて納品いたします。",
+    status: "pending",
+    timestamp: "2026-06-02 14:22"
+  },
+  {
+    id: "req-mock-2",
+    perfId: "perf-1",
+    toTroupeId: "troupe-a",
+    fromName: "劇団アクトゼロ",
+    fromEmail: "zero@example.com",
+    address: "",
+    deliveryMethod: "対面",
+    copies: 80,
+    size: "A4二つ折り",
+    notes: "折り込みよろしくお願いいたします！アトリエまで手持ち搬入（対面）を予定しております。",
+    status: "accepted",
+    timestamp: "2026-06-03 09:15"
+  }
+];
 
-  let currentDate = new Date(2026, 5, 13); // デフォルト固定 2026年6月13日
-  let selectedPerformanceId = null;
-  let pageHistory = [];
+// ===================== STATE STATE STATE =====================
+// データを保持するグローバル変数（初期値は空配列またはnullに）
+let troupesData = [];
+let performancesData = [];
+let incomingRequests = [];
+let currentUser = null; // ログインユーザー情報
 
-  // ===================== APP INITIALIZATION =====================
-  function initApp() {
-    if (!localStorage.getItem('troupesData_v4')) {
-      localStorage.setItem('troupesData_v4', JSON.stringify(DEFAULT_TROUPES));
-      localStorage.setItem('performancesData_v4', JSON.stringify(DEFAULT_PERFORMANCES));
-      localStorage.setItem('incomingRequests_v4', JSON.stringify(DEFAULT_REQUESTS));
-      localStorage.setItem('currentUser_v4', JSON.stringify(null));
-    }
+let currentDate = new Date(2026, 5, 13); // デフォルト固定 2026年6月13日
+let selectedPerformanceId = null;
+let editingPerfId = null;
+let pageHistory = [];
 
-    troupesData = JSON.parse(localStorage.getItem('troupesData_v4'));
-    performancesData = JSON.parse(localStorage.getItem('performancesData_v4'));
-    incomingRequests = JSON.parse(localStorage.getItem('incomingRequests_v4'));
-    currentUser = JSON.parse(localStorage.getItem('currentUser_v4'));
+// ===================== APP INITIALIZATION =====================
+async function initApp() {
+  // Supabaseからデータを読み込む
+  await loadAllData();
 
-    updateFilterDropdown();
-    renderLegend();
-    renderCalendar();
-    renderTroupes(troupesData);
-    updateAuthUI();
+  // UIの初期描画
+  updateFilterDropdown();
+  renderLegend();
+  renderTroupes(troupesData);
+  renderCalendar();
+  updateAuthUI();
+  showPage('calendar'); // 初期表示ページ
+}
+
+// データをSupabaseから読み込む新しい関数
+async function loadAllData() {
+  try {
+    // 劇団情報をSupabaseから取得
+    const { data: troupes, error: troupesError } = await supabase
+      .from('troupes')
+      .select('*');
+    if (troupesError) throw troupesError;
+    troupesData = troupes;
+
+    // 公演情報をSupabaseから取得
+    const { data: performances, error: performancesError } = await supabase
+      .from('performances')
+      .select('*');
+    if (performancesError) throw performancesError;
+    performancesData = performances;
+
+    // 折り込み依頼情報をSupabaseから取得
+    const { data: requests, error: requestsError } = await supabase
+      .from('requests')
+      .select('*');
+    if (requestsError) throw requestsError;
+    incomingRequests = requests;
+
+    console.log('Supabaseからデータを読み込みました。');
+
+  } catch (error) {
+    console.error('データの読み込み中にエラーが発生しました:', error.message);
+    alert('データの読み込みに失敗しました。インターネット接続を確認してください。');
+    // エラー時はデフォルトデータを表示するなどのフォールバック処理
+    troupesData = [...DEFAULT_TROUPES];
+    performancesData = [...DEFAULT_PERFORMANCES];
+    incomingRequests = [...DEFAULT_REQUESTS];
+  }
+}
+
+// saveAllData関数はSupabase連携では通常使用しません。削除してください。
+// もし残す場合は、localStorageへの保存処理を削除してください。
+function saveAllData() {
+  console.log('saveAllData: Supabase連携ではこの関数は通常使用しません。');
+}
+
+// ページ読み込み時に実行
+window.onload = initApp;
+  
+// ===================== ROUTING & UTILS =====================
+function showPage(pageId, pushToHistory = true) {
+  const activePage = document.querySelector('.page.active');
+  if (activePage && pushToHistory) {
+    pageHistory.push(activePage.id);
   }
 
-  function saveAllData() {
-    localStorage.setItem('troupesData_v4', JSON.stringify(troupesData));
-    localStorage.setItem('performancesData_v4', JSON.stringify(performancesData));
-    localStorage.setItem('incomingRequests_v4', JSON.stringify(incomingRequests));
-    localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+  const targetPage = document.getElementById(`page-${pageId}`);
+  if (targetPage) {
+    targetPage.classList.add('active');
   }
 
-  // ===================== ROUTING & UTILS =====================
-  function showPage(pageId, pushToHistory = true) {
-    const activePage = document.querySelector('.page.active');
-    if (activePage && pushToHistory) {
-      pageHistory.push(activePage.id);
+  const tab = document.getElementById(`tab-${pageId}`);
+  if (tab) {
+    tab.classList.add('active');
+  }
+
+  window.scrollTo({ top: 0 });
+
+  if (pageId === 'calendar') renderCalendar();
+  if (pageId === 'troupes') renderTroupes(troupesData);
+  if (pageId === 'mypage') renderMyPage();
+  if (pageId === 'register') prepareRegisterPage();
+}
+
+function goBack() {
+  if (pageHistory.length > 0) {
+    const prevPage = pageHistory.pop();
+    showPage(prevPage, false);
+  } else {
+    showPage('calendar', false);
+  }
+}
+
+function getTroupeColorClass(troupeId) {
+  const idx = troupesData.findIndex(t => t.id === troupeId);
+  if (idx === -1) return 'troupe-a';
+  const classes = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
+  return classes[idx % classes.length];
+}
+
+function getAcceptanceStatus(perf) {
+  const todayStr = "2026-06-13"; // 固定システム基準日
+  if (todayStr < perf.acceptStart) return { text: "受付開始前", class: "status-soon", accept: false };
+  if (todayStr >= perf.acceptStart && todayStr <= perf.acceptEnd) {
+    const approvedCount = incomingRequests
+      .filter(r => r.perfId === perf.id && (r.status === 'accepted' || r.status === 'pending'))
+      .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
+    if (approvedCount >= perf.maxQuota) {
+      return { text: "満枠締切", class: "status-closed", accept: false };
     }
-
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-
-    const targetPage = document.getElementById(`page-${pageId}`);
-    if (targetPage) {
-      targetPage.classList.add('active');
-    }
-
-    const tab = document.getElementById(`tab-${pageId}`);
-    if (tab) {
-      tab.classList.add('active');
-    }
-
-    window.scrollTo({ top: 0 });
-
-    if (pageId === 'calendar') renderCalendar();
-    if (pageId === 'troupes') renderTroupes(troupesData);
-    if (pageId === 'mypage') renderMyPage();
-    if (pageId === 'register') prepareRegisterPage();
+    return { text: "折り込み受付中", class: "status-open", accept: true };
   }
+  return { text: "受付期間終了", class: "status-closed", accept: false };
+}
 
-  function goBack() {
-    if (pageHistory.length > 0) {
-      const prevPage = pageHistory.pop();
-      showPage(prevPage, false);
-    } else {
-      showPage('calendar', false);
-    }
-  }
+// ===================== UI UPDATES =====================
+function updateFilterDropdown() {
+  const select = document.getElementById('cal-filter');
+  if (!select) return;
+  select.innerHTML = '<option value="">すべての劇団</option>';
+  troupesData.forEach(t => {
+    select.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+  });
+}
 
-  function getTroupeColorClass(troupeId) {
-    const idx = troupesData.findIndex(t => t.id === troupeId);
-    if (idx === -1) return 'troupe-a';
-    const classes = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
-    return classes[idx % classes.length];
-  }
-
-  function getAcceptanceStatus(perf) {
-    const todayStr = "2026-06-13"; // 固定システム基準日
-    if (todayStr < perf.acceptStart) return { text: "受付開始前", class: "status-soon", accept: false };
-    if (todayStr >= perf.acceptStart && todayStr <= perf.acceptEnd) {
-      const approvedCount = incomingRequests
-        .filter(r => r.perfId === perf.id && (r.status === 'accepted' || r.status === 'pending'))
-        .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-      if (approvedCount >= perf.maxQuota) {
-        return { text: "満枠締切", class: "status-closed", accept: false };
-      }
-      return { text: "折り込み受付中", class: "status-open", accept: true };
-    }
-    return { text: "受付期間終了", class: "status-closed", accept: false };
-  }
-
-  // ===================== UI UPDATES =====================
-  function updateFilterDropdown() {
-    const select = document.getElementById('cal-filter');
-    if (!select) return;
-    select.innerHTML = '<option value="">すべての劇団</option>';
-    troupesData.forEach(t => {
-      select.innerHTML += `<option value="${t.id}">${t.name}</option>`;
-    });
-  }
-
-  function renderLegend() {
-    const legend = document.getElementById('calendar-legend');
-    if (!legend) return;
-    legend.innerHTML = '';
-    troupesData.forEach(t => {
-      const colorClass = getTroupeColorClass(t.id);
-      let dummy = document.createElement('div');
-      dummy.className = colorClass;
-      document.body.appendChild(dummy);
-      const bg = window.getComputedStyle(dummy).backgroundColor;
-      const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
-      document.body.removeChild(dummy);
-
-      legend.innerHTML += `
-        <div class="legend-item">
-          <div class="legend-dot" style="background:${borderLeft}"></div>
-          <span>${t.name} (${t.affiliation.replace('大学','')})</span>
-        </div>
-      `;
-    });
-  }
-
-  // ===================== CALENDAR CORE =====================
-  function changeMonth(dir) {
-    currentDate.setMonth(currentDate.getMonth() + dir);
-    renderCalendar();
-  }
-
-  function renderCalendar() {
-    const grid = document.getElementById('cal-grid');
-    const label = document.getElementById('month-label');
-    const filterVal = document.getElementById('cal-filter').value;
-    if (!grid || !label) return;
-
-    grid.innerHTML = '';
-    const dows = ['日', '月', '火', '水', '木', '金', '土'];
-    dows.forEach(d => {
-      grid.innerHTML += `<div class="cal-dow">${d}</div>`;
-    });
-
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
-    label.textContent = `${year}年${month + 1}月`;
-
-    const firstDay = new Date(year, month, 1);
-    const startDow = firstDay.getDay();
-    const lastDay = new Date(year, month + 1, 0);
-    const totalDays = lastDay.getDate();
-
-    const prevLastDay = new Date(year, month, 0).getDate();
-
-    for (let i = startDow - 1; i >= 0; i--) {
-      const dayNum = prevLastDay - i;
-      grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${dayNum}</div></div>`;
-    }
-
-    for (let day = 1; day <= totalDays; day++) {
-      const currentLoopDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-      const isToday = (year === 2026 && month === 5 && day === 13);
-      
-      let cell = document.createElement('div');
-      cell.className = `cal-cell ${isToday ? 'today' : ''}`;
-      cell.innerHTML = `<div class="cal-day-num">${day}</div>`;
-
-      performancesData.forEach(p => {
-        if (filterVal && p.troupeId !== filterVal) return;
-        if (currentLoopDateStr >= p.start && currentLoopDateStr <= p.end) {
-          const colorClass = getTroupeColorClass(p.troupeId);
-          const ev = document.createElement('div');
-          ev.className = `cal-event ${colorClass}`;
-          ev.textContent = p.title;
-          ev.title = p.title;
-          ev.onclick = (e) => {
-            e.stopPropagation();
-            openPerformanceDetail(p.id);
-          };
-          cell.appendChild(ev);
-        }
-      });
-
-      grid.appendChild(cell);
-    }
-
-    const totalCellsSoFar = startDow + totalDays;
-    const remaining = 42 - totalCellsSoFar; 
-    const nextMonthDisplay = remaining >= 7 ? remaining - 7 : remaining;
-    
-    for (let i = 1; i <= nextMonthDisplay; i++) {
-      grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${i}</div></div>`;
-    }
-  }
-
-  // ===================== TROUPE SECTION LAYER =====================
-  function renderTroupes(troupes) {
-    const grid = document.getElementById('troupe-grid');
-    if (!grid) return;
-    grid.innerHTML = '';
-
-    if (troupes.length === 0) {
-      grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="ti ti-users-minus"></i>該当する劇団が見つかりませんでした。</div>';
-      return;
-    }
-
-    troupes.forEach(t => {
-      const colorClass = getTroupeColorClass(t.id);
-      
-      let dummy = document.createElement('div');
-      dummy.className = colorClass;
-      document.body.appendChild(dummy);
-      const bg = window.getComputedStyle(dummy).backgroundColor;
-      const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
-      document.body.removeChild(dummy);
-
-      const myPerfs = performancesData.filter(p => p.troupeId === t.id);
-      let statusHtml = '<span class="status-badge status-closed">公演予定なし</span>';
-      
-      if (myPerfs.length > 0) {
-        const activeOpenPerf = myPerfs.find(p => getAcceptanceStatus(p).accept);
-        if (activeOpenPerf) {
-          statusHtml = `<span class="status-badge status-open">折り込み受付中</span>`;
-        } else {
-          const statusObj = getAcceptanceStatus(myPerfs[myPerfs.length - 1]);
-          statusHtml = `<span class="status-badge ${statusObj.class}">${statusObj.text}</span>`;
-        }
-      }
-
-      const card = document.createElement('div');
-      card.className = 'troupe-card';
-      card.onclick = () => openTroupeModal(t.id);
-
-      let deleteBtnHtml = '';
-      if (currentUser && currentUser.id === t.id) {
-        deleteBtnHtml = `
-          <button class="troupe-delete-btn" title="マイページからアカウントを完全削除できます" onclick="event.stopPropagation(); showPage('mypage');">
-            <i class="ti ti-settings" style="font-size: 16px;"></i>
-          </button>
-        `;
-      }
-
-      card.innerHTML = `
-        ${deleteBtnHtml}
-        <div class="troupe-card-head">
-          <div class="troupe-avatar" style="background:${bg}; color:${borderLeft}">${t.name.charAt(0)}</div>
-          <div>
-            <div class="troupe-name">${t.name}</div>
-            <div class="troupe-univ">${t.affiliation}</div>
-          </div>
-          ${statusHtml}
-        </div>
-        <div class="troupe-stats">
-          <span>登録公演: <strong>${myPerfs.length}</strong> 件</span>
-          <span style="color:var(--crimson); font-weight:500;">詳細・スケジュールを見る →</span>
-        </div>
-      `;
-      grid.appendChild(card);
-    });
-  }
-
-  function filterTroupes() {
-    const keyword = document.querySelector('.search-input').value.toLowerCase();
-    const univ = document.getElementById('univ-filter').value;
-    const acceptOnly = document.getElementById('accept-filter').value;
-
-    const filtered = troupesData.filter(t => {
-      const matchKeyword = t.name.toLowerCase().includes(keyword) || t.affiliation.toLowerCase().includes(keyword);
-      const matchUniv = !univ || t.affiliation === univ;
-      
-      let matchAccept = true;
-      if (acceptOnly) {
-        const myPerfs = performancesData.filter(p => p.troupeId === t.id);
-        const hasAccept = myPerfs.some(p => getAcceptanceStatus(p).accept);
-        matchAccept = (acceptOnly === 'true') ? hasAccept : !hasAccept;
-      }
-
-      return matchKeyword && matchUniv && matchAccept;
-    });
-
-    renderTroupes(filtered);
-  }
-
-  function openTroupeModal(troupeId) {
-    const troupe = troupesData.find(t => t.id === troupeId);
-    if (!troupe) return;
-
-    const colorClass = getTroupeColorClass(troupe.id);
+function renderLegend() {
+  const legend = document.getElementById('calendar-legend');
+  if (!legend) return;
+  legend.innerHTML = '';
+  troupesData.forEach(t => {
+    const colorClass = getTroupeColorClass(t.id);
     let dummy = document.createElement('div');
     dummy.className = colorClass;
     document.body.appendChild(dummy);
@@ -1145,563 +953,901 @@
     const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
     document.body.removeChild(dummy);
 
-    const avatar = document.getElementById('modal-troupe-avatar');
-    avatar.textContent = troupe.name.charAt(0);
-    avatar.style.background = bg;
-    avatar.style.color = borderLeft;
+    legend.innerHTML += `
+           <div class="legend-item">
+             <div class="legend-dot" style="background:${borderLeft}"></div>
+             <span>${t.name} (${t.affiliation.replace('大学','')})</span>
+           </div>
+         `;
+  });
+}
 
-    document.getElementById('modal-troupe-name').textContent = troupe.name;
-    document.getElementById('modal-troupe-affiliation').textContent = `所属: ${troupe.affiliation}`;
-    document.getElementById('modal-troupe-description').textContent = troupe.description || "劇団紹介文はまだ登録されていません。";
+// ===================== CALENDAR CORE =====================
+function changeMonth(dir) {
+  currentDate.setMonth(currentDate.getMonth() + dir);
+  renderCalendar();
+}
 
-    const linksWrap = document.getElementById('modal-troupe-links');
-    linksWrap.innerHTML = '';
-    
-    if (troupe.homepage) {
-      linksWrap.innerHTML += `
-        <a href="${troupe.homepage}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--crimson); background:var(--crimson-pale); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid rgba(139,26,47,0.15);">
-          <i class="ti ti-world" style="font-size:16px;"></i> <span>公式ホームページを開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i>
-        </a>`;
-    }
-    if (troupe.sns) {
-      linksWrap.innerHTML += `
-        <a href="${troupe.sns}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:#1A1410; background:var(--surface2); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid var(--border-neutral);">
-          <i class="ti ti-brand-x" style="font-size:16px;"></i> <span>公式SNS (X / Twitter) を開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i>
-        </a>`;
-    }
-    if (!troupe.homepage && !troupe.sns) {
-      linksWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">外部リンク情報は登録されていません。</p>';
-    }
+function renderCalendar() {
+  const grid = document.getElementById('cal-grid');
+  const label = document.getElementById('month-label');
+  const filterVal = document.getElementById('cal-filter').value;
+  if (!grid || !label) return;
 
-    const troupePerfs = performancesData.filter(p => p.troupeId === troupeId);
-    const perfListWrap = document.getElementById('modal-troupe-performances');
-    perfListWrap.innerHTML = '';
+  grid.innerHTML = '';
+  const dows = ['日', '月', '火', '水', '木', '金', '土'];
+  dows.forEach(d => {
+    grid.innerHTML += `<div class="cal-dow">${d}</div>`;
+  });
 
-    if (troupePerfs.length === 0) {
-      perfListWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">現在、登録されている公演スケジュールはありません。</p>';
-    } else {
-      troupePerfs.forEach(p => {
-        const stat = getAcceptanceStatus(p);
-        const item = document.createElement('div');
-        item.style.cssText = "padding:10px 12px; background:var(--white); border:0.5px solid var(--border-neutral); border-radius:var(--radius-md); cursor:pointer; display:flex; flex-direction:column; gap:4px; transition:all 0.2s;";
-        item.onmouseover = () => item.style.borderColor = "var(--crimson)";
-        item.onmouseout = () => item.style.borderColor = "var(--border-neutral)";
-        
-        item.onclick = () => {
-          closeTroupeModal();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  label.textContent = `${year}年${month + 1}月`;
+
+  const firstDay = new Date(year, month, 1);
+  const startDow = firstDay.getDay();
+  const lastDay = new Date(year, month + 1, 0);
+  const totalDays = lastDay.getDate();
+
+  const prevLastDay = new Date(year, month, 0).getDate();
+
+  for (let i = startDow - 1; i >= 0; i--) {
+    const dayNum = prevLastDay - i;
+    grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${dayNum}</div></div>`;
+  }
+
+  for (let day = 1; day <= totalDays; day++) {
+    const currentLoopDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const isToday = (year === 2026 && month === 5 && day === 13);
+
+    let cell = document.createElement('div');
+    cell.className = `cal-cell ${isToday ? 'today' : ''}`;
+    cell.innerHTML = `<div class="cal-day-num">${day}</div>`;
+
+    performancesData.forEach(p => {
+      if (filterVal && p.troupeId !== filterVal) return;
+      if (currentLoopDateStr >= p.start && currentLoopDateStr <= p.end) {
+        const colorClass = getTroupeColorClass(p.troupeId);
+        const ev = document.createElement('div');
+        ev.className = `cal-event ${colorClass}`;
+        ev.textContent = p.title;
+        ev.title = p.title;
+        ev.onclick = (e) => {
+          e.stopPropagation();
           openPerformanceDetail(p.id);
         };
+        cell.appendChild(ev);
+      }
+    });
 
-        item.innerHTML = `
-          <div style="display:flex; justify-content:between; align-items:flex-start; gap:8px; width:100%;">
-            <strong style="font-size:14px; color:var(--ink); flex:1;">${p.title}</strong>
-            <span class="status-badge ${stat.class}" style="margin:0; font-size:10px; padding:2px 6px;">${stat.text}</span>
-          </div>
-          <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:12px; margin-top:2px;">
-            <span><i class="ti ti-calendar" style="font-size:13px;"></i> ${p.start} ～ ${p.end}</span>
-            <span><i class="ti ti-map-pin" style="font-size:13px;"></i> ${p.venue}</span>
-          </div>
-        `;
-        perfListWrap.appendChild(item);
-      });
-    }
-
-    document.getElementById('troupe-detail-modal').style.display = 'flex';
+    grid.appendChild(cell);
   }
 
-  function closeTroupeModal() {
-    document.getElementById('troupe-detail-modal').style.display = 'none';
+  const totalCellsSoFar = startDow + totalDays;
+  const remaining = 42 - totalCellsSoFar; 
+  const nextMonthDisplay = remaining >= 7 ? remaining - 7 : remaining;
+
+  for (let i = 1; i <= nextMonthDisplay; i++) {
+    grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${i}</div></div>`;
+  }
+}
+
+// ===================== TROUPE SECTION LAYER =====================
+function renderTroupes(troupes) {
+  const grid = document.getElementById('troupe-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  if (troupes.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="ti ti-users-minus"></i>該当する劇団が見つかりませんでした。</div>';
+    return;
   }
 
-  // ===================== PERFORMANCE DETAIL CORE =====================
-  function openPerformanceDetail(perfId) {
-    selectedPerformanceId = perfId;
-    const perf = performancesData.find(p => p.id === perfId);
-    if (!perf) return;
+  troupes.forEach(t => {
+    const colorClass = getTroupeColorClass(t.id);
+    let dummy = document.createElement('div');
+    dummy.className = colorClass;
+    document.body.appendChild(dummy);
+    const bg = window.getComputedStyle(dummy).backgroundColor;
+    const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
+    document.body.removeChild(dummy);
 
-    const troupe = troupesData.find(t => t.id === perf.troupeId);
-    const troupeNameStr = troupe ? troupe.name : "不明な劇団";
+    const myPerfs = performancesData.filter(p => p.troupeId === t.id);
+    let statusHtml = '<span class="status-badge status-closed">公演予定なし</span>';
 
-    document.getElementById('detail-troupe-name').innerHTML = `<i class="ti ti-users" style="font-size:13px"></i> ${troupeNameStr} の詳細情報を表示`;
-    document.getElementById('detail-title').textContent = perf.title;
-    document.getElementById('detail-desc').textContent = perf.desc || "公演概要・補足テキストは未登録です。";
-    document.getElementById('detail-date').textContent = `${perf.start} ～ ${perf.end}`;
-    document.getElementById('detail-venue').textContent = perf.venue;
-    document.getElementById('detail-accept-period').textContent = `${perf.acceptStart} ～ ${perf.acceptEnd}`;
-    document.getElementById('detail-email').textContent = perf.email || "未設定";
-    document.getElementById('detail-max-quota').innerHTML = `${perf.maxQuota}<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span>`;
-
-    const totalCopies = incomingRequests
-      .filter(r => r.perfId === perfId && (r.status === 'accepted' || r.status === 'pending'))
-      .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-
-    let pct = (totalCopies / perf.maxQuota) * 100;
-    if (pct > 100) pct = 100;
-    document.getElementById('detail-quota-bar').style.width = `${pct}%`;
-    document.getElementById('detail-quota-summary').textContent = `${totalCopies} / ${perf.maxQuota} 部（承認済み＆保留中の合計）`;
-
-    const statusObj = getAcceptanceStatus(perf);
-    const badge = document.getElementById('detail-status-badge');
-    badge.textContent = statusObj.text;
-    badge.className = `status-badge ${statusObj.class}`;
-
-    const reqBtn = document.getElementById('detail-request-btn');
-    if (statusObj.accept) {
-      reqBtn.disabled = false;
-      reqBtn.textContent = "この公演に折り込みを依頼する";
-    } else {
-      reqBtn.disabled = true;
-      reqBtn.textContent = `リクエスト受付不可（${statusObj.text}）`;
-    }
-
-    const actionsBlock = document.getElementById('perf-my-actions');
-    if (currentUser && currentUser.id === perf.troupeId) {
-      actionsBlock.style.display = 'flex';
-    } else {
-      actionsBlock.style.display = 'none';
-    }
-
-    showPage('perf-detail');
-  }
-
-  function handleDetailTroupeLinkClick() {
-    const perf = performancesData.find(p => p.id === selectedPerformanceId);
-    if (perf) {
-      openTroupeModal(perf.troupeId);
-    }
-  }
-
-  // ===================== REQUEST SUBMIT LAYER =====================
-  function openRequestForm() {
-    document.getElementById('success-banner').classList.remove('show');
-    document.getElementById('request-form-body').style.display = 'block';
-
-    const perf = performancesData.find(p => p.id === selectedPerformanceId);
-    if (perf) {
-      document.getElementById('req-form-title').textContent = `『${perf.title}』への折り込み申請`;
-    }
-    
-    // フィールド初期化
-    document.getElementById('req-address').value = '';
-    const radioButtons = document.getElementsByName('req-delivery-method');
-    if (radioButtons.length > 0) radioButtons[0].checked = true; // 「対面」をデフォルト選択
-
-    if (currentUser) {
-      document.getElementById('req-from-name').value = currentUser.name;
-      document.getElementById('req-from-email').value = currentUser.email;
-    } else {
-      document.getElementById('req-from-name').value = '';
-      document.getElementById('req-from-email').value = '';
-    }
-
-    showPage('request-form');
-  }
-
-  // 💡 リクエスト送信処理に住所と受け渡し方法の抽出・格納を追加
-  function submitRequestForm() {
-    const fromName = document.getElementById('req-from-name').value.trim();
-    const fromEmail = document.getElementById('req-from-email').value.trim();
-    const address = document.getElementById('req-address').value.trim(); // 住所（任意）
-    const copies = parseInt(document.getElementById('req-copies').value);
-    const size = document.getElementById('req-size').value;
-    const notes = document.getElementById('req-notes').value;
-
-    // ラジオボタンの選択値を取得（対面 or 郵送）
-    const radioMethods = document.getElementsByName('req-delivery-method');
-    let deliveryMethod = "対面";
-    for (let i = 0; i < radioMethods.length; i++) {
-      if (radioMethods[i].checked) {
-        deliveryMethod = radioMethods[i].value;
-        break;
+    if (myPerfs.length > 0) {
+      const activeOpenPerf = myPerfs.find(p => getAcceptanceStatus(p).accept);
+      if (activeOpenPerf) {
+        statusHtml = `<span class="status-badge status-open">折り込み受付中</span>`;
+      } else {
+        const statusObj = getAcceptanceStatus(myPerfs[myPerfs.length - 1]);
+        statusHtml = `<span class="status-badge ${statusObj.class}">${statusObj.text}</span>`;
       }
     }
 
-    if (!fromName || !fromEmail || !copies) {
-      alert('必須項目(*)を入力してください。');
-      return;
+    const card = document.createElement('div');
+    card.className = 'troupe-card';
+    card.onclick = () => openTroupeModal(t.id);
+
+    let deleteBtnHtml = '';
+    if (currentUser && currentUser.id === t.id) {
+      deleteBtnHtml = `
+             <button class="troupe-delete-btn" title="マイページからアカウントを完全削除できます" onclick="event.stopPropagation(); showPage('mypage');">
+               <i class="ti ti-settings" style="font-size: 16px;"></i>
+             </button>
+           `;
     }
 
-    const perf = performancesData.find(p => p.id === selectedPerformanceId);
-    if (!perf) return;
+    card.innerHTML = `
+           ${deleteBtnHtml}
+           <div class="troupe-card-head">
+             <div class="troupe-avatar" style="background:${bg}; color:${borderLeft}">${t.name.charAt(0)}</div>
+             <div>
+               <div class="troupe-name">${t.name}</div>
+               <div class="troupe-univ">${t.affiliation}</div>
+             </div>
+             ${statusHtml}
+           </div>
+           <div class="troupe-stats">
+             <span>登録公演: <strong>${myPerfs.length}</strong> 件</span>
+             <span style="color:var(--crimson); font-weight:500;">詳細・スケジュールを見る →</span>
+           </div>
+         `;
+    grid.appendChild(card);
+  });
+}
 
-    const newReq = {
-      id: "req-" + Date.now(),
-      perfId: selectedPerformanceId,
-      toTroupeId: perf.troupeId,
-      fromName,
-      fromEmail,
-      address,          // 💡 追加
-      deliveryMethod,   // 💡 追加
-      copies,
-      size,
-      notes,
-      status: "pending",
-      timestamp: new Date().toLocaleString()
-    };
+function filterTroupes() {
+  const keyword = document.querySelector('.search-input').value.toLowerCase();
+  const univ = document.getElementById('univ-filter').value;
+  const acceptOnly = document.getElementById('accept-filter').value;
 
-    incomingRequests.push(newReq);
-    saveAllData();
+  const filtered = troupesData.filter(t => {
+    const matchKeyword = t.name.toLowerCase().includes(keyword) || t.affiliation.toLowerCase().includes(keyword);
+    const matchUniv = !univ || t.affiliation === univ;
 
-    document.getElementById('success-banner').classList.add('show');
-    document.getElementById('request-form-body').style.display = 'none';
-
-    setTimeout(() => {
-      openPerformanceDetail(selectedPerformanceId);
-    }, 1800);
-  }
-
-  // ===================== REGISTER & EDIT PERFORMANCE =====================
-  function prepareRegisterPage() {
-    const msg = document.getElementById('register-need-login-msg');
-    const body = document.getElementById('register-form-body');
-    const titleLabel = document.getElementById('register-page-title');
-    const submitBtn = document.getElementById('register-submit-btn');
-
-    if (!currentUser) {
-      msg.style.display = 'block';
-      body.style.display = 'none';
-      return;
+    let matchAccept = true;
+    if (acceptOnly) {
+      const myPerfs = performancesData.filter(p => p.troupeId === t.id);
+      const hasAccept = myPerfs.some(p => getAcceptanceStatus(p).accept);
+      matchAccept = (acceptOnly === 'true') ? hasAccept : !hasAccept;
     }
 
-    msg.style.display = 'none';
-    body.style.display = 'block';
+    return matchKeyword && matchUniv && matchAccept;
+  });
 
-    titleLabel.textContent = "新しい公演情報の公開登録";
-    submitBtn.innerHTML = '<i class="ti ti-check"></i>この公演をカレンダーに登録する';
-    submitBtn.onclick = handleRegisterPerformance;
+  renderTroupes(filtered);
+}
 
-    document.getElementById('new-perf-title').value = '';
-    document.getElementById('new-perf-start').value = '2026-06-14';
-    document.getElementById('new-perf-end').value = '2026-06-22';
-    document.getElementById('new-perf-accept-start').value = '2026-05-20';
-    document.getElementById('new-perf-accept-end').value = '2026-06-10';
-    document.getElementById('new-perf-venue').value = '';
-    document.getElementById('new-perf-quota').value = '300';
-    document.getElementById('new-perf-desc').value = '';
+function openTroupeModal(troupeId) {
+  const troupe = troupesData.find(t => t.id === troupeId);
+  if (!troupe) return;
+
+  const colorClass = getTroupeColorClass(troupe.id);
+  let dummy = document.createElement('div');
+  dummy.className = colorClass;
+  document.body.appendChild(dummy);
+  const bg = window.getComputedStyle(dummy).backgroundColor;
+  const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
+  document.body.removeChild(dummy);
+
+  const avatar = document.getElementById('modal-troupe-avatar');
+  avatar.textContent = troupe.name.charAt(0);
+  avatar.style.background = bg;
+  avatar.style.color = borderLeft;
+
+  document.getElementById('modal-troupe-name').textContent = troupe.name;
+  document.getElementById('modal-troupe-affiliation').textContent = `所属: ${troupe.affiliation}`;
+  document.getElementById('modal-troupe-description').textContent = troupe.description || "劇団紹介文はまだ登録されていません。";
+
+  const linksWrap = document.getElementById('modal-troupe-links');
+  linksWrap.innerHTML = '';
+
+  if (troupe.homepage) {
+    linksWrap.innerHTML += `
+           <a href="${troupe.homepage}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--crimson); background:var(--crimson-pale); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid rgba(139,26,47,0.15);">
+             <i class="ti ti-world" style="font-size:16px;"></i> <span>公式ホームページを開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i>
+           </a>`;
+  }
+  if (troupe.sns) {
+    linksWrap.innerHTML += `
+           <a href="${troupe.sns}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:#1A1410; background:var(--surface2); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid var(--border-neutral);">
+             <i class="ti ti-brand-x" style="font-size:16px;"></i> <span>公式SNS (X / Twitter) を開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i>
+           </a>`;
+  }
+  if (!troupe.homepage && !troupe.sns) {
+    linksWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">外部リンク情報は登録されていません。</p>';
   }
 
-  function handleRegisterPerformance() {
-    const title = document.getElementById('new-perf-title').value.trim();
-    const start = document.getElementById('new-perf-start').value;
-    const end = document.getElementById('new-perf-end').value;
-    const acceptStart = document.getElementById('new-perf-accept-start').value;
-    const acceptEnd = document.getElementById('new-perf-accept-end').value;
-    const venue = document.getElementById('new-perf-venue').value.trim();
-    const maxQuota = parseInt(document.getElementById('new-perf-quota').value);
-    const desc = document.getElementById('new-perf-desc').value;
+  const troupePerfs = performancesData.filter(p => p.troupeId === troupeId);
+  const perfListWrap = document.getElementById('modal-troupe-performances');
+  perfListWrap.innerHTML = '';
 
-    if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || !maxQuota) {
-      alert('必須マークの項目をすべて正しく入力してください。');
-      return;
+  if (troupePerfs.length === 0) {
+    perfListWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">現在、登録されている公演スケジュールはありません。</p>';
+  } else {
+    troupePerfs.forEach(p => {
+      const stat = getAcceptanceStatus(p);
+      const item = document.createElement('div');
+      item.style.cssText = "padding:10px 12px; background:var(--white); border:0.5px solid var(--border-neutral); border-radius:var(--radius-md); cursor:pointer; display:flex; flex-direction:column; gap:4px; transition:all 0.2s;";
+      item.onmouseover = () => item.style.borderColor = "var(--crimson)";
+      item.onmouseout = () => item.style.borderColor = "var(--border-neutral)";
+
+      item.onclick = () => {
+        closeTroupeModal();
+        openPerformanceDetail(p.id);
+      };
+
+      item.innerHTML = `
+             <div style="display:flex; justify-content:between; align-items:flex-start; gap:8px; width:100%;">
+               <strong style="font-size:14px; color:var(--ink); flex:1;">${p.title}</strong>
+               <span class="status-badge ${stat.class}" style="margin:0; font-size:10px; padding:2px 6px;">${stat.text}</span>
+             </div>
+             <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:12px; margin-top:2px;">
+               <span><i class="ti ti-calendar" style="font-size:13px;"></i> ${p.start} ～ ${p.end}</span>
+               <span><i class="ti ti-map-pin" style="font-size:13px;"></i> ${p.venue}</span>
+             </div>
+           `;
+      perfListWrap.appendChild(item);
+    });
+  }
+
+  document.getElementById('troupe-detail-modal').style.display = 'flex';
+}
+
+function closeTroupeModal() {
+  document.getElementById('troupe-detail-modal').style.display = 'none';
+}
+
+// ===================== PERFORMANCE DETAIL CORE =====================
+function openPerformanceDetail(perfId) {
+  selectedPerformanceId = perfId;
+  const perf = performancesData.find(p => p.id === perfId);
+  if (!perf) return;
+
+  const troupe = troupesData.find(t => t.id === perf.troupeId);
+  const troupeNameStr = troupe ? troupe.name : "不明な劇団";
+
+  document.getElementById('detail-troupe-name').innerHTML = `<i class="ti ti-users" style="font-size:13px"></i> ${troupeNameStr} の詳細情報を表示`;
+  document.getElementById('detail-title').textContent = perf.title;
+  document.getElementById('detail-desc').textContent = perf.desc || "公演概要・補足テキストは未登録です。";
+  document.getElementById('detail-date').textContent = `${perf.start} ～ ${perf.end}`;
+  document.getElementById('detail-venue').textContent = perf.venue;
+  document.getElementById('detail-accept-period').textContent = `${perf.acceptStart} ～ ${perf.acceptEnd}`;
+  document.getElementById('detail-email').textContent = perf.email || "未設定";
+  document.getElementById('detail-max-quota').innerHTML = `${perf.maxQuota}<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span>`;
+
+  const totalCopies = incomingRequests
+    .filter(r => r.perfId === perfId && (r.status === 'accepted' || r.status === 'pending'))
+    .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
+
+  let pct = (totalCopies / perf.maxQuota) * 100;
+  if (pct > 100) pct = 100;
+  document.getElementById('detail-quota-bar').style.width = `${pct}%`;
+  document.getElementById('detail-quota-summary').textContent = `${totalCopies} / ${perf.maxQuota} 部（承認済み＆保留中の合計）`;
+
+  const statusObj = getAcceptanceStatus(perf);
+  const badge = document.getElementById('detail-status-badge');
+  badge.textContent = statusObj.text;
+  badge.className = `status-badge ${statusObj.class}`;
+
+  const reqBtn = document.getElementById('detail-request-btn');
+  if (statusObj.accept) {
+    reqBtn.disabled = false;
+    reqBtn.textContent = "この公演に折り込みを依頼する";
+  } else {
+    reqBtn.disabled = true;
+    reqBtn.textContent = `リクエスト受付不可（${statusObj.text}）`;
+  }
+
+  const actionsBlock = document.getElementById('perf-my-actions');
+  if (currentUser && currentUser.id === perf.troupeId) {
+    actionsBlock.style.display = 'flex';
+  } else {
+    actionsBlock.style.display = 'none';
+  }
+
+  showPage('perf-detail');
+}
+
+function handleDetailTroupeLinkClick() {
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (perf) {
+    openTroupeModal(perf.troupeId);
+  }
+}
+
+// ===================== REQUEST SUBMIT LAYER =====================
+function openRequestForm() {
+  document.getElementById('success-banner').classList.remove('show');
+  document.getElementById('request-form-body').style.display = 'block';
+
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (perf) {
+    document.getElementById('req-form-title').textContent = `『${perf.title}』への折り込み申請`;
+  }
+
+  // フィールド初期化
+  document.getElementById('req-address').value = '';
+  const radioButtons = document.getElementsByName('req-delivery-method');
+  if (radioButtons.length > 0) radioButtons[0].checked = true; // 「対面」をデフォルト選択
+
+  if (currentUser) {
+    document.getElementById('req-from-name').value = currentUser.name;
+    document.getElementById('req-from-email').value = currentUser.email;
+  } else {
+    document.getElementById('req-from-name').value = '';
+    document.getElementById('req-from-email').value = '';
+  }
+
+  showPage('request-form');
+}
+
+// 💡 リクエスト送信処理に住所と受け渡し方法の抽出・格納を追加
+async function submitRequestForm() {
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (!perf) return;
+
+  const fromName = document.getElementById('req-from-name').value.trim();
+  const fromEmail = document.getElementById('req-from-email').value.trim();
+  const address = document.getElementById('req-address').value.trim(); // 住所（任意）
+  const copies = parseInt(document.getElementById('req-copies').value);
+  const size = document.getElementById('req-size').value;
+  const notes = document.getElementById('req-notes').value;
+
+  // ラジオボタンの選択値を取得（対面 or 郵送）
+  const radioMethods = document.getElementsByName('req-delivery-method');
+  let deliveryMethod = "対面";
+  for (let i = 0; i < radioMethods.length; i++) {
+    if (radioMethods[i].checked) {
+      deliveryMethod = radioMethods[i].value;
+      break;
     }
-
-    const newPerf = {
-      id: "perf-" + Date.now(),
-      troupeId: currentUser.id,
-      title,
-      start,
-      end,
-      acceptStart,
-      acceptEnd,
-      venue,
-      maxQuota,
-      desc,
-      email: currentUser.email
-    };
-
-    performancesData.push(newPerf);
-    saveAllData();
-
-    alert('新しい公演スケジュールを登録し、全体カレンダーに反映しました。');
-    showPage('calendar');
   }
 
-  function startEditPerformance() {
-    const perf = performancesData.find(p => p.id === selectedPerformanceId);
-    if (!perf) return;
-
-    showPage('register', true);
-
-    document.getElementById('register-page-title').textContent = "公演情報の修正変更";
-    const submitBtn = document.getElementById('register-submit-btn');
-    submitBtn.innerHTML = '<i class="ti ti-refresh"></i>変更内容を保存する';
-    submitBtn.onclick = saveEditPerformance;
-
-    document.getElementById('new-perf-title').value = perf.title;
-    document.getElementById('new-perf-start').value = perf.start;
-    document.getElementById('new-perf-end').value = perf.end;
-    document.getElementById('new-perf-accept-start').value = perf.acceptStart;
-    document.getElementById('new-perf-accept-end').value = perf.acceptEnd;
-    document.getElementById('new-perf-venue').value = perf.venue;
-    document.getElementById('new-perf-quota').value = perf.maxQuota;
-    document.getElementById('new-perf-desc').value = perf.desc || '';
+  if (!fromName || !fromEmail || isNaN(copies) || copies <= 0) {
+    alert('必須項目をすべて入力し、部数は正しく入力してください。');
+    return;
   }
 
-  function saveEditPerformance() {
-    const perf = performancesData.find(p => p.id === selectedPerformanceId);
-    if (!perf) return;
+  const newRequest = {
+    id: 'req_' + Date.now(),
+    perfId: selectedPerformanceId,
+    toTroupeId: perf.troupeId,
+    fromName: fromName,
+    fromEmail: fromEmail,
+    address: address,
+    deliveryMethod: deliveryMethod,
+    copies: copies,
+    size: size,
+    notes: notes,
+    timestamp: new Date().toLocaleString('ja-JP'),
+    status: 'pending'
+  };
 
-    perf.title = document.getElementById('new-perf-title').value.trim();
-    perf.start = document.getElementById('new-perf-start').value;
-    perf.end = document.getElementById('new-perf-end').value;
-    perf.acceptStart = document.getElementById('new-perf-accept-start').value;
-    perf.acceptEnd = document.getElementById('new-perf-accept-end').value;
-    perf.venue = document.getElementById('new-perf-venue').value.trim();
-    perf.maxQuota = parseInt(document.getElementById('new-perf-quota').value);
-    perf.desc = document.getElementById('new-perf-desc').value;
+  try {
+    // Supabaseに新しい依頼を挿入
+    const { data, error } = await supabase
+      .from('requests')
+      .insert([newRequest]);
 
-    saveAllData();
-    alert('公演情報の修正を上書き保存しました。');
-    openPerformanceDetail(perf.id);
-  }
+    if (error) throw error;
 
-  function deletePerformanceClick() {
-    if (confirm('本当にこの公演情報をカレンダーから完全に削除しますか？\n紐づいている他団体からの折り込みリクエスト履歴も全て抹消されます。')) {
-      performancesData = performancesData.filter(p => p.id !== selectedPerformanceId);
-      incomingRequests = incomingRequests.filter(r => r.perfId !== selectedPerformanceId);
-      saveAllData();
-      alert('公演情報を削除しました。');
-      showPage('calendar');
-    }
-  }
-
-  // ===================== IDENTITY & AUTHENTICATION MANAGEMENT =====================
-  function updateAuthUI() {
-    const loginBtn = document.getElementById('nav-login-btn');
-    if (currentUser) {
-      loginBtn.innerHTML = `<i class="ti ti-layout-dashboard"></i>管理マイページ`;
-    } else {
-      loginBtn.innerHTML = `<i class="ti ti-user"></i>ログイン`;
-    }
-  }
-
-  function handleRegisterTroupe() {
-    const name = document.getElementById('reg-troupe-name').value.trim();
-    const affiliation = document.getElementById('reg-troupe-univ').value;
-    const email = document.getElementById('reg-troupe-email').value.trim();
-    const password = document.getElementById('reg-troupe-password').value;
+    // 公演の現在の折り込み枚数を更新
+    const updatedCurrent = (perf.current || 0) + copies;
+    const { error: updatePerfError } = await supabase
+      .from('performances')
+      .update({ current: updatedCurrent })
+      .eq('id', selectedPerformanceId);
     
-    const description = document.getElementById('reg-troupe-desc').value.trim();
-    const homepage = document.getElementById('reg-troupe-hp').value.trim();
-    const sns = document.getElementById('reg-troupe-sns').value.trim();
+    if (updatePerfError) throw updatePerfError;
 
-    if (!name || !email || !password) {
-      alert('劇団名、メールアドレス、パスワードは必須入力項目です。');
-      return;
-    }
+    // グローバル変数も更新
+    incomingRequests.push(newRequest);
+    perf.current = updatedCurrent; // グローバル変数内の公演情報も更新
 
-    if (troupesData.some(t => t.email === email)) {
-      alert('このメールアドレスは既に他の劇団アカウントで登録されています。');
-      return;
-    }
-
-    const newId = "troupe-" + Date.now();
-    const newTroupe = {
-      id: newId,
-      name,
-      affiliation,
-      email,
-      password,
-      description,
-      homepage,
-      sns
+    // EmailJSの送信処理はそのまま残す（非同期で実行）
+    const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
+    const templateParams = {
+      to_email: targetTroupe ? targetTroupe.email : '',
+      from_name: fromName,
+      reply_to: fromEmail,
+      copies: copies,
+      size: size,
+      notes: notes || '特になし',
+      delivery_method: deliveryMethod,
+      address: address || 'なし'
     };
+    const serviceID = 'service_4gfx3qf';
+    const templateID = 'template_rzattmh';
 
-    troupesData.push(newTroupe);
-    currentUser = newTroupe;
-    saveAllData();
+    if (typeof emailjs !== 'undefined' && emailjs.send) {
+      emailjs.send(serviceID, templateID, templateParams)
+        .then(function(response) {
+          console.log('EmailJS Success!', response.status, response.text);
+          finalizeRequestFormSuccess();
+        }, function(error) {
+          console.error('EmailJS Error:', error);
+          alert('通知メール送信に一部エラーが出ましたが、システム内の依頼ボックスには確実に保存されました。');
+          finalizeRequestFormSuccess();
+        });
+    } else {
+      finalizeRequestFormSuccess();
+    }
 
-    alert(`劇団「${name}」のアカウントを作成し、ログインしました！`);
+  } catch (error) {
+    console.error('折り込み依頼送信エラー:', error.message);
+    alert('折り込み依頼の送信に失敗しました。');
+  }
+}
+
+function finalizeRequestFormSuccess() {
+  document.getElementById('success-banner').classList.add('show');
+  document.getElementById('request-form-body').style.display = 'none';
+  // loadAllData()はsubmitRequestForm内で呼び出されているため、ここでは不要
+  setTimeout(() => {
+    openPerformanceDetail(selectedPerformanceId);
+  }, 1800);
+}
+
+// ===================== REGISTER & EDIT PERFORMANCE =====================
+function prepareRegisterPage() {
+  const msg = document.getElementById('register-need-login-msg');
+  const body = document.getElementById('register-form-body');
+  const titleLabel = document.getElementById('register-page-title');
+  const submitBtn = document.getElementById('register-submit-btn');
+
+  if (!currentUser) {
+    msg.style.display = 'block';
+    body.style.display = 'none';
+    return;
+  }
+
+  msg.style.display = 'none';
+  body.style.display = 'block';
+
+  titleLabel.textContent = "新しい公演情報の公開登録";
+  submitBtn.innerHTML = '<i class="ti ti-check"></i>この公演をカレンダーに登録する';
+  submitBtn.onclick = handleRegisterPerformance;
+  editingPerfId = null; // 新規登録時は編集IDをクリア
+
+  // フォームフィールドをクリア
+  document.getElementById('new-perf-title').value = '';
+  document.getElementById('new-perf-start').value = '2026-06-14';
+  document.getElementById('new-perf-end').value = '2026-06-22';
+  document.getElementById('new-perf-accept-start').value = '2026-05-20';
+  document.getElementById('new-perf-accept-end').value = '2026-06-10';
+  document.getElementById('new-perf-venue').value = '';
+  document.getElementById('new-perf-quota').value = '300';
+  document.getElementById('new-perf-desc').value = '';
+}
+
+async function handleRegisterPerformance() {
+  if (!currentUser) {
+    alert('公演を登録するにはログインが必要です。');
+    return;
+  }
+
+  const title = document.getElementById('new-perf-title').value.trim();
+  const start = document.getElementById('new-perf-start').value;
+  const end = document.getElementById('new-perf-end').value;
+  const acceptStart = document.getElementById('new-perf-accept-start').value;
+  const acceptEnd = document.getElementById('new-perf-accept-end').value;
+  const venue = document.getElementById('new-perf-venue').value.trim();
+  const maxQuota = parseInt(document.getElementById('new-perf-quota').value);
+  const desc = document.getElementById('new-perf-desc').value;
+  const email = currentUser.email; // ログインユーザーのメールアドレスを使用
+
+  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || isNaN(maxQuota) || maxQuota <= 0) {
+    alert('必須項目をすべて正しく入力してください。');
+    return;
+  }
+
+  const newPerfData = {
+    troupeId: currentUser.id,
+    title, start, end, acceptStart, acceptEnd, venue, maxQuota, current: 0, desc, email
+  };
+
+  try {
+    let result;
+    if (editingPerfId) {
+      // 既存公演の更新
+      result = await supabase
+        .from('performances')
+        .update(newPerfData)
+        .eq('id', editingPerfId);
+    } else {
+      // 新規公演の登録
+      newPerfData.id = 'perf_' + Date.now(); // 新規登録時のみIDを生成
+      result = await supabase
+        .from('performances')
+        .insert([newPerfData]);
+    }
+
+    if (result.error) throw result.error;
+
+    alert(editingPerfId ? '公演情報を更新しました！' : '新しい公演を登録しました！');
+    editingPerfId = null; // 編集モードを終了
+    await loadAllData(); // 全データを再読み込みしてUIを最新化
+    showPage('calendar'); // カレンダーページへ遷移
+
+  } catch (error) {
+    console.error('公演登録/更新エラー:', error.message);
+    alert('公演の登録または更新に失敗しました。');
+  }
+}
+
+function startEditPerformance() {
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (!perf) return;
+
+  showPage('register', true);
+
+  document.getElementById('register-page-title').textContent = "公演情報の修正変更";
+  const submitBtn = document.getElementById('register-submit-btn');
+  submitBtn.innerHTML = '<i class="ti ti-refresh"></i>変更内容を保存する';
+  submitBtn.onclick = handleRegisterPerformance; // handleRegisterPerformanceを更新にも使用
+  editingPerfId = selectedPerformanceId; // 編集対象のIDを設定
+
+  // フォームに既存の公演情報をセット
+  document.getElementById('new-perf-title').value = perf.title;
+  document.getElementById('new-perf-start').value = perf.start;
+  document.getElementById('new-perf-end').value = perf.end;
+  document.getElementById('new-perf-accept-start').value = perf.acceptStart;
+  document.getElementById('new-perf-accept-end').value = perf.acceptEnd;
+  document.getElementById('new-perf-venue').value = perf.venue;
+  document.getElementById('new-perf-quota').value = perf.maxQuota;
+  document.getElementById('new-perf-desc').value = perf.desc || '';
+}
+
+async function deletePerformanceClick() {
+  if (!selectedPerformanceId) return;
+
+  if (confirm('本当にこの公演情報をカレンダーから完全に削除しますか？\n紐づいている他団体からの折り込みリクエスト履歴も全て抹消されます。')) {
+    try {
+      // 関連する依頼情報を削除
+      const { error: reqError } = await supabase
+        .from('requests')
+        .delete()
+        .eq('perfId', selectedPerformanceId);
+      if (reqError) throw reqError;
+
+      // 公演自体を削除
+      const { error: perfError } = await supabase
+        .from('performances')
+        .delete()
+        .eq('id', selectedPerformanceId);
+      if (perfError) throw perfError;
+
+      alert('公演情報を削除しました。');
+      await loadAllData(); // 全データを再読み込みしてUIを最新化
+      showPage('calendar');
+
+    } catch (error) {
+      console.error('公演削除エラー:', error.message);
+      alert('公演の削除中にエラーが発生しました。');
+    }
+  }
+}
+
+// ===================== IDENTITY & AUTHENTICATION MANAGEMENT =====================
+function updateAuthUI() {
+  const loginBtn = document.getElementById('nav-login-btn');
+  if (currentUser) {
+    loginBtn.innerHTML = `<i class="ti ti-layout-dashboard"></i>管理マイページ`;
+  } else {
+    loginBtn.innerHTML = `<i class="ti ti-user"></i>ログイン`;
+  }
+}
+
+async function handleRegisterTroupe() {
+  const name = document.getElementById('reg-troupe-name').value.trim();
+  const affiliation = document.getElementById('reg-troupe-univ').value;
+  const email = document.getElementById('reg-troupe-email').value.trim();
+  const password = document.getElementById('reg-troupe-password').value.trim();
+  const description = document.getElementById('reg-troupe-desc').value.trim();
+  const homepage = document.getElementById('reg-troupe-hp').value.trim();
+  const sns = document.getElementById('reg-troupe-sns').value.trim();
+
+  if (!name || !email || !password) {
+    alert('必須項目をすべて入力してください。');
+    return;
+  }
+
+  // 既存メールアドレスのチェック（Supabase側でもユニーク制約を設定済み）
+  const { data: existingTroupe, error: checkError } = await supabase
+    .from('troupes')
+    .select('id')
+    .eq('email', email);
+
+  if (checkError) {
+    console.error('既存劇団チェックエラー:', checkError.message);
+    alert('劇団登録中にエラーが発生しました。');
+    return;
+  }
+  if (existingTroupe && existingTroupe.length > 0) {
+    alert('このメールアドレスは既に登録されています。');
+    return;
+  }
+
+  const newId = 'tr_' + Date.now(); // ユニークIDを生成
+  const newTroupe = {
+    id: newId,
+    name,
+    affiliation,
+    email,
+    password, // パスワードは本来ハッシュ化すべき
+    description,
+    homepage,
+    sns
+  };
+
+  // Supabaseに新しい劇団を挿入
+  const { data, error } = await supabase
+    .from('troupes')
+    .insert([newTroupe]);
+
+  if (error) {
+    console.error('劇団登録エラー:', error.message);
+    alert('劇団の登録に失敗しました。');
+    return;
+  }
+
+  // 成功したらグローバル変数も更新し、UIをリフレッシュ
+  troupesData.push(newTroupe);
+  currentUser = newTroupe; // 登録と同時にログイン状態に
+
+  alert(`劇団「${name}」のアカウントを作成し、ログインしました！`);
+  await loadAllData(); // 全データを再読み込みしてUIを最新化
+  updateAuthUI();
+  showPage('mypage');
+}
+
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value;
+
+  if (!email || !pass) {
+    alert('メールアドレスとパスワードを入力してください');
+    return;
+  }
+
+  // Supabaseからメールアドレスに一致する劇団情報を取得
+  const { data: foundTroupes, error } = await supabase
+    .from('troupes')
+    .select('*')
+    .eq('email', email);
+
+  if (error) {
+    console.error('ログインエラー:', error.message);
+    alert('ログイン中にエラーが発生しました。');
+    return;
+  }
+
+  if (foundTroupes && foundTroupes.length > 0) {
+    const found = foundTroupes[0];
+    if (found.password && found.password === pass) {
+      currentUser = found;
+      alert(`劇団「${found.name}」としてログインしました。`);
+      await loadAllData(); // ログイン後、念のため全データを再読み込み
+      updateAuthUI();
+      showPage('mypage'); // ログイン後マイページへ
+    } else {
+      alert('パスワードが間違っています。');
+    }
+  } else {
+    alert('登録されていないメールアドレスです。');
+  }
+}
+    
+function handleLogout() {
+  currentUser = null;
+  // Supabase Authを使用する場合は、ここでsupabase.auth.signOut()を呼び出す
+  // 今回は認証システムを無視するため、グローバル変数をクリアするのみ
+  updateAuthUI();
+  alert('ログアウトしました。');
+  showPage('calendar');
+}
+
+// ===================== HOSTER MYPAGE MANAGEMENT =====================
+// 💡 インボックス描画処理：住所（あれば表示）と受け渡し方法バッジを可視化
+function renderMyPage() {
+  const authSec = document.getElementById('auth-section');
+  const dashSec = document.getElementById('dashboard-section');
+
+  if (!currentUser) {
+    authSec.style.display = 'block';
+    dashSec.style.display = 'none';
+    return;
+  }
+
+  authSec.style.display = 'none';
+  dashSec.style.display = 'block';
+
+  document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
+  document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation} | システム通知先: ${currentUser.email}`;
+
+  const myReqs = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
+  const pendingCount = myReqs.filter(r => r.status === 'pending').length;
+  const acceptedCount = myReqs.filter(r => r.status === 'accepted').length;
+
+  document.getElementById('stat-incoming-pending').textContent = pendingCount;
+  document.getElementById('stat-incoming-accepted').textContent = acceptedCount;
+
+  const inboxWrap = document.getElementById('dashboard-inbox');
+  inboxWrap.innerHTML = '';
+
+  if (myReqs.length === 0) {
+    inboxWrap.innerHTML = '<div class="empty-state"><i class="ti ti-mailbox-off"></i>まだ折り込みリクエストは届いていません。</div>';
+    return;
+  }
+
+  [...myReqs].reverse().forEach(req => {
+    const targetPerf = performancesData.find(p => p.id === req.perfId);
+    const perfTitleStr = targetPerf ? targetPerf.title : "削除された公演";
+
+    const isUnread = req.status === 'pending';
+    const item = document.createElement('div');
+    item.className = `inbox-item ${isUnread ? 'unread' : ''}`;
+
+    let actionButtonsHtml = '';
+    if (req.status === 'pending') {
+      actionButtonsHtml = `
+             <div class="inbox-actions">
+               <button class="inbox-btn inbox-btn-accept" onclick="processRequest('${req.id}', 'accepted')"><i class="ti ti-check"></i> 承認</button>
+               <button class="inbox-btn inbox-btn-decline" onclick="processRequest('${req.id}', 'declined')"><i class="ti ti-ban"></i> 拒否</button>
+             </div>
+           `;
+    } else {
+      const badgeLabel = req.status === 'accepted' ? '承認済み' : '拒否済み';
+      const badgeColor = req.status === 'accepted' ? '#1A6B4A' : '#A32D2D';
+      const badgeBg = req.status === 'accepted' ? '#E5F3EE' : '#FEF0F0';
+      actionButtonsHtml = `
+             <span style="font-size:12px; padding:4px 10px; border-radius:4px; font-weight:600; color:${badgeColor}; background:${badgeBg}">
+               ${badgeLabel}
+             </span>
+           `;
+    }
+
+    // 受け渡し方法の文字とアイコンを決定（デフォルトは対面）
+    const methodStr = req.deliveryMethod || "対面";
+    const methodIcon = methodStr === "郵送" ? "ti-truck" : "ti-box";
+    const methodBadgeColor = methodStr === "郵送" ? "color:#1a4a8b; background:#e5eef9;" : "color:#8b5a1a; background:#fff4e5;";
+
+    // 住所が登録されている場合のみHTMLを生成
+    const addressHtml = req.address 
+      ? `<div style="font-size:12px; color:var(--ink-mid); background:var(--surface); border:1px dashed var(--border-neutral); padding:4px 8px; border-radius:4px; margin-top:4px;"><i class="ti ti-map-pin" style="font-size:12px;"></i> 返送用住所: ${req.address}</div>`
+      : '';
+
+    item.innerHTML = `
+           <div class="inbox-body">
+             <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">対象公演：${perfTitleStr}</div>
+             <div class="inbox-from">${req.fromName} <span style="font-weight:400; font-size:12px; color:var(--muted)">(${req.fromEmail})</span></div>
+             ${addressHtml}
+             <div class="inbox-preview" title="${req.notes || '備考なし'}" style="margin-top:4px;">メッセージ: ${req.notes || 'なし'}</div>
+             <div class="inbox-meta">
+               <span class="inbox-copies">${req.copies} 部</span>
+               <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
+               <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:3px; ${methodBadgeColor}"><i class="ti ${methodIcon}"></i> ${methodStr}</span>
+               <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
+             </div>
+           </div>
+           ${actionButtonsHtml}
+         `;
+    inboxWrap.appendChild(item);
+  });
+}
+
+async function processRequest(reqId, newStatus) {
+  const req = incomingRequests.find(r => r.id === reqId);
+  if (!req) return;
+
+  if (newStatus === 'accepted') {
+    const targetPerf = performancesData.find(p => p.id === req.perfId);
+    if (targetPerf) {
+      const currentTotal = incomingRequests
+        .filter(r => r.perfId === req.perfId && (r.status === 'accepted' || r.status === 'pending'))
+        .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
+      
+      // 現在のコードの超過確認ロジックを維持
+      if (currentTotal + parseInt(req.copies || 0) > targetPerf.maxQuota) { // 承認されるリクエストの部数も加算してチェック
+        if (!confirm('注意: この申請を承認すると、設定されている上限受付部数枠を超過します。本当に承認しますか？')) {
+          return;
+        }
+      }
+    }
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('requests')
+      .update({ status: newStatus })
+      .eq('id', reqId);
+
+    if (error) throw error;
+
+    alert(newStatus === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否（辞退）しました。');
+    await loadAllData(); // 全データを再読み込みしてUIを最新化
+    // renderMyPage(); // loadAllData内でUI更新が行われるため不要、または必要に応じて呼び出し
+
+  } catch (error) {
+    console.error('依頼応答エラー:', error.message);
+    alert('依頼の応答中にエラーが発生しました。');
+  }
+}
+
+async function deleteTroupeAccount() {
+  if (!currentUser) {
+    alert('ログインしていません。');
+    return;
+  }
+
+  if (!confirm('【警告】本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報や、他団体からの申請履歴も一緒にすべて削除されます）')) {
+    return;
+  }
+
+  const id = currentUser.id;
+
+  try {
+    // 関連する公演情報を削除
+    const { error: perfError } = await supabase
+      .from('performances')
+      .delete()
+      .eq('troupeId', id);
+    if (perfError) throw perfError;
+
+    // 関連する依頼情報を削除
+    const { error: reqError } = await supabase
+      .from('requests')
+      .delete()
+      .eq('toTroupeId', id);
+    if (reqError) throw reqError;
+
+    // 劇団自体を削除
+    const { error: troupeError } = await supabase
+      .from('troupes')
+      .delete()
+      .eq('id', id);
+    if (troupeError) throw troupeError;
+
+    alert('アカウント情報をすべて完全に削除しました。');
+    currentUser = null; // グローバル変数からも削除
+    await loadAllData(); // 全データを再読み込みしてUIを最新化
+    updateAuthUI();
+    showPage('troupes');
+
+  } catch (error) {
+    console.error('劇団削除エラー:', error.message);
+    alert('劇団の削除中にエラーが発生しました。');
+  }
+}
+
+// この関数はlocalStorageベースなので、Supabase連携では使用しないか、Supabaseのデータをリセットするように変更が必要です。
+// 今回はlocalStorageのデータリセット機能として残しますが、Supabaseのデータはリセットされません。
+function resetAllDataToDefault() {
+  if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期劇団・公演データ（デモデータ）の状態に復元しますか？\n作成したアカウントや申請履歴は削除されます。')) {
+    localStorage.removeItem('troupesData_v4');
+    localStorage.removeItem('performancesData_v4');
+    localStorage.removeItem('incomingRequests_v4');
+    localStorage.removeItem('currentUser_v4');
+    
+    troupesData = [...DEFAULT_TROUPES];
+    performancesData = [...DEFAULT_PERFORMANCES];
+    incomingRequests = [...DEFAULT_REQUESTS];
+    currentUser = null;
+    
+    // Supabaseのデータはリセットされないため、UIのみ更新
+    alert('ブラウザのローカルデータをデモ初期状態に復元しました。Supabaseのデータは変更されていません。');
+    
     updateFilterDropdown();
     renderLegend();
     renderTroupes(troupesData);
     updateAuthUI();
-    showPage('mypage');
-  }
-
-  function handleLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass = document.getElementById('login-password').value;
-
-    const found = troupesData.find(t => t.email === email && t.password === pass);
-    if (!found) {
-      alert('メールアドレスまたはパスワードが正しくありません。');
-      return;
-    }
-
-    currentUser = found;
-    saveAllData();
-    alert(`劇団「${found.name}」としてログインしました。`);
-    updateAuthUI();
-    renderMyPage();
-  }
-
-  function handleLogout() {
-    currentUser = null;
-    saveAllData();
-    updateAuthUI();
-    alert('ログアウトしました。');
+    renderCalendar();
     showPage('calendar');
   }
+}
 
-  // ===================== HOSTER MYPAGE MANAGEMENT =====================
-  // 💡 インボックス描画処理：住所（あれば表示）と受け渡し方法バッジを可視化
-  function renderMyPage() {
-    const authSec = document.getElementById('auth-section');
-    const dashSec = document.getElementById('dashboard-section');
-
-    if (!currentUser) {
-      authSec.style.display = 'block';
-      dashSec.style.display = 'none';
-      return;
-    }
-
-    authSec.style.display = 'none';
-    dashSec.style.display = 'block';
-
-    document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
-    document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation} | システム通知先: ${currentUser.email}`;
-
-    const myReqs = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
-    const pendingCount = myReqs.filter(r => r.status === 'pending').length;
-    const acceptedCount = myReqs.filter(r => r.status === 'accepted').length;
-
-    document.getElementById('stat-incoming-pending').textContent = pendingCount;
-    document.getElementById('stat-incoming-accepted').textContent = acceptedCount;
-
-    const inboxWrap = document.getElementById('dashboard-inbox');
-    inboxWrap.innerHTML = '';
-
-    if (myReqs.length === 0) {
-      inboxWrap.innerHTML = '<div class="empty-state"><i class="ti ti-mailbox-off"></i>まだ折り込みリクエストは届いていません。</div>';
-      return;
-    }
-
-    [...myReqs].reverse().forEach(req => {
-      const targetPerf = performancesData.find(p => p.id === req.perfId);
-      const perfTitleStr = targetPerf ? targetPerf.title : "削除された公演";
-      
-      const isUnread = req.status === 'pending';
-      const item = document.createElement('div');
-      item.className = `inbox-item ${isUnread ? 'unread' : ''}`;
-
-      let actionButtonsHtml = '';
-      if (req.status === 'pending') {
-        actionButtonsHtml = `
-          <div class="inbox-actions">
-            <button class="inbox-btn inbox-btn-accept" onclick="processRequest('${req.id}', 'accepted')"><i class="ti ti-check"></i> 承認</button>
-            <button class="inbox-btn inbox-btn-decline" onclick="processRequest('${req.id}', 'declined')"><i class="ti ti-ban"></i> 拒否</button>
-          </div>
-        `;
-      } else {
-        const badgeLabel = req.status === 'accepted' ? '承認済み' : '拒否済み';
-        const badgeColor = req.status === 'accepted' ? '#1A6B4A' : '#A32D2D';
-        const badgeBg = req.status === 'accepted' ? '#E5F3EE' : '#FEF0F0';
-        actionButtonsHtml = `
-          <span style="font-size:12px; padding:4px 10px; border-radius:4px; font-weight:600; color:${badgeColor}; background:${badgeBg}">
-            ${badgeLabel}
-          </span>
-        `;
-      }
-
-      // 受け渡し方法の文字とアイコンを決定（デフォルトは対面）
-      const methodStr = req.deliveryMethod || "対面";
-      const methodIcon = methodStr === "郵送" ? "ti-truck" : "ti-box";
-      const methodBadgeColor = methodStr === "郵送" ? "color:#1a4a8b; background:#e5eef9;" : "color:#8b5a1a; background:#fff4e5;";
-
-      // 住所が登録されている場合のみHTMLを生成
-      const addressHtml = req.address 
-        ? `<div style="font-size:12px; color:var(--ink-mid); background:var(--surface); border:1px dashed var(--border-neutral); padding:4px 8px; border-radius:4px; margin-top:4px;"><i class="ti ti-map-pin" style="font-size:12px;"></i> 返送用住所: ${req.address}</div>`
-        : '';
-
-      item.innerHTML = `
-        <div class="inbox-body">
-          <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">対象公演：${perfTitleStr}</div>
-          <div class="inbox-from">${req.fromName} <span style="font-weight:400; font-size:12px; color:var(--muted)">(${req.fromEmail})</span></div>
-          ${addressHtml}
-          <div class="inbox-preview" title="${req.notes || '備考なし'}" style="margin-top:4px;">メッセージ: ${req.notes || 'なし'}</div>
-          <div class="inbox-meta">
-            <span class="inbox-copies">${req.copies} 部</span>
-            <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
-            <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:3px; ${methodBadgeColor}"><i class="ti ${methodIcon}"></i> ${methodStr}</span>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
-          </div>
-        </div>
-        ${actionButtonsHtml}
-      `;
-      inboxWrap.appendChild(item);
-    });
-  }
-
-  function processRequest(reqId, newStatus) {
-    const req = incomingRequests.find(r => r.id === reqId);
-    if (!req) return;
-
-    if (newStatus === 'accepted') {
-      const targetPerf = performancesData.find(p => p.id === req.perfId);
-      if (targetPerf) {
-        const currentTotal = incomingRequests
-          .filter(r => r.perfId === req.perfId && (r.status === 'accepted' || r.status === 'pending'))
-          .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-        
-        if (currentTotal > targetPerf.maxQuota) {
-          if (!confirm('注意: この申請を承認すると、設定されている上限受付部数枠を超過します。本当に承認しますか？')) {
-            return;
-          }
-        }
-      }
-    }
-
-    req.status = newStatus;
-    saveAllData();
-    renderMyPage();
-  }
-
-  function deleteTroupeAccount() {
-    if (confirm('【警告】本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報や、他団体からの申請履歴も一緒にすべてブラウザから削除されます）')) {
-      const id = currentUser.id;
-      troupesData = troupesData.filter(t => t.id !== id);
-      performancesData = performancesData.filter(p => p.troupeId !== id);
-      incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
-      
-      currentUser = null;
-      saveAllData();
-      alert('アカウント情報をすべて完全に削除しました。');
-      
-      updateFilterDropdown();
-      renderLegend();
-      renderTroupes(troupesData);
-      updateAuthUI();
-      renderCalendar();
-      showPage('troupes');
-    }
-  }
-
-  function resetAllDataToDefault() {
-    if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期劇団・公演データ（デモデータ）の状態に復元しますか？\n作成したアカウントや申請履歴は削除されます。')) {
-      localStorage.removeItem('troupesData_v4');
-      localStorage.removeItem('performancesData_v4');
-      localStorage.removeItem('incomingRequests_v4');
-      localStorage.removeItem('currentUser_v4');
-      
-      troupesData = [...DEFAULT_TROUPES];
-      performancesData = [...DEFAULT_PERFORMANCES];
-      incomingRequests = [...DEFAULT_REQUESTS];
-      currentUser = null;
-      
-      saveAllData();
-      alert('すべてのデータをデモ初期状態に復元しました。');
-      
-      updateFilterDropdown();
-      renderLegend();
-      renderTroupes(troupesData);
-      updateAuthUI();
-      renderCalendar();
-      showPage('calendar');
-    }
-  }
-
-  window.onload = initApp;
 </script>
 
 </body>
