@@ -6,13 +6,8 @@
 <title>ビラネットワーク｜早慶演劇祭</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-    <!-- Supabase CDNを読み込む -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-(function() {
-// 必要に応じて emailjs.init("YOUR_PUBLIC_KEY") をここに記述してください
-})();
-</script>
+<!-- Supabase CDNを読み込む -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -72,7 +67,7 @@ align-items: center;
 gap: 10px;
 }
 .nav-logo i {
-color: var(--crimson); 
+color: var(--crimson);
 font-size: 26px;
 }
 .nav-logo span {
@@ -171,17 +166,17 @@ border: 1px solid var(--border-neutral);
 border-radius: var(--radius-lg);
 background: var(--border-neutral);
 }
-.cal-grid { 
-display: grid; 
-grid-template-columns: repeat(7, minmax(120px, 1fr)); 
-gap: 1px; 
+.cal-grid {
+display: grid;
+grid-template-columns: repeat(7, minmax(120px, 1fr));
+gap: 1px;
 }
 .cal-dow { background: var(--surface2); padding: 10px 4px; text-align: center; font-size: 12px; font-weight: 600; color: var(--muted); }
-.cal-cell { 
-background: var(--white); 
-min-height: 120px; 
-padding: 8px; 
-position: relative; 
+.cal-cell {
+background: var(--white);
+min-height: 120px;
+padding: 8px;
+position: relative;
 display: flex;
 flex-direction: column;
 gap: 4px;
@@ -256,7 +251,6 @@ gap: 4px;
 .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 @media (max-width: 600px) { .form-2col { grid-template-columns: 1fr; } }
 
-/* ラジオボタングループのスタイル設定 */
 .radio-group { display: flex; gap: 20px; margin-top: 6px; }
 .radio-label { display: flex; align-items: center; gap: 6px; font-size: 14px; cursor: pointer; font-weight: 500; }
 .radio-label input[type="radio"] { width: 16px; height: 16px; accent-color: var(--crimson); cursor: pointer; }
@@ -450,7 +444,7 @@ gap: 4px;
 </div>
 
 <div class="perf-sidebar">
-<div id="perf-my-actions" style="display: none; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px;">
+<div id="perf-my-actions" style="display: none; margin-bottom: 12px; flex-direction: column; gap: 8px;">
 <button class="btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: #eef2f7; border-color: #cbd5e1;" onclick="startEditPerformance()">
 <i class="ti ti-edit"></i>この公演情報を修正する
 </button>
@@ -692,7 +686,7 @@ gap: 4px;
 
 <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral); text-align: right;">
 <button class="btn-secondary" style="background: #fef2f2; border-color: #fca5a5; color: #b91c1c; font-size: 12px; padding: 6px 12px;" onclick="deleteTroupeAccount()">
-<i class="ti ti-alert-triangle"></i> 劇団アカウントを削除する 
+<i class="ti ti-alert-triangle"></i> 劇団アカウントを削除する
 </button>
 </div>
 </div>
@@ -738,1393 +732,850 @@ gap: 4px;
 </div>
 </div>
 
+<!-- =====================================================================
+     JavaScript: 単一の <script> ブロック（重複なし・Supabase統合版）
+     ===================================================================== -->
 <script>
-
-  <script>
-const SUPABASE_URL = 'https://azdvqobryrpxriftaale.supabase.co/rest/v1/'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6ZHZxb2JyeXJweHJpZnRhYWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzIzNjYsImV4cCI6MjA5NjkwODM2Nn0.tLopMSF670ok2jXHq6_G-MYtIajdCrxmsQ4TDIv5u_A'; // 例: eyJhbGciOiJIUzI1NiI...（長い文字列 ）
-
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-console.log('Supabaseクライアントが初期化されました。');
-  
-// ===================== CORE DATABASE (DEMO DATA) =====================
-const DEFAULT_TROUPES = [
-{ 
-id: "troupe-a", 
-name: "劇団ソウルフルズ", 
-affiliation: "早稲田大学", 
-email: "soul.member@example.com", 
-password: "password123",
-className: "troupe-a",
-description: "早稲田大学を拠点とする、結成15年目の学生劇団です。人間の深層心理を突いた重厚なストレートプレイから、音楽をふんだんに取り入れたエンターテインメント劇まで幅広く創作を行っています。",
-homepage: "https://example.com/soulfuls",
-sns: "https://x.com/soulfuls_waseda"
-},
-{ 
-id: "troupe-b", 
-name: "慶應シアターラボ", 
-affiliation: "慶應義塾大学", 
-email: "lab@example.com", 
-password: "password123",
-className: "troupe-b",
-description: "慶應義塾大学公認の演劇サークルです。現代口語演劇の可能性を拡張することをテーマに、実験的な舞台空間デザインと緻密な対話劇を展開しています。初心者大歓迎です！",
-homepage: "https://example.com/theater-lab",
-sns: "https://x.com/keio_theater_lab"
-},
-{ 
-id: "troupe-c", 
-name: "劇団アクトゼロ", 
-affiliation: "早稲田大学", 
-email: "zero@example.com", 
-password: "password123",
-className: "troupe-c",
-description: "「何もない空間から、すべてを創り出す」をモットーに活動する早稲田の小劇場劇団です。フィジカルシアターやコンテンポラリーダンスの要素を融合させた独自のスタイルが特徴です。",
-homepage: "",
-sns: "https://x.com/act_zero_w"
-},
-{ 
-id: "troupe-d", 
-name: "三田ドラマティック社会", 
-affiliation: "慶應義塾大学", 
-email: "mita-d@example.com", 
-password: "password123",
-className: "troupe-d",
-description: "コメディ・エンタメに特化した慶應の老舗劇団です。観客が心の底から笑って、ちょっと泣ける、上質な大衆娯楽演劇を追求し続けています。年4回、三田キャンパス周辺で公演中！",
-homepage: "https://example.com/mita-dramatic",
-sns: ""
-}
-];
-
-const DEFAULT_PERFORMANCES = [
-{
-id: "perf-1",
-troupeId: "troupe-a",
-title: "初夏の本公演『新緑のプレリュード』",
-start: "2026-06-12",
-end: "2026-06-15",
-acceptStart: "2026-05-10",
-acceptEnd: "2026-06-08",
-venue: "早稲田小劇場どらま館",
-maxQuota: 350,
-desc: "劇団ソウルフルズが送る、若者たちの交錯する群像劇。チケット予約は公式サイトより。ビラはA4サイズまで受け入れ可能ですが、2つ折り以上のものは事前にご相談ください。納品は劇団宛に郵送、またはどらま館へ直接持参をお願いします。",
-email: "soul.member@example.com"
-},
-{
-id: "perf-2",
-troupeId: "troupe-b",
-title: "プロデュース公演『崩壊と再構築のメカニズム』",
-start: "2026-06-20",
-end: "2026-06-24",
-acceptStart: "2026-05-15",
-acceptEnd: "2026-06-18",
-venue: "慶應義塾大学 塾生会館大ホール",
-maxQuota: 200,
-desc: "言葉の限界に挑むスリリングな会話劇。折り込みチラシは上限200部を厳守してください。束作成の関係上、締め切り後の搬入は一切受け付けられませんのでご容赦ください。",
-email: "lab@example.com"
-}
-];
-
-// 💡 初期デモデータに新規項目 address と deliveryMethod を割り当て
-const DEFAULT_REQUESTS = [
-{
-id: "req-mock-1",
-perfId: "perf-1",
-toTroupeId: "troupe-a",
-fromName: "慶應シアターラボ",
-fromEmail: "lab@example.com",
-address: "東京都港区三田2-15-45 塾生会館気付",
-deliveryMethod: "郵送",
-copies: 120,
-size: "A4ペラ",
-notes: "いつもお世話になっております。6月公演のチラシを120部折り込みよろしくお願いいたします。郵送にて納品いたします。",
-status: "pending",
-timestamp: "2026-06-02 14:22"
-},
-{
-id: "req-mock-2",
-perfId: "perf-1",
-toTroupeId: "troupe-a",
-fromName: "劇団アクトゼロ",
-fromEmail: "zero@example.com",
-address: "",
-deliveryMethod: "対面",
-copies: 80,
-size: "A4二つ折り",
-notes: "折り込みよろしくお願いいたします！アトリエまで手持ち搬入（対面）を予定しております。",
-status: "accepted",
-timestamp: "2026-06-03 09:15"
-}
-];
-
-// ===================== STATE STATE STATE =====================
-  let troupesData = [];
-  let performancesData = [];
-  let incomingRequests = [];
-  let currentUser = null;
-
-  let currentDate = new Date(2026, 5, 13); // デフォルト固定 2026年6月13日
-  let selectedPerformanceId = null;
-  let pageHistory = [];
- // Supabaseクライアントの初期化（ステップ2で追加したコード）
-const SUPABASE_URL = 'https://azdvqobryrpxriftaale.supabase.co/rest/v1/';
+// ===================== SUPABASE 初期化 =====================
+// 【修正1】CDN版は window.supabase にモジュールが展開される。
+//           createClient を分割代入で取り出し、クライアントは別名 db に格納して
+//           window.supabase を上書きしないようにする。
+// 【修正2】SUPABASE_URL は /rest/v1/ なしのベースURLを使う。
+const SUPABASE_URL = 'https://azdvqobryrpxriftaale.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6ZHZxb2JyeXJweHJpZnRhYWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzIzNjYsImV4cCI6MjA5NjkwODM2Nn0.tLopMSF670ok2jXHq6_G-MYtIajdCrxmsQ4TDIv5u_A';
-const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const { createClient } = window.supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// データを保持するグローバル変数（初期値は空配列またはnullに）
+// ===================== デモデータ（Supabase接続失敗時のフォールバック） =====================
+const DEFAULT_TROUPES = [
+  { id: "troupe-a", name: "劇団ソウルフルズ", affiliation: "早稲田大学", email: "soul.member@example.com", password: "password123", description: "早稲田大学を拠点とする、結成15年目の学生劇団です。人間の深層心理を突いた重厚なストレートプレイから、音楽をふんだんに取り入れたエンターテインメント劇まで幅広く創作を行っています。", homepage: "https://example.com/soulfuls", sns: "https://x.com/soulfuls_waseda" },
+  { id: "troupe-b", name: "慶應シアターラボ", affiliation: "慶應義塾大学", email: "lab@example.com", password: "password123", description: "慶應義塾大学公認の演劇サークルです。現代口語演劇の可能性を拡張することをテーマに、実験的な舞台空間デザインと緻密な対話劇を展開しています。初心者大歓迎です！", homepage: "https://example.com/theater-lab", sns: "https://x.com/keio_theater_lab" },
+  { id: "troupe-c", name: "劇団アクトゼロ", affiliation: "早稲田大学", email: "zero@example.com", password: "password123", description: "「何もない空間から、すべてを創り出す」をモットーに活動する早稲田の小劇場劇団です。フィジカルシアターやコンテンポラリーダンスの要素を融合させた独自のスタイルが特徴です。", homepage: "", sns: "https://x.com/act_zero_w" },
+  { id: "troupe-d", name: "三田ドラマティック社会", affiliation: "慶應義塾大学", email: "mita-d@example.com", password: "password123", description: "コメディ・エンタメに特化した慶應の老舗劇団です。観客が心の底から笑って、ちょっと泣ける、上質な大衆娯楽演劇を追求し続けています。年4回、三田キャンパス周辺で公演中！", homepage: "https://example.com/mita-dramatic", sns: "" }
+];
+const DEFAULT_PERFORMANCES = [
+  { id: "perf-1", troupeId: "troupe-a", title: "初夏の本公演『新緑のプレリュード』", start: "2026-06-12", end: "2026-06-15", acceptStart: "2026-05-10", acceptEnd: "2026-06-08", venue: "早稲田小劇場どらま館", maxQuota: 350, desc: "劇団ソウルフルズが送る、若者たちの交錯する群像劇。チケット予約は公式サイトより。ビラはA4サイズまで受け入れ可能ですが、2つ折り以上のものは事前にご相談ください。納品は劇団宛に郵送、またはどらま館へ直接持参をお願いします。", email: "soul.member@example.com" },
+  { id: "perf-2", troupeId: "troupe-b", title: "プロデュース公演『崩壊と再構築のメカニズム』", start: "2026-06-20", end: "2026-06-24", acceptStart: "2026-05-15", acceptEnd: "2026-06-18", venue: "慶應義塾大学 塾生会館大ホール", maxQuota: 200, desc: "言葉の限界に挑むスリリングな会話劇。折り込みチラシは上限200部を厳守してください。束作成の関係上、締め切り後の搬入は一切受け付けられませんのでご容赦ください。", email: "lab@example.com" }
+];
+const DEFAULT_REQUESTS = [
+  { id: "req-mock-1", perfId: "perf-1", toTroupeId: "troupe-a", fromName: "慶應シアターラボ", fromEmail: "lab@example.com", address: "東京都港区三田2-15-45 塾生会館気付", deliveryMethod: "郵送", copies: 120, size: "A4ペラ", notes: "いつもお世話になっております。6月公演のチラシを120部折り込みよろしくお願いいたします。郵送にて納品いたします。", status: "pending", timestamp: "2026-06-02 14:22" },
+  { id: "req-mock-2", perfId: "perf-1", toTroupeId: "troupe-a", fromName: "劇団アクトゼロ", fromEmail: "zero@example.com", address: "", deliveryMethod: "対面", copies: 80, size: "A4二つ折り", notes: "折り込みよろしくお願いいたします！アトリエまで手持ち搬入（対面）を予定しております。", status: "accepted", timestamp: "2026-06-03 09:15" }
+];
+
+// ===================== グローバル変数（1回だけ宣言） =====================
 let troupesData = [];
 let performancesData = [];
 let incomingRequests = [];
-let currentUser = null; // ログインユーザー情報
-
-// その他のグローバル変数や定数はそのまま
-const currentMonth = new Date();
-let selectedPerformanceId = null; // 以前のselectedPerfIdから変更
+let currentUser = null;
+let currentDate = new Date(2026, 5, 13);
+let selectedPerformanceId = null;
 let editingPerfId = null;
 let pageHistory = [];
 
-// デフォルトデータは、Supabaseにデータがない場合のフォールバックとして残しておくか、
-// Supabaseに初期データを投入した後は削除しても良い
-const DEFAULT_TROUPES = [
-  // ... 既存のデフォルトデータ
-];
-const DEFAULT_PERFORMANCES = [
-  // ... 既存のデフォルトデータ
-];
-const DEFAULT_REQUESTS = [
-  // ... 既存のデフォルトデータ
-];
-
 // ===================== APP INITIALIZATION =====================
-  function initApp() {
-    if (!localStorage.getItem('troupesData_v4')) {
-      localStorage.setItem('troupesData_v4', JSON.stringify(DEFAULT_TROUPES));
-      localStorage.setItem('performancesData_v4', JSON.stringify(DEFAULT_PERFORMANCES));
-      localStorage.setItem('incomingRequests_v4', JSON.stringify(DEFAULT_REQUESTS));
-      localStorage.setItem('currentUser_v4', JSON.stringify(null));
-    }
-
-    troupesData = JSON.parse(localStorage.getItem('troupesData_v4'));
-    performancesData = JSON.parse(localStorage.getItem('performancesData_v4'));
-    incomingRequests = JSON.parse(localStorage.getItem('incomingRequests_v4'));
-    currentUser = JSON.parse(localStorage.getItem('currentUser_v4'));
-
-    updateFilterDropdown();
-    renderLegend();
-    renderCalendar();
-    renderTroupes(troupesData);
-    updateAuthUI();
-  }
-
-  function saveAllData() {
-    localStorage.setItem('troupesData_v4', JSON.stringify(troupesData));
-    localStorage.setItem('performancesData_v4', JSON.stringify(performancesData));
-    localStorage.setItem('incomingRequests_v4', JSON.stringify(incomingRequests));
-    localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
- // ページ初期化関数をSupabaseからデータを読み込むように変更
 async function initApp() {
-  // Supabaseからデータを読み込む
   await loadAllData();
-
-  // UIの初期描画
   updateFilterDropdown();
   renderLegend();
   renderTroupes(troupesData);
   renderCalendar();
   updateAuthUI();
-  showPage('calendar'); // 初期表示ページ
 }
 
-// データをSupabaseから読み込む新しい関数
 async function loadAllData() {
   try {
-    // 劇団情報をSupabaseから取得
-    const { data: troupes, error: troupesError } = await supabase
-      .from('troupes')
-      .select('*');
+    const { data: troupes, error: troupesError } = await db.from('troupes').select('*');
     if (troupesError) throw troupesError;
-    troupesData = troupes;
+    troupesData = troupes || [];
 
-    // 公演情報をSupabaseから取得
-    const { data: performances, error: performancesError } = await supabase
-      .from('performances')
-      .select('*');
+    const { data: performances, error: performancesError } = await db.from('performances').select('*');
     if (performancesError) throw performancesError;
-    performancesData = performances;
+    performancesData = performances || [];
 
-    // 折り込み依頼情報をSupabaseから取得
-    const { data: requests, error: requestsError } = await supabase
-      .from('requests')
-      .select('*');
+    const { data: requests, error: requestsError } = await db.from('requests').select('*');
     if (requestsError) throw requestsError;
-    incomingRequests = requests;
+    incomingRequests = requests || [];
 
-    // ログインユーザー情報の復元（必要であれば）
-    // 今回は認証システムを無視するため、currentUserはログイン時に設定されると仮定
-    // もしセッション管理を行う場合は、Supabase Authの機能を利用する
-
-    console.log('Supabaseからデータを読み込みました。');
-
+    console.log('Supabaseからデータを読み込みました。', { troupes: troupesData.length, performances: performancesData.length, requests: incomingRequests.length });
   } catch (error) {
-    console.error('データの読み込み中にエラーが発生しました:', error.message);
-    alert('データの読み込みに失敗しました。インターネット接続を確認してください。');
-    // エラー時はデフォルトデータを表示するなどのフォールバック処理
+    console.error('データ読み込みエラー（フォールバック使用）:', error.message);
     troupesData = [...DEFAULT_TROUPES];
     performancesData = [...DEFAULT_PERFORMANCES];
     incomingRequests = [...DEFAULT_REQUESTS];
+  }
 }
 
-}
-
-// saveAllData関数は、各データが更新されるたびに呼び出されていますが、
-// Supabaseではテーブルごとに操作を行うため、この関数は不要になるか、
-// 各データタイプごとの保存関数に分割されます。基本的には削除して問題ありません。
-// もし残す場合は、localStorageへの保存処理を削除してください。
 function saveAllData() {
-  // localStorage.setItem('troupesData_v4', JSON.stringify(troupesData));
-  // localStorage.setItem('performancesData_v4', JSON.stringify(performancesData));
-  // localStorage.setItem('incomingRequests_v4', JSON.stringify(incomingRequests));
-  // localStorage.setItem('currentUser_v4', JSON.stringify(currentUser));
-  console.log('saveAllData: Supabase連携ではこの関数は通常使用しません。');
+  // Supabase連携ではこの関数は各操作関数で個別に処理するため何もしない
+  console.log('saveAllData: Supabase連携では各関数内で個別保存します。');
 }
 
-// ページ読み込み時に実行
-// 進行中1html.txt の 1706行目付近
-window.onload = initApp;
 // ===================== ROUTING & UTILS =====================
 function showPage(pageId, pushToHistory = true) {
-const activePage = document.querySelector('.page.active');
-if (activePage && pushToHistory) {
-pageHistory.push(activePage.id);
-}
+  const activePage = document.querySelector('.page.active');
+  if (activePage && pushToHistory) pageHistory.push(activePage.id);
 
-document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
 
-const targetPage = document.getElementById(`page-${pageId}`);
-if (targetPage) {
-targetPage.classList.add('active');
-}
+  const targetPage = document.getElementById(`page-${pageId}`);
+  if (targetPage) targetPage.classList.add('active');
 
-const tab = document.getElementById(`tab-${pageId}`);
-if (tab) {
-tab.classList.add('active');
-}
+  const tab = document.getElementById(`tab-${pageId}`);
+  if (tab) tab.classList.add('active');
 
-window.scrollTo({ top: 0 });
+  window.scrollTo({ top: 0 });
 
-if (pageId === 'calendar') renderCalendar();
-if (pageId === 'troupes') renderTroupes(troupesData);
-if (pageId === 'mypage') renderMyPage();
-if (pageId === 'register') prepareRegisterPage();
+  if (pageId === 'calendar') renderCalendar();
+  if (pageId === 'troupes') renderTroupes(troupesData);
+  if (pageId === 'mypage') renderMyPage();
+  if (pageId === 'register') prepareRegisterPage();
 }
 
 function goBack() {
-if (pageHistory.length > 0) {
-const prevPage = pageHistory.pop();
-showPage(prevPage, false);
-} else {
-showPage('calendar', false);
-}
+  if (pageHistory.length > 0) {
+    const prevPage = pageHistory.pop();
+    showPage(prevPage, false);
+  } else {
+    showPage('calendar', false);
+  }
 }
 
 function getTroupeColorClass(troupeId) {
-const idx = troupesData.findIndex(t => t.id === troupeId);
-if (idx === -1) return 'troupe-a';
-const classes = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
-return classes[idx % classes.length];
+  const idx = troupesData.findIndex(t => t.id === troupeId);
+  if (idx === -1) return 'troupe-a';
+  const classes = ['troupe-a', 'troupe-b', 'troupe-c', 'troupe-d', 'troupe-e'];
+  return classes[idx % classes.length];
 }
 
 function getAcceptanceStatus(perf) {
-const todayStr = "2026-06-13"; // 固定システム基準日
-if (todayStr < perf.acceptStart) return { text: "受付開始前", class: "status-soon", accept: false };
-if (todayStr >= perf.acceptStart && todayStr <= perf.acceptEnd) {
-const approvedCount = incomingRequests
-.filter(r => r.perfId === perf.id && (r.status === 'accepted' || r.status === 'pending'))
-.reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-if (approvedCount >= perf.maxQuota) {
-return { text: "満枠締切", class: "status-closed", accept: false };
-}
-return { text: "折り込み受付中", class: "status-open", accept: true };
-}
-return { text: "受付期間終了", class: "status-closed", accept: false };
+  const todayStr = "2026-06-13";
+  if (todayStr < perf.acceptStart) return { text: "受付開始前", class: "status-soon", accept: false };
+  if (todayStr >= perf.acceptStart && todayStr <= perf.acceptEnd) {
+    const approvedCount = incomingRequests
+      .filter(r => r.perfId === perf.id && (r.status === 'accepted' || r.status === 'pending'))
+      .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
+    if (approvedCount >= perf.maxQuota) return { text: "満枠締切", class: "status-closed", accept: false };
+    return { text: "折り込み受付中", class: "status-open", accept: true };
+  }
+  return { text: "受付期間終了", class: "status-closed", accept: false };
 }
 
 // ===================== UI UPDATES =====================
 function updateFilterDropdown() {
-const select = document.getElementById('cal-filter');
-if (!select) return;
-select.innerHTML = '<option value="">すべての劇団</option>';
-troupesData.forEach(t => {
-select.innerHTML += `<option value="${t.id}">${t.name}</option>`;
-});
+  const select = document.getElementById('cal-filter');
+  if (!select) return;
+  select.innerHTML = '<option value="">すべての劇団</option>';
+  troupesData.forEach(t => {
+    select.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+  });
 }
 
 function renderLegend() {
-const legend = document.getElementById('calendar-legend');
-if (!legend) return;
-legend.innerHTML = '';
-troupesData.forEach(t => {
-const colorClass = getTroupeColorClass(t.id);
-let dummy = document.createElement('div');
-dummy.className = colorClass;
-document.body.appendChild(dummy);
-const bg = window.getComputedStyle(dummy).backgroundColor;
-const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
-document.body.removeChild(dummy);
-
-legend.innerHTML += `
-       <div class="legend-item">
-         <div class="legend-dot" style="background:${borderLeft}"></div>
-         <span>${t.name} (${t.affiliation.replace('大学','')})</span>
-       </div>
-     `;
-});
+  const legend = document.getElementById('calendar-legend');
+  if (!legend) return;
+  legend.innerHTML = '';
+  troupesData.forEach(t => {
+    const colorClass = getTroupeColorClass(t.id);
+    let dummy = document.createElement('div');
+    dummy.className = colorClass;
+    document.body.appendChild(dummy);
+    const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
+    document.body.removeChild(dummy);
+    legend.innerHTML += `<div class="legend-item"><div class="legend-dot" style="background:${borderLeft}"></div><span>${t.name} (${t.affiliation.replace('大学','')})</span></div>`;
+  });
 }
 
 // ===================== CALENDAR CORE =====================
 function changeMonth(dir) {
-currentDate.setMonth(currentDate.getMonth() + dir);
-renderCalendar();
+  currentDate.setMonth(currentDate.getMonth() + dir);
+  renderCalendar();
 }
 
 function renderCalendar() {
-const grid = document.getElementById('cal-grid');
-const label = document.getElementById('month-label');
-const filterVal = document.getElementById('cal-filter').value;
-if (!grid || !label) return;
+  const grid = document.getElementById('cal-grid');
+  const label = document.getElementById('month-label');
+  const filterEl = document.getElementById('cal-filter');
+  if (!grid || !label || !filterEl) return;
 
-grid.innerHTML = '';
-const dows = ['日', '月', '火', '水', '木', '金', '土'];
-dows.forEach(d => {
-grid.innerHTML += `<div class="cal-dow">${d}</div>`;
-});
+  const filterVal = filterEl.value;
+  grid.innerHTML = '';
+  const dows = ['日', '月', '火', '水', '木', '金', '土'];
+  dows.forEach(d => { grid.innerHTML += `<div class="cal-dow">${d}</div>`; });
 
-const year = currentDate.getFullYear();
-const month = currentDate.getMonth();
-label.textContent = `${year}年${month + 1}月`;
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  label.textContent = `${year}年${month + 1}月`;
 
-const firstDay = new Date(year, month, 1);
-const startDow = firstDay.getDay();
-const lastDay = new Date(year, month + 1, 0);
-const totalDays = lastDay.getDate();
+  const firstDay = new Date(year, month, 1);
+  const startDow = firstDay.getDay();
+  const lastDay = new Date(year, month + 1, 0);
+  const totalDays = lastDay.getDate();
+  const prevLastDay = new Date(year, month, 0).getDate();
 
-const prevLastDay = new Date(year, month, 0).getDate();
+  for (let i = startDow - 1; i >= 0; i--) {
+    grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${prevLastDay - i}</div></div>`;
+  }
 
-for (let i = startDow - 1; i >= 0; i--) {
-const dayNum = prevLastDay - i;
-grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${dayNum}</div></div>`;
+  for (let day = 1; day <= totalDays; day++) {
+    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const isToday = (year === 2026 && month === 5 && day === 13);
+    let cell = document.createElement('div');
+    cell.className = `cal-cell ${isToday ? 'today' : ''}`;
+    cell.innerHTML = `<div class="cal-day-num">${day}</div>`;
+
+    performancesData.forEach(p => {
+      if (filterVal && p.troupeId !== filterVal) return;
+      if (dateStr >= p.start && dateStr <= p.end) {
+        const colorClass = getTroupeColorClass(p.troupeId);
+        const ev = document.createElement('div');
+        ev.className = `cal-event ${colorClass}`;
+        ev.textContent = p.title;
+        ev.title = p.title;
+        ev.onclick = (e) => { e.stopPropagation(); openPerformanceDetail(p.id); };
+        cell.appendChild(ev);
+      }
+    });
+    grid.appendChild(cell);
+  }
+
+  const totalCellsSoFar = startDow + totalDays;
+  const remaining = 42 - totalCellsSoFar;
+  const nextMonthDisplay = remaining >= 7 ? remaining - 7 : remaining;
+  for (let i = 1; i <= nextMonthDisplay; i++) {
+    grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${i}</div></div>`;
+  }
 }
 
-for (let day = 1; day <= totalDays; day++) {
-const currentLoopDateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-const isToday = (year === 2026 && month === 5 && day === 13);
-
-let cell = document.createElement('div');
-cell.className = `cal-cell ${isToday ? 'today' : ''}`;
-cell.innerHTML = `<div class="cal-day-num">${day}</div>`;
-
-performancesData.forEach(p => {
-if (filterVal && p.troupeId !== filterVal) return;
-if (currentLoopDateStr >= p.start && currentLoopDateStr <= p.end) {
-const colorClass = getTroupeColorClass(p.troupeId);
-const ev = document.createElement('div');
-ev.className = `cal-event ${colorClass}`;
-ev.textContent = p.title;
-ev.title = p.title;
-ev.onclick = (e) => {
-e.stopPropagation();
-openPerformanceDetail(p.id);
-};
-cell.appendChild(ev);
-}
-});
-
-grid.appendChild(cell);
-}
-
-const totalCellsSoFar = startDow + totalDays;
-const remaining = 42 - totalCellsSoFar; 
-const nextMonthDisplay = remaining >= 7 ? remaining - 7 : remaining;
-
-for (let i = 1; i <= nextMonthDisplay; i++) {
-grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${i}</div></div>`;
-}
-}
-
-// ===================== TROUPE SECTION LAYER =====================
+// ===================== TROUPE SECTION =====================
 function renderTroupes(troupes) {
-const grid = document.getElementById('troupe-grid');
-if (!grid) return;
-grid.innerHTML = '';
+  const grid = document.getElementById('troupe-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
 
-if (troupes.length === 0) {
-grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="ti ti-users-minus"></i>該当する劇団が見つかりませんでした。</div>';
-return;
-}
+  if (troupes.length === 0) {
+    grid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;"><i class="ti ti-users-minus"></i>該当する劇団が見つかりませんでした。</div>';
+    return;
+  }
 
-troupes.forEach(t => {
-const colorClass = getTroupeColorClass(t.id);
+  troupes.forEach(t => {
+    const colorClass = getTroupeColorClass(t.id);
+    let dummy = document.createElement('div');
+    dummy.className = colorClass;
+    document.body.appendChild(dummy);
+    const bg = window.getComputedStyle(dummy).backgroundColor;
+    const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
+    document.body.removeChild(dummy);
 
-let dummy = document.createElement('div');
-dummy.className = colorClass;
-document.body.appendChild(dummy);
-const bg = window.getComputedStyle(dummy).backgroundColor;
-const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
-document.body.removeChild(dummy);
-
-const myPerfs = performancesData.filter(p => p.troupeId === t.id);
-let statusHtml = '<span class="status-badge status-closed">公演予定なし</span>';
-
-if (myPerfs.length > 0) {
-const activeOpenPerf = myPerfs.find(p => getAcceptanceStatus(p).accept);
-if (activeOpenPerf) {
-statusHtml = `<span class="status-badge status-open">折り込み受付中</span>`;
-} else {
-const statusObj = getAcceptanceStatus(myPerfs[myPerfs.length - 1]);
-statusHtml = `<span class="status-badge ${statusObj.class}">${statusObj.text}</span>`;
-}
-}
-
-const card = document.createElement('div');
-card.className = 'troupe-card';
-card.onclick = () => openTroupeModal(t.id);
-
-let deleteBtnHtml = '';
-if (currentUser && currentUser.id === t.id) {
-deleteBtnHtml = `
-         <button class="troupe-delete-btn" title="マイページからアカウントを完全削除できます" onclick="event.stopPropagation(); showPage('mypage');">
-           <i class="ti ti-settings" style="font-size: 16px;"></i>
-         </button>
-       `;
-}
-
-card.innerHTML = `
-       ${deleteBtnHtml}
-       <div class="troupe-card-head">
-         <div class="troupe-avatar" style="background:${bg}; color:${borderLeft}">${t.name.charAt(0)}</div>
-         <div>
-           <div class="troupe-name">${t.name}</div>
-           <div class="troupe-univ">${t.affiliation}</div>
-         </div>
-         ${statusHtml}
-       </div>
-       <div class="troupe-stats">
-         <span>登録公演: <strong>${myPerfs.length}</strong> 件</span>
-         <span style="color:var(--crimson); font-weight:500;">詳細・スケジュールを見る →</span>
-       </div>
-     `;
-grid.appendChild(card);
-});
-}
-
-function filterTroupes() {
-const keyword = document.querySelector('.search-input').value.toLowerCase();
-const univ = document.getElementById('univ-filter').value;
-const acceptOnly = document.getElementById('accept-filter').value;
-
-const filtered = troupesData.filter(t => {
-const matchKeyword = t.name.toLowerCase().includes(keyword) || t.affiliation.toLowerCase().includes(keyword);
-const matchUniv = !univ || t.affiliation === univ;
-
-let matchAccept = true;
-if (acceptOnly) {
-const myPerfs = performancesData.filter(p => p.troupeId === t.id);
-const hasAccept = myPerfs.some(p => getAcceptanceStatus(p).accept);
-matchAccept = (acceptOnly === 'true') ? hasAccept : !hasAccept;
-}
-
-return matchKeyword && matchUniv && matchAccept;
-});
-
-renderTroupes(filtered);
-}
-
-function openTroupeModal(troupeId) {
-const troupe = troupesData.find(t => t.id === troupeId);
-if (!troupe) return;
-
-const colorClass = getTroupeColorClass(troupe.id);
-let dummy = document.createElement('div');
-dummy.className = colorClass;
-document.body.appendChild(dummy);
-const bg = window.getComputedStyle(dummy).backgroundColor;
-const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
-document.body.removeChild(dummy);
-
-const avatar = document.getElementById('modal-troupe-avatar');
-avatar.textContent = troupe.name.charAt(0);
-avatar.style.background = bg;
-avatar.style.color = borderLeft;
-
-document.getElementById('modal-troupe-name').textContent = troupe.name;
-document.getElementById('modal-troupe-affiliation').textContent = `所属: ${troupe.affiliation}`;
-document.getElementById('modal-troupe-description').textContent = troupe.description || "劇団紹介文はまだ登録されていません。";
-
-const linksWrap = document.getElementById('modal-troupe-links');
-linksWrap.innerHTML = '';
-
-if (troupe.homepage) {
-linksWrap.innerHTML += `
-       <a href="${troupe.homepage}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--crimson); background:var(--crimson-pale); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid rgba(139,26,47,0.15);">
-         <i class="ti ti-world" style="font-size:16px;"></i> <span>公式ホームページを開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i>
-       </a>`;
-}
-if (troupe.sns) {
-linksWrap.innerHTML += `
-       <a href="${troupe.sns}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:#1A1410; background:var(--surface2); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid var(--border-neutral);">
-         <i class="ti ti-brand-x" style="font-size:16px;"></i> <span>公式SNS (X / Twitter) を開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i>
-       </a>`;
-}
-if (!troupe.homepage && !troupe.sns) {
-linksWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">外部リンク情報は登録されていません。</p>';
-}
-
-const troupePerfs = performancesData.filter(p => p.troupeId === troupeId);
-const perfListWrap = document.getElementById('modal-troupe-performances');
-perfListWrap.innerHTML = '';
-
-if (troupePerfs.length === 0) {
-perfListWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">現在、登録されている公演スケジュールはありません。</p>';
-} else {
-troupePerfs.forEach(p => {
-const stat = getAcceptanceStatus(p);
-const item = document.createElement('div');
-item.style.cssText = "padding:10px 12px; background:var(--white); border:0.5px solid var(--border-neutral); border-radius:var(--radius-md); cursor:pointer; display:flex; flex-direction:column; gap:4px; transition:all 0.2s;";
-item.onmouseover = () => item.style.borderColor = "var(--crimson)";
-item.onmouseout = () => item.style.borderColor = "var(--border-neutral)";
-
-item.onclick = () => {
-closeTroupeModal();
-openPerformanceDetail(p.id);
-};
-
-item.innerHTML = `
-         <div style="display:flex; justify-content:between; align-items:flex-start; gap:8px; width:100%;">
-           <strong style="font-size:14px; color:var(--ink); flex:1;">${p.title}</strong>
-           <span class="status-badge ${stat.class}" style="margin:0; font-size:10px; padding:2px 6px;">${stat.text}</span>
-         </div>
-         <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:12px; margin-top:2px;">
-           <span><i class="ti ti-calendar" style="font-size:13px;"></i> ${p.start} ～ ${p.end}</span>
-           <span><i class="ti ti-map-pin" style="font-size:13px;"></i> ${p.venue}</span>
-         </div>
-       `;
-perfListWrap.appendChild(item);
-});
-}
-
-document.getElementById('troupe-detail-modal').style.display = 'flex';
-}
-
-function closeTroupeModal() {
-document.getElementById('troupe-detail-modal').style.display = 'none';
-}
-
-// ===================== PERFORMANCE DETAIL CORE =====================
-function openPerformanceDetail(perfId) {
-selectedPerformanceId = perfId;
-const perf = performancesData.find(p => p.id === perfId);
-if (!perf) return;
-
-const troupe = troupesData.find(t => t.id === perf.troupeId);
-const troupeNameStr = troupe ? troupe.name : "不明な劇団";
-
-document.getElementById('detail-troupe-name').innerHTML = `<i class="ti ti-users" style="font-size:13px"></i> ${troupeNameStr} の詳細情報を表示`;
-document.getElementById('detail-title').textContent = perf.title;
-document.getElementById('detail-desc').textContent = perf.desc || "公演概要・補足テキストは未登録です。";
-document.getElementById('detail-date').textContent = `${perf.start} ～ ${perf.end}`;
-document.getElementById('detail-venue').textContent = perf.venue;
-document.getElementById('detail-accept-period').textContent = `${perf.acceptStart} ～ ${perf.acceptEnd}`;
-document.getElementById('detail-email').textContent = perf.email || "未設定";
-document.getElementById('detail-max-quota').innerHTML = `${perf.maxQuota}<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span>`;
-
-const totalCopies = incomingRequests
-.filter(r => r.perfId === perfId && (r.status === 'accepted' || r.status === 'pending'))
-.reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-
-let pct = (totalCopies / perf.maxQuota) * 100;
-if (pct > 100) pct = 100;
-document.getElementById('detail-quota-bar').style.width = `${pct}%`;
-document.getElementById('detail-quota-summary').textContent = `${totalCopies} / ${perf.maxQuota} 部（承認済み＆保留中の合計）`;
-
-const statusObj = getAcceptanceStatus(perf);
-const badge = document.getElementById('detail-status-badge');
-badge.textContent = statusObj.text;
-badge.className = `status-badge ${statusObj.class}`;
-
-const reqBtn = document.getElementById('detail-request-btn');
-if (statusObj.accept) {
-reqBtn.disabled = false;
-reqBtn.textContent = "この公演に折り込みを依頼する";
-} else {
-reqBtn.disabled = true;
-reqBtn.textContent = `リクエスト受付不可（${statusObj.text}）`;
-}
-
-const actionsBlock = document.getElementById('perf-my-actions');
-if (currentUser && currentUser.id === perf.troupeId) {
-actionsBlock.style.display = 'flex';
-} else {
-actionsBlock.style.display = 'none';
-}
-
-showPage('perf-detail');
-}
-
-function handleDetailTroupeLinkClick() {
-const perf = performancesData.find(p => p.id === selectedPerformanceId);
-if (perf) {
-openTroupeModal(perf.troupeId);
-}
-}
-
-// ===================== REQUEST SUBMIT LAYER =====================
-function openRequestForm() {
-document.getElementById('success-banner').classList.remove('show');
-document.getElementById('request-form-body').style.display = 'block';
-
-const perf = performancesData.find(p => p.id === selectedPerformanceId);
-if (perf) {
-document.getElementById('req-form-title').textContent = `『${perf.title}』への折り込み申請`;
-}
-
-// フィールド初期化
-document.getElementById('req-address').value = '';
-const radioButtons = document.getElementsByName('req-delivery-method');
-if (radioButtons.length > 0) radioButtons[0].checked = true; // 「対面」をデフォルト選択
-
-if (currentUser) {
-document.getElementById('req-from-name').value = currentUser.name;
-document.getElementById('req-from-email').value = currentUser.email;
-} else {
-document.getElementById('req-from-name').value = '';
-document.getElementById('req-from-email').value = '';
-}
-
-showPage('request-form');
-}
-
-// 💡 リクエスト送信処理に住所と受け渡し方法の抽出・格納を追加
-  function submitRequestForm() {
-    const fromName = document.getElementById('req-from-name').value.trim();
-    const fromEmail = document.getElementById('req-from-email').value.trim();
-    const address = document.getElementById('req-address').value.trim(); // 住所（任意）
-    const copies = parseInt(document.getElementById('req-copies').value);
-    const size = document.getElementById('req-size').value;
-    const notes = document.getElementById('req-notes').value;
-
-    // ラジオボタンの選択値を取得（対面 or 郵送）
-    const radioMethods = document.getElementsByName('req-delivery-method');
-    let deliveryMethod = "対面";
-    for (let i = 0; i < radioMethods.length; i++) {
-      if (radioMethods[i].checked) {
-        deliveryMethod = radioMethods[i].value;
-        break;
+    const myPerfs = performancesData.filter(p => p.troupeId === t.id);
+    let statusHtml = '<span class="status-badge status-closed">公演予定なし</span>';
+    if (myPerfs.length > 0) {
+      const activeOpenPerf = myPerfs.find(p => getAcceptanceStatus(p).accept);
+      if (activeOpenPerf) {
+        statusHtml = `<span class="status-badge status-open">折り込み受付中</span>`;
+      } else {
+        const statusObj = getAcceptanceStatus(myPerfs[myPerfs.length - 1]);
+        statusHtml = `<span class="status-badge ${statusObj.class}">${statusObj.text}</span>`;
       }
     }
 
-    if (!fromName || !fromEmail || !copies) {
-      alert('必須項目(*)を入力してください。');
-      return;
-  async function submitRequestForm() {
+    const card = document.createElement('div');
+    card.className = 'troupe-card';
+    card.onclick = () => openTroupeModal(t.id);
+
+    let deleteBtnHtml = '';
+    if (currentUser && currentUser.id === t.id) {
+      deleteBtnHtml = `<button class="troupe-delete-btn" title="マイページから管理できます" onclick="event.stopPropagation(); showPage('mypage');"><i class="ti ti-settings" style="font-size: 16px;"></i></button>`;
+    }
+
+    card.innerHTML = `
+      ${deleteBtnHtml}
+      <div class="troupe-card-head">
+        <div class="troupe-avatar" style="background:${bg}; color:${borderLeft}">${t.name.charAt(0)}</div>
+        <div>
+          <div class="troupe-name">${t.name}</div>
+          <div class="troupe-univ">${t.affiliation}</div>
+        </div>
+        ${statusHtml}
+      </div>
+      <div class="troupe-stats">
+        <span>登録公演: <strong>${myPerfs.length}</strong> 件</span>
+        <span style="color:var(--crimson); font-weight:500;">詳細・スケジュールを見る →</span>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function filterTroupes() {
+  const keyword = document.querySelector('.search-input').value.toLowerCase();
+  const univ = document.getElementById('univ-filter').value;
+  const acceptOnly = document.getElementById('accept-filter').value;
+
+  const filtered = troupesData.filter(t => {
+    const matchKeyword = t.name.toLowerCase().includes(keyword) || t.affiliation.toLowerCase().includes(keyword);
+    const matchUniv = !univ || t.affiliation === univ;
+    let matchAccept = true;
+    if (acceptOnly) {
+      const myPerfs = performancesData.filter(p => p.troupeId === t.id);
+      const hasAccept = myPerfs.some(p => getAcceptanceStatus(p).accept);
+      matchAccept = (acceptOnly === 'true') ? hasAccept : !hasAccept;
+    }
+    return matchKeyword && matchUniv && matchAccept;
+  });
+  renderTroupes(filtered);
+}
+
+function openTroupeModal(troupeId) {
+  const troupe = troupesData.find(t => t.id === troupeId);
+  if (!troupe) return;
+
+  const colorClass = getTroupeColorClass(troupe.id);
+  let dummy = document.createElement('div');
+  dummy.className = colorClass;
+  document.body.appendChild(dummy);
+  const bg = window.getComputedStyle(dummy).backgroundColor;
+  const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
+  document.body.removeChild(dummy);
+
+  const avatar = document.getElementById('modal-troupe-avatar');
+  avatar.textContent = troupe.name.charAt(0);
+  avatar.style.background = bg;
+  avatar.style.color = borderLeft;
+
+  document.getElementById('modal-troupe-name').textContent = troupe.name;
+  document.getElementById('modal-troupe-affiliation').textContent = `所属: ${troupe.affiliation}`;
+  document.getElementById('modal-troupe-description').textContent = troupe.description || "劇団紹介文はまだ登録されていません。";
+
+  const linksWrap = document.getElementById('modal-troupe-links');
+  linksWrap.innerHTML = '';
+  if (troupe.homepage) {
+    linksWrap.innerHTML += `<a href="${troupe.homepage}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--crimson); background:var(--crimson-pale); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid rgba(139,26,47,0.15);"><i class="ti ti-world" style="font-size:16px;"></i> <span>公式ホームページを開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i></a>`;
+  }
+  if (troupe.sns) {
+    linksWrap.innerHTML += `<a href="${troupe.sns}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:#1A1410; background:var(--surface2); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid var(--border-neutral);"><i class="ti ti-brand-x" style="font-size:16px;"></i> <span>公式SNS (X / Twitter) を開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i></a>`;
+  }
+  if (!troupe.homepage && !troupe.sns) {
+    linksWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">外部リンク情報は登録されていません。</p>';
+  }
+
+  const troupePerfs = performancesData.filter(p => p.troupeId === troupeId);
+  const perfListWrap = document.getElementById('modal-troupe-performances');
+  perfListWrap.innerHTML = '';
+
+  if (troupePerfs.length === 0) {
+    perfListWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">現在、登録されている公演スケジュールはありません。</p>';
+  } else {
+    troupePerfs.forEach(p => {
+      const stat = getAcceptanceStatus(p);
+      const item = document.createElement('div');
+      item.style.cssText = "padding:10px 12px; background:var(--white); border:0.5px solid var(--border-neutral); border-radius:var(--radius-md); cursor:pointer; display:flex; flex-direction:column; gap:4px; transition:all 0.2s;";
+      item.onmouseover = () => item.style.borderColor = "var(--crimson)";
+      item.onmouseout = () => item.style.borderColor = "var(--border-neutral)";
+      item.onclick = () => { closeTroupeModal(); openPerformanceDetail(p.id); };
+      item.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; width:100%;">
+          <strong style="font-size:14px; color:var(--ink); flex:1;">${p.title}</strong>
+          <span class="status-badge ${stat.class}" style="margin:0; font-size:10px; padding:2px 6px;">${stat.text}</span>
+        </div>
+        <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:12px; margin-top:2px;">
+          <span><i class="ti ti-calendar" style="font-size:13px;"></i> ${p.start} ～ ${p.end}</span>
+          <span><i class="ti ti-map-pin" style="font-size:13px;"></i> ${p.venue}</span>
+        </div>`;
+      perfListWrap.appendChild(item);
+    });
+  }
+
+  document.getElementById('troupe-detail-modal').style.display = 'flex';
+}
+
+function closeTroupeModal() {
+  document.getElementById('troupe-detail-modal').style.display = 'none';
+}
+
+// ===================== PERFORMANCE DETAIL =====================
+function openPerformanceDetail(perfId) {
+  selectedPerformanceId = perfId;
+  const perf = performancesData.find(p => p.id === perfId);
+  if (!perf) return;
+
+  const troupe = troupesData.find(t => t.id === perf.troupeId);
+  const troupeNameStr = troupe ? troupe.name : "不明な劇団";
+
+  document.getElementById('detail-troupe-name').innerHTML = `<i class="ti ti-users" style="font-size:13px"></i> ${troupeNameStr} の詳細情報を表示`;
+  document.getElementById('detail-title').textContent = perf.title;
+  document.getElementById('detail-desc').textContent = perf.desc || "公演概要・補足テキストは未登録です。";
+  document.getElementById('detail-date').textContent = `${perf.start} ～ ${perf.end}`;
+  document.getElementById('detail-venue').textContent = perf.venue;
+  document.getElementById('detail-accept-period').textContent = `${perf.acceptStart} ～ ${perf.acceptEnd}`;
+  document.getElementById('detail-email').textContent = perf.email || "未設定";
+  document.getElementById('detail-max-quota').innerHTML = `${perf.maxQuota}<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span>`;
+
+  const totalCopies = incomingRequests
+    .filter(r => r.perfId === perfId && (r.status === 'accepted' || r.status === 'pending'))
+    .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
+
+  let pct = Math.min((totalCopies / perf.maxQuota) * 100, 100);
+  document.getElementById('detail-quota-bar').style.width = `${pct}%`;
+  document.getElementById('detail-quota-summary').textContent = `${totalCopies} / ${perf.maxQuota} 部（承認済み＆保留中の合計）`;
+
+  const statusObj = getAcceptanceStatus(perf);
+  const badge = document.getElementById('detail-status-badge');
+  badge.textContent = statusObj.text;
+  badge.className = `status-badge ${statusObj.class}`;
+
+  const reqBtn = document.getElementById('detail-request-btn');
+  reqBtn.disabled = !statusObj.accept;
+  reqBtn.textContent = statusObj.accept ? "この公演に折り込みを依頼する" : `リクエスト受付不可（${statusObj.text}）`;
+
+  const actionsBlock = document.getElementById('perf-my-actions');
+  actionsBlock.style.display = (currentUser && currentUser.id === perf.troupeId) ? 'flex' : 'none';
+
+  showPage('perf-detail');
+}
+
+function handleDetailTroupeLinkClick() {
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (perf) openTroupeModal(perf.troupeId);
+}
+
+// ===================== REQUEST FORM =====================
+function openRequestForm() {
+  document.getElementById('success-banner').classList.remove('show');
+  document.getElementById('request-form-body').style.display = 'block';
+
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (perf) document.getElementById('req-form-title').textContent = `『${perf.title}』への折り込み申請`;
+
+  document.getElementById('req-address').value = '';
+  const radioButtons = document.getElementsByName('req-delivery-method');
+  if (radioButtons.length > 0) radioButtons[0].checked = true;
+
+  if (currentUser) {
+    document.getElementById('req-from-name').value = currentUser.name;
+    document.getElementById('req-from-email').value = currentUser.email;
+  } else {
+    document.getElementById('req-from-name').value = '';
+    document.getElementById('req-from-email').value = '';
+  }
+
+  showPage('request-form');
+}
+
+async function submitRequestForm() {
   const perf = performancesData.find(p => p.id === selectedPerformanceId);
   if (!perf) return;
 
   const fromName = document.getElementById('req-from-name').value.trim();
   const fromEmail = document.getElementById('req-from-email').value.trim();
-  const address = document.getElementById('req-address').value.trim(); // 住所（任意）
+  const address = document.getElementById('req-address').value.trim();
   const copies = parseInt(document.getElementById('req-copies').value);
   const size = document.getElementById('req-size').value;
   const notes = document.getElementById('req-notes').value;
 
-  // ラジオボタンの選択値を取得（対面 or 郵送）
   const radioMethods = document.getElementsByName('req-delivery-method');
   let deliveryMethod = "対面";
   for (let i = 0; i < radioMethods.length; i++) {
-    if (radioMethods[i].checked) {
-      deliveryMethod = radioMethods[i].value;
-      break;
-}
+    if (radioMethods[i].checked) { deliveryMethod = radioMethods[i].value; break; }
   }
 
-    const perf = performancesData.find(p => p.id === selectedPerformanceId);
-    if (!perf) return;
   if (!fromName || !fromEmail || isNaN(copies) || copies <= 0) {
     alert('必須項目をすべて入力し、部数は正しく入力してください。');
     return;
   }
 
-    const newReq = {
-      id: "req-" + Date.now(),
-      perfId: selectedPerformanceId,
-      toTroupeId: perf.troupeId,
-      fromName,
-      fromEmail,
-      address,          // 💡 追加
-      deliveryMethod,   // 💡 追加
-      copies,
-      size,
-      notes,
-      status: "pending",
-      timestamp: new Date().toLocaleString()
   const newRequest = {
     id: 'req_' + Date.now(),
     perfId: selectedPerformanceId,
     toTroupeId: perf.troupeId,
-    fromName: fromName, // fromTroupeからfromNameに変更
-    fromEmail: fromEmail, // 追加
-    address: address, // 追加
-    deliveryMethod: deliveryMethod, // 追加
-    copies: copies,
-    size: size,
-    notes: notes,
-    timestamp: new Date().toLocaleString('ja-JP'), // 日付形式を調整
+    fromName,
+    fromEmail,
+    address,
+    deliveryMethod,
+    copies,
+    size,
+    notes,
+    timestamp: new Date().toLocaleString('ja-JP'),
     status: 'pending'
   };
 
   try {
-    // Supabaseに新しい依頼を挿入
-    const { data, error } = await supabase
-      .from('requests')
-      .insert([newRequest]);
-
+    const { error } = await db.from('requests').insert([newRequest]);
     if (error) throw error;
 
-    // 公演の現在の折り込み枚数を更新
-    const updatedCurrent = perf.current + copies;
-    const { error: updatePerfError } = await supabase
-      .from('performances')
-      .update({ current: updatedCurrent })
-      .eq('id', selectedPerformanceId);
-    
-    if (updatePerfError) throw updatePerfError;
-
-    // グローバル変数も更新
     incomingRequests.push(newRequest);
-    perf.current = updatedCurrent; // グローバル変数内の公演情報も更新
 
-    // EmailJSの送信処理はそのまま残す（非同期で実行）
+    // EmailJS通知
     const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
     const templateParams = {
       to_email: targetTroupe ? targetTroupe.email : '',
-      from_name: fromName,
-      reply_to: fromEmail,
-      copies: copies,
-      size: size,
-      notes: notes || '特になし',
-      delivery_method: deliveryMethod,
-      address: address || 'なし'
-};
-    const serviceID = 'service_4gfx3qf';
-    const templateID = 'template_rzattmh';
-
+      from_name: fromName, reply_to: fromEmail,
+      copies, size, notes: notes || '特になし',
+      delivery_method: deliveryMethod, address: address || 'なし'
+    };
     if (typeof emailjs !== 'undefined' && emailjs.send) {
-      emailjs.send(serviceID, templateID, templateParams)
-        .then(function(response) {
-          console.log('EmailJS Success!', response.status, response.text);
-          finalizeRequestFormSuccess();
-        }, function(error) {
-          console.error('EmailJS Error:', error);
-          alert('通知メール送信に一部エラーが出ましたが、システム内の依頼ボックスには確実に保存されました。');
-          finalizeRequestFormSuccess();
-        });
-    } else {
-      finalizeRequestFormSuccess();
+      emailjs.send('service_4gfx3qf', 'template_rzattmh', templateParams)
+        .then(() => {}, () => { alert('通知メール送信に一部エラーが出ましたが、依頼ボックスには保存されました。'); });
     }
-
-    incomingRequests.push(newReq);
-    saveAllData();
 
     document.getElementById('success-banner').classList.add('show');
     document.getElementById('request-form-body').style.display = 'none';
-    await loadAllData(); // 全データを再読み込みしてUIを最新化
 
-    setTimeout(() => {
-      openPerformanceDetail(selectedPerformanceId);
-    }, 1800);
+    setTimeout(() => { openPerformanceDetail(selectedPerformanceId); }, 1800);
   } catch (error) {
     console.error('折り込み依頼送信エラー:', error.message);
     alert('折り込み依頼の送信に失敗しました。');
-}
+  }
 }
 
 // ===================== REGISTER & EDIT PERFORMANCE =====================
 function prepareRegisterPage() {
-const msg = document.getElementById('register-need-login-msg');
-const body = document.getElementById('register-form-body');
-const titleLabel = document.getElementById('register-page-title');
-const submitBtn = document.getElementById('register-submit-btn');
+  const msg = document.getElementById('register-need-login-msg');
+  const body = document.getElementById('register-form-body');
 
-if (!currentUser) {
-msg.style.display = 'block';
-body.style.display = 'none';
-return;
-}
-
-msg.style.display = 'none';
-body.style.display = 'block';
-
-titleLabel.textContent = "新しい公演情報の公開登録";
-submitBtn.innerHTML = '<i class="ti ti-check"></i>この公演をカレンダーに登録する';
-submitBtn.onclick = handleRegisterPerformance;
-
-document.getElementById('new-perf-title').value = '';
-document.getElementById('new-perf-start').value = '2026-06-14';
-document.getElementById('new-perf-end').value = '2026-06-22';
-document.getElementById('new-perf-accept-start').value = '2026-05-20';
-document.getElementById('new-perf-accept-end').value = '2026-06-10';
-document.getElementById('new-perf-venue').value = '';
-document.getElementById('new-perf-quota').value = '300';
-document.getElementById('new-perf-desc').value = '';
-}
-
-  function handleRegisterPerformance() {
-    const title = document.getElementById('new-perf-title').value.trim();
-    const start = document.getElementById('new-perf-start').value;
-    const end = document.getElementById('new-perf-end').value;
-    const acceptStart = document.getElementById('new-perf-accept-start').value;
-    const acceptEnd = document.getElementById('new-perf-accept-end').value;
-    const venue = document.getElementById('new-perf-venue').value.trim();
-    const maxQuota = parseInt(document.getElementById('new-perf-quota').value);
-    const desc = document.getElementById('new-perf-desc').value;
-
-    if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || !maxQuota) {
-      alert('必須マークの項目をすべて正しく入力してください。');
-      return;
-  async function handleRegisterPerformance() {
   if (!currentUser) {
-    alert('公演を登録するにはログインが必要です。');
+    msg.style.display = 'block';
+    body.style.display = 'none';
     return;
   }
 
-  const title = document.getElementById('perf-title').value.trim();
-  const start = document.getElementById('perf-start-date').value;
-  const end = document.getElementById('perf-end-date').value;
-  const acceptStart = document.getElementById('perf-accept-start-date').value;
-  const acceptEnd = document.getElementById('perf-accept-end-date').value;
-  const venue = document.getElementById('perf-venue').value.trim();
-  const maxQuota = parseInt(document.getElementById('perf-max-quota').value);
-  const desc = document.getElementById('perf-desc').value.trim();
-  const email = document.getElementById('perf-contact-email').value.trim();
+  msg.style.display = 'none';
+  body.style.display = 'block';
 
-  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || isNaN(maxQuota) || !email) {
-    alert('必須項目をすべて入力してください。');
+  document.getElementById('register-page-title').textContent = "新しい公演情報の公開登録";
+  const submitBtn = document.getElementById('register-submit-btn');
+  submitBtn.innerHTML = '<i class="ti ti-check"></i>この公演をカレンダーに登録する';
+  submitBtn.onclick = handleRegisterPerformance;
+
+  if (!editingPerfId) {
+    document.getElementById('new-perf-title').value = '';
+    document.getElementById('new-perf-start').value = '2026-06-14';
+    document.getElementById('new-perf-end').value = '2026-06-22';
+    document.getElementById('new-perf-accept-start').value = '2026-05-20';
+    document.getElementById('new-perf-accept-end').value = '2026-06-10';
+    document.getElementById('new-perf-venue').value = '';
+    document.getElementById('new-perf-quota').value = '300';
+    document.getElementById('new-perf-desc').value = '';
+  }
+}
+
+async function handleRegisterPerformance() {
+  if (!currentUser) { alert('公演を登録するにはログインが必要です。'); return; }
+
+  // 【修正3】HTMLのID（new-perf-*）と一致させる
+  const title = document.getElementById('new-perf-title').value.trim();
+  const start = document.getElementById('new-perf-start').value;
+  const end = document.getElementById('new-perf-end').value;
+  const acceptStart = document.getElementById('new-perf-accept-start').value;
+  const acceptEnd = document.getElementById('new-perf-accept-end').value;
+  const venue = document.getElementById('new-perf-venue').value.trim();
+  const maxQuota = parseInt(document.getElementById('new-perf-quota').value);
+  const desc = document.getElementById('new-perf-desc').value.trim();
+
+  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || isNaN(maxQuota)) {
+    alert('必須マークの項目をすべて正しく入力してください。');
     return;
   }
 
-  const newPerfData = {
+  const perfData = {
     troupeId: currentUser.id,
-    title, start, end, acceptStart, acceptEnd, venue, maxQuota, current: 0, desc, email
+    title, start, end, acceptStart, acceptEnd, venue, maxQuota, desc,
+    email: currentUser.email
   };
 
   try {
-    let result;
     if (editingPerfId) {
-      // 既存公演の更新
-      result = await supabase
-        .from('performances')
-        .update(newPerfData)
-        .eq('id', editingPerfId);
+      const { error } = await db.from('performances').update(perfData).eq('id', editingPerfId);
+      if (error) throw error;
+      const idx = performancesData.findIndex(p => p.id === editingPerfId);
+      if (idx !== -1) performancesData[idx] = { ...performancesData[idx], ...perfData };
+      editingPerfId = null;
+      alert('公演情報を更新しました！');
     } else {
-      // 新規公演の登録
-      newPerfData.id = 'perf_' + Date.now(); // 新規登録時のみIDを生成
-      result = await supabase
-        .from('performances')
-        .insert([newPerfData]);
-}
-
-    const newPerf = {
-      id: "perf-" + Date.now(),
-      troupeId: currentUser.id,
-      title,
-      start,
-      end,
-      acceptStart,
-      acceptEnd,
-      venue,
-      maxQuota,
-      desc,
-      email: currentUser.email
-    };
-    if (result.error) throw result.error;
-
-    performancesData.push(newPerf);
-    saveAllData();
-    alert(editingPerfId ? '公演情報を更新しました！' : '新しい公演を登録しました！');
-    editingPerfId = null; // 編集モードを終了
-    await loadAllData(); // 全データを再読み込みしてUIを最新化
-    showPage('calendar'); // カレンダーページへ遷移
-
-    alert('新しい公演スケジュールを登録し、全体カレンダーに反映しました。');
+      perfData.id = 'perf_' + Date.now();
+      const { error } = await db.from('performances').insert([perfData]);
+      if (error) throw error;
+      performancesData.push(perfData);
+      alert('新しい公演スケジュールを登録し、全体カレンダーに反映しました。');
+    }
     showPage('calendar');
   } catch (error) {
     console.error('公演登録/更新エラー:', error.message);
-    alert('公演の登録または更新に失敗しました。');
-}
+    alert('公演の登録または更新に失敗しました: ' + error.message);
+  }
 }
 
 function startEditPerformance() {
-const perf = performancesData.find(p => p.id === selectedPerformanceId);
-if (!perf) return;
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (!perf) return;
 
-showPage('register', true);
+  editingPerfId = selectedPerformanceId;
+  showPage('register', true);
 
-document.getElementById('register-page-title').textContent = "公演情報の修正変更";
-const submitBtn = document.getElementById('register-submit-btn');
-submitBtn.innerHTML = '<i class="ti ti-refresh"></i>変更内容を保存する';
-submitBtn.onclick = saveEditPerformance;
+  document.getElementById('register-page-title').textContent = "公演情報の修正変更";
+  const submitBtn = document.getElementById('register-submit-btn');
+  submitBtn.innerHTML = '<i class="ti ti-refresh"></i>変更内容を保存する';
+  submitBtn.onclick = handleRegisterPerformance;
 
-document.getElementById('new-perf-title').value = perf.title;
-document.getElementById('new-perf-start').value = perf.start;
-document.getElementById('new-perf-end').value = perf.end;
-document.getElementById('new-perf-accept-start').value = perf.acceptStart;
-document.getElementById('new-perf-accept-end').value = perf.acceptEnd;
-document.getElementById('new-perf-venue').value = perf.venue;
-document.getElementById('new-perf-quota').value = perf.maxQuota;
-document.getElementById('new-perf-desc').value = perf.desc || '';
+  document.getElementById('new-perf-title').value = perf.title;
+  document.getElementById('new-perf-start').value = perf.start;
+  document.getElementById('new-perf-end').value = perf.end;
+  document.getElementById('new-perf-accept-start').value = perf.acceptStart;
+  document.getElementById('new-perf-accept-end').value = perf.acceptEnd;
+  document.getElementById('new-perf-venue').value = perf.venue;
+  document.getElementById('new-perf-quota').value = perf.maxQuota;
+  document.getElementById('new-perf-desc').value = perf.desc || '';
 }
 
-function saveEditPerformance() {
-const perf = performancesData.find(p => p.id === selectedPerformanceId);
-if (!perf) return;
-
-perf.title = document.getElementById('new-perf-title').value.trim();
-perf.start = document.getElementById('new-perf-start').value;
-perf.end = document.getElementById('new-perf-end').value;
-perf.acceptStart = document.getElementById('new-perf-accept-start').value;
-perf.acceptEnd = document.getElementById('new-perf-accept-end').value;
-perf.venue = document.getElementById('new-perf-venue').value.trim();
-perf.maxQuota = parseInt(document.getElementById('new-perf-quota').value);
-perf.desc = document.getElementById('new-perf-desc').value;
-
-saveAllData();
-alert('公演情報の修正を上書き保存しました。');
-openPerformanceDetail(perf.id);
+async function deletePerformanceClick() {
+  if (!confirm('本当にこの公演情報をカレンダーから完全に削除しますか？\n紐づいている折り込みリクエスト履歴も全て抹消されます。')) return;
+  try {
+    const { error: reqErr } = await db.from('requests').delete().eq('perfId', selectedPerformanceId);
+    if (reqErr) throw reqErr;
+    const { error: perfErr } = await db.from('performances').delete().eq('id', selectedPerformanceId);
+    if (perfErr) throw perfErr;
+    performancesData = performancesData.filter(p => p.id !== selectedPerformanceId);
+    incomingRequests = incomingRequests.filter(r => r.perfId !== selectedPerformanceId);
+    alert('公演情報を削除しました。');
+    showPage('calendar');
+  } catch (error) {
+    console.error('公演削除エラー:', error.message);
+    alert('公演の削除に失敗しました: ' + error.message);
+  }
 }
 
-function deletePerformanceClick() {
-if (confirm('本当にこの公演情報をカレンダーから完全に削除しますか？\n紐づいている他団体からの折り込みリクエスト履歴も全て抹消されます。')) {
-performancesData = performancesData.filter(p => p.id !== selectedPerformanceId);
-incomingRequests = incomingRequests.filter(r => r.perfId !== selectedPerformanceId);
-saveAllData();
-alert('公演情報を削除しました。');
-showPage('calendar');
-}
-}
-
-// ===================== IDENTITY & AUTHENTICATION MANAGEMENT =====================
+// ===================== AUTH =====================
 function updateAuthUI() {
-const loginBtn = document.getElementById('nav-login-btn');
-if (currentUser) {
-loginBtn.innerHTML = `<i class="ti ti-layout-dashboard"></i>管理マイページ`;
-} else {
-loginBtn.innerHTML = `<i class="ti ti-user"></i>ログイン`;
+  const loginBtn = document.getElementById('nav-login-btn');
+  if (currentUser) {
+    loginBtn.innerHTML = `<i class="ti ti-layout-dashboard"></i>管理マイページ`;
+  } else {
+    loginBtn.innerHTML = `<i class="ti ti-user"></i>ログイン`;
+  }
 }
-}
 
-  function handleRegisterTroupe() {
-    const name = document.getElementById('reg-troupe-name').value.trim();
-    const affiliation = document.getElementById('reg-troupe-univ').value;
-    const email = document.getElementById('reg-troupe-email').value.trim();
-    const password = document.getElementById('reg-troupe-password').value;
-    
-    const description = document.getElementById('reg-troupe-desc').value.trim();
-    const homepage = document.getElementById('reg-troupe-hp').value.trim();
-    const sns = document.getElementById('reg-troupe-sns').value.trim();
-
-    if (!name || !email || !password) {
-      alert('劇団名、メールアドレス、パスワードは必須入力項目です。');
-      return;
-    }
-
-    if (troupesData.some(t => t.email === email)) {
-      alert('このメールアドレスは既に他の劇団アカウントで登録されています。');
-      return;
-    }
-  async function handleRegisterTroupe() {
+async function handleRegisterTroupe() {
   const name = document.getElementById('reg-troupe-name').value.trim();
-  const affiliation = document.getElementById('reg-troupe-univ').value; // univからaffiliationに変更
+  const affiliation = document.getElementById('reg-troupe-univ').value;
   const email = document.getElementById('reg-troupe-email').value.trim();
   const password = document.getElementById('reg-troupe-password').value.trim();
   const description = document.getElementById('reg-troupe-desc').value.trim();
   const homepage = document.getElementById('reg-troupe-hp').value.trim();
   const sns = document.getElementById('reg-troupe-sns').value.trim();
 
-  if (!name || !email || !password) {
-    alert('必須項目をすべて入力してください。');
-    return;
-  }
+  if (!name || !email || !password) { alert('劇団名、メールアドレス、パスワードは必須入力項目です。'); return; }
 
-    const newId = "troupe-" + Date.now();
-    const newTroupe = {
-      id: newId,
-      name,
-      affiliation,
-      email,
-      password,
-      description,
-      homepage,
-      sns
-    };
-  // 既存メールアドレスのチェック（Supabase側でもユニーク制約を設定済み）
-  const { data: existingTroupe, error: checkError } = await supabase
-    .from('troupes')
-    .select('id')
-    .eq('email', email);
+  try {
+    const { data: existing, error: checkError } = await db.from('troupes').select('id').eq('email', email);
+    if (checkError) throw checkError;
+    if (existing && existing.length > 0) { alert('このメールアドレスは既に登録されています。'); return; }
+
+    const newTroupe = { id: 'tr_' + Date.now(), name, affiliation, email, password, description, homepage, sns };
+    const { error } = await db.from('troupes').insert([newTroupe]);
+    if (error) throw error;
 
     troupesData.push(newTroupe);
     currentUser = newTroupe;
-    saveAllData();
-  if (checkError) {
-    console.error('既存劇団チェックエラー:', checkError.message);
-    alert('劇団登録中にエラーが発生しました。');
-    return;
-  }
-  if (existingTroupe && existingTroupe.length > 0) {
-    alert('このメールアドレスは既に登録されています。');
-    return;
-  }
-
     alert(`劇団「${name}」のアカウントを作成し、ログインしました！`);
     updateFilterDropdown();
     renderLegend();
-    renderTroupes(troupesData);
     updateAuthUI();
     showPage('mypage');
-  const newId = 'tr_' + Date.now(); // ユニークIDを生成
-  const newTroupe = {
-    id: newId,
-    name,
-    affiliation,
-    email,
-    password, // パスワードは本来ハッシュ化すべき
-    description,
-    homepage,
-    sns
-  };
-
-  // Supabaseに新しい劇団を挿入
-  const { data, error } = await supabase
-    .from('troupes')
-    .insert([newTroupe]);
-
-  if (error) {
+  } catch (error) {
     console.error('劇団登録エラー:', error.message);
-    alert('劇団の登録に失敗しました。');
-    return;
+    alert('劇団の登録に失敗しました: ' + error.message);
+  }
 }
 
-  function handleLogin() {
-    const email = document.getElementById('login-email').value.trim();
-    const pass = document.getElementById('login-password').value;
-  // 成功したらグローバル変数も更新し、UIをリフレッシュ
-  troupesData.push(newTroupe);
-  currentUser = newTroupe; // 登録と同時にログイン状態に
-  
-  alert(`劇団「${name}」のアカウントを作成し、ログインしました！`);
-  await loadAllData(); // 全データを再読み込みしてUIを最新化
-  updateAuthUI();
-  showPage('mypage');
-}
-
-  async function handleLogin() {
+async function handleLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pass = document.getElementById('login-password').value;
 
-  if (!email || !pass) {
-    alert('メールアドレスとパスワードを入力してください');
-    return;
-  }
+  if (!email || !pass) { alert('メールアドレスとパスワードを入力してください'); return; }
 
-    const found = troupesData.find(t => t.email === email && t.password === pass);
-    if (!found) {
-      alert('メールアドレスまたはパスワードが正しくありません。');
-      return;
-    }
-  // Supabaseからメールアドレスに一致する劇団情報を取得
-  const { data: foundTroupes, error } = await supabase
-    .from('troupes')
-    .select('*')
-    .eq('email', email);
+  try {
+    const { data: foundTroupes, error } = await db.from('troupes').select('*').eq('email', email);
+    if (error) throw error;
 
-    currentUser = found;
-    saveAllData();
-    alert(`劇団「${found.name}」としてログインしました。`);
-    updateAuthUI();
-    renderMyPage();
-  if (error) {
-    console.error('ログインエラー:', error.message);
-    alert('ログイン中にエラーが発生しました。');
-    return;
-}
-
-  if (foundTroupes && foundTroupes.length > 0) {
-    const found = foundTroupes[0];
-    if (found.password && found.password === pass) {
-      currentUser = found;
-      alert(`劇団「${found.name}」としてログインしました。`);
-      await loadAllData(); // ログイン後、念のため全データを再読み込み
-      updateAuthUI();
-      showPage('mypage'); // ログイン後マイページへ
+    if (foundTroupes && foundTroupes.length > 0) {
+      const found = foundTroupes[0];
+      if (found.password === pass) {
+        currentUser = found;
+        alert(`劇団「${found.name}」としてログインしました。`);
+        await loadAllData();
+        updateAuthUI();
+        showPage('mypage');
+      } else {
+        alert('パスワードが間違っています。');
+      }
     } else {
-      alert('パスワードが間違っています。');
+      alert('登録されていないメールアドレスです。');
     }
-  } else {
-    alert('登録されていないメールアドレスです。');
+  } catch (error) {
+    console.error('ログインエラー:', error.message);
+    alert('ログイン中にエラーが発生しました: ' + error.message);
   }
 }
-    
+
 function handleLogout() {
-currentUser = null;
-saveAllData();
-updateAuthUI();
-alert('ログアウトしました。');
-showPage('calendar');
+  currentUser = null;
+  updateAuthUI();
+  alert('ログアウトしました。');
+  showPage('calendar');
 }
 
-// ===================== HOSTER MYPAGE MANAGEMENT =====================
-// 💡 インボックス描画処理：住所（あれば表示）と受け渡し方法バッジを可視化
+// ===================== MY PAGE =====================
 function renderMyPage() {
-const authSec = document.getElementById('auth-section');
-const dashSec = document.getElementById('dashboard-section');
+  const authSec = document.getElementById('auth-section');
+  const dashSec = document.getElementById('dashboard-section');
 
-if (!currentUser) {
-authSec.style.display = 'block';
-dashSec.style.display = 'none';
-return;
+  if (!currentUser) {
+    authSec.style.display = 'block';
+    dashSec.style.display = 'none';
+    return;
+  }
+
+  authSec.style.display = 'none';
+  dashSec.style.display = 'block';
+
+  document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
+  document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation} | システム通知先: ${currentUser.email}`;
+
+  const myReqs = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
+  document.getElementById('stat-incoming-pending').textContent = myReqs.filter(r => r.status === 'pending').length;
+  document.getElementById('stat-incoming-accepted').textContent = myReqs.filter(r => r.status === 'accepted').length;
+
+  const inboxWrap = document.getElementById('dashboard-inbox');
+  inboxWrap.innerHTML = '';
+
+  if (myReqs.length === 0) {
+    inboxWrap.innerHTML = '<div class="empty-state"><i class="ti ti-mailbox-off"></i>まだ折り込みリクエストは届いていません。</div>';
+    return;
+  }
+
+  [...myReqs].reverse().forEach(req => {
+    const targetPerf = performancesData.find(p => p.id === req.perfId);
+    const perfTitleStr = targetPerf ? targetPerf.title : "削除された公演";
+    const isUnread = req.status === 'pending';
+    const item = document.createElement('div');
+    item.className = `inbox-item ${isUnread ? 'unread' : ''}`;
+
+    let actionButtonsHtml = '';
+    if (req.status === 'pending') {
+      actionButtonsHtml = `<div class="inbox-actions"><button class="inbox-btn inbox-btn-accept" onclick="processRequest('${req.id}', 'accepted')"><i class="ti ti-check"></i> 承認</button><button class="inbox-btn inbox-btn-decline" onclick="processRequest('${req.id}', 'declined')"><i class="ti ti-ban"></i> 拒否</button></div>`;
+    } else {
+      const badgeLabel = req.status === 'accepted' ? '承認済み' : '拒否済み';
+      const badgeColor = req.status === 'accepted' ? '#1A6B4A' : '#A32D2D';
+      const badgeBg = req.status === 'accepted' ? '#E5F3EE' : '#FEF0F0';
+      actionButtonsHtml = `<span style="font-size:12px; padding:4px 10px; border-radius:4px; font-weight:600; color:${badgeColor}; background:${badgeBg}">${badgeLabel}</span>`;
+    }
+
+    const methodStr = req.deliveryMethod || "対面";
+    const methodIcon = methodStr === "郵送" ? "ti-truck" : "ti-box";
+    const methodBadgeColor = methodStr === "郵送" ? "color:#1a4a8b; background:#e5eef9;" : "color:#8b5a1a; background:#fff4e5;";
+    const addressHtml = req.address ? `<div style="font-size:12px; color:var(--ink-mid); background:var(--surface); border:1px dashed var(--border-neutral); padding:4px 8px; border-radius:4px; margin-top:4px;"><i class="ti ti-map-pin" style="font-size:12px;"></i> 返送用住所: ${req.address}</div>` : '';
+
+    item.innerHTML = `
+      <div class="inbox-body">
+        <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">対象公演：${perfTitleStr}</div>
+        <div class="inbox-from">${req.fromName} <span style="font-weight:400; font-size:12px; color:var(--muted)">(${req.fromEmail})</span></div>
+        ${addressHtml}
+        <div class="inbox-preview" title="${req.notes || '備考なし'}" style="margin-top:4px;">メッセージ: ${req.notes || 'なし'}</div>
+        <div class="inbox-meta">
+          <span class="inbox-copies">${req.copies} 部</span>
+          <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
+          <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:3px; ${methodBadgeColor}"><i class="ti ${methodIcon}"></i> ${methodStr}</span>
+          <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
+        </div>
+      </div>
+      ${actionButtonsHtml}`;
+    inboxWrap.appendChild(item);
+  });
 }
 
-authSec.style.display = 'none';
-dashSec.style.display = 'block';
-
-document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
-document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation} | システム通知先: ${currentUser.email}`;
-
-const myReqs = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
-const pendingCount = myReqs.filter(r => r.status === 'pending').length;
-const acceptedCount = myReqs.filter(r => r.status === 'accepted').length;
-
-document.getElementById('stat-incoming-pending').textContent = pendingCount;
-document.getElementById('stat-incoming-accepted').textContent = acceptedCount;
-
-const inboxWrap = document.getElementById('dashboard-inbox');
-inboxWrap.innerHTML = '';
-
-if (myReqs.length === 0) {
-inboxWrap.innerHTML = '<div class="empty-state"><i class="ti ti-mailbox-off"></i>まだ折り込みリクエストは届いていません。</div>';
-return;
-}
-
-[...myReqs].reverse().forEach(req => {
-const targetPerf = performancesData.find(p => p.id === req.perfId);
-const perfTitleStr = targetPerf ? targetPerf.title : "削除された公演";
-
-const isUnread = req.status === 'pending';
-const item = document.createElement('div');
-item.className = `inbox-item ${isUnread ? 'unread' : ''}`;
-
-let actionButtonsHtml = '';
-if (req.status === 'pending') {
-actionButtonsHtml = `
-         <div class="inbox-actions">
-           <button class="inbox-btn inbox-btn-accept" onclick="processRequest('${req.id}', 'accepted')"><i class="ti ti-check"></i> 承認</button>
-           <button class="inbox-btn inbox-btn-decline" onclick="processRequest('${req.id}', 'declined')"><i class="ti ti-ban"></i> 拒否</button>
-         </div>
-       `;
-} else {
-const badgeLabel = req.status === 'accepted' ? '承認済み' : '拒否済み';
-const badgeColor = req.status === 'accepted' ? '#1A6B4A' : '#A32D2D';
-const badgeBg = req.status === 'accepted' ? '#E5F3EE' : '#FEF0F0';
-actionButtonsHtml = `
-         <span style="font-size:12px; padding:4px 10px; border-radius:4px; font-weight:600; color:${badgeColor}; background:${badgeBg}">
-           ${badgeLabel}
-         </span>
-       `;
-}
-
-// 受け渡し方法の文字とアイコンを決定（デフォルトは対面）
-const methodStr = req.deliveryMethod || "対面";
-const methodIcon = methodStr === "郵送" ? "ti-truck" : "ti-box";
-const methodBadgeColor = methodStr === "郵送" ? "color:#1a4a8b; background:#e5eef9;" : "color:#8b5a1a; background:#fff4e5;";
-
-// 住所が登録されている場合のみHTMLを生成
-const addressHtml = req.address 
-? `<div style="font-size:12px; color:var(--ink-mid); background:var(--surface); border:1px dashed var(--border-neutral); padding:4px 8px; border-radius:4px; margin-top:4px;"><i class="ti ti-map-pin" style="font-size:12px;"></i> 返送用住所: ${req.address}</div>`
-: '';
-
-item.innerHTML = `
-       <div class="inbox-body">
-         <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">対象公演：${perfTitleStr}</div>
-         <div class="inbox-from">${req.fromName} <span style="font-weight:400; font-size:12px; color:var(--muted)">(${req.fromEmail})</span></div>
-         ${addressHtml}
-         <div class="inbox-preview" title="${req.notes || '備考なし'}" style="margin-top:4px;">メッセージ: ${req.notes || 'なし'}</div>
-         <div class="inbox-meta">
-           <span class="inbox-copies">${req.copies} 部</span>
-           <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
-           <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:3px; ${methodBadgeColor}"><i class="ti ${methodIcon}"></i> ${methodStr}</span>
-           <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
-         </div>
-       </div>
-       ${actionButtonsHtml}
-     `;
-inboxWrap.appendChild(item);
-});
-}
-
-  function processRequest(reqId, newStatus) {
-    const req = incomingRequests.find(r => r.id === reqId);
-    if (!req) return;
- async function processRequest(reqId, newStatus) {
+async function processRequest(reqId, newStatus) {
   const req = incomingRequests.find(r => r.id === reqId);
   if (!req) return;
 
-    if (newStatus === 'accepted') {
-      const targetPerf = performancesData.find(p => p.id === req.perfId);
-      if (targetPerf) {
-        const currentTotal = incomingRequests
-          .filter(r => r.perfId === req.perfId && (r.status === 'accepted' || r.status === 'pending'))
-          .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-        
-        if (currentTotal > targetPerf.maxQuota) {
-          if (!confirm('注意: この申請を承認すると、設定されている上限受付部数枠を超過します。本当に承認しますか？')) {
-            return;
-          }
   if (newStatus === 'accepted') {
     const targetPerf = performancesData.find(p => p.id === req.perfId);
     if (targetPerf) {
       const currentTotal = incomingRequests
         .filter(r => r.perfId === req.perfId && (r.status === 'accepted' || r.status === 'pending'))
         .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-      
-      // 現在のコードの超過確認ロジックを維持
       if (currentTotal > targetPerf.maxQuota) {
-        if (!confirm('注意: この申請を承認すると、設定されている上限受付部数枠を超過します。本当に承認しますか？')) {
-          return;
-}
-}
-}
+        if (!confirm('注意: この申請を承認すると、設定されている上限受付部数枠を超過します。本当に承認しますか？')) return;
+      }
+    }
   }
 
   try {
-    const { data, error } = await supabase
-      .from('requests')
-      .update({ status: newStatus })
-      .eq('id', reqId);
-
+    const { error } = await db.from('requests').update({ status: newStatus }).eq('id', reqId);
     if (error) throw error;
-
-    // グローバル変数も更新
-req.status = newStatus;
-    saveAllData();
-    renderMyPage();
-
+    req.status = newStatus;
     alert(newStatus === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否（辞退）しました。');
-    await loadAllData(); // 全データを再読み込みしてUIを最新化
-    // renderMyPage(); // loadAllData内でUI更新が行われるため不要、または必要に応じて呼び出し
-
+    renderMyPage();
   } catch (error) {
     console.error('依頼応答エラー:', error.message);
-    alert('依頼の応答中にエラーが発生しました。');
-}
+    alert('依頼の応答中にエラーが発生しました: ' + error.message);
+  }
 }
 
-  function deleteTroupeAccount() {
-    if (confirm('【警告】本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報や、他団体からの申請履歴も一緒にすべてブラウザから削除されます）')) {
-      const id = currentUser.id;
-      troupesData = troupesData.filter(t => t.id !== id);
-      performancesData = performancesData.filter(p => p.troupeId !== id);
-      incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
-      
-      currentUser = null;
-      saveAllData();
-      alert('アカウント情報をすべて完全に削除しました。');
-      
-      updateFilterDropdown();
-      renderLegend();
-      renderTroupes(troupesData);
-      updateAuthUI();
-      renderCalendar();
-      showPage('troupes');
-    }
- async function deleteTroupeAccount() {
-  if (!currentUser) {
-    alert('ログインしていません。');
-    return;
-  }
-
-  if (!confirm('【警告】本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報や、他団体からの申請履歴も一緒にすべて削除されます）')) {
-    return;
-  }
+async function deleteTroupeAccount() {
+  if (!currentUser) { alert('ログインしていません。'); return; }
+  if (!confirm('【警告】本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報や、他団体からの申請履歴も一緒にすべて削除されます）')) return;
 
   const id = currentUser.id;
-
   try {
-    // 関連する公演情報を削除
-    const { error: perfError } = await supabase
-      .from('performances')
-      .delete()
-      .eq('troupeId', id);
-    if (perfError) throw perfError;
+    const { error: perfErr } = await db.from('performances').delete().eq('troupeId', id);
+    if (perfErr) throw perfErr;
+    const { error: reqErr } = await db.from('requests').delete().eq('toTroupeId', id);
+    if (reqErr) throw reqErr;
+    const { error: troupeErr } = await db.from('troupes').delete().eq('id', id);
+    if (troupeErr) throw troupeErr;
 
-    // 関連する依頼情報を削除
-    const { error: reqError } = await supabase
-      .from('requests')
-      .delete()
-      .eq('toTroupeId', id);
-    if (reqError) throw reqError;
-
-    // 劇団自体を削除
-    const { error: troupeError } = await supabase
-      .from('troupes')
-      .delete()
-      .eq('id', id);
-    if (troupeError) throw troupeError;
-
-    // グローバル変数からも削除
     troupesData = troupesData.filter(t => t.id !== id);
     performancesData = performancesData.filter(p => p.troupeId !== id);
     incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
-    
     currentUser = null;
     alert('アカウント情報をすべて完全に削除しました。');
-    
-    await loadAllData(); // 全データを再読み込みしてUIを最新化
+    updateFilterDropdown();
+    renderLegend();
     updateAuthUI();
     showPage('troupes');
-
   } catch (error) {
     console.error('劇団削除エラー:', error.message);
-    alert('劇団の削除中にエラーが発生しました。');
-}
-}
-
-function resetAllDataToDefault() {
-if (confirm('ブラウザに保存されているテストデータをすべてリセットし、最初の初期劇団・公演データ（デモデータ）の状態に復元しますか？\n作成したアカウントや申請履歴は削除されます。')) {
-localStorage.removeItem('troupesData_v4');
-localStorage.removeItem('performancesData_v4');
-localStorage.removeItem('incomingRequests_v4');
-localStorage.removeItem('currentUser_v4');
-
-troupesData = [...DEFAULT_TROUPES];
-performancesData = [...DEFAULT_PERFORMANCES];
-incomingRequests = [...DEFAULT_REQUESTS];
-currentUser = null;
-
-saveAllData();
-alert('すべてのデータをデモ初期状態に復元しました。');
-
-updateFilterDropdown();
-renderLegend();
-renderTroupes(troupesData);
-updateAuthUI();
-renderCalendar();
-showPage('calendar');
-}
+    alert('劇団の削除中にエラーが発生しました: ' + error.message);
+  }
 }
 
+async function resetAllDataToDefault() {
+  if (!confirm('Supabase上のデータをすべて削除し、デモ初期データに戻しますか？\n（この操作は取り消せません）')) return;
+  try {
+    await db.from('requests').delete().neq('id', '');
+    await db.from('performances').delete().neq('id', '');
+    await db.from('troupes').delete().neq('id', '');
+
+    await db.from('troupes').insert(DEFAULT_TROUPES);
+    await db.from('performances').insert(DEFAULT_PERFORMANCES);
+    await db.from('requests').insert(DEFAULT_REQUESTS);
+
+    currentUser = null;
+    await loadAllData();
+    updateFilterDropdown();
+    renderLegend();
+    updateAuthUI();
+    renderCalendar();
+    alert('すべてのデータをデモ初期状態に復元しました。');
+    showPage('calendar');
+  } catch (error) {
+    console.error('リセットエラー:', error.message);
+    alert('リセットに失敗しました: ' + error.message);
+  }
+}
+
+// ===================== エントリポイント（1回だけ） =====================
 window.onload = initApp;
 </script>
 
 </body>
-</html>
 </html>
