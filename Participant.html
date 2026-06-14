@@ -779,34 +779,31 @@ gap: 4px;
 
 </div>
 
-<div id="troupe-detail-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; padding: 1rem;" onclick="if(event.target === this) closeTroupeModal();">
-<div style="background: var(--white); padding: 24px; border-radius: var(--radius-lg); width: 100%; max-width: 520px; max-height: 85vh; overflow-y: auto; border: 1px solid var(--border-neutral); position: relative; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+<!-- ===================== TROUPE SIDE PANEL ===================== -->
+<div class="panel-overlay" id="troupe-panel-overlay" onclick="closeTroupeModal()"></div>
+<div class="side-panel" id="troupe-side-panel">
+  <div class="panel-header">
+    <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+      <div id="tsp-avatar" class="troupe-avatar" style="width:44px; height:44px; font-size:18px; flex-shrink:0;"></div>
+      <div style="min-width:0;">
+        <div class="panel-perf-title" id="tsp-name">-</div>
+        <div class="panel-troupe-label" id="tsp-affiliation">-</div>
+      </div>
+    </div>
+    <button class="panel-close-btn" onclick="closeTroupeModal()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="panel-section-title"><i class="ti ti-file-text"></i>劇団紹介</div>
+    <p id="tsp-description" style="white-space:pre-wrap; font-size:13px; color:var(--ink-mid); line-height:1.7; background:var(--surface); padding:12px; border-radius:var(--radius-md); border:0.5px solid var(--border-neutral); margin-bottom:16px;"></p>
 
-<button onclick="closeTroupeModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; cursor: pointer; font-size: 20px; color: var(--muted); display: flex; align-items: center; justify-content: center;"><i class="ti ti-x"></i></button>
+    <div class="panel-section-title"><i class="ti ti-link"></i>リンク</div>
+    <div id="tsp-links" style="display:flex; flex-direction:column; gap:8px; margin-bottom:16px;"></div>
 
-<div style="display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--border-neutral);">
-<div id="modal-troupe-avatar" class="troupe-avatar" style="width: 52px; height: 52px; font-size: 20px;"></div>
-<div>
-<h2 id="modal-troupe-name" style="color: var(--ink); font-size: 18px; font-weight: 600;">劇団名</h2>
-<p id="modal-troupe-affiliation" style="font-size: 13px; color: var(--muted); margin-top: 2px;"></p>
-</div>
-</div>
+    <div class="panel-divider"></div>
 
-<div style="margin-bottom: 20px;">
-<h3 style="font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em;"><i class="ti ti-file-text"></i> 劇団紹介</h3>
-<p id="modal-troupe-description" style="white-space: pre-wrap; font-size: 14px; color: var(--ink-mid); line-height: 1.6; background: var(--surface); padding: 12px; border-radius: var(--radius-md); border: 0.5px solid var(--border-neutral);"></p>
-</div>
-
-<div style="margin-bottom: 20px;">
-<h3 style="font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.05em;"><i class="ti ti-link"></i> リンク</h3>
-<div id="modal-troupe-links" style="display: flex; flex-direction: column; gap: 8px;"></div>
-</div>
-
-<div>
-<h3 style="font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 8px; letter-spacing: 0.05em;"><i class="ti ti-calendar-event"></i> 登録されている公演一覧</h3>
-<div id="modal-troupe-performances" style="display: flex; flex-direction: column; gap: 8px;"></div>
-</div>
-</div>
+    <div class="panel-section-title"><i class="ti ti-calendar-event"></i>登録されている公演</div>
+    <div id="tsp-performances" style="display:flex; flex-direction:column; gap:8px;"></div>
+  </div>
 </div>
 
 <!-- =====================================================================
@@ -1121,59 +1118,62 @@ function openTroupeModal(troupeId) {
   const borderLeft = window.getComputedStyle(dummy).borderLeftColor;
   document.body.removeChild(dummy);
 
-  const avatar = document.getElementById('modal-troupe-avatar');
+  const avatar = document.getElementById('tsp-avatar');
   avatar.textContent = troupe.name.charAt(0);
   avatar.style.background = bg;
   avatar.style.color = borderLeft;
 
-  document.getElementById('modal-troupe-name').textContent = troupe.name;
-  document.getElementById('modal-troupe-affiliation').textContent = `所属: ${troupe.affiliation}`;
-  document.getElementById('modal-troupe-description').textContent = troupe.description || "劇団紹介文はまだ登録されていません。";
+  document.getElementById('tsp-name').textContent = troupe.name;
+  document.getElementById('tsp-affiliation').textContent = troupe.affiliation || '';
+  document.getElementById('tsp-description').textContent = troupe.description || "劇団紹介文はまだ登録されていません。";
 
-  const linksWrap = document.getElementById('modal-troupe-links');
+  const linksWrap = document.getElementById('tsp-links');
   linksWrap.innerHTML = '';
   if (troupe.homepage) {
-    linksWrap.innerHTML += `<a href="${troupe.homepage}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:var(--crimson); background:var(--crimson-pale); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid rgba(139,26,47,0.15);"><i class="ti ti-world" style="font-size:16px;"></i> <span>公式ホームページを開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i></a>`;
+    linksWrap.innerHTML += `<a href="${troupe.homepage}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--crimson); background:var(--crimson-pale); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid rgba(139,26,47,0.15);"><i class="ti ti-world" style="font-size:15px;"></i> 公式ホームページを開く <i class="ti ti-external-link" style="margin-left:auto; font-size:13px;"></i></a>`;
   }
   if (troupe.sns) {
-    linksWrap.innerHTML += `<a href="${troupe.sns}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:14px; color:#1A1410; background:var(--surface2); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid var(--border-neutral);"><i class="ti ti-brand-x" style="font-size:16px;"></i> <span>公式SNS (X / Twitter) を開く</span> <i class="ti ti-external-link" style="margin-left:auto; font-size:14px;"></i></a>`;
+    linksWrap.innerHTML += `<a href="${troupe.sns}" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink); background:var(--surface2); padding:8px 12px; border-radius:var(--radius-sm); border:0.5px solid var(--border-neutral);"><i class="ti ti-brand-x" style="font-size:15px;"></i> 公式SNS (X / Twitter) を開く <i class="ti ti-external-link" style="margin-left:auto; font-size:13px;"></i></a>`;
   }
   if (!troupe.homepage && !troupe.sns) {
-    linksWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">外部リンク情報は登録されていません。</p>';
+    linksWrap.innerHTML = '<p style="font-size:12px; color:var(--muted); font-style:italic;">外部リンク情報は登録されていません。</p>';
   }
 
   const troupePerfs = performancesData.filter(p => p.troupeId === troupeId);
-  const perfListWrap = document.getElementById('modal-troupe-performances');
+  const perfListWrap = document.getElementById('tsp-performances');
   perfListWrap.innerHTML = '';
 
   if (troupePerfs.length === 0) {
-    perfListWrap.innerHTML = '<p style="font-size:13px; color:var(--muted); font-style:italic;">現在、登録されている公演スケジュールはありません。</p>';
+    perfListWrap.innerHTML = '<p style="font-size:12px; color:var(--muted); font-style:italic;">現在、登録されている公演スケジュールはありません。</p>';
   } else {
     troupePerfs.forEach(p => {
       const stat = getAcceptanceStatus(p);
       const item = document.createElement('div');
-      item.style.cssText = "padding:10px 12px; background:var(--white); border:0.5px solid var(--border-neutral); border-radius:var(--radius-md); cursor:pointer; display:flex; flex-direction:column; gap:4px; transition:all 0.2s;";
+      item.style.cssText = "padding:10px 12px; background:var(--surface); border:0.5px solid var(--border-neutral); border-radius:var(--radius-md); cursor:pointer; display:flex; flex-direction:column; gap:4px; transition:border-color 0.2s;";
       item.onmouseover = () => item.style.borderColor = "var(--crimson)";
       item.onmouseout = () => item.style.borderColor = "var(--border-neutral)";
-      item.onclick = () => { closeTroupeModal(); openPerformanceDetail(p.id); };
+      item.onclick = () => { closeTroupeModal(); openSidePanel(p.id); };
       item.innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px; width:100%;">
-          <strong style="font-size:14px; color:var(--ink); flex:1;">${p.title}</strong>
-          <span class="status-badge ${stat.class}" style="margin:0; font-size:10px; padding:2px 6px;">${stat.text}</span>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
+          <strong style="font-size:13px; color:var(--ink); flex:1;">${p.title}</strong>
+          <span class="status-badge ${stat.class}" style="margin:0; font-size:10px; padding:2px 6px; flex-shrink:0;">${stat.text}</span>
         </div>
-        <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:12px; margin-top:2px;">
-          <span><i class="ti ti-calendar" style="font-size:13px;"></i> ${p.start} ～ ${p.end}</span>
-          <span><i class="ti ti-map-pin" style="font-size:13px;"></i> ${p.venue}</span>
-        </div>`;
+        <div style="font-size:12px; color:var(--muted); display:flex; align-items:center; gap:12px; margin-top:2px; flex-wrap:wrap;">
+          <span><i class="ti ti-calendar" style="font-size:12px;"></i> ${p.start} ～ ${p.end}</span>
+          <span><i class="ti ti-map-pin" style="font-size:12px;"></i> ${p.venue}</span>
+        </div>
+        <div style="font-size:11px; color:var(--crimson); margin-top:2px;">タップして折り込み依頼 →</div>`;
       perfListWrap.appendChild(item);
     });
   }
 
-  document.getElementById('troupe-detail-modal').style.display = 'flex';
+  document.getElementById('troupe-panel-overlay').classList.add('open');
+  document.getElementById('troupe-side-panel').classList.add('open');
 }
 
 function closeTroupeModal() {
-  document.getElementById('troupe-detail-modal').style.display = 'none';
+  document.getElementById('troupe-panel-overlay').classList.remove('open');
+  document.getElementById('troupe-side-panel').classList.remove('open');
 }
 
 // ===================== PERFORMANCE DETAIL =====================
