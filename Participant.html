@@ -852,7 +852,8 @@ function getTroupeColorClass(troupeId) {
 }
 
 function getAcceptanceStatus(perf) {
-  const todayStr = "2026-06-13";
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   if (todayStr < perf.acceptStart) return { text: "受付開始前", class: "status-soon", accept: false };
   if (todayStr >= perf.acceptStart && todayStr <= perf.acceptEnd) {
     const approvedCount = incomingRequests
@@ -935,7 +936,11 @@ function renderCalendar() {
         ev.className = `cal-event ${colorClass}`;
         ev.textContent = p.title;
         ev.title = p.title;
-        ev.onclick = (e) => { e.stopPropagation(); openPerformanceDetail(p.id); };
+        ev.onclick = (e) => {
+          e.stopPropagation();
+          selectedPerformanceId = p.id;
+          openRequestForm();
+        };
         cell.appendChild(ev);
       }
     });
