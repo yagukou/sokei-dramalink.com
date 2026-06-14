@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ビラネットワーク｜早慶演劇祭</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <!-- Supabase CDNを読み込む -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -810,9 +809,6 @@ gap: 4px;
      JavaScript: 単一の <script> ブロック（重複なし・Supabase統合版）
      ===================================================================== -->
 <script>
-// ===================== EMAILJS 初期化 =====================
-emailjs.init("G7zBiW5JvckByX5DB");
-
 // ===================== SUPABASE 初期化 =====================
 // 【修正1】CDN版は window.supabase にモジュールが展開される。
 //           createClient を分割代入で取り出し、クライアントは別名 db に格納して
@@ -1288,20 +1284,31 @@ async function submitRequestForm() {
 
     incomingRequests.push(newRequest);
 
-    // EmailJS通知（未設定・エラーでもメイン処理に影響しないよう独立したtry-catchで囲む）
+    // Resend メール通知（Edge Function経由）
     try {
       const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
-      const templateParams = {
-        to_email: targetTroupe ? targetTroupe.email : '',
-        from_name: fromName, reply_to: fromEmail,
-        copies, size, notes: notes || '特になし',
-        delivery_method: deliveryMethod, address: address || 'なし'
-      };
-      if (typeof emailjs !== 'undefined' && typeof emailjs.send === 'function') {
-        await emailjs.send('service_4gfx3qf', 'template_rzattmh', templateParams);
+      if (targetTroupe && targetTroupe.email) {
+        await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            fromName,
+            fromEmail,
+            toEmail: targetTroupe.email,
+            perfTitle: perf.title,
+            copies,
+            size,
+            deliveryMethod,
+            address: address || '',
+            notes: notes || '',
+          }),
+        });
       }
     } catch (emailError) {
-      console.warn('EmailJS通知スキップ（依頼データは保存済み）:', emailError);
+      console.warn('メール通知スキップ（依頼データは保存済み）:', emailError);
     }
 
     document.getElementById('success-banner').classList.add('show');
@@ -1890,6 +1897,34 @@ async function submitPanelRequest() {
     const { error } = await db.from('requests').insert([newRequest]);
     if (error) throw error;
     incomingRequests.push(newRequest);
+
+    // Resend メール通知（Edge Function経由）
+    try {
+      const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
+      if (targetTroupe && targetTroupe.email) {
+        await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+          },
+          body: JSON.stringify({
+            fromName,
+            fromEmail,
+            toEmail: targetTroupe.email,
+            perfTitle: perf.title,
+            copies,
+            size,
+            deliveryMethod,
+            address: address || '',
+            notes: notes || '',
+          }),
+        });
+      }
+    } catch (emailError) {
+      console.warn('メール通知スキップ（依頼データは保存済み）:', emailError);
+    }
+
     document.getElementById('panel-form-body').style.display = 'none';
     document.getElementById('panel-success').classList.add('show');
   } catch (error) {
