@@ -719,6 +719,48 @@ gap: 4px;
 <div class="section-title"><i class="ti ti-inbox"></i>折り込み依頼インボックス</div>
 <div class="inbox-list" id="dashboard-inbox"></div>
 
+<!-- ===== プロフィール編集 ===== -->
+<div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
+  <div class="section-title"><i class="ti ti-user-edit"></i>劇団プロフィール設定</div>
+  <div class="form-card" style="max-width:100%; margin-bottom:0;">
+    <div class="form-2col">
+      <div class="form-row">
+        <label class="form-label">劇団名<span class="form-required">*</span></label>
+        <input type="text" class="form-input" id="edit-troupe-name" placeholder="例：劇団シアターエクスプレス">
+      </div>
+      <div class="form-row">
+        <label class="form-label">パスワード変更 <span class="form-optional">（変更しない場合は空欄）</span></label>
+        <input type="password" class="form-input" id="edit-troupe-password" placeholder="新しいパスワード">
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">所属大学<span class="form-required">*</span></label>
+      <select class="form-select" id="edit-troupe-univ" onchange="toggleUnivOtherField('edit')">
+        <option value="早稲田大学">早稲田大学</option>
+        <option value="慶應義塾大学">慶應義塾大学</option>
+        <option value="その他">その他</option>
+      </select>
+    </div>
+    <div class="form-row" id="edit-univ-other-row" style="display:none;">
+      <label class="form-label">大学名（その他）<span class="form-required">*</span></label>
+      <input type="text" class="form-input" id="edit-troupe-univ-other" placeholder="大学名を入力してください">
+    </div>
+    <div class="form-row">
+      <label class="form-label">劇団紹介文</label>
+      <textarea class="form-textarea" id="edit-troupe-desc" placeholder="劇団の特色や活動内容を入力してください"></textarea>
+    </div>
+    <div class="form-row">
+      <label class="form-label">公式ホームページURL</label>
+      <input type="url" class="form-input" id="edit-troupe-hp" placeholder="https://example.com">
+    </div>
+    <div class="form-row">
+      <label class="form-label">公式SNS (X/Twitterなど) URL</label>
+      <input type="url" class="form-input" id="edit-troupe-sns" placeholder="https://x.com/username">
+    </div>
+    <button class="btn-primary" onclick="handleUpdateTroupeProfile()"><i class="ti ti-device-floppy"></i>プロフィールを保存する</button>
+  </div>
+</div>
+
 <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral); text-align: right;">
 <button class="btn-secondary" style="background: #fef2f2; border-color: #fca5a5; color: #b91c1c; font-size: 12px; padding: 6px 12px;" onclick="deleteTroupeAccount()">
 <i class="ti ti-alert-triangle"></i> 劇団アカウントを削除する
@@ -1423,12 +1465,12 @@ function updateAuthUI() {
 
 async function handleRegisterTroupe() {
   const name = document.getElementById('reg-troupe-name').value.trim();
-  const affiliation = document.getElementById('reg-troupe-univ').value;
   const email = document.getElementById('reg-troupe-email').value.trim();
   const password = document.getElementById('reg-troupe-password').value.trim();
-  const description = document.getElementById('reg-troupe-desc').value.trim();
-  const homepage = document.getElementById('reg-troupe-hp').value.trim();
-  const sns = document.getElementById('reg-troupe-sns').value.trim();
+  const affiliation = '';
+  const description = '';
+  const homepage = '';
+  const sns = '';
 
   if (!name || !email || !password) { alert('劇団名、メールアドレス、パスワードは必須入力項目です。'); return; }
 
@@ -1491,6 +1533,56 @@ function handleLogout() {
   showPage('calendar');
 }
 
+async function handleUpdateTroupeProfile() {
+  if (!currentUser) return;
+
+  const name = document.getElementById('edit-troupe-name').value.trim();
+  if (!name) { alert('劇団名は必須です。'); document.getElementById('edit-troupe-name').focus(); return; }
+
+  const newPassword = document.getElementById('edit-troupe-password').value;
+
+  const univSel = document.getElementById('edit-troupe-univ').value;
+  let affiliation = univSel;
+  if (univSel === 'その他') {
+    const other = document.getElementById('edit-troupe-univ-other').value.trim();
+    if (!other) { alert('大学名を入力してください。'); document.getElementById('edit-troupe-univ-other').focus(); return; }
+    affiliation = other;
+  }
+
+  const description = document.getElementById('edit-troupe-desc').value.trim();
+  const homepage = document.getElementById('edit-troupe-hp').value.trim();
+  const sns = document.getElementById('edit-troupe-sns').value.trim();
+
+  const updates = { name, affiliation, description, homepage, sns };
+  if (newPassword) updates.password = newPassword;
+
+  try {
+    const { error } = await db.from('troupes').update(updates).eq('id', currentUser.id);
+    if (error) throw error;
+    Object.assign(currentUser, updates);
+    const idx = troupesData.findIndex(t => t.id === currentUser.id);
+    if (idx !== -1) Object.assign(troupesData[idx], updates);
+    document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
+    document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation || '未設定'} | システム通知先: ${currentUser.email}`;
+    document.getElementById('edit-troupe-password').value = '';
+    alert('プロフィールを保存しました！');
+  } catch (error) {
+    console.error('プロフィール更新エラー:', error.message);
+    alert('プロフィールの保存に失敗しました: ' + error.message);
+  }
+}
+
+function toggleUnivOtherField(prefix) {
+  const sel = document.getElementById(`${prefix}-troupe-univ`);
+  const row = document.getElementById(`${prefix}-univ-other-row`);
+  if (!sel || !row) return;
+  row.style.display = sel.value === 'その他' ? 'block' : 'none';
+  if (sel.value !== 'その他') {
+    const otherInput = document.getElementById(`${prefix}-troupe-univ-other`);
+    if (otherInput) otherInput.value = '';
+  }
+}
+
 // ===================== MY PAGE =====================
 function renderMyPage() {
   const authSec = document.getElementById('auth-section');
@@ -1506,7 +1598,34 @@ function renderMyPage() {
   dashSec.style.display = 'block';
 
   document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
-  document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation} | システム通知先: ${currentUser.email}`;
+  document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation || '未設定'} | システム通知先: ${currentUser.email}`;
+
+  // プロフィール編集フォームに現在値をセット
+  const nameEl = document.getElementById('edit-troupe-name');
+  if (nameEl) nameEl.value = currentUser.name || '';
+  const pwEl = document.getElementById('edit-troupe-password');
+  if (pwEl) pwEl.value = '';
+
+  const knownUnivs = ['早稲田大学', '慶應義塾大学', 'その他'];
+  const affil = currentUser.affiliation || '';
+  const univEl = document.getElementById('edit-troupe-univ');
+  if (univEl) {
+    if (knownUnivs.includes(affil) || affil === '') {
+      univEl.value = affil || '早稲田大学';
+      document.getElementById('edit-univ-other-row').style.display = 'none';
+      document.getElementById('edit-troupe-univ-other').value = '';
+    } else {
+      univEl.value = 'その他';
+      document.getElementById('edit-univ-other-row').style.display = 'block';
+      document.getElementById('edit-troupe-univ-other').value = affil;
+    }
+  }
+  const descEl = document.getElementById('edit-troupe-desc');
+  if (descEl) descEl.value = currentUser.description || '';
+  const hpEl = document.getElementById('edit-troupe-hp');
+  if (hpEl) hpEl.value = currentUser.homepage || '';
+  const snsEl = document.getElementById('edit-troupe-sns');
+  if (snsEl) snsEl.value = currentUser.sns || '';
 
   const myReqs = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
   document.getElementById('stat-incoming-pending').textContent = myReqs.filter(r => r.status === 'pending').length;
