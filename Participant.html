@@ -683,14 +683,6 @@ gap: 4px;
 <input type="text" class="form-input" id="reg-troupe-name" placeholder="例：劇団シアターエクスプレス">
 </div>
 <div class="form-row">
-<label class="form-label">所属大学<span class="form-required">*</span></label>
-<select class="form-select" id="reg-troupe-univ">
-<option value="早稲田大学">早稲田大学</option>
-<option value="慶應義塾大学">慶應義塾大学</option>
-<option value="その他">その他</option>
-</select>
-</div>
-<div class="form-row">
 <label class="form-label">連絡先メールアドレス<span class="form-required">*</span></label>
 <input type="email" class="form-input" id="reg-troupe-email" placeholder="example@example.com">
 </div>
@@ -698,21 +690,8 @@ gap: 4px;
 <label class="form-label">アカウントパスワード<span class="form-required">*</span></label>
 <input type="password" class="form-input" id="reg-troupe-password" placeholder="任意のパスワード">
 </div>
-
-<div class="form-row">
-<label class="form-label">劇団紹介文</label>
-<textarea class="form-textarea" id="reg-troupe-desc" placeholder="劇団の特色や活動内容を入力してください"></textarea>
-</div>
-<div class="form-row">
-<label class="form-label">公式ホームページURL</label>
-<input type="url" class="form-input" id="reg-troupe-hp" placeholder="https://example.com">
-</div>
-<div class="form-row">
-<label class="form-label">公式SNS (X/Twitterなど) URL</label>
-<input type="url" class="form-input" id="reg-troupe-sns" placeholder="https://x.com/username">
-</div>
-
-<button class="btn-primary" style="width: 100%; justify-content: center;" onclick="handleRegisterTroupe()"><i class="ti ti-user-plus"></i>アカウントを作成する</button>
+<p style="font-size:12px; color:var(--muted); margin-top:8px;"><i class="ti ti-info-circle" style="font-size:13px;"></i> 所属大学・紹介文・URLはログイン後のマイページから設定できます</p>
+<button class="btn-primary" style="width: 100%; justify-content: center; margin-top:12px;" onclick="handleRegisterTroupe()"><i class="ti ti-user-plus"></i>アカウントを作成する</button>
 </div>
 </div>
 </div>
@@ -739,6 +718,34 @@ gap: 4px;
 
 <div class="section-title"><i class="ti ti-inbox"></i>折り込み依頼インボックス</div>
 <div class="inbox-list" id="dashboard-inbox"></div>
+
+<!-- ===== プロフィール編集 ===== -->
+<div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
+  <div class="section-title"><i class="ti ti-user-edit"></i>劇団プロフィール設定</div>
+  <div class="form-card" style="max-width:100%; margin-bottom:0;">
+    <div class="form-row">
+      <label class="form-label">所属大学<span class="form-required">*</span></label>
+      <select class="form-select" id="edit-troupe-univ">
+        <option value="早稲田大学">早稲田大学</option>
+        <option value="慶應義塾大学">慶應義塾大学</option>
+        <option value="その他">その他</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label class="form-label">劇団紹介文</label>
+      <textarea class="form-textarea" id="edit-troupe-desc" placeholder="劇団の特色や活動内容を入力してください"></textarea>
+    </div>
+    <div class="form-row">
+      <label class="form-label">公式ホームページURL</label>
+      <input type="url" class="form-input" id="edit-troupe-hp" placeholder="https://example.com">
+    </div>
+    <div class="form-row">
+      <label class="form-label">公式SNS (X/Twitterなど) URL</label>
+      <input type="url" class="form-input" id="edit-troupe-sns" placeholder="https://x.com/username">
+    </div>
+    <button class="btn-primary" onclick="handleUpdateTroupeProfile()"><i class="ti ti-device-floppy"></i>プロフィールを保存する</button>
+  </div>
+</div>
 
 <div style="margin-top: 3rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral); text-align: right;">
 <button class="btn-secondary" style="background: #fef2f2; border-color: #fca5a5; color: #b91c1c; font-size: 12px; padding: 6px 12px;" onclick="deleteTroupeAccount()">
@@ -1268,27 +1275,20 @@ async function submitRequestForm() {
     incomingRequests.push(newRequest);
 
     // EmailJS通知（未設定・エラーでもメイン処理に影響しないよう独立したtry-catchで囲む）
-   try {
-  const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
-  const requesterTroupe = troupesData.find(t => t.id === currentUser.id);
-
-  const { error: emailError } = await db.functions.invoke('send-email', {
-    body: {
-      to_email: targetTroupe?.email || '',
-      cc_email: requesterTroupe?.email || '',
-      from_name: currentUser.name,
-      perf_title: perf.title,
-      time: document.getElementById('req-time')?.value || '',
-      copies: document.getElementById('req-copies')?.value || '',
-      size: document.getElementById('req-size')?.value || '',
-      notes: document.getElementById('req-notes')?.value || '',
+    try {
+      const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
+      const templateParams = {
+        to_email: targetTroupe ? targetTroupe.email : '',
+        from_name: fromName, reply_to: fromEmail,
+        copies, size, notes: notes || '特になし',
+        delivery_method: deliveryMethod, address: address || 'なし'
+      };
+      if (typeof emailjs !== 'undefined' && typeof emailjs.send === 'function') {
+        await emailjs.send('service_4gfx3qf', 'template_rzattmh', templateParams);
+      }
+    } catch (emailError) {
+      console.warn('EmailJS通知スキップ（依頼データは保存済み）:', emailError);
     }
-  });
-
-  if (emailError) console.warn('メール通知スキップ:', emailError);
-} catch (emailError) {
-  console.warn('メール通知スキップ（依頼データは保存済み）:', emailError);
-}
 
     document.getElementById('success-banner').classList.add('show');
     document.getElementById('request-form-body').style.display = 'none';
@@ -1451,12 +1451,12 @@ function updateAuthUI() {
 
 async function handleRegisterTroupe() {
   const name = document.getElementById('reg-troupe-name').value.trim();
-  const affiliation = document.getElementById('reg-troupe-univ').value;
   const email = document.getElementById('reg-troupe-email').value.trim();
   const password = document.getElementById('reg-troupe-password').value.trim();
-  const description = document.getElementById('reg-troupe-desc').value.trim();
-  const homepage = document.getElementById('reg-troupe-hp').value.trim();
-  const sns = document.getElementById('reg-troupe-sns').value.trim();
+  const affiliation = '';
+  const description = '';
+  const homepage = '';
+  const sns = '';
 
   if (!name || !email || !password) { alert('劇団名、メールアドレス、パスワードは必須入力項目です。'); return; }
 
@@ -1519,6 +1519,29 @@ function handleLogout() {
   showPage('calendar');
 }
 
+async function handleUpdateTroupeProfile() {
+  if (!currentUser) return;
+  const affiliation = document.getElementById('edit-troupe-univ').value;
+  const description = document.getElementById('edit-troupe-desc').value.trim();
+  const homepage = document.getElementById('edit-troupe-hp').value.trim();
+  const sns = document.getElementById('edit-troupe-sns').value.trim();
+
+  const updates = { affiliation, description, homepage, sns };
+
+  try {
+    const { error } = await db.from('troupes').update(updates).eq('id', currentUser.id);
+    if (error) throw error;
+    Object.assign(currentUser, updates);
+    const idx = troupesData.findIndex(t => t.id === currentUser.id);
+    if (idx !== -1) Object.assign(troupesData[idx], updates);
+    document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation || '未設定'} | システム通知先: ${currentUser.email}`;
+    alert('プロフィールを保存しました！');
+  } catch (error) {
+    console.error('プロフィール更新エラー:', error.message);
+    alert('プロフィールの保存に失敗しました: ' + error.message);
+  }
+}
+
 // ===================== MY PAGE =====================
 function renderMyPage() {
   const authSec = document.getElementById('auth-section');
@@ -1534,7 +1557,19 @@ function renderMyPage() {
   dashSec.style.display = 'block';
 
   document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
-  document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation} | システム通知先: ${currentUser.email}`;
+  document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation || '未設定'} | システム通知先: ${currentUser.email}`;
+
+  // プロフィール編集フォームに現在値をセット
+  const univEl = document.getElementById('edit-troupe-univ');
+  if (univEl) {
+    univEl.value = currentUser.affiliation || '早稲田大学';
+  }
+  const descEl = document.getElementById('edit-troupe-desc');
+  if (descEl) descEl.value = currentUser.description || '';
+  const hpEl = document.getElementById('edit-troupe-hp');
+  if (hpEl) hpEl.value = currentUser.homepage || '';
+  const snsEl = document.getElementById('edit-troupe-sns');
+  if (snsEl) snsEl.value = currentUser.sns || '';
 
   const myReqs = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
   document.getElementById('stat-incoming-pending').textContent = myReqs.filter(r => r.status === 'pending').length;
