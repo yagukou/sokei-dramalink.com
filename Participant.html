@@ -627,18 +627,23 @@ gap: 4px;
 <label class="form-label">折り込みビラの受け渡し方法<span class="form-required">*</span></label>
 <div class="radio-group">
 <label class="radio-label">
-<input type="radio" name="new-perf-delivery" value="どちらでも可" checked>
+<input type="radio" name="new-perf-delivery" value="どちらでも可" checked onchange="togglePerfAddressField()">
 <i class="ti ti-circle-check"></i> どちらでも可（対面・郵送どちらも受け付け）
 </label>
 <label class="radio-label">
-<input type="radio" name="new-perf-delivery" value="対面のみ">
+<input type="radio" name="new-perf-delivery" value="対面のみ" onchange="togglePerfAddressField()">
 <i class="ti ti-box"></i> 対面（直接持込・引取）のみ受け付け
 </label>
 <label class="radio-label">
-<input type="radio" name="new-perf-delivery" value="郵送のみ">
+<input type="radio" name="new-perf-delivery" value="郵送のみ" onchange="togglePerfAddressField()">
 <i class="ti ti-truck"></i> 郵送・宅配便のみ受け付け
 </label>
 </div>
+</div>
+<div class="form-row" id="perf-address-row" style="display:block;">
+<label class="form-label">郵送先住所（送り先）<span class="form-required">*</span></label>
+<input type="text" class="form-input" id="new-perf-address" placeholder="例：東京都新宿区西早稲田1-1-1 〇〇ビル気付">
+<div style="font-size:11px; color:var(--muted); margin-top:4px;"><i class="ti ti-info-circle" style="font-size:12px;"></i> 折り込み依頼者がサイドパネルでビラの送り先として確認できます</div>
 </div>
 <div class="form-row">
 <label class="form-label">公演概要・詳細説明</label>
@@ -1334,15 +1339,22 @@ async function handleRegisterPerformance() {
   const deliveryRadios = document.getElementsByName('new-perf-delivery');
   let deliveryRestriction = 'どちらでも可';
   for (let r of deliveryRadios) { if (r.checked) { deliveryRestriction = r.value; break; } }
+  const deliveryAddress = document.getElementById('new-perf-address').value.trim();
 
   if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || isNaN(maxQuota)) {
     alert('必須マークの項目をすべて正しく入力してください。');
+    return;
+  }
+  if (deliveryRestriction !== '対面のみ' && !deliveryAddress) {
+    alert('郵送を受け付ける場合は、郵送先住所を入力してください。');
+    document.getElementById('new-perf-address').focus();
     return;
   }
 
   const perfData = {
     troupeId: currentUser.id,
     title, start, end, acceptStart, acceptEnd, venue, maxQuota, desc, deliveryRestriction,
+    deliveryAddress: deliveryRestriction !== '対面のみ' ? deliveryAddress : '',
     email: currentUser.email
   };
 
@@ -1391,6 +1403,16 @@ function startEditPerformance() {
   const restriction = perf.deliveryRestriction || 'どちらでも可';
   const deliveryRadios = document.getElementsByName('new-perf-delivery');
   for (let r of deliveryRadios) { r.checked = (r.value === restriction); }
+  document.getElementById('new-perf-address').value = perf.deliveryAddress || '';
+  togglePerfAddressField();
+}
+
+function togglePerfAddressField() {
+  const radios = document.getElementsByName('new-perf-delivery');
+  let val = 'どちらでも可';
+  for (let r of radios) { if (r.checked) { val = r.value; break; } }
+  const row = document.getElementById('perf-address-row');
+  if (row) row.style.display = (val === '対面のみ') ? 'none' : 'block';
 }
 
 async function deletePerformanceClick() {
@@ -1672,6 +1694,15 @@ function openSidePanel(perfId) {
   document.getElementById('panel-address').value = '';
 
   const restriction = perf.deliveryRestriction || 'どちらでも可';
+  const addrBox = document.getElementById('panel-delivery-address-box');
+  const addrText = document.getElementById('panel-delivery-address');
+  if (restriction !== '対面のみ' && perf.deliveryAddress) {
+    addrText.textContent = perf.deliveryAddress;
+    addrBox.style.display = 'block';
+  } else {
+    addrBox.style.display = 'none';
+  }
+
   const faceRadio = document.querySelector('input[name="panel-delivery"][value="対面"]');
   const mailRadio = document.querySelector('input[name="panel-delivery"][value="郵送"]');
   const faceLabel = faceRadio ? faceRadio.closest('label') : null;
@@ -1792,6 +1823,10 @@ async function submitPanelRequest() {
       <span class="panel-info-val" id="panel-accept-period">-</span>
       <span class="panel-info-label"><i class="ti ti-inbox" style="font-size:13px"></i>受付状況</span>
       <span id="panel-status-badge">-</span>
+    </div>
+    <div id="panel-delivery-address-box" style="display:none; background:var(--surface2); border:1px solid var(--border-neutral); border-radius:var(--radius-sm); padding:8px 12px; font-size:12px; margin-top:8px;">
+      <div style="color:var(--muted); margin-bottom:3px; display:flex; align-items:center; gap:4px;"><i class="ti ti-map-pin" style="font-size:13px;"></i>郵送先住所</div>
+      <div id="panel-delivery-address" style="color:var(--ink); font-weight:500; word-break:break-all;"></div>
     </div>
     <div class="panel-quota-text" id="panel-quota-text" style="font-size:12px; color:var(--crimson); font-weight:500; margin-top:4px;"></div>
 
