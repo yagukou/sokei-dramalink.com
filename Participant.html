@@ -1268,20 +1268,27 @@ async function submitRequestForm() {
     incomingRequests.push(newRequest);
 
     // EmailJS通知（未設定・エラーでもメイン処理に影響しないよう独立したtry-catchで囲む）
-    try {
-      const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
-      const templateParams = {
-        to_email: targetTroupe ? targetTroupe.email : '',
-        from_name: fromName, reply_to: fromEmail,
-        copies, size, notes: notes || '特になし',
-        delivery_method: deliveryMethod, address: address || 'なし'
-      };
-      if (typeof emailjs !== 'undefined' && typeof emailjs.send === 'function') {
-        await emailjs.send('service_4gfx3qf', 'template_rzattmh', templateParams);
-      }
-    } catch (emailError) {
-      console.warn('EmailJS通知スキップ（依頼データは保存済み）:', emailError);
+   try {
+  const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
+  const requesterTroupe = troupesData.find(t => t.id === currentUser.id);
+
+  const { error: emailError } = await db.functions.invoke('send-email', {
+    body: {
+      to_email: targetTroupe?.email || '',
+      cc_email: requesterTroupe?.email || '',
+      from_name: currentUser.name,
+      perf_title: perf.title,
+      time: document.getElementById('req-time')?.value || '',
+      copies: document.getElementById('req-copies')?.value || '',
+      size: document.getElementById('req-size')?.value || '',
+      notes: document.getElementById('req-notes')?.value || '',
     }
+  });
+
+  if (emailError) console.warn('メール通知スキップ:', emailError);
+} catch (emailError) {
+  console.warn('メール通知スキップ（依頼データは保存済み）:', emailError);
+}
 
     document.getElementById('success-banner').classList.add('show');
     document.getElementById('request-form-body').style.display = 'none';
