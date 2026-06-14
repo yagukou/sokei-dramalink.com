@@ -290,6 +290,39 @@ gap: 4px;
 .info-banner p { font-size: 13px; color: var(--ink-mid); }
 .empty-state { text-align: center; padding: 3rem 1rem; color: var(--muted); font-size: 14px; }
 .empty-state i { font-size: 40px; margin-bottom: 12px; display: block; color: var(--border-neutral); }
+
+/* ===================== SIDE PANEL ===================== */
+.panel-overlay { position: fixed; inset: 0; background: rgba(26,20,16,0.25); z-index: 198; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+.panel-overlay.open { opacity: 1; pointer-events: all; }
+.side-panel { position: fixed; top: 64px; right: -500px; width: 440px; max-width: 100vw; height: calc(100vh - 64px); background: var(--white); box-shadow: -4px 0 32px rgba(26,20,16,0.14); z-index: 199; overflow-y: auto; transition: right 0.3s ease; display: flex; flex-direction: column; }
+.side-panel.open { right: 0; }
+.panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 1.25rem; border-bottom: 1px solid var(--border-neutral); position: sticky; top: 0; background: var(--white); z-index: 1; }
+.panel-perf-title { font-size: 17px; font-weight: 600; color: var(--ink); line-height: 1.35; }
+.panel-troupe-label { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.panel-close-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 22px; padding: 0; flex-shrink: 0; line-height: 1; }
+.panel-close-btn:hover { color: var(--ink); }
+.panel-body { padding: 1.25rem; flex: 1; }
+.panel-info-grid { display: grid; grid-template-columns: auto 1fr; gap: 7px 14px; font-size: 13px; margin-bottom: 12px; }
+.panel-info-label { color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 4px; }
+.panel-info-val { color: var(--ink); font-weight: 500; }
+.panel-quota-bg { background: var(--surface2); border-radius: 4px; height: 6px; margin: 4px 0 4px; }
+.panel-quota-fill { background: var(--crimson); border-radius: 4px; height: 100%; transition: width 0.4s; }
+.panel-quota-text { font-size: 11px; color: var(--muted); }
+.panel-divider { border: none; border-top: 1px dashed var(--border-neutral); margin: 1.25rem 0; }
+.panel-section-title { font-size: 12px; font-weight: 600; color: var(--crimson); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+.panel-form-row { margin-bottom: 11px; }
+.panel-form-label { display: block; font-size: 12px; font-weight: 500; color: var(--ink-mid); margin-bottom: 4px; }
+.panel-form-input { width: 100%; padding: 8px 10px; border: 1px solid var(--border-neutral); border-radius: var(--radius-sm); font-size: 13px; background: var(--white); font-family: inherit; }
+.panel-form-input:focus { outline: none; border-color: var(--crimson); }
+.panel-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.panel-radio-group { display: flex; flex-direction: column; gap: 7px; }
+.panel-radio-label { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; color: var(--ink-mid); }
+.panel-submit-btn { width: 100%; padding: 11px; background: var(--crimson); color: white; border: none; border-radius: var(--radius-md); font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; }
+.panel-submit-btn:hover:not(:disabled) { background: var(--crimson-light); }
+.panel-submit-btn:disabled { background: var(--muted); cursor: not-allowed; }
+.panel-success { background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: var(--radius-md); padding: 1.25rem; text-align: center; color: #2e7d32; font-size: 14px; display: none; margin-top: 1rem; }
+.panel-success.show { display: block; }
+.panel-login-hint { background: var(--crimson-pale); border: 1px solid rgba(139,26,47,0.2); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: var(--crimson); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 </style>
 </head>
 <body>
@@ -936,11 +969,7 @@ function renderCalendar() {
         ev.className = `cal-event ${colorClass}`;
         ev.textContent = p.title;
         ev.title = p.title;
-        ev.onclick = (e) => {
-          e.stopPropagation();
-          selectedPerformanceId = p.id;
-          openRequestForm();
-        };
+        ev.onclick = (e) => { e.stopPropagation(); openSidePanel(p.id); };
         cell.appendChild(ev);
       }
     });
@@ -951,7 +980,10 @@ function renderCalendar() {
   const remaining = 42 - totalCellsSoFar;
   const nextMonthDisplay = remaining >= 7 ? remaining - 7 : remaining;
   for (let i = 1; i <= nextMonthDisplay; i++) {
-    grid.innerHTML += `<div class="cal-cell other-month"><div class="cal-day-num">${i}</div></div>`;
+    const nextCell = document.createElement('div');
+    nextCell.className = 'cal-cell other-month';
+    nextCell.innerHTML = `<div class="cal-day-num">${i}</div>`;
+    grid.appendChild(nextCell);
   }
 }
 
@@ -1586,7 +1618,201 @@ async function resetAllDataToDefault() {
 
 // ===================== エントリポイント（1回だけ） =====================
 window.onload = initApp;
+
+// ===================== SIDE PANEL =====================
+function openSidePanel(perfId) {
+  selectedPerformanceId = perfId;
+  const perf = performancesData.find(p => p.id === perfId);
+  if (!perf) return;
+
+  const troupe = troupesData.find(t => t.id === perf.troupeId);
+  document.getElementById('panel-perf-title').textContent = perf.title;
+  document.getElementById('panel-troupe-label').textContent = troupe ? troupe.name : '';
+  document.getElementById('panel-perf-dates').textContent = `${perf.start} ～ ${perf.end}`;
+  document.getElementById('panel-venue').textContent = perf.venue || '未設定';
+  document.getElementById('panel-accept-period').textContent = `${perf.acceptStart || '?'} ～ ${perf.acceptEnd || '?'}`;
+
+  const statusObj = getAcceptanceStatus(perf);
+  document.getElementById('panel-status-badge').innerHTML = `<span class="status-badge ${statusObj.class}">${statusObj.text}</span>`;
+
+  const totalCopies = incomingRequests
+    .filter(r => r.perfId === perfId && (r.status === 'accepted' || r.status === 'pending'))
+    .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
+  const pct = Math.min(perf.maxQuota > 0 ? (totalCopies / perf.maxQuota) * 100 : 0, 100);
+  document.getElementById('panel-quota-fill').style.width = `${pct}%`;
+  document.getElementById('panel-quota-text').textContent = `${totalCopies} / ${perf.maxQuota} 部（承認済み＆保留中の合計）`;
+
+  // フォーム初期化
+  document.getElementById('panel-from-name').value = currentUser ? currentUser.name : '';
+  document.getElementById('panel-from-email').value = currentUser ? currentUser.email : '';
+  document.getElementById('panel-copies').value = 100;
+  document.getElementById('panel-size').value = 'A4ペラ';
+  document.getElementById('panel-notes').value = '';
+  document.getElementById('panel-address').value = '';
+  document.getElementById('panel-address-row').style.display = 'none';
+  const radios = document.getElementsByName('panel-delivery');
+  if (radios.length > 0) radios[0].checked = true;
+
+  document.getElementById('panel-login-hint').style.display = currentUser ? 'none' : 'flex';
+
+  const submitBtn = document.getElementById('panel-submit-btn');
+  if (statusObj.accept) {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="ti ti-send"></i> この内容で折り込みを申請する';
+  } else {
+    submitBtn.disabled = true;
+    submitBtn.textContent = `受付不可（${statusObj.text}）`;
+  }
+
+  document.getElementById('panel-success').classList.remove('show');
+  document.getElementById('panel-form-body').style.display = 'block';
+
+  document.getElementById('panel-overlay').classList.add('open');
+  document.getElementById('side-panel').classList.add('open');
+}
+
+function closeSidePanel() {
+  document.getElementById('panel-overlay').classList.remove('open');
+  document.getElementById('side-panel').classList.remove('open');
+}
+
+async function submitPanelRequest() {
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (!perf) return;
+
+  const fromName = document.getElementById('panel-from-name').value.trim();
+  const fromEmail = document.getElementById('panel-from-email').value.trim();
+  const copies = parseInt(document.getElementById('panel-copies').value);
+  const size = document.getElementById('panel-size').value;
+  const notes = document.getElementById('panel-notes').value.trim();
+  const address = document.getElementById('panel-address').value.trim();
+  const radios = document.getElementsByName('panel-delivery');
+  let deliveryMethod = '対面';
+  for (let r of radios) { if (r.checked) { deliveryMethod = r.value; break; } }
+
+  if (!fromName || !fromEmail || isNaN(copies) || copies <= 0) {
+    alert('必須項目をすべて入力し、部数は正しく入力してください。');
+    return;
+  }
+
+  const newRequest = {
+    id: 'req_' + Date.now(),
+    perfId: selectedPerformanceId,
+    toTroupeId: perf.troupeId,
+    fromName, fromEmail, address, deliveryMethod, copies, size,
+    notes: notes || '',
+    status: 'pending',
+    timestamp: new Date().toLocaleString('ja-JP')
+  };
+
+  const submitBtn = document.getElementById('panel-submit-btn');
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="ti ti-loader"></i> 送信中...';
+
+  try {
+    const { error } = await db.from('requests').insert([newRequest]);
+    if (error) throw error;
+    incomingRequests.push(newRequest);
+    document.getElementById('panel-form-body').style.display = 'none';
+    document.getElementById('panel-success').classList.add('show');
+  } catch (error) {
+    console.error('折り込み依頼送信エラー:', error);
+    alert('送信に失敗しました: ' + (error.message || JSON.stringify(error)));
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<i class="ti ti-send"></i> この内容で折り込みを申請する';
+  }
+}
 </script>
+
+<!-- ===================== SIDE PANEL HTML ===================== -->
+<div class="panel-overlay" id="panel-overlay" onclick="closeSidePanel()"></div>
+<div class="side-panel" id="side-panel">
+  <div class="panel-header">
+    <div style="min-width:0;">
+      <div class="panel-perf-title" id="panel-perf-title">-</div>
+      <div class="panel-troupe-label" id="panel-troupe-label">-</div>
+    </div>
+    <button class="panel-close-btn" onclick="closeSidePanel()"><i class="ti ti-x"></i></button>
+  </div>
+  <div class="panel-body">
+    <div class="panel-info-grid">
+      <span class="panel-info-label"><i class="ti ti-calendar" style="font-size:13px"></i>公演期間</span>
+      <span class="panel-info-val" id="panel-perf-dates">-</span>
+      <span class="panel-info-label"><i class="ti ti-map-pin" style="font-size:13px"></i>会場</span>
+      <span class="panel-info-val" id="panel-venue">-</span>
+      <span class="panel-info-label"><i class="ti ti-clock" style="font-size:13px"></i>受付期間</span>
+      <span class="panel-info-val" id="panel-accept-period">-</span>
+      <span class="panel-info-label"><i class="ti ti-inbox" style="font-size:13px"></i>受付状況</span>
+      <span id="panel-status-badge">-</span>
+    </div>
+    <div class="panel-quota-bg"><div class="panel-quota-fill" id="panel-quota-fill" style="width:0%"></div></div>
+    <div class="panel-quota-text" id="panel-quota-text">0 / 0 部</div>
+
+    <div class="panel-divider"></div>
+
+    <div class="panel-section-title"><i class="ti ti-send"></i>折り込みを依頼する</div>
+    <div class="panel-login-hint" id="panel-login-hint" style="display:none;">
+      <i class="ti ti-info-circle"></i>ログインすると劇団名・メールが自動入力されます
+    </div>
+
+    <div id="panel-form-body">
+      <div class="panel-form-row">
+        <label class="panel-form-label">劇団名・団体名 <span style="color:var(--crimson)">*</span></label>
+        <input class="panel-form-input" id="panel-from-name" type="text" placeholder="例：劇団早稲田座">
+      </div>
+      <div class="panel-form-row">
+        <label class="panel-form-label">連絡先メール <span style="color:var(--crimson)">*</span></label>
+        <input class="panel-form-input" id="panel-from-email" type="email" placeholder="example@gmail.com">
+      </div>
+      <div class="panel-2col">
+        <div class="panel-form-row">
+          <label class="panel-form-label">部数 <span style="color:var(--crimson)">*</span></label>
+          <input class="panel-form-input" id="panel-copies" type="number" value="100" min="10">
+        </div>
+        <div class="panel-form-row">
+          <label class="panel-form-label">サイズ</label>
+          <select class="panel-form-input" id="panel-size">
+            <option value="A4ペラ">A4ペラ</option>
+            <option value="A4二つ折り">A4二つ折り</option>
+            <option value="B5ペラ">B5ペラ</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+      </div>
+      <div class="panel-form-row">
+        <label class="panel-form-label">受け渡し方法 <span style="color:var(--crimson)">*</span></label>
+        <div class="panel-radio-group">
+          <label class="panel-radio-label">
+            <input type="radio" name="panel-delivery" value="対面" checked
+              onchange="document.getElementById('panel-address-row').style.display='none'">
+            <i class="ti ti-box" style="font-size:14px"></i>対面（直接持込・引取）
+          </label>
+          <label class="panel-radio-label">
+            <input type="radio" name="panel-delivery" value="郵送"
+              onchange="document.getElementById('panel-address-row').style.display='block'">
+            <i class="ti ti-truck" style="font-size:14px"></i>郵送・宅配便
+          </label>
+        </div>
+      </div>
+      <div class="panel-form-row" id="panel-address-row" style="display:none;">
+        <label class="panel-form-label">郵送先住所</label>
+        <input class="panel-form-input" id="panel-address" type="text" placeholder="東京都〇〇区…">
+      </div>
+      <div class="panel-form-row">
+        <label class="panel-form-label">備考・特記事項</label>
+        <textarea class="panel-form-input" id="panel-notes" rows="3" style="resize:vertical;" placeholder="搬入日時のご相談など"></textarea>
+      </div>
+      <button class="panel-submit-btn" id="panel-submit-btn" onclick="submitPanelRequest()">
+        <i class="ti ti-send"></i> この内容で折り込みを申請する
+      </button>
+    </div>
+    <div class="panel-success" id="panel-success">
+      <i class="ti ti-circle-check" style="font-size:28px; display:block; margin-bottom:8px;"></i>
+      折り込み依頼を送信しました！<br>
+      <span style="font-size:12px; margin-top:4px; display:block; color:#388e3c;">相手劇団のインボックスに届きました</span>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
