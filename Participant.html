@@ -618,8 +618,26 @@ gap: 4px;
 <input type="text" class="form-input" id="new-perf-venue" placeholder="例：早稲田大学小劇場どらま館">
 </div>
 <div class="form-row">
-<label class="form-label">折り込み受付上限部数<span class="form-required">*</span></label>
-<input type="number" class="form-input" id="new-perf-quota" value="300" min="10" max="1000">
+<label class="form-label">1団体あたりの折り込み上限部数<span class="form-required">*</span></label>
+<input type="number" class="form-input" id="new-perf-quota" value="300" min="1" max="1000">
+</div>
+</div>
+<div class="form-section-title" style="margin-top:20px;">受け渡し方法の制限</div>
+<div class="form-row">
+<label class="form-label">折り込みビラの受け渡し方法<span class="form-required">*</span></label>
+<div class="radio-group">
+<label class="radio-label">
+<input type="radio" name="new-perf-delivery" value="どちらでも可" checked>
+<i class="ti ti-circle-check"></i> どちらでも可（対面・郵送どちらも受け付け）
+</label>
+<label class="radio-label">
+<input type="radio" name="new-perf-delivery" value="対面のみ">
+<i class="ti ti-box"></i> 対面（直接持込・引取）のみ受け付け
+</label>
+<label class="radio-label">
+<input type="radio" name="new-perf-delivery" value="郵送のみ">
+<i class="ti ti-truck"></i> 郵送・宅配便のみ受け付け
+</label>
 </div>
 </div>
 <div class="form-row">
@@ -1313,6 +1331,9 @@ async function handleRegisterPerformance() {
   const venue = document.getElementById('new-perf-venue').value.trim();
   const maxQuota = parseInt(document.getElementById('new-perf-quota').value);
   const desc = document.getElementById('new-perf-desc').value.trim();
+  const deliveryRadios = document.getElementsByName('new-perf-delivery');
+  let deliveryRestriction = 'どちらでも可';
+  for (let r of deliveryRadios) { if (r.checked) { deliveryRestriction = r.value; break; } }
 
   if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || isNaN(maxQuota)) {
     alert('必須マークの項目をすべて正しく入力してください。');
@@ -1321,7 +1342,7 @@ async function handleRegisterPerformance() {
 
   const perfData = {
     troupeId: currentUser.id,
-    title, start, end, acceptStart, acceptEnd, venue, maxQuota, desc,
+    title, start, end, acceptStart, acceptEnd, venue, maxQuota, desc, deliveryRestriction,
     email: currentUser.email
   };
 
@@ -1367,6 +1388,9 @@ function startEditPerformance() {
   document.getElementById('new-perf-venue').value = perf.venue;
   document.getElementById('new-perf-quota').value = perf.maxQuota;
   document.getElementById('new-perf-desc').value = perf.desc || '';
+  const restriction = perf.deliveryRestriction || 'どちらでも可';
+  const deliveryRadios = document.getElementsByName('new-perf-delivery');
+  for (let r of deliveryRadios) { r.checked = (r.value === restriction); }
 }
 
 async function deletePerformanceClick() {
@@ -1635,23 +1659,42 @@ function openSidePanel(perfId) {
   const statusObj = getAcceptanceStatus(perf);
   document.getElementById('panel-status-badge').innerHTML = `<span class="status-badge ${statusObj.class}">${statusObj.text}</span>`;
 
-  const totalCopies = incomingRequests
-    .filter(r => r.perfId === perfId && (r.status === 'accepted' || r.status === 'pending'))
-    .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-  const pct = Math.min(perf.maxQuota > 0 ? (totalCopies / perf.maxQuota) * 100 : 0, 100);
-  document.getElementById('panel-quota-fill').style.width = `${pct}%`;
-  document.getElementById('panel-quota-text').textContent = `${totalCopies} / ${perf.maxQuota} 部（承認済み＆保留中の合計）`;
+  document.getElementById('panel-quota-text').textContent = `1団体あたり上限：${perf.maxQuota} 部`;
 
   // フォーム初期化
   document.getElementById('panel-from-name').value = currentUser ? currentUser.name : '';
   document.getElementById('panel-from-email').value = currentUser ? currentUser.email : '';
-  document.getElementById('panel-copies').value = 100;
+  const copiesInput = document.getElementById('panel-copies');
+  copiesInput.max = perf.maxQuota;
+  copiesInput.value = Math.min(100, perf.maxQuota);
   document.getElementById('panel-size').value = 'A4ペラ';
   document.getElementById('panel-notes').value = '';
   document.getElementById('panel-address').value = '';
-  document.getElementById('panel-address-row').style.display = 'none';
-  const radios = document.getElementsByName('panel-delivery');
-  if (radios.length > 0) radios[0].checked = true;
+
+  const restriction = perf.deliveryRestriction || 'どちらでも可';
+  const faceRadio = document.querySelector('input[name="panel-delivery"][value="対面"]');
+  const mailRadio = document.querySelector('input[name="panel-delivery"][value="郵送"]');
+  const faceLabel = faceRadio ? faceRadio.closest('label') : null;
+  const mailLabel = mailRadio ? mailRadio.closest('label') : null;
+
+  if (restriction === '対面のみ') {
+    faceRadio.checked = true; faceRadio.disabled = false;
+    mailRadio.disabled = true;
+    if (faceLabel) faceLabel.style.opacity = '1';
+    if (mailLabel) mailLabel.style.opacity = '0.35';
+    document.getElementById('panel-address-row').style.display = 'none';
+  } else if (restriction === '郵送のみ') {
+    mailRadio.checked = true; mailRadio.disabled = false;
+    faceRadio.disabled = true;
+    if (mailLabel) mailLabel.style.opacity = '1';
+    if (faceLabel) faceLabel.style.opacity = '0.35';
+    document.getElementById('panel-address-row').style.display = 'block';
+  } else {
+    faceRadio.checked = true; faceRadio.disabled = false; mailRadio.disabled = false;
+    if (faceLabel) faceLabel.style.opacity = '1';
+    if (mailLabel) mailLabel.style.opacity = '1';
+    document.getElementById('panel-address-row').style.display = 'none';
+  }
 
   document.getElementById('panel-login-hint').style.display = currentUser ? 'none' : 'flex';
 
@@ -1692,6 +1735,11 @@ async function submitPanelRequest() {
 
   if (!fromName || !fromEmail || isNaN(copies) || copies <= 0) {
     alert('必須項目をすべて入力し、部数は正しく入力してください。');
+    return;
+  }
+  if (copies > perf.maxQuota) {
+    alert(`1団体あたりの折り込み上限は ${perf.maxQuota} 部です。部数を修正してください。`);
+    document.getElementById('panel-copies').focus();
     return;
   }
 
@@ -1745,8 +1793,7 @@ async function submitPanelRequest() {
       <span class="panel-info-label"><i class="ti ti-inbox" style="font-size:13px"></i>受付状況</span>
       <span id="panel-status-badge">-</span>
     </div>
-    <div class="panel-quota-bg"><div class="panel-quota-fill" id="panel-quota-fill" style="width:0%"></div></div>
-    <div class="panel-quota-text" id="panel-quota-text">0 / 0 部</div>
+    <div class="panel-quota-text" id="panel-quota-text" style="font-size:12px; color:var(--crimson); font-weight:500; margin-top:4px;"></div>
 
     <div class="panel-divider"></div>
 
