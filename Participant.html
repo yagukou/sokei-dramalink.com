@@ -528,7 +528,7 @@ gap: 4px;
 
 <div class="sidebar-card">
 <div class="sidebar-card-title"><i class="ti ti-stack-2"></i>折り込み枠の状況</div>
-<div class="quota-text">受付合計上限</div>
+<div class="quota-text">1団体あたりの上限部数</div>
 <div style="font-size:22px;font-weight:500;color:var(--ink)" id="detail-max-quota">300<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span></div>
 <div style="margin:8px 0">
 <div class="quota-bar-bg"><div class="quota-bar-fill" id="detail-quota-bar" style="width:0%"></div></div>
@@ -1014,10 +1014,6 @@ function getAcceptanceStatus(perf) {
   const todayStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   if (todayStr < perf.acceptStart) return { text: "受付開始前", class: "status-soon", accept: false };
   if (todayStr >= perf.acceptStart && todayStr <= perf.acceptEnd) {
-    const approvedCount = incomingRequests
-      .filter(r => r.perfId === perf.id && (r.status === 'accepted' || r.status === 'pending'))
-      .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-    if (approvedCount >= perf.maxQuota) return { text: "満枠締切", class: "status-closed", accept: false };
     return { text: "折り込み受付中", class: "status-open", accept: true };
   }
   return { text: "受付期間終了", class: "status-closed", accept: false };
@@ -1276,15 +1272,16 @@ function openPerformanceDetail(perfId) {
   document.getElementById('detail-venue').textContent = perf.venue;
   document.getElementById('detail-accept-period').textContent = `${perf.acceptStart} ～ ${perf.acceptEnd}`;
   document.getElementById('detail-email').textContent = perf.email || "未設定";
-  document.getElementById('detail-max-quota').innerHTML = `${perf.maxQuota}<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部</span>`;
+  document.getElementById('detail-max-quota').innerHTML = `${perf.maxQuota}<span style="font-size:14px;font-weight:400;color:var(--muted)"> 部/団体</span>`;
 
-  const totalCopies = incomingRequests
-    .filter(r => r.perfId === perfId && (r.status === 'accepted' || r.status === 'pending'))
-    .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
+  const requestingTroupes = [...new Set(
+    incomingRequests
+      .filter(r => r.perfId === perfId && r.status !== 'declined')
+      .map(r => r.fromTroupeId || r.fromEmail)
+  )].length;
 
-  let pct = Math.min((totalCopies / perf.maxQuota) * 100, 100);
-  document.getElementById('detail-quota-bar').style.width = `${pct}%`;
-  document.getElementById('detail-quota-summary').textContent = `${totalCopies} / ${perf.maxQuota} 部（承認済み＆保留中の合計）`;
+  document.getElementById('detail-quota-bar').style.width = `0%`;
+  document.getElementById('detail-quota-summary').textContent = `現在 ${requestingTroupes} 団体から依頼あり`;
 
   const statusObj = getAcceptanceStatus(perf);
   const badge = document.getElementById('detail-status-badge');
