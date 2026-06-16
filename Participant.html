@@ -935,6 +935,22 @@ let pageHistory = [];
 // ===================== APP INITIALIZATION =====================
 async function initApp() {
   await loadAllData();
+  // localStorage からセッションを復元
+  try {
+    const saved = localStorage.getItem('currentUser');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // DBから最新情報を取得して復元
+      const { data: freshData } = await db.from('troupes').select('*').eq('id', parsed.id);
+      if (freshData && freshData.length > 0) {
+        currentUser = freshData[0];
+      } else {
+        localStorage.removeItem('currentUser');
+      }
+    }
+  } catch(e) {
+    localStorage.removeItem('currentUser');
+  }
   updateFilterDropdown();
   renderLegend();
   renderTroupes(troupesData);
@@ -1584,6 +1600,7 @@ async function handleRegisterTroupe() {
 
     troupesData.push(newTroupe);
     currentUser = newTroupe;
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
     alert(`劇団「${name}」のアカウントを作成し、ログインしました！`);
     updateFilterDropdown();
     renderLegend();
@@ -1609,6 +1626,7 @@ async function handleLogin() {
       const found = foundTroupes[0];
       if (found.password === pass) {
         currentUser = found;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
         alert(`劇団「${found.name}」としてログインしました。`);
         await loadAllData();
         updateAuthUI();
@@ -1627,6 +1645,7 @@ async function handleLogin() {
 
 function handleLogout() {
   currentUser = null;
+  localStorage.removeItem('currentUser');
   conversationsData = [];
   currentConvId = null;
   if (chatChannel) { try { db.removeChannel(chatChannel); } catch(e) {} chatChannel = null; }
@@ -1885,6 +1904,7 @@ async function deleteTroupeAccount() {
     performancesData = performancesData.filter(p => p.troupeId !== id);
     incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
     currentUser = null;
+    localStorage.removeItem('currentUser');
     alert('アカウント情報をすべて完全に削除しました。');
     updateFilterDropdown();
     renderLegend();
@@ -1915,6 +1935,7 @@ async function resetAllDataToDefault() {
     await db.from('troupes').delete().neq('id', '');
 
     currentUser = null;
+    localStorage.removeItem('currentUser');
     troupesData = [];
     performancesData = [];
     incomingRequests = [];
