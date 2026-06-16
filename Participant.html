@@ -631,11 +631,11 @@ gap: 4px;
 <div class="form-2col">
 <div class="form-row">
 <label class="form-label">公演開始日<span class="form-required">*</span></label>
-<input type="date" class="form-input" id="new-perf-start" value="2026-06-14">
+<input type="date" class="form-input" id="new-perf-start">
 </div>
 <div class="form-row">
 <label class="form-label">公演終了日<span class="form-required">*</span></label>
-<input type="date" class="form-input" id="new-perf-end" value="2026-06-22">
+<input type="date" class="form-input" id="new-perf-end">
 </div>
 </div>
 
@@ -643,11 +643,11 @@ gap: 4px;
 <div class="form-2col">
 <div class="form-row">
 <label class="form-label">折り込み受付開始日<span class="form-required">*</span></label>
-<input type="date" class="form-input" id="new-perf-accept-start" value="2026-05-20">
+<input type="date" class="form-input" id="new-perf-accept-start">
 </div>
 <div class="form-row">
 <label class="form-label">折り込み受付終了日<span class="form-required">*</span></label>
-<input type="date" class="form-input" id="new-perf-accept-end" value="2026-06-10">
+<input type="date" class="form-input" id="new-perf-accept-end">
 </div>
 </div>
 
@@ -707,7 +707,7 @@ gap: 4px;
 <div class="form-section-title">登録団体 ログイン</div>
 <div class="form-row">
 <label class="form-label">メールアドレス</label>
-<input type="email" class="form-input" id="login-email" value="soul.member@example.com">
+<input type="email" class="form-input" id="login-email" placeholder="example@example.com">
 </div>
 <div class="form-row">
 <label class="form-label">パスワード</label>
@@ -1426,11 +1426,18 @@ function prepareRegisterPage() {
   submitBtn.onclick = handleRegisterPerformance;
 
   if (!editingPerfId) {
+    const today = new Date();
+    const toDateStr = d => d.toISOString().split('T')[0];
+    const perfStart = new Date(today); perfStart.setDate(today.getDate() + 21);
+    const perfEnd = new Date(perfStart); perfEnd.setDate(perfStart.getDate() + 2);
+    const acceptStart = new Date(today); acceptStart.setDate(today.getDate() + 7);
+    const acceptEnd = new Date(today); acceptEnd.setDate(today.getDate() + 14);
+
     document.getElementById('new-perf-title').value = '';
-    document.getElementById('new-perf-start').value = '2026-06-14';
-    document.getElementById('new-perf-end').value = '2026-06-22';
-    document.getElementById('new-perf-accept-start').value = '2026-05-20';
-    document.getElementById('new-perf-accept-end').value = '2026-06-10';
+    document.getElementById('new-perf-start').value = toDateStr(perfStart);
+    document.getElementById('new-perf-end').value = toDateStr(perfEnd);
+    document.getElementById('new-perf-accept-start').value = toDateStr(acceptStart);
+    document.getElementById('new-perf-accept-end').value = toDateStr(acceptEnd);
     document.getElementById('new-perf-venue').value = '';
     document.getElementById('new-perf-quota').value = '300';
     document.getElementById('new-perf-desc').value = '';
