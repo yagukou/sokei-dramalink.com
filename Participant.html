@@ -322,6 +322,44 @@ gap: 4px;
 .panel-success { background: #e8f5e9; border: 1px solid #a5d6a7; border-radius: var(--radius-md); padding: 1.25rem; text-align: center; color: #2e7d32; font-size: 14px; display: none; margin-top: 1rem; }
 .panel-success.show { display: block; }
 .panel-login-hint { background: var(--crimson-pale); border: 1px solid rgba(139,26,47,0.2); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: var(--crimson); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+
+/* ===================== CHAT ===================== */
+#page-chat { max-width: 1200px; padding: 1rem 1.5rem; }
+.chat-layout { display: flex; height: calc(100vh - 180px); background: var(--white); border: 1px solid var(--border-neutral); border-radius: var(--radius-lg); overflow: hidden; }
+.chat-sidebar { width: 280px; flex-shrink: 0; border-right: 1px solid var(--border-neutral); display: flex; flex-direction: column; overflow: hidden; }
+.chat-sidebar-header { padding: 14px 16px; font-size: 14px; font-weight: 600; border-bottom: 1px solid var(--border-neutral); display: flex; align-items: center; gap: 8px; background: var(--surface); flex-shrink: 0; }
+.conv-list { flex: 1; overflow-y: auto; }
+.chat-conv-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; border-bottom: 0.5px solid var(--border-neutral); transition: background 0.15s; }
+.chat-conv-item:hover { background: var(--surface2); }
+.chat-conv-item.active { background: var(--crimson-pale); }
+.chat-conv-meta { flex: 1; min-width: 0; }
+.chat-conv-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-conv-preview { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.chat-unread { background: var(--crimson); color: white; font-size: 11px; font-weight: 600; border-radius: 10px; padding: 1px 6px; min-width: 18px; text-align: center; flex-shrink: 0; }
+.chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--white); }
+.chat-view { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+.chat-header { padding: 12px 16px; border-bottom: 1px solid var(--border-neutral); display: flex; align-items: center; gap: 10px; background: var(--white); flex-shrink: 0; }
+.chat-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 8px; }
+.chat-msg-wrap { display: flex; align-items: flex-end; gap: 6px; }
+.chat-msg-wrap.mine { flex-direction: row-reverse; }
+.chat-msg-wrap.bot { justify-content: center; }
+.chat-bubble { max-width: 65%; padding: 8px 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; word-break: break-word; white-space: pre-wrap; }
+.chat-bubble.mine { background: var(--crimson); color: white; border-bottom-right-radius: 4px; }
+.chat-bubble.theirs { background: var(--surface2); color: var(--ink); border-bottom-left-radius: 4px; }
+.chat-bubble.bot { background: var(--surface); color: var(--muted); font-size: 12px; border-radius: 8px; max-width: 80%; text-align: center; padding: 6px 14px; border: 0.5px solid var(--border-neutral); }
+.chat-time { font-size: 10px; color: var(--muted); flex-shrink: 0; align-self: flex-end; }
+.chat-input-area { padding: 10px 14px; border-top: 1px solid var(--border-neutral); display: flex; gap: 8px; align-items: center; background: var(--white); position: relative; flex-shrink: 0; }
+.chat-text-input { flex: 1; padding: 8px 12px; border: 1px solid var(--border-neutral); border-radius: 20px; font-size: 13px; font-family: inherit; outline: none; }
+.chat-text-input:focus { border-color: var(--crimson); }
+.chat-send-btn { width: 36px; height: 36px; background: var(--crimson); border: none; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
+.chat-send-btn:hover { background: var(--crimson-light); }
+.emoji-toggle { width: 34px; height: 34px; background: none; border: none; font-size: 20px; cursor: pointer; flex-shrink: 0; padding: 0; line-height: 1; }
+.emoji-picker-popup { position: absolute; bottom: 58px; left: 14px; background: var(--white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 8px; display: none; grid-template-columns: repeat(8, 32px); gap: 2px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); z-index: 50; }
+.emoji-picker-popup.open { display: grid; }
+.emoji-picker-popup span { font-size: 18px; width: 30px; height: 30px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+.emoji-picker-popup span:hover { background: var(--surface2); }
+.chat-empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 10px; font-size: 14px; }
+.chat-empty-state i { font-size: 48px; color: var(--border-neutral); display: block; }
 </style>
 </head>
 <body>
@@ -348,6 +386,9 @@ gap: 4px;
 </button>
 <button class="nav-tab" onclick="showPage('register')" id="tab-register">
 <i class="ti ti-plus"></i>公演登録
+</button>
+<button class="nav-tab" onclick="showPage('chat')" id="tab-chat">
+<i class="ti ti-messages"></i>チャット
 </button>
 </div>
 
@@ -706,17 +747,19 @@ gap: 4px;
 
 <div class="stat-grid">
 <div class="stat-card stat-card-red">
-<div class="stat-label">届いている依頼（保留中）</div>
-<div class="stat-value" id="stat-incoming-pending" style="color:var(--crimson)">0</div>
+<div class="stat-label">届いた依頼数</div>
+<div class="stat-value" id="stat-incoming-count" style="color:var(--crimson)">0</div>
 </div>
 <div class="stat-card stat-card-neutral">
-<div class="stat-label">承認済みのビラ束</div>
-<div class="stat-value" id="stat-incoming-accepted">0</div>
+<div class="stat-label">送った依頼数</div>
+<div class="stat-value" id="stat-sent-count">0</div>
 </div>
 </div>
 
 <div class="section-title"><i class="ti ti-inbox"></i>折り込み依頼インボックス</div>
 <div class="inbox-list" id="dashboard-inbox"></div>
+
+<div id="sent-requests-section"></div>
 
 <!-- ===== プロフィール編集 ===== -->
 <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
@@ -776,6 +819,50 @@ gap: 4px;
 </div>
 </div>
 
+</div>
+
+<!-- ===================== CHAT PAGE ===================== -->
+<div class="page" id="page-chat">
+<div class="page-header" style="margin-bottom:0.75rem;">
+<div class="page-title">チャット</div>
+<div class="page-sub">折り込みを依頼した劇団とメッセージを交換できます</div>
+</div>
+<div id="chat-login-prompt" class="info-banner" style="display:none;">
+<div class="info-banner-title"><i class="ti ti-alert-triangle"></i>ログインが必要です</div>
+<p>チャットを使うにはマイページからログインしてください。</p>
+</div>
+<div class="chat-layout" id="chat-layout" style="display:none;">
+<div class="chat-sidebar">
+<div class="chat-sidebar-header"><i class="ti ti-messages" style="color:var(--crimson);"></i>会話</div>
+<div class="conv-list" id="conv-list"></div>
+</div>
+<div class="chat-main">
+<div class="chat-empty-state" id="chat-empty-state">
+<i class="ti ti-message-circle"></i>
+<span>左の劇団を選んでメッセージ</span>
+</div>
+<div class="chat-view" id="chat-view" style="display:none;">
+<div class="chat-header">
+<div id="chat-header-avatar" class="troupe-avatar" style="width:36px; height:36px; font-size:14px; flex-shrink:0;"></div>
+<div>
+<div id="chat-header-name" style="font-size:14px; font-weight:600;"></div>
+<div id="chat-header-univ" style="font-size:12px; color:var(--muted);"></div>
+</div>
+</div>
+<div class="chat-messages" id="chat-messages"></div>
+<div class="chat-input-area">
+<button class="emoji-toggle" onclick="toggleEmojiPicker()" title="絵文字">😊</button>
+<div class="emoji-picker-popup" id="chat-emoji-picker"></div>
+<input type="text" class="chat-text-input" id="chat-text-input"
+  placeholder="メッセージを入力... (Enterで送信)"
+  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}">
+<button class="chat-send-btn" onclick="sendChatMessage()" title="送信">
+<i class="ti ti-send" style="font-size:15px;"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 <!-- ===================== TROUPE SIDE PANEL ===================== -->
@@ -903,6 +990,7 @@ function showPage(pageId, pushToHistory = true) {
   if (pageId === 'troupes') renderTroupes(troupesData);
   if (pageId === 'mypage') renderMyPage();
   if (pageId === 'register') prepareRegisterPage();
+  if (pageId === 'chat') initChat();
 }
 
 function goBack() {
@@ -1535,6 +1623,9 @@ async function handleLogin() {
 
 function handleLogout() {
   currentUser = null;
+  conversationsData = [];
+  currentConvId = null;
+  if (chatChannel) { try { db.removeChannel(chatChannel); } catch(e) {} chatChannel = null; }
   updateAuthUI();
   alert('ログアウトしました。');
   showPage('calendar');
@@ -1635,55 +1726,114 @@ function renderMyPage() {
   if (snsEl) snsEl.value = currentUser.sns || '';
 
   const myReqs = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
-  document.getElementById('stat-incoming-pending').textContent = myReqs.filter(r => r.status === 'pending').length;
-  document.getElementById('stat-incoming-accepted').textContent = myReqs.filter(r => r.status === 'accepted').length;
+  const sentReqs = incomingRequests.filter(r =>
+    r.fromTroupeId === currentUser.id || (r.fromEmail === currentUser.email && r.toTroupeId !== currentUser.id)
+  );
 
+  document.getElementById('stat-incoming-count').textContent = myReqs.length;
+  document.getElementById('stat-sent-count').textContent = sentReqs.length;
+
+  // ── インボックス ──
   const inboxWrap = document.getElementById('dashboard-inbox');
   inboxWrap.innerHTML = '';
 
   if (myReqs.length === 0) {
     inboxWrap.innerHTML = '<div class="empty-state"><i class="ti ti-mailbox-off"></i>まだ折り込みリクエストは届いていません。</div>';
-    return;
+  } else {
+    [...myReqs].reverse().forEach(req => {
+      const targetPerf = performancesData.find(p => p.id === req.perfId);
+      const perfTitleStr = targetPerf ? targetPerf.title : "削除された公演";
+      const isNew = req.status === 'pending';
+      const item = document.createElement('div');
+      item.className = `inbox-item ${isNew ? 'unread' : ''}`;
+
+      // チャットへボタン（fromTroupeId or emailからtroupe特定）
+      const fromTroupeId = req.fromTroupeId || troupesData.find(t => t.email === req.fromEmail)?.id;
+      const chatBtnEl = document.createElement('div');
+      chatBtnEl.className = 'inbox-actions';
+      if (fromTroupeId) {
+        const btn = document.createElement('button');
+        btn.className = 'inbox-btn';
+        btn.style.cssText = 'background:var(--crimson-pale); border-color:rgba(139,26,47,0.2); color:var(--crimson); display:flex; align-items:center; gap:4px;';
+        btn.innerHTML = '<i class="ti ti-messages"></i> チャットへ';
+        btn.onclick = () => openChatWithTroupe(fromTroupeId);
+        chatBtnEl.appendChild(btn);
+      }
+
+      const methodStr = req.deliveryMethod || "対面";
+      const methodIcon = methodStr === "郵送" ? "ti-truck" : "ti-box";
+      const methodBadgeColor = methodStr === "郵送" ? "color:#1a4a8b; background:#e5eef9;" : "color:#8b5a1a; background:#fff4e5;";
+      const addressHtml = req.address ? `<div style="font-size:12px; color:var(--ink-mid); background:var(--surface); border:1px dashed var(--border-neutral); padding:4px 8px; border-radius:4px; margin-top:4px;"><i class="ti ti-map-pin" style="font-size:12px;"></i> 返送用住所: ${req.address}</div>` : '';
+
+      item.innerHTML = `
+        <div class="inbox-body">
+          <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">対象公演：${perfTitleStr}</div>
+          <div class="inbox-from">${req.fromName} <span style="font-weight:400; font-size:12px; color:var(--muted)">(${req.fromEmail})</span></div>
+          ${addressHtml}
+          <div class="inbox-preview" title="${req.notes || '備考なし'}" style="margin-top:4px;">備考: ${req.notes || 'なし'}</div>
+          <div class="inbox-meta">
+            <span class="inbox-copies">${req.copies} 部</span>
+            <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
+            <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:3px; ${methodBadgeColor}"><i class="ti ${methodIcon}"></i> ${methodStr}</span>
+            <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
+          </div>
+        </div>`;
+      item.appendChild(chatBtnEl);
+      inboxWrap.appendChild(item);
+    });
   }
 
-  [...myReqs].reverse().forEach(req => {
-    const targetPerf = performancesData.find(p => p.id === req.perfId);
-    const perfTitleStr = targetPerf ? targetPerf.title : "削除された公演";
-    const isUnread = req.status === 'pending';
-    const item = document.createElement('div');
-    item.className = `inbox-item ${isUnread ? 'unread' : ''}`;
+  // ── 送信済み依頼 ──
+  const sentSection = document.getElementById('sent-requests-section');
+  if (sentSection) {
+    sentSection.innerHTML = '';
+    const sentHeader = document.createElement('div');
+    sentHeader.style.cssText = 'margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);';
+    sentHeader.innerHTML = '<div class="section-title"><i class="ti ti-send"></i>送信した折り込み依頼</div>';
+    sentSection.appendChild(sentHeader);
 
-    let actionButtonsHtml = '';
-    if (req.status === 'pending') {
-      actionButtonsHtml = `<div class="inbox-actions"><button class="inbox-btn inbox-btn-accept" onclick="processRequest('${req.id}', 'accepted')"><i class="ti ti-check"></i> 承認</button><button class="inbox-btn inbox-btn-decline" onclick="processRequest('${req.id}', 'declined')"><i class="ti ti-ban"></i> 拒否</button></div>`;
+    if (sentReqs.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.innerHTML = '<i class="ti ti-send-off"></i>まだ依頼を送信していません。';
+      sentSection.appendChild(empty);
     } else {
-      const badgeLabel = req.status === 'accepted' ? '承認済み' : '拒否済み';
-      const badgeColor = req.status === 'accepted' ? '#1A6B4A' : '#A32D2D';
-      const badgeBg = req.status === 'accepted' ? '#E5F3EE' : '#FEF0F0';
-      actionButtonsHtml = `<span style="font-size:12px; padding:4px 10px; border-radius:4px; font-weight:600; color:${badgeColor}; background:${badgeBg}">${badgeLabel}</span>`;
+      const sentList = document.createElement('div');
+      sentList.className = 'inbox-list';
+      [...sentReqs].reverse().forEach(req => {
+        const toTroupe = troupesData.find(t => t.id === req.toTroupeId);
+        const toName = toTroupe ? toTroupe.name : req.toTroupeId;
+        const targetPerf = performancesData.find(p => p.id === req.perfId);
+        const perfTitle = targetPerf ? targetPerf.title : "削除された公演";
+
+        const item = document.createElement('div');
+        item.className = 'inbox-item';
+        item.innerHTML = `
+          <div class="inbox-body">
+            <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">依頼先: <strong>${toName}</strong>  /  公演: ${perfTitle}</div>
+            <div class="inbox-meta" style="margin-top:4px;">
+              <span class="inbox-copies">${req.copies} 部</span>
+              <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
+              <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
+            </div>
+          </div>`;
+
+        if (req.toTroupeId) {
+          const actions = document.createElement('div');
+          actions.className = 'inbox-actions';
+          const btn = document.createElement('button');
+          btn.className = 'inbox-btn';
+          btn.style.cssText = 'background:var(--crimson-pale); border-color:rgba(139,26,47,0.2); color:var(--crimson); display:flex; align-items:center; gap:4px;';
+          btn.innerHTML = '<i class="ti ti-messages"></i> チャットへ';
+          btn.onclick = () => openChatWithTroupe(req.toTroupeId);
+          actions.appendChild(btn);
+          item.appendChild(actions);
+        }
+        sentList.appendChild(item);
+      });
+      sentSection.appendChild(sentList);
     }
-
-    const methodStr = req.deliveryMethod || "対面";
-    const methodIcon = methodStr === "郵送" ? "ti-truck" : "ti-box";
-    const methodBadgeColor = methodStr === "郵送" ? "color:#1a4a8b; background:#e5eef9;" : "color:#8b5a1a; background:#fff4e5;";
-    const addressHtml = req.address ? `<div style="font-size:12px; color:var(--ink-mid); background:var(--surface); border:1px dashed var(--border-neutral); padding:4px 8px; border-radius:4px; margin-top:4px;"><i class="ti ti-map-pin" style="font-size:12px;"></i> 返送用住所: ${req.address}</div>` : '';
-
-    item.innerHTML = `
-      <div class="inbox-body">
-        <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">対象公演：${perfTitleStr}</div>
-        <div class="inbox-from">${req.fromName} <span style="font-weight:400; font-size:12px; color:var(--muted)">(${req.fromEmail})</span></div>
-        ${addressHtml}
-        <div class="inbox-preview" title="${req.notes || '備考なし'}" style="margin-top:4px;">メッセージ: ${req.notes || 'なし'}</div>
-        <div class="inbox-meta">
-          <span class="inbox-copies">${req.copies} 部</span>
-          <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
-          <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:3px; ${methodBadgeColor}"><i class="ti ${methodIcon}"></i> ${methodStr}</span>
-          <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
-        </div>
-      </div>
-      ${actionButtonsHtml}`;
-    inboxWrap.appendChild(item);
-  });
+  }
 }
 
 async function processRequest(reqId, newStatus) {
@@ -1765,6 +1915,398 @@ async function resetAllDataToDefault() {
     console.error('リセットエラー:', error.message);
     alert('リセットに失敗しました: ' + error.message);
   }
+}
+
+// ===================== CHAT グローバル変数 =====================
+let conversationsData = [];
+let currentConvId = null;
+let chatMessages = [];
+let chatChannel = null;
+const EMOJI_LIST = ['👍','❤️','😊','😂','🎉','✅','🙏','👏','😮','🤔','💪','🎭','📦','✉️','⭐','🔥','🤝','😅','🙌','💌'];
+
+// ===================== CHAT 関数群 =====================
+async function initChat() {
+  if (!currentUser) {
+    document.getElementById('chat-login-prompt').style.display = 'block';
+    document.getElementById('chat-layout').style.display = 'none';
+    return;
+  }
+  document.getElementById('chat-login-prompt').style.display = 'none';
+  document.getElementById('chat-layout').style.display = 'flex';
+
+  await loadConversations();
+  renderConvList();
+
+  // 絵文字ピッカー初期化（1回だけ）
+  const ep = document.getElementById('chat-emoji-picker');
+  if (ep && ep.children.length === 0) {
+    EMOJI_LIST.forEach(em => {
+      const s = document.createElement('span');
+      s.textContent = em;
+      s.onclick = () => insertEmoji(em);
+      ep.appendChild(s);
+    });
+  }
+}
+
+async function loadConversations() {
+  try {
+    const { data, error } = await db.from('conversations')
+      .select('*')
+      .or(`troupeAId.eq.${currentUser.id},troupeBId.eq.${currentUser.id}`)
+      .order('updatedAt', { ascending: false });
+    if (error) throw error;
+    conversationsData = data || [];
+  } catch (e) {
+    console.error('会話読み込みエラー:', e);
+    conversationsData = [];
+  }
+}
+
+function getOtherTroupeId(conv) {
+  return conv.troupeAId === currentUser.id ? conv.troupeBId : conv.troupeAId;
+}
+
+function getMyUnreadCount(conv) {
+  return (conv.troupeAId === currentUser.id ? conv.unreadForA : conv.unreadForB) || 0;
+}
+
+function getTroupeColorInfo(troupeId) {
+  const colorClass = getTroupeColorClass(troupeId);
+  let dummy = document.createElement('div');
+  dummy.className = colorClass;
+  document.body.appendChild(dummy);
+  const bg = window.getComputedStyle(dummy).backgroundColor;
+  const color = window.getComputedStyle(dummy).borderLeftColor;
+  document.body.removeChild(dummy);
+  return { bg, color };
+}
+
+function renderConvList() {
+  const list = document.getElementById('conv-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  if (conversationsData.length === 0) {
+    list.innerHTML = '<div style="padding:1rem; font-size:12px; color:var(--muted); text-align:center; line-height:1.8;">まだ会話がありません。<br>折り込み依頼を送ると<br>自動的に開始されます。</div>';
+    return;
+  }
+
+  conversationsData.forEach(conv => {
+    const otherId = getOtherTroupeId(conv);
+    const other = troupesData.find(t => t.id === otherId);
+    if (!other) return;
+    const { bg, color } = getTroupeColorInfo(otherId);
+    const unread = getMyUnreadCount(conv);
+
+    const item = document.createElement('div');
+    item.className = `chat-conv-item${currentConvId === conv.id ? ' active' : ''}`;
+    item.dataset.convId = conv.id;
+    item.onclick = () => openConversation(conv.id);
+
+    const av = document.createElement('div');
+    av.className = 'troupe-avatar';
+    av.style.cssText = `width:36px; height:36px; font-size:14px; flex-shrink:0; background:${bg}; color:${color};`;
+    av.textContent = other.name.charAt(0);
+    item.appendChild(av);
+
+    const meta = document.createElement('div');
+    meta.className = 'chat-conv-meta';
+    meta.innerHTML = `<div class="chat-conv-name">${other.name}</div><div class="chat-conv-preview">${conv.lastMessage || '---'}</div>`;
+    item.appendChild(meta);
+
+    if (unread > 0) {
+      const badge = document.createElement('div');
+      badge.className = 'chat-unread';
+      badge.textContent = unread;
+      item.appendChild(badge);
+    }
+
+    list.appendChild(item);
+  });
+}
+
+async function openConversation(convId) {
+  currentConvId = convId;
+  const conv = conversationsData.find(c => c.id === convId);
+  if (!conv) return;
+
+  const otherId = getOtherTroupeId(conv);
+  const other = troupesData.find(t => t.id === otherId);
+  const { bg, color } = getTroupeColorInfo(otherId);
+
+  const headerAv = document.getElementById('chat-header-avatar');
+  headerAv.textContent = other ? other.name.charAt(0) : '?';
+  headerAv.style.background = bg;
+  headerAv.style.color = color;
+  document.getElementById('chat-header-name').textContent = other ? other.name : otherId;
+  document.getElementById('chat-header-univ').textContent = other ? (other.affiliation || '') : '';
+
+  document.getElementById('chat-empty-state').style.display = 'none';
+  document.getElementById('chat-view').style.display = 'flex';
+
+  await loadMessages(convId);
+
+  // 既読リセット
+  const amA = conv.troupeAId === currentUser.id;
+  const myUnreadField = amA ? 'unreadForA' : 'unreadForB';
+  if (getMyUnreadCount(conv) > 0) {
+    conv[myUnreadField] = 0;
+    db.from('conversations').update({ [myUnreadField]: 0 }).eq('id', convId).catch(() => {});
+  }
+
+  // リスト再描画（バッジ更新）
+  document.querySelectorAll('.chat-conv-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.convId === convId);
+  });
+  renderConvList();
+
+  subscribeToMessages(convId);
+}
+
+async function loadMessages(convId) {
+  try {
+    const { data, error } = await db.from('messages')
+      .select('*')
+      .eq('conversationId', convId)
+      .order('createdAt', { ascending: true });
+    if (error) throw error;
+    chatMessages = data || [];
+    renderMessages();
+  } catch (e) {
+    console.error('メッセージ読み込みエラー:', e);
+    chatMessages = [];
+  }
+}
+
+function renderMessages() {
+  const container = document.getElementById('chat-messages');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const conv = conversationsData.find(c => c.id === currentConvId);
+  const otherId = conv ? getOtherTroupeId(conv) : null;
+
+  chatMessages.forEach(msg => {
+    const isBot = msg.senderId === 'bot';
+    const isMine = !isBot && msg.senderId === currentUser.id;
+    const ts = new Date(msg.createdAt);
+    const timeStr = ts.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+    const wrap = document.createElement('div');
+    wrap.className = `chat-msg-wrap ${isBot ? 'bot' : isMine ? 'mine' : 'theirs'}`;
+
+    const bubble = document.createElement('div');
+    bubble.className = `chat-bubble ${isBot ? 'bot' : isMine ? 'mine' : 'theirs'}`;
+    bubble.textContent = msg.content;
+
+    if (isBot) {
+      const inner = document.createElement('div');
+      inner.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:3px;';
+      const label = document.createElement('div');
+      label.style.cssText = 'font-size:10px; color:var(--muted); display:flex; align-items:center; gap:4px;';
+      label.innerHTML = '<i class="ti ti-robot"></i>システムメッセージ';
+      const time = document.createElement('div');
+      time.className = 'chat-time';
+      time.textContent = timeStr;
+      inner.appendChild(label);
+      inner.appendChild(bubble);
+      inner.appendChild(time);
+      wrap.appendChild(inner);
+    } else if (isMine) {
+      const time = document.createElement('span');
+      time.className = 'chat-time';
+      time.textContent = timeStr;
+      wrap.appendChild(time);
+      wrap.appendChild(bubble);
+    } else {
+      const { bg, color } = getTroupeColorInfo(otherId || msg.senderId);
+      const av = document.createElement('div');
+      av.className = 'troupe-avatar';
+      av.style.cssText = `width:28px; height:28px; font-size:11px; flex-shrink:0; background:${bg}; color:${color}; align-self:flex-end;`;
+      const sender = troupesData.find(t => t.id === msg.senderId);
+      av.textContent = sender ? sender.name.charAt(0) : '?';
+      const time = document.createElement('span');
+      time.className = 'chat-time';
+      time.textContent = timeStr;
+      wrap.appendChild(av);
+      wrap.appendChild(bubble);
+      wrap.appendChild(time);
+    }
+
+    container.appendChild(wrap);
+  });
+
+  container.scrollTop = container.scrollHeight;
+}
+
+async function sendChatMessage() {
+  if (!currentUser || !currentConvId) return;
+  const input = document.getElementById('chat-text-input');
+  if (!input) return;
+  const content = input.value.trim();
+  if (!content) return;
+
+  input.value = '';
+  closeEmojiPicker();
+
+  const conv = conversationsData.find(c => c.id === currentConvId);
+  if (!conv) return;
+
+  const amA = conv.troupeAId === currentUser.id;
+  const otherId = getOtherTroupeId(conv);
+  const otherUnreadField = amA ? 'unreadForB' : 'unreadForA';
+
+  const msg = {
+    id: 'msg_' + Date.now(),
+    conversationId: currentConvId,
+    senderId: currentUser.id,
+    content,
+    type: 'text',
+    createdAt: new Date().toISOString(),
+  };
+
+  try {
+    const { error } = await db.from('messages').insert([msg]);
+    if (error) throw error;
+
+    const preview = content.length > 30 ? content.substring(0, 30) + '…' : content;
+    const newUnread = (conv[otherUnreadField] || 0) + 1;
+    await db.from('conversations').update({
+      lastMessage: preview,
+      updatedAt: new Date().toISOString(),
+      [otherUnreadField]: newUnread,
+    }).eq('id', currentConvId);
+    conv.lastMessage = preview;
+    conv[otherUnreadField] = newUnread;
+
+    // 通知メール（クールダウン付き）
+    const other = troupesData.find(t => t.id === otherId);
+    if (other && other.email) {
+      fetch(`${SUPABASE_URL}/functions/v1/send-chat-notification`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
+        body: JSON.stringify({
+          conversationId: currentConvId,
+          fromName: currentUser.name,
+          toEmail: other.email,
+          messagePreview: content.length > 60 ? content.substring(0, 60) + '…' : content,
+          recipientIsA: conv.troupeAId === otherId,
+        }),
+      }).catch(e => console.warn('通知メールスキップ:', e));
+    }
+
+    // 楽観的更新
+    chatMessages.push(msg);
+    renderMessages();
+    renderConvList();
+  } catch (e) {
+    console.error('メッセージ送信エラー:', e);
+    alert('メッセージの送信に失敗しました');
+  }
+}
+
+function subscribeToMessages(convId) {
+  if (chatChannel) { try { db.removeChannel(chatChannel); } catch(e) {} chatChannel = null; }
+
+  chatChannel = db.channel(`chat-${convId}`)
+    .on('postgres_changes', {
+      event: 'INSERT', schema: 'public', table: 'messages',
+      filter: `conversationId=eq.${convId}`,
+    }, (payload) => {
+      const msg = payload.new;
+      if (!msg || chatMessages.find(m => m.id === msg.id)) return;
+      chatMessages.push(msg);
+      renderMessages();
+
+      // 既読リセット（相手のメッセージが来た場合）
+      if (msg.senderId !== currentUser.id) {
+        const conv = conversationsData.find(c => c.id === convId);
+        if (conv) {
+          const amA = conv.troupeAId === currentUser.id;
+          const myField = amA ? 'unreadForA' : 'unreadForB';
+          if (conv[myField] > 0) {
+            conv[myField] = 0;
+            db.from('conversations').update({ [myField]: 0 }).eq('id', convId).catch(() => {});
+            renderConvList();
+          }
+        }
+      }
+    })
+    .subscribe();
+}
+
+async function getOrCreateConversation(troupeAId, troupeBId) {
+  const [idA, idB] = [troupeAId, troupeBId].sort();
+  try {
+    const { data, error } = await db.from('conversations')
+      .select('*').eq('troupeAId', idA).eq('troupeBId', idB);
+    if (error) throw error;
+    if (data && data.length > 0) {
+      if (!conversationsData.find(c => c.id === data[0].id)) conversationsData.unshift(data[0]);
+      return data[0];
+    }
+    const now = new Date().toISOString();
+    const newConv = { id: `conv_${idA}_${idB}`, troupeAId: idA, troupeBId: idB, lastMessage: '', unreadForA: 0, unreadForB: 0, updatedAt: now, createdAt: now };
+    const { error: ie } = await db.from('conversations').insert([newConv]);
+    if (ie) throw ie;
+    conversationsData.unshift(newConv);
+    return newConv;
+  } catch (e) {
+    console.error('会話作成エラー:', e);
+    return null;
+  }
+}
+
+async function sendBotMessage(convId, content) {
+  const conv = conversationsData.find(c => c.id === convId);
+  if (!conv) return;
+  const amA = conv.troupeAId === currentUser.id;
+  const otherField = amA ? 'unreadForB' : 'unreadForA';
+  const preview = content.length > 30 ? content.substring(0, 30) + '…' : content;
+  const msg = { id: `msg_bot_${Date.now()}`, conversationId: convId, senderId: 'bot', content, type: 'text', createdAt: new Date().toISOString() };
+  try {
+    await db.from('messages').insert([msg]);
+    const newUnread = (conv[otherField] || 0) + 1;
+    await db.from('conversations').update({ lastMessage: preview, updatedAt: new Date().toISOString(), [otherField]: newUnread }).eq('id', convId);
+    conv.lastMessage = preview;
+    conv[otherField] = newUnread;
+  } catch (e) { console.error('ボットメッセージ送信エラー:', e); }
+}
+
+function toggleEmojiPicker() {
+  const ep = document.getElementById('chat-emoji-picker');
+  if (ep) ep.classList.toggle('open');
+}
+
+function closeEmojiPicker() {
+  const ep = document.getElementById('chat-emoji-picker');
+  if (ep) ep.classList.remove('open');
+}
+
+function insertEmoji(emoji) {
+  const input = document.getElementById('chat-text-input');
+  if (input) {
+    const pos = input.selectionStart || input.value.length;
+    input.value = input.value.substring(0, pos) + emoji + input.value.substring(pos);
+    input.focus();
+    input.setSelectionRange(pos + emoji.length, pos + emoji.length);
+  }
+  closeEmojiPicker();
+}
+
+async function openChatWithTroupe(troupeId) {
+  if (!currentUser) { alert('チャットを使うにはログインしてください。'); return; }
+  showPage('chat');
+  // initChat が呼ばれるので少し待つ
+  setTimeout(async () => {
+    await loadConversations();
+    const conv = await getOrCreateConversation(currentUser.id, troupeId);
+    if (conv) {
+      renderConvList();
+      await openConversation(conv.id);
+    }
+  }, 50);
 }
 
 // ===================== エントリポイント（1回だけ） =====================
@@ -1883,6 +2425,7 @@ async function submitPanelRequest() {
     id: 'req_' + Date.now(),
     perfId: selectedPerformanceId,
     toTroupeId: perf.troupeId,
+    fromTroupeId: currentUser ? currentUser.id : null,
     fromName, fromEmail, address, deliveryMethod, copies, size,
     notes: notes || '',
     status: 'pending',
@@ -1927,6 +2470,28 @@ async function submitPanelRequest() {
 
     document.getElementById('panel-form-body').style.display = 'none';
     document.getElementById('panel-success').classList.add('show');
+
+    // チャットボタン表示
+    const chatBtn = document.getElementById('panel-chat-btn');
+    if (chatBtn && currentUser) {
+      chatBtn.style.display = 'inline-flex';
+      const capturedTroupeId = perf.troupeId;
+      chatBtn.onclick = () => { closeSidePanel(); openChatWithTroupe(capturedTroupeId); };
+    }
+
+    // チャット会話作成 + ボットメッセージ
+    if (currentUser) {
+      try {
+        const conv = await getOrCreateConversation(currentUser.id, perf.troupeId);
+        if (conv) {
+          const delivStr = deliveryMethod === '郵送' ? `郵送（${address || '住所未入力'}）` : '対面';
+          const botText = `📬 折り込み依頼が届きました\n\n差出団体: ${fromName}\n対象公演: 「${perf.title}」\n部数: ${copies}部\nサイズ: ${size}\n受け渡し方法: ${delivStr}${notes ? `\n備考: ${notes}` : ''}\n\nこのチャットで詳細をやり取りしてください。`;
+          await sendBotMessage(conv.id, botText);
+        }
+      } catch (chatErr) {
+        console.warn('チャット会話作成スキップ:', chatErr);
+      }
+    }
   } catch (error) {
     console.error('折り込み依頼送信エラー:', error);
     alert('送信に失敗しました: ' + (error.message || JSON.stringify(error)));
@@ -2024,7 +2589,10 @@ async function submitPanelRequest() {
     <div class="panel-success" id="panel-success">
       <i class="ti ti-circle-check" style="font-size:28px; display:block; margin-bottom:8px;"></i>
       折り込み依頼を送信しました！<br>
-      <span style="font-size:12px; margin-top:4px; display:block; color:#388e3c;">相手劇団のインボックスに届きました</span>
+      <span style="font-size:12px; margin-top:4px; display:block; color:#388e3c;">チャットで詳細を確認・調整できます</span>
+      <button id="panel-chat-btn" style="display:none; margin-top:12px; padding:8px 20px; background:var(--ink-mid); color:white; border:none; border-radius:var(--radius-md); font-size:13px; cursor:pointer; font-family:inherit; align-items:center; gap:6px;">
+        <i class="ti ti-messages"></i>チャットで話し合う →
+      </button>
     </div>
   </div>
 </div>
