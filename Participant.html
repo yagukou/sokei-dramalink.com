@@ -811,10 +811,10 @@ gap: 4px;
 </div>
 
 <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-neutral);">
-<div class="form-section-title" style="color: var(--crimson); font-size: 13px; font-weight: 600;"><i class="ti ti-refresh"></i> 開発・管理用データリセット</div>
-<p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">データが不整合を起こしたり、最初から動作テストをやり直したい場合は、以下のボタンより全てのデータを消去し、最初の初期デモデータに戻すことができます。</p>
+<div class="form-section-title" style="color: var(--crimson); font-size: 13px; font-weight: 600;"><i class="ti ti-trash"></i> 管理者専用：全データ削除</div>
+<p style="font-size: 12px; color: var(--muted); margin-bottom: 12px;">Supabase上の団体・公演・依頼・チャットデータをすべて完全削除します。管理者パスワードの認証が必要です。この操作は取り消せません。</p>
 <button class="btn-secondary" style="background: #fff5f5; border-color: #feb2b2; color: #c53030; font-size: 12px; padding: 6px 14px;" onclick="resetAllDataToDefault()">
-<i class="ti ti-refresh"></i> データをすべて初期化（デモデータ復元）
+<i class="ti ti-trash"></i> 全データを完全削除する
 </button>
 </div>
 </div>
@@ -1889,28 +1889,39 @@ async function deleteTroupeAccount() {
   }
 }
 
+const ADMIN_RESET_PASSWORD = 'K5fgrR/<,P%adfpoIT';
+
 async function resetAllDataToDefault() {
-  if (!confirm('Supabase上のデータをすべて削除し、デモ初期データに戻しますか？\n（この操作は取り消せません）')) return;
+  const input = prompt('管理者パスワードを入力してください：');
+  if (input === null) return;
+  if (input !== ADMIN_RESET_PASSWORD) {
+    alert('パスワードが違います。');
+    return;
+  }
+  if (!confirm('すべての団体・公演・依頼・チャットデータを完全に削除します。\nこの操作は取り消せません。本当に実行しますか？')) return;
+
   try {
+    await db.from('messages').delete().neq('id', '');
+    await db.from('conversations').delete().neq('id', '');
     await db.from('requests').delete().neq('id', '');
     await db.from('performances').delete().neq('id', '');
     await db.from('troupes').delete().neq('id', '');
 
-    await db.from('troupes').insert(DEFAULT_TROUPES);
-    await db.from('performances').insert(DEFAULT_PERFORMANCES);
-    await db.from('requests').insert(DEFAULT_REQUESTS);
-
     currentUser = null;
-    await loadAllData();
+    troupesData = [];
+    performancesData = [];
+    incomingRequests = [];
+    conversationsData = [];
+
     updateFilterDropdown();
     renderLegend();
     updateAuthUI();
     renderCalendar();
-    alert('すべてのデータをデモ初期状態に復元しました。');
+    alert('すべてのデータを削除しました。');
     showPage('calendar');
   } catch (error) {
-    console.error('リセットエラー:', error.message);
-    alert('リセットに失敗しました: ' + error.message);
+    console.error('削除エラー:', error.message);
+    alert('削除に失敗しました: ' + error.message);
   }
 }
 
