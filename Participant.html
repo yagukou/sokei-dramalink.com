@@ -1542,56 +1542,112 @@ function resetRegisterForm() {
   }
 }
 
+// ===================== 公演情報の登録・修正処理（修正版） =====================
 async function handleRegisterPerformance() {
-  if (!currentUser) { alert('公演を登録するにはログインが必要です。'); return; }
+  if (!currentUser) {
+    alert('公演情報を登録・修正するにはログインが必要です。');
+    return;
+  }
 
-  // 【修正3】HTMLのID（new-perf-*）と一致させる
   const title = document.getElementById('new-perf-title').value.trim();
   const start = document.getElementById('new-perf-start').value;
   const end = document.getElementById('new-perf-end').value;
   const acceptStart = document.getElementById('new-perf-accept-start').value;
   const acceptEnd = document.getElementById('new-perf-accept-end').value;
   const venue = document.getElementById('new-perf-venue').value.trim();
-  const maxQuota = parseInt(document.getElementById('new-perf-quota').value);
+  const quotaInput = document.getElementById('new-perf-quota').value;
   const desc = document.getElementById('new-perf-desc').value.trim();
-  const deliveryRadios = document.getElementsByName('new-perf-delivery');
+
+  const radios = document.getElementsByName('new-perf-delivery');
   let deliveryRestriction = 'どちらでも可';
-  for (let r of deliveryRadios) { if (r.checked) { deliveryRestriction = r.value; break; } }
+  for (let r of radios) {
+    if (r.checked) {
+      deliveryRestriction = r.value;
+      break;
+    }
+  }
   const deliveryAddress = document.getElementById('new-perf-address').value.trim();
 
-  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || isNaN(maxQuota)) {
-    alert('必須マークの項目をすべて正しく入力してください。');
+  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || !quotaInput) {
+    alert('必須項目（*）をすべて入力してください。');
     return;
   }
-  if (deliveryRestriction !== '対面のみ' && !deliveryAddress) {
-    alert('郵送を受け付ける場合は、郵送先住所を入力してください。');
-    document.getElementById('new-perf-address').focus();
-    return;
-  }
+  const maxQuota = parseInt(quotaInput);
 
-  const perfData = {
+  // 送信オブジェクトの組み立て
+  const perfPayload = {
     troupeId: currentUser.id,
-    title, start, end, acceptStart, acceptEnd, venue, maxQuota, desc, deliveryRestriction,
-    deliveryAddress: deliveryRestriction !== '対面のみ' ? deliveryAddress : '',
-    email: currentUser.email
+    title,
+    start,
+    end,
+    acceptStart,
+    acceptEnd,
+    venue,
+    maxQuota,
+    desc,
+    deliveryRestriction,
+    deliveryAddress: (deliveryRestriction === '対面のみ') ? '' : deliveryAddress,
+    updatedAt: new Date().toISOString()
   };
 
   try {
     if (editingPerfId) {
-      const { error } = await db.from('performances').update(perfData).eq('id', editingPerfId);
+      // ーーーーー 【修正ポイント】既存データの変更（編集モード） ーーーーー
+      const { data, error } = await db
+        .from('performances')
+        .update(perfPayload)
+        .eq('id', editingPerfId)
+        .select(); // 更新後の最新データを取得する
+
       if (error) throw error;
+
+      // 1. ローカルのデータ配列（performancesData）を最新に置き換える
       const idx = performancesData.findIndex(p => p.id === editingPerfId);
-      if (idx !== -1) performancesData[idx] = { ...performancesData[idx], ...perfData };
-      editingPerfId = null;
+      if (idx !== -1 && data && data.length > 0) {
+        performancesData[idx] = data[0];
+      } else {
+        // 万が一 .select() でデータが返らなかった場合のフォールバック
+        perfPayload.id = editingPerfId;
+        if (idx !== -1) performancesData[idx] = { ...performancesData[idx], ...perfPayload };
+      }
+
       alert('公演情報を更新しました！');
+
     } else {
-      perfData.id = 'perf_' + Date.now();
-      const { error } = await db.from('performances').insert([perfData]);
+      // ーーーーー 新規登録モード ーーーーー
+      const newId = 'perf_' + Date.now();
+      perfPayload.id = newId;
+      perfPayload.createdAt = new Date().toISOString();
+
+      const { data, error } = await db
+        .from('performances')
+        .insert([perfPayload])
+        .select();
+
       if (error) throw error;
-      performancesData.push(perfData);
-      alert('新しい公演スケジュールを登録し、全体カレンダーに反映しました。');
+
+      if (data && data.length > 0) {
+        performancesData.push(data[0]);
+      } else {
+        performancesData.push(perfPayload);
+      }
+
+      alert('新しい公演情報を登録しました！');
     }
+
+    // ーーーーー 【修正ポイント】画面側への即時反映処理 ーーーーー
+    // 2. 登録・修正フォームを初期状態にリセット
+    resetRegisterForm(); 
+
+    // 3. カレンダーと劇団一覧の表示を最新データで再描画
+    renderCalendar();
+    if (typeof renderTroupes === 'function') {
+      renderTroupes(troupesData);
+    }
+
+    // 4. カレンダー画面に安全に戻す
     showPage('calendar');
+
   } catch (error) {
     console.error('公演登録/更新エラー:', error.message);
     alert('公演の登録または更新に失敗しました: ' + error.message);
