@@ -516,14 +516,13 @@ gap: 4px;
 </div>
 </div>
 
-<div class="perf-sidebar">
 <div id="perf-my-actions" style="display: none; margin-bottom: 12px; flex-direction: column; gap: 8px;">
-<button class="btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: #eef2f7; border-color: #cbd5e1;" onclick="startEditPerformance()">
-<i class="ti ti-edit"></i>この公演情報を修正する
-</button>
-<button class="btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: #fef2f2; border-color: #fca5a5; color: #b91c1c;" onclick="deletePerformanceClick()">
-<i class="ti ti-trash"></i>この公演を削除する
-</button>
+  <button class="btn-primary" style="width: 100%; justify-content: center; background: var(--gold);" onclick="startEditPerformance()">
+    <i class="ti ti-edit"></i> この公演情報を修正する
+  </button>
+  <button class="btn-secondary" style="width: 100%; color: #A32D2D; background: #FEF0F0; border-color: #F8C4C4;" onclick="handleDeletePerformance()">
+    <i class="ti ti-trash"></i> この公演を削除する
+  </button>
 </div>
 
 <div class="sidebar-card">
@@ -616,9 +615,13 @@ gap: 4px;
 <div class="page-sub" id="register-page-sub">自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します</div>
 </div>
 
-<div id="register-need-login-msg" class="info-banner" style="display:none;">
-<div class="info-banner-title"><i class="ti ti-alert-triangle"></i>ログインが必要です</div>
-<p>公演情報を登録・修正するには、マイページから劇団アカウントでログインしてください。</p>
+<div class="submit-row">
+  <button class="btn-primary" id="register-submit-btn" onclick="handleRegisterPerformance()">
+    <i class="ti ti-device-floppy"></i> 公演情報を登録する
+  </button>
+  <button class="btn-secondary" type="button" onclick="cancelEditPerformance()">
+    キャンセル
+  </button>
 </div>
 
 <div id="register-form-body">
@@ -1457,6 +1460,85 @@ function prepareRegisterPage() {
     document.getElementById('new-perf-venue').value = '';
     document.getElementById('new-perf-quota').value = '300';
     document.getElementById('new-perf-desc').value = '';
+  }
+}
+
+// 公演情報の編集を開始する関数
+function startEditPerformance() {
+  if (!selectedPerformanceId) return;
+  
+  // 選択中の公演データを取得
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (!perf) return;
+  
+  // 編集モードとしてIDを記録
+  editingPerfId = perf.id;
+  
+  // 登録画面のタイトルや文言を「修正」に切り替える
+  document.getElementById('register-page-title').textContent = '公演情報の修正';
+  document.getElementById('register-page-sub').textContent = '登録済みの公演スケジュールや受け入れ条件を変更します。';
+  document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-device-floppy"></i> 変更内容を保存する';
+  
+  // 各入力フォームに既存の値をセット
+  document.getElementById('new-perf-title').value = perf.title || '';
+  document.getElementById('new-perf-start').value = perf.start || '';
+  document.getElementById('new-perf-end').value = perf.end || '';
+  document.getElementById('new-perf-accept-start').value = perf.acceptStart || '';
+  document.getElementById('new-perf-accept-end').value = perf.acceptEnd || '';
+  document.getElementById('new-perf-venue').value = perf.venue || '';
+  document.getElementById('new-perf-quota').value = perf.maxQuota || 0;
+  document.getElementById('new-perf-desc').value = perf.desc || '';
+  
+  // 受け渡し方法のラジオボタンの復元
+  const deliveryRadios = document.getElementsByName('new-perf-delivery');
+  for (let r of deliveryRadios) {
+    if (r.value === perf.deliveryRestriction) {
+      r.checked = true;
+    }
+  }
+  
+  // 住所フィールドの表示・非表示と値の復元
+  const addressInput = document.getElementById('new-perf-address');
+  if (addressInput) {
+    addressInput.value = perf.deliveryAddress || '';
+    // 配送方法のコンテキストに合わせて表示制御している場合はここで呼び出し
+    if (perf.deliveryRestriction === '対面のみ') {
+      // 必要に応じて住所行を隠すロジックがあれば連動
+    }
+  }
+  
+  // 登録（編集）ページへ遷移
+  showPage('register');
+}
+
+// 編集をキャンセルしてカレンダーに戻る関数
+function cancelEditPerformance() {
+  if (editingPerfId) {
+    if (!confirm('変更内容は保存されません。キャンセルしますか？')) return;
+  }
+  resetRegisterForm();
+  showPage('calendar');
+}
+
+// フォームを通常の「新規登録」状態にリセットする関数
+function resetRegisterForm() {
+  editingPerfId = null;
+  document.getElementById('register-page-title').textContent = '公演の登録';
+  document.getElementById('register-page-sub').textContent = '自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します。';
+  document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-plus"></i> 公演情報を登録する';
+  
+  // フォームクリア
+  document.getElementById('new-perf-title').value = '';
+  document.getElementById('new-perf-start').value = '';
+  document.getElementById('new-perf-end').value = '';
+  document.getElementById('new-perf-accept-start').value = '';
+  document.getElementById('new-perf-accept-end').value = '';
+  document.getElementById('new-perf-venue').value = '';
+  document.getElementById('new-perf-quota').value = '';
+  document.getElementById('new-perf-desc').value = '';
+  document.getElementById('new-perf-address').value = '';
+  if (document.getElementsByName('new-perf-delivery')[0]) {
+    document.getElementsByName('new-perf-delivery')[0].checked = true;
   }
 }
 
