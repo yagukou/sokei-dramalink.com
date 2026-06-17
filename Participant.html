@@ -1317,6 +1317,60 @@ function openPerformanceDetail(perfId) {
   showPage('perf-detail');
 }
 
+// ▼ 新しく追加する：公演情報の編集を開始する関数
+function startEditPerformance() {
+  if (!selectedPerformanceId) return;
+  
+  // 現在選択中の公演データを取得
+  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+  if (!perf) return;
+  
+  // 編集モードとしてグローバル変数（editingPerfId）にIDを記録
+  editingPerfId = perf.id;
+  
+  // 登録画面のタイトルやボタンの文言を「修正モード」用に切り替える
+  const regTitle = document.getElementById('register-page-title');
+  if (regTitle) regTitle.textContent = '公演情報の修正';
+  
+  const regSub = document.querySelector('#page-register .section-sub');
+  if (regSub) regSub.textContent = '登録済みの公演スケジュールや受け入れ条件を変更します。';
+  
+  const submitBtn = document.getElementById('register-submit-btn');
+  if (submitBtn) submitBtn.innerHTML = '<i class="ti ti-device-floppy"></i> 変更内容を保存する';
+  
+  // 各フォームに現在の登録データを自動でセット
+  document.getElementById('new-perf-title').value = perf.title || '';
+  document.getElementById('new-perf-start').value = perf.start || '';
+  document.getElementById('new-perf-end').value = perf.end || '';
+  document.getElementById('new-perf-accept-start').value = perf.acceptStart || '';
+  document.getElementById('new-perf-accept-end').value = perf.acceptEnd || '';
+  document.getElementById('new-perf-venue').value = perf.venue || '';
+  document.getElementById('new-perf-quota').value = perf.maxQuota || '';
+  document.getElementById('new-perf-desc').value = perf.desc || '';
+  
+  // 受け渡し方法のラジオボタンを復元
+  const radios = document.getElementsByName('new-perf-delivery');
+  for (let r of radios) {
+    if (r.value === perf.deliveryRestriction) {
+      r.checked = true;
+    }
+  }
+  
+  // 住所フィールドの復元
+  const addrInput = document.getElementById('new-perf-address');
+  if (addrInput) {
+    addrInput.value = perf.deliveryAddress || '';
+    // 郵送の場合の住所欄表示連動
+    const addrRow = document.getElementById('perf-address-row');
+    if (addrRow) {
+      addrRow.style.display = (perf.deliveryRestriction === '郵送・宅配便のみ' || perf.deliveryRestriction === 'どちらでも可') ? 'block' : 'none';
+    }
+  }
+  
+  // 登録フォーム画面（page-register）に遷移
+  showPage('register');
+}
+
 function handleDetailTroupeLinkClick() {
   const perf = performancesData.find(p => p.id === selectedPerformanceId);
   if (perf) openTroupeModal(perf.troupeId);
