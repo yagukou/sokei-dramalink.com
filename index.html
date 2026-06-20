@@ -1039,9 +1039,57 @@
     }, 9000); 
 
     /* ハンバーガーボタンメニュー */
-    document.querySelector(".hamburger").onclick = function() {
-      alert("ここにメニュー開く処理");
+    /* ==========================================================================
+       ★ハンバーガーメニューの作成と各ページへのリンク処理（ここを貼り付け）
+       ========================================================================== */
+    
+    // 1. スマホの画面上に、メニュー画面（HTML）とデザイン（CSS）を自動で作成して追加します
+    const menuHTML = `
+      <div id="menu-overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:140; display:none;"></div>
+      <nav id="mobile-nav" style="position:fixed; top:0; right:-100%; width:250px; height:100vh; background-color:#111111; box-shadow:-4px 0 12px rgba(0,0,0,0.5); z-index:150; display:flex; flex-direction:column; padding-top:90px; transition:right 0.3s ease;">
+        <a href="index.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">トップページ</a>
+        <a href="ticket.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">チケット予約</a>
+        <a href="Schedule.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">スケジュール</a>
+        <a href="news.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">ニュース</a>
+        <a href="what.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">公演紹介</a>
+        <a href="Participant.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">ビラネットワーク</a>
+        <a href="Inquiry.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">お問い合わせ</a>
+      </nav>
+    `;
+    document.body.insertAdjacentHTML('beforeend', menuHTML);
+
+    // 2. ボタンやリンクをクリックしたときの動きを設定します
+    const hamburgerBtn = document.querySelector(".hamburger");
+    const mobileNav = document.getElementById("mobile-nav");
+    const menuOverlay = document.getElementById("menu-overlay");
+    const menuLinks = document.querySelectorAll(".m-link");
+
+    // ☰ボタンをクリックしたとき：メニューを開く
+    hamburgerBtn.onclick = function() {
+      toggleMobileMenu();
     };
+
+    // 暗い背景をクリックしたとき：メニューを閉じる
+    menuOverlay.onclick = function() {
+      toggleMobileMenu();
+    };
+
+    // メニュー内のリンク（各ページ）をクリックしたとき、ホバー（指をのせたとき）に赤くするデザイン
+    menuLinks.forEach(link => {
+      link.onmouseenter = () => link.style.backgroundColor = '#b90e0e';
+      link.onmouseleave = () => link.style.backgroundColor = 'transparent';
+    });
+
+    // メニューを開閉させる共通の命令
+    function toggleMobileMenu() {
+      if (mobileNav.style.right === "0px") {
+        mobileNav.style.right = "-100%";
+        menuOverlay.style.display = "none";
+      } else {
+        mobileNav.style.right = "0px";
+        menuOverlay.style.display = "block";
+      }
+    }
     </script>
   </body>
 </html>
