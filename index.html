@@ -633,7 +633,127 @@
       .news-item { flex-direction: column; align-items: flex-start; gap: 10px; }
       .news-date { width: auto; }
     }
+
+/* タブレット・スマホ全般 (画面幅 992px 以下) */
+@media (max-width: 992px) {
+  /* 3枚のカードリンクを横並びから縦並び（または2列）へ柔軟に変更 */
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 0 20px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 500px; /* スマホで広がりすぎないように制限 */
+  }
+}
+
+/* スマートフォン (画面幅 768px 以下) */
+@media (max-width: 768px) {
+  /* --- ヘッダーの最適化 --- */
+  header {
+    padding: 0 15px;
+    height: auto;
+    min-height: 80px;
+    flex-direction: column; /* 縦並びにして要素を収める */
+    justify-content: center;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .logo-area {
+    margin-right: 0;
+    text-align: center;
+  }
+
+  .ticket-btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  /* --- メインビジュアル（スライダー）の最適化 --- */
+  .slider-container {
+    height: 50vh; /* スマホでは高さを画面の半分程度にして見やすく */
+  }
+
+  .slide-text-overlay h2 {
+    font-size: 24px; /* 文字サイズをスマホ向けに縮小 */
+    letter-spacing: 2px;
+  }
+
+  .slide-text-overlay p {
+    font-size: 14px;
+  }
+
+  /* --- 各セクションの余白調整 --- */
+  .section-title {
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+
+  .section-title::after {
+    bottom: -8px;
+    width: 40px;
+  }
+
+  section {
+    padding: 50px 15px; /* 左右の余白を確保して文字の端切れを防ぐ */
+  }
+
+  /* --- 告知エリア・文言の調整 --- */
+  .announcement-box {
+    padding: 20px 15px;
+  }
+
+  .announcement-box p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* --- ビデオセクションの調整 --- */
+  .video-wrapper {
+    width: 100%; /* スマホでは動画を横幅いっぱいに */
+    border: none;
+  }
+
+  /* --- フッターの調整 --- */
+  footer {
+    padding: 20px 15px;
+    font-size: 11px;
+  }
+}
+
+/* 小さなスマートフォン (画面幅 480px 以下) */
+@media (max-width: 480px) {
+  header {
+    /* 非常に狭い画面では右側の言語選択ボタンなどとの重なりを防ぐ調整 */
+    align-items: center;
+  }
+  
+  .header-right {
+    gap: 10px;
+  }
+
+  .slider-container {
+    height: 40vh; /* さらに高さをコンパクトに */
+  }
+
+  .slide-text-overlay h2 {
+    font-size: 20px;
+  }
+  
+  /* ボタンの文字を調整 */
+  .card-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
     </style>
+
   </head>
 
   <body>
