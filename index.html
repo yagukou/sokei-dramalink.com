@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google" content="notranslate">
     
+    <!-- ファビコン設定（画像ファイル名に合わせて変更してください） -->
     <link rel="icon" href="favicon.ico" type="image/x-icon" />
 
     <style>
@@ -28,661 +29,965 @@
       position: relative;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       font-family: sans-serif; /* ヘッダーのみ視認性重視でゴシック */
-      z-index: 100;
     }
 
-    .header-left {
+    .menu-left, .menu-right {
+      display: flex;
+      gap: 15px;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .menu-left div, .menu-right div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .menu-left img, .menu-right img {
+       width: 30px;
+       height: 30px;
+       margin-bottom: 5px;
+       filter: brightness(0) invert(1); 
+    }
+
+    .logo {
+      text-decoration: none;
+      font-family: "Times New Roman", serif;
+      letter-spacing: 3px;
+      text-align: center;
+      line-height: 1.2;
+      display: flex;
+      flex-direction: column;  
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%); 
+      z-index: 1;
+      max-width: 40%;  
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .logo-main {
+      font-size: 24px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #ffffff; 
+    }
+
+    .logo-sub {   
+      font-size: 13px;   
+      letter-spacing: 2px;
+      color: #d4af37; 
+      margin-top: 2px;
+    }
+
+    a {
+      text-decoration: none;
+      flex-direction: column;
+      color: black;
+      font-size: 12px;
+    }
+
+    .menu-1 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent !important; 
+      box-shadow: none !important;
+      width: auto !important;   
+      height: auto !important;  
+      padding: 5px 10px;
+      transition: 0.3s;
+    }
+
+    .menu-1 span {
+      display: block;
+      width: 100%;
+      text-align: center;       
+      margin-top: 5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffffff !important; 
+    }
+
+    .menu-1:hover {
+      transform: translateY(-3px);
+    }
+
+    /* スライダーエリア */
+    .slider {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .slides { position: relative; }
+
+    .slide {
+      width: 100%;
+      height: 100vh;
+      object-fit: cover;
+      display: none;
+      border-radius: 0;
+      opacity: 0;
+      transition: 0.5s;
+      position: absolute;
+    }
+
+    .slide.active {
+      display: block;
+      opacity: 1;
+      position: relative;
+    }
+
+    button.prev, button.next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: #b90e0e;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .prev { left: 10px; }
+    .next { right: 10px; }
+
+    .hero-text {
+      position: absolute;
+      bottom: 12%;
+      left: 8%;
+      z-index: 10;
+      color: white;
+    }
+
+    .hero-text h1 {
+      font-size: 72px;
+      font-family: "Times New Roman", "Yu Mincho", serif;
+      margin: 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    }
+
+    .hero-text p {
+      letter-spacing: 6px;
+      color: #d4af37;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .slider::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(11,11,11,1) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
+      z-index: 2;
+    }
+
+    /* 劇団四季・宝塚風の高級デザイン設定 */
+    .section-head {
+      text-align: center;
+      margin-bottom: 70px;
+      position: relative;
+    }
+
+    .section-en {
+      color: #c5a059; /* 落ち着いたアンティークゴールド */
+      letter-spacing: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .section-head h2 {
+      font-size: 38px;
+      margin: 0;
+      font-family: "Yu Mincho", serif;
+      color: inherit;
+      font-weight: 500;
+      letter-spacing: 2px;
+    }
+
+    .section-head::after {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: #c5a059;
+      margin: 20px auto 0;
+    }
+
+    /* ① トップニュース */
+    .top-news {
       display: flex;
       align-items: center;
-      gap: 20px;
-    }
-
-    /* チケット予約ボタン */
-    .ticket-btn {
-      background-color: #ffffff;
-      color: #b90e0e;
-      border: 2px solid #ffffff;
-      padding: 10px 22px;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: all 0.3s ease;
-      text-decoration: none;
+      justify-content: center;
+      background: #161616;
+      border-top: 1px solid #2a2a2a;
+      border-bottom: 1px solid #2a2a2a;
+      padding: 22px 8%;
       font-size: 15px;
       letter-spacing: 1px;
     }
 
-    .ticket-btn:hover {
-      background-color: transparent;
-      color: #ffffff;
-    }
-
-    /* 中央ロゴエリア */
-    .logo-area {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-    }
-
-    .logo-area h1 {
-      margin: 0;
-      font-size: 22px;
-      letter-spacing: 3px;
-      color: #ffffff;
-      font-weight: 700;
-    }
-
-    /* 右側エリア（言語選択・ハンバーガー） */
-    .header-right {
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-
-    .lang-btn {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.6);
-      color: #ffffff;
-      padding: 6px 14px;
-      cursor: pointer;
-      font-size: 13px;
-      border-radius: 3px;
-      transition: background 0.2s;
-    }
-
-    .lang-btn:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    .lang-dropdown {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      margin-top: 8px;
-      background: #222;
-      border: 1px solid #444;
-      border-radius: 4px;
-      display: none;
-      z-index: 1000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-    }
-
-    .lang-dropdown button {
-      display: block;
-      width: 100%;
-      padding: 10px 20px;
-      background: transparent;
-      border: none;
-      color: #eee;
-      text-align: left;
-      cursor: pointer;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-
-    .lang-dropdown button:hover {
-      background: #b90e0e;
-      color: #fff;
-    }
-
-    /* ハンバーガーボタンのデザイン */
-    .hamburger {
-      font-size: 28px;
-      cursor: pointer;
-      margin-left: 15px;
-      color: #ffffff;
-      user-select: none;
-    }
-
-    /* --- メインビジュアル（スライダー） --- */
-    .slider-container {
-      position: relative;
-      width: 100%;
-      height: 75vh;
-      overflow: hidden;
-      background: #000;
-    }
-
-    .slide {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      opacity: 0;
-      transition: opacity 1.2s ease-in-out;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .slide.active {
-      opacity: 1;
-    }
-
-    .slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      filter: brightness(0.45) contrast(1.05);
-    }
-
-    .slide-text-overlay {
-      position: absolute;
-      text-align: center;
-      padding: 0 20px;
-      max-width: 900px;
-    }
-
-    .slide-text-overlay h2 {
-      font-size: 42px;
-      margin: 0 0 15px 0;
-      font-weight: 400;
-      letter-spacing: 6px;
-      text-shadow: 0 4px 15px rgba(0,0,0,0.6);
-      line-height: 1.4;
-    }
-
-    .slide-text-overlay p {
-      font-size: 18px;
-      margin: 0;
-      color: #dddddd;
+    .news-label {
+      color: #b90e0e;
+      margin-right: 25px;
+      font-weight: bold;
+      border: 1px solid #b90e0e;
+      padding: 2px 10px;
+      font-size: 12px;
       letter-spacing: 2px;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     }
 
-    /* スライダー矢印ボタン */
-    .slider-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(0,0,0,0.3);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      padding: 18px 15px;
-      cursor: pointer;
-      z-index: 10;
-      font-size: 20px;
-      transition: all 0.3s;
+    .news-text {
+      color: #ddd;
     }
 
-    .slider-btn:hover {
-      background: #b90e0e;
-      border-color: #b90e0e;
+    /* ② スケジュール */
+    .schedule-section {
+      background: #0b0b0b;
+      padding: 120px 10%;
     }
 
-    .prev { left: 20px; border-radius: 0 4px 4px 0; }
-    .next { right: 20px; border-radius: 4px 0 0 4px; }
-
-    /* --- 各セクションの共通スタイル --- */
-    section {
-      padding: 90px 40px;
-      max-width: 1100px;
-      margin: 0 auto;
+    .schedule-list {
+      max-width: 1000px;
+      margin: 60px auto 0;
     }
 
-    .section-title {
-      font-size: 28px;
-      text-align: center;
-      letter-spacing: 4px;
-      margin-bottom: 45px;
-      position: relative;
-      font-weight: 400;
+    .schedule-item {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #222;
+      padding: 40px 20px;
+      transition: 0.4s;
     }
 
-    .section-title::after {
-      content: "";
-      position: absolute;
-      bottom: -12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 1px;
-      background: #b90e0e;
+    .schedule-item:hover {
+      background: rgba(197, 160, 89, 0.03); 
     }
 
-    /* 告知ボックス */
-    .announcement-box {
-      background: linear-gradient(135deg, #161616 0%, #0f0f0f 100%);
-      border-left: 3px solid #b90e0e;
-      padding: 35px 40px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      border-radius: 0 8px 8px 0;
-    }
-
-    .announcement-box p {
-      margin: 0;
+    .schedule-date {
+      color: #c5a059;
       font-size: 16px;
-      line-height: 1.85;
-      color: #e0e0e0;
-      letter-spacing: 1px;
+      width: 160px;
+      line-height: 1.2;
+      letter-spacing: 2px;
+      border-right: 1px solid #333;
     }
 
-    /* ビデオ表示エリア */
-    .video-section {
-      background: #000000;
-      max-width: 100%;
-      padding: 90px 0;
+    .schedule-date span {
+      font-size: 46px;
+      font-family: "Times New Roman", serif;
+      display: block;
+      font-weight: 300;
     }
 
-    .video-wrapper {
-      width: 85%;
-      max-width: 900px;
-      margin: 0 auto;
-      aspect-ratio: 16 / 9;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.7);
-      border: 1px solid #1c1c1c;
-      border-radius: 4px;
-      overflow: hidden;
+    .schedule-info {
+      flex: 1;
+      padding-left: 40px;
     }
 
-    .video-wrapper iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* --- 3枚のカードリンクコンテナ --- */
-    .card-container {
-      display: flex;
-      justify-content: space-between;
-      gap: 25px;
-      margin-top: 20px;
-    }
-
-    .card {
-      background: #121212;
-      border: 1px solid #1c1c1c;
-      width: 31%;
-      border-radius: 6px;
-      overflow: hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-      transition: transform 0.3s, border-color 0.3s;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      border-color: #b90e0e;
-    }
-
-    .card-img-wrap {
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      background: #1a1a1a;
-      overflow: hidden;
-    }
-
-    .card-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.5s;
-    }
-
-    .card:hover .card-img-wrap img {
-      transform: scale(1.04);
-    }
-
-    .card-content {
-      padding: 25px;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .card-title {
-      font-size: 18px;
-      letter-spacing: 1px;
-      margin: 0 0 12px 0;
+    .schedule-info h3 {
       color: #ffffff;
+      font-size: 24px;
+      margin: 0 0 12px 0;
+      font-family: "Yu Mincho", serif;
       font-weight: 500;
     }
 
-    .card-text {
-      font-size: 13.5px;
-      line-height: 1.65;
-      color: #aaaaaa;
-      margin: 0 0 20px 0;
-      font-family: sans-serif;
-    }
-
-    .card-btn {
-      align-self: flex-start;
-      background: transparent;
-      color: #ffffff;
-      border: 1px solid #b90e0e;
-      padding: 11px 24px;
-      cursor: pointer;
-      font-size: 13px;
-      letter-spacing: 1px;
-      border-radius: 4px;
-      transition: all 0.3s;
-      text-decoration: none;
-    }
-
-    .card-btn:hover {
-      background: #b90e0e;
-      box-shadow: 0 4px 12px rgba(185,14,14,0.3);
-    }
-
-    /* --- フッター --- */
-    footer {
-      background: #000000;
-      text-align: center;
-      padding: 35px 20px;
-      font-size: 12px;
-      color: #555555;
-      border-top: 1px solid #111111;
-      letter-spacing: 1px;
-    }
-
-    /* --- Google 翻訳ツールの非表示カスタム --- */
-    .goog-te-banner-frame, .skiptranslate, iframe.goog-te-menu-frame {
-      display: none !important;
-    }
-    body {
-      top: 0 !important;
-    }
-
-    /* --- スマートフォン用引き出しメニューのスタイル --- */
-    .mobile-nav {
-      position: fixed;
-      top: 0;
-      right: -100%; /* 初期状態は隠す */
-      width: 250px;
-      height: 100vh;
-      background-color: #111111;
-      box-shadow: -4px 0 12px rgba(0,0,0,0.5);
-      z-index: 150;
+    .schedule-meta {
       display: flex;
-      flex-direction: column;
-      padding-top: 110px;
-      transition: right 0.3s ease;
+      gap: 15px;
+      align-items: center;
+      font-size: 14px;
+      color: #aaa;
     }
 
-    .mobile-nav.open {
-      right: 0; /* メニューが開いた状態 */
+    .schedule-venue {
+      color: #c5a059;
     }
 
-    .mobile-nav-link {
-      color: #ffffff;
-      text-decoration: none;
-      padding: 15px 25px;
-      font-size: 16px;
-      border-bottom: 1px solid #222;
+    .status-tag {
+      background: #b90e0e;
+      color: white;
+      font-size: 11px;
+      padding: 2px 8px;
       font-family: sans-serif;
-      transition: background 0.2s;
+      font-weight: bold;
     }
 
-    .mobile-nav-link:hover {
-      background-color: #b90e0e;
+    /* ③ ガイド */
+    .guide-section {
+      background: #fbf9f6; 
+      color: #1a1a1a;
+      padding: 120px 10%;
     }
 
-    /* 背景を暗くするシート */
-    .menu-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.6);
-      z-index: 140;
-      display: none;
+    .guide-section .section-en { color: #b90e0e; }
+    .guide-section .section-head::after { background: #b90e0e; }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      max-width: 1200px;
+      margin: 60px auto 0;
+    }
+
+    .guide-card {
+      background: #ffffff;
+      padding: 45px 35px;
+      border-radius: 0px; 
+      color: #1a1a1a;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      border-top: 3px solid #c5a059; 
+      transition: 0.3s;
+    }
+
+    .guide-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(185,14,14,0.08);
+    }
+
+    .guide-card h3 {
+      font-size: 20px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      font-family: "Yu Mincho", serif;
+      color: #b90e0e;
+    }
+
+    .guide-card p {
+      color: #555;
+      line-height: 1.8;
+      font-size: 14px;
+      margin: 0;
+    }
+
+    /* ④ ニュースセクション */
+    .news-section {
+      background: #ffffff;
+      color: #1a1a1a;
+      padding: 120px 10%;
+      border-top: 1px solid #f0e9e0;
+    }
+
+    .news-section .section-en { color: #c5a059; }
+    .news-section .section-head::after { background: #c5a059; }
+
+    .news-list {
+      max-width: 1000px;
+      margin: 60px auto 0;
+      border-top: 1px solid #e5dfd5;
+    }
+
+    .news-item {
+      display: flex;
+      align-items: center;
+      padding: 30px 15px;
+      border-bottom: 1px solid #e5dfd5;
+      text-decoration: none;
+      transition: 0.35s;
+    }
+
+    .news-item:hover {
+      background: #fbf9f6;
+      padding-left: 30px;
+    }
+
+    .news-date {
+      width: 140px;
+      color: #888;
+      font-size: 14px;
+      letter-spacing: 1px;
+      font-family: "Times New Roman", serif;
+    }
+
+    .news-category {
+      font-size: 11px;
+      padding: 3px 10px;
+      border: 1px solid #ccc;
+      color: #666;
+      margin-right: 30px;
+      font-family: sans-serif;
+      min-width: 70px;
+      text-align: center;
     }
     
-    .menu-overlay.show {
-      display: block;
+    .news-item:hover .news-category {
+      border-color: #b90e0e;
+      color: #b90e0e;
     }
 
-    /* --- レスポンシブ表示設定（スマートフォン・タブレット用） --- */
-    @media (max-width: 992px) {
-      .card-container {
-        flex-direction: column;
-        align-items: center;
-        gap: 30px;
-        padding: 0 20px;
-      }
+    .news-title {
+      flex: 1;
+      color: #1a1a1a;
+      font-size: 18px;
+      font-family: "Yu Mincho", serif;
+      letter-spacing: 0.5px;
+    }
 
-      .card {
-        width: 100%;
-        max-width: 500px;
-      }
+    .news-arrow {
+      color: #c5a059;
+      font-size: 20px;
+      transition: 0.3s;
+      font-family: sans-serif;
+    }
+
+    .news-item:hover .news-arrow {
+      color: #b90e0e;
+      transform: translateX(8px);
+    }
+
+    /* ⑤ メディア（ギャラリー） */
+    .media-section {
+      background: #0b0b0b;
+      padding: 120px 10%;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 50px;
+      max-width: 1200px;
+      margin: 60px auto 0;
+    }
+
+    .media-card {
+      text-decoration: none;
+      overflow: hidden;
+      background: #121212;
+      border: 1px solid #222;
+      transition: 0.4s;
+    }
+
+    .media-card:hover {
+      border-color: #c5a059;
+      box-shadow: 0 10px 30px rgba(197,160,89,0.1);
+    }
+
+    .media-thumb-wrapper {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      height: 340px;
+    }
+
+    .media-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .media-card:hover img {
+      transform: scale(1.06);
+    }
+
+    .media-tag {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(11,11,11,0.85);
+      color: #c5a059;
+      font-size: 11px;
+      letter-spacing: 2px;
+      padding: 4px 12px;
+      border: 1px solid #c5a059;
+      font-family: sans-serif;
+    }
+
+    .media-text {
+      padding: 30px 25px;
+    }
+
+    .media-text h3 {
+      color: white;
+      font-size: 22px;
+      margin: 0;
+      font-family: "Yu Mincho", serif;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* フッター・SNSエリア */
+    footer {
+      background: #070707;
+      border-top: 1px solid #1a1a1a;
+      padding: 60px 5% 40px;
+      text-align: center;
+    }
+
+    .sns {
+      display: flex;
+      justify-content: center;
+      gap: 35px;
+      margin-bottom: 40px;
+    }
+
+    .sns-item {
+      display: inline-block;
+      transition: 0.3s;
+    }
+
+    .sns-item:hover {
+      transform: translateY(-3px);
+      filter: brightness(1.2);
+    }
+
+    .sns-item img {
+      width: 36px;   
+      height: 36px;
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: #555;
+      letter-spacing: 1px;
+      font-family: sans-serif;
+    }
+
+    /* Google翻訳ポップアップ等の強制非表示 */
+    .goog-te-banner-frame,
+    .goog-te-gadget-icon,
+    .goog-te-gadget-simple,
+    .goog-te-balloon-frame,
+    .goog-te-banner-frame.skiptranslate {
+      display: none !important;
+    }
+
+    body {
+      top: 0px !important;
+      position: static !important;
+    }
+
+    .lang-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .lang-menu {
+      position: absolute;
+      top: 110%;   
+      left: 0;
+      width: 140px;
+      background: #f0f0f0;
+      border-radius: 12px;
+      overflow: hidden;
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      font-family: sans-serif;
+    }
+
+    .lang-menu div {
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 13px;
+      color: black;
+    }
+
+    .lang-menu div:hover { background: #ddd; }
+    .hamburger { display: none; }
+
+    /* レスポンシブ */
+    @media (max-width: 960px) {
+      .guide-grid { grid-template-columns: 1fr; gap: 25px; }
+      .media-grid { grid-template-columns: 1fr; gap: 35px; }
     }
 
     @media (max-width: 768px) {
-      header {
-        padding: 0 15px;
-        height: 80px;
+      header { height: 70px; }
+      .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
+      .menu-left, .menu-right { display: none; }
+      .hamburger {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 30px;
+        color: white !important; 
+        cursor: pointer;
+        z-index: 1000;
+        display: block;
+        font-family: sans-serif;
       }
-
-      /* スマホ版でロゴと三本線が綺麗に並ぶよう左寄せにする */
-      .logo-area {
-        position: static !important;
-        transform: none !important;
-        flex-grow: 1;
-        text-align: left;
-        margin-left: 15px;
-      }
-
-      .logo-area h1 {
-        font-size: 18px;
-        letter-spacing: 1px;
-      }
-
-      .slider-container {
-        height: 50vh;
-      }
-
-      .slide-text-overlay h2 {
-        font-size: 24px;
-        letter-spacing: 2px;
-      }
-
-      .slide-text-overlay p {
-        font-size: 14px;
-      }
-
-      .section-title {
-        font-size: 22px;
-        margin-bottom: 25px;
-      }
-
-      section {
-        padding: 50px 15px;
-      }
-
-      .announcement-box {
-        padding: 20px 15px;
-      }
-
-      .announcement-box p {
-        font-size: 14px;
-        line-height: 1.6;
-      }
-
-      .video-wrapper {
-        width: 100%;
-        border: none;
-      }
-
-      footer {
-        padding: 20px 15px;
-        font-size: 11px;
-      }
+      .hero-text h1 { font-size: 42px; }
+      .schedule-item { flex-direction: column; align-items: flex-start; gap: 15px; }
+      .schedule-date { border-right: none; border-bottom: 1px solid #333; padding-bottom: 10px; width: 100%; }
+      .schedule-info { padding-left: 0; }
+      .news-item { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .news-date { width: auto; }
     }
 
-    @media (max-width: 480px) {
-      .slider-container {
-        height: 40vh;
-      }
+/* タブレット・スマホ全般 (画面幅 992px 以下) */
+@media (max-width: 992px) {
+  /* 3枚のカードリンクを横並びから縦並び（または2列）へ柔軟に変更 */
+  .card-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 0 20px;
+  }
 
-      .slide-text-overlay h2 {
-        font-size: 20px;
-      }
-      
-      .card-btn {
-        padding: 10px 20px;
-        font-size: 13px;
-      }
-    }
+  .card {
+    width: 100%;
+    max-width: 500px; /* スマホで広がりすぎないように制限 */
+  }
+}
+
+/* スマートフォン (画面幅 768px 以下) */
+@media (max-width: 768px) {
+  /* --- ヘッダーの最適化 --- */
+  header {
+    padding: 0 15px;
+    height: auto;
+    min-height: 80px;
+    flex-direction: column; /* 縦並びにして要素を収める */
+    justify-content: center;
+    gap: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .logo-area {
+    margin-right: 0;
+    text-align: center;
+  }
+
+  .ticket-btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  /* --- メインビジュアル（スライダー）の最適化 --- */
+  .slider-container {
+    height: 50vh; /* スマホでは高さを画面の半分程度にして見やすく */
+  }
+
+  .slide-text-overlay h2 {
+    font-size: 24px; /* 文字サイズをスマホ向けに縮小 */
+    letter-spacing: 2px;
+  }
+
+  .slide-text-overlay p {
+    font-size: 14px;
+  }
+
+  /* --- 各セクションの余白調整 --- */
+  .section-title {
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+
+  .section-title::after {
+    bottom: -8px;
+    width: 40px;
+  }
+
+  section {
+    padding: 50px 15px; /* 左右の余白を確保して文字の端切れを防ぐ */
+  }
+
+  /* --- 告知エリア・文言の調整 --- */
+  .announcement-box {
+    padding: 20px 15px;
+  }
+
+  .announcement-box p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* --- ビデオセクションの調整 --- */
+  .video-wrapper {
+    width: 100%; /* スマホでは動画を横幅いっぱいに */
+    border: none;
+  }
+
+  /* --- フッターの調整 --- */
+  footer {
+    padding: 20px 15px;
+    font-size: 11px;
+  }
+}
+
+/* 小さなスマートフォン (画面幅 480px 以下) */
+@media (max-width: 480px) {
+  header {
+    /* 非常に狭い画面では右側の言語選択ボタンなどとの重なりを防ぐ調整 */
+    align-items: center;
+  }
+  
+  .header-right {
+    gap: 10px;
+  }
+
+  .slider-container {
+    height: 40vh; /* さらに高さをコンパクトに */
+  }
+
+  .slide-text-overlay h2 {
+    font-size: 20px;
+  }
+  
+  /* ボタンの文字を調整 */
+  .card-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
     </style>
+
   </head>
 
   <body>
+    <script>
+    window.difyChatbotConfig = {
+      token: 'cfUgpimDdajARduo',
+      inputs: {},
+      systemVariables: {},
+      userVariables: {}
+    }
+    </script>
+    <script src="https://udify.app/embed.min.js" id="cfUgpimDdajARduo" defer></script>
+    <style>
+      #dify-chatbot-bubble-button { background-color: #b90e0e !important; }
+      #dify-chatbot-bubble-window { width: 24rem !important; height: 40rem !important; }
+    </style>
+
+    <div id="google_translate_element" style="display:none;"></div>
+    <script>
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({ pageLanguage: 'ja' }, 'google_translate_element');
+    }
+    </script>
+    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
     <header>
-      <div class="header-left">
-        <a href="#" class="ticket-btn">TICKET</a>
+      <div class="menu-left">
+        <a href="ticket.html" class="menu-1">
+          <img src="ticket3.png">
+          <span>チケット予約</span>
+        </a>
+        <a href="what.html" class="menu-1">
+          <img src="what3.png">
+          <span>公演紹介</span>
+        </a>
+        <a href="Participant.html" class="menu-1">
+          <img src="Participant3.png">
+          <span>ビラネット</span>
+        </a>
+        <a href="Schedule.html" class="menu-1">
+          <img src="Schedule3.png">
+          <span>スケジュール</span>
+        </a>
       </div>
 
-      <div class="logo-area">
-        <h1>早慶演劇祭</h1>
-      </div>
+      <a href="index.html" class="logo">
+        <div class="logo-main">StageLink</div>
+        <div class="logo-sub">Official Website</div>
+      </a>
 
-      <div class="header-right">
-        <button class="lang-btn" id="lang-btn" onclick="toggleLangMenu(event)">Language</button>
-        <div class="lang-dropdown" id="lang-menu">
-          <button onclick="setLang('ja')">日本語</button>
-          <button onclick="setLang('en')">English</button>
-          <button onclick="setLang('zh-CN')">简体中文</button>
-          <button onclick="setLang('ko')">한국어</button>
+      <div class="menu-right">
+        <a href="news.html" class="menu-1">
+          <img src="news3.png">
+          <span>ニュース</span>
+        </a>
+        <div class="lang-wrapper">
+          <a class="menu-1" onclick="toggleLangMenu(event); return false;">
+            <img src="Language3.png">
+            <span>Language</span>
+          </a>
+          <div id="lang-menu" class="lang-menu" style="display: none;">
+            <div onclick="setLang('ja')">日本語</div>
+            <div onclick="setLang('en')">ENGLISH</div>
+            <div onclick="setLang('zh-CN')">简体中文</div>
+            <div onclick="setLang('ko')">한국어</div>
+          </div>
         </div>
-        
-        <div class="hamburger">☰</div>
+        <a href="Inquiry.html" class="menu-1">
+          <img src="Inquiry3.png">
+          <span>お問い合わせ</span>
+        </a>
+        <a href="menu.html" class="menu-1">
+          <img src="menu3.png">
+          <span>メニュー</span>
+        </a>
       </div>
+
+      <div class="hamburger">☰</div>
     </header>
 
-    <div class="menu-overlay" id="menu-overlay"></div>
-    <nav class="mobile-nav" id="mobile-nav">
-      <a href="#" class="mobile-nav-link" onclick="toggleMobileMenu()">トップページ</a>
-      <a href="#" class="mobile-nav-link" onclick="toggleMobileMenu()">チケット予約</a>
-      <a href="#announcement-section" class="mobile-nav-link" onclick="toggleMobileMenu()">公演情報</a>
-      <a href="#contents-section" class="mobile-nav-link" onclick="toggleMobileMenu()">コンテンツ・グッズ</a>
-    </nav>
-
-    <div class="slider-container">
-      <button class="slider-btn prev">◀</button>
-      <button class="slider-btn next">▶</button>
-
-      <div class="slide active">
-        <div class="slide-text-overlay">
-          <h2>伝統と情熱が交錯する、舞台の競演。</h2>
-          <p>第〇〇回 早慶演劇祭 特設サイト</p>
-        </div>
+    <div class="slider">
+      <div class="slides">
+        <img src="img1.jpg" class="slide active">
+        <img src="img2.jpg" class="slide">
+        <img src="img3.jpg" class="slide">
       </div>
-
-      <div class="slide">
-        <div class="slide-text-overlay">
-          <h2>その一瞬に、すべてを懸けて。</h2>
-          <p>両校の誇りをかけた魂の劇空間</p>
-        </div>
-      </div>
+      <button class="prev">◀</button>
+      <button class="next">▶</button>
     </div>
 
-    <section id="announcement-section">
-      <h2 class="section-title">ABOUT</h2>
-      <div class="announcement-box">
-        <p>
-          ここに演劇祭の概要や、開催にあたっての挨拶文・告知文が入ります。テキストを変更する際は、この部分の文章を自由に書き換えてください。明朝体をベースにした美しいレイアウトが適用されています。
-        </p>
+    <div class="hero-text">
+      <p>StageLink</p>
+      <h1>StageLink 2026</h1>
+    </div>
+
+    <section class="top-news">
+      <div class="news-label">INFO</div>
+      <div class="news-text">2026.08.10 StageLink 2026 電子チケット販売受付を開始いたしました</div>
+    </section>
+
+    <section class="schedule-section">
+      <div class="section-head">
+        <p class="section-en">Schedule</p>
+        <h2>上演スケジュール</h2>
+      </div>
+      <div class="schedule-list">
+        <div class="schedule-item">
+          <div class="schedule-date">AUG<br><span>10</span></div>
+          <div class="schedule-info">
+            <h3>オープニングアクト / 合同開幕公演</h3>
+            <div class="schedule-meta">
+              <span class="schedule-venue">早稲田大学 大隈記念講堂</span>
+              <span class="status-tag">チケット発売中</span>
+            </div>
+          </div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-date">AUG<br><span>12</span></div>
+          <div class="schedule-info">
+            <h3>慶應義塾大学 出場団体公演</h3>
+            <div class="schedule-meta">
+              <span class="schedule-venue">三田キャンパス ホール</span>
+              <span class="status-tag">チケット発売中</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <div class="video-section">
-      <div class="video-wrapper">
-        <iframe 
-          src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-          allowfullscreen>
-        </iframe>
+    <section class="guide-section">
+      <div class="section-head">
+        <p class="section-en">Attendance Guide</p>
+        <h2>ご観劇の際に</h2>
       </div>
-    </div>
-
-    <section id="contents-section">
-      <h2 class="section-title">INFORMATION</h2>
-      <div class="card-container">
-        
-        <div class="card">
-          <div class="card-img-wrap"></div>
-          <div class="card-content">
-            <div>
-              <h3 class="card-title">公演情報・タイムスケジュール</h3>
-              <p class="card-text">各劇団の詳しい上演スケジュールや、演目紹介はこちらからご確認いただけます。</p>
-            </div>
-            <a href="#" class="card-btn">MORE</a>
-          </div>
+      <div class="guide-grid">
+        <div class="guide-card">
+          <h3>開場時間のご案内</h3>
+          <p>各公演とも、開演の30分前よりロビー開場いたします。お時間に余裕を持ってお越しください。</p>
         </div>
-
-        <div class="card">
-          <div class="card-img-wrap"></div>
-          <div class="card-content">
-            <div>
-              <h3 class="card-title">公式パンフレット・グッズ</h3>
-              <p class="card-text">限定グッズや公式パンフレットの物販情報、事前予約に関するご案内です。</p>
-            </div>
-            <a href="#" class="card-btn">MORE</a>
-          </div>
+        <div class="guide-card">
+          <h3>撮影・録音について</h3>
+          <p>客席内での許可のない写真撮影・録音・録画は、演出の妨げおよび著作権保護のため固くお断りいたします。</p>
         </div>
-
-        <div class="card">
-          <div class="card-img-wrap"></div>
-          <div class="card-content">
-            <div>
-              <h3 class="card-title">会場アクセス・お問合せ</h3>
-              <p class="card-text">劇場への道のりや、感染症対策、車椅子でのご来場等に関するお問合せ窓口。</p>
-            </div>
-            <a href="#" class="card-btn">MORE</a>
-          </div>
+        <div class="guide-card">
+          <h3>電子チケットの提示</h3>
+          <p>当日はスマートフォンの画面にて電子チケット（QRコード）をご提示のうえ、ご入場ください。</p>
         </div>
+      </div>
+    </section>
 
+    <section class="news-section">
+      <div class="section-head">
+        <p class="section-en">News & Topics</p>
+        <h2>ニュース</h2>
+      </div>
+      <div class="news-list">
+        <a href="#" class="news-item">
+          <div class="news-date">2026.08.10</div>
+          <div class="news-category">チケット</div>
+          <div class="news-title">StageLink 2026 一般観劇チケット販売開始のお知らせ</div>
+          <div class="news-arrow">→</div>
+        </a>
+        <a href="#" class="news-item">
+          <div class="news-date">2026.08.05</div>
+          <div class="news-category">公演情報</div>
+          <div class="news-title">早稲田・慶應 両校の出場団体プロフィールおよび演目を解禁</div>
+          <div class="news-arrow">→</div>
+        </a>
+        <a href="#" class="news-item">
+          <div class="news-date">2026.07.30</div>
+          <div class="news-category">トピックス</div>
+          <div class="news-title">メインビジュアルおよび公式プロモーション映像を同時公開</div>
+          <div class="news-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="media-section">
+      <div class="section-head">
+        <p class="section-en">Official Media</p>
+        <h2>メディア</h2>
+      </div>
+      <div class="media-grid">
+        <a href="#" class="media-card">
+          <div class="media-thumb-wrapper">
+            <span class="media-tag">INTERVIEW</span>
+            <img src="media1.jpg" alt="インタビュー">
+          </div>
+          <div class="media-text">
+            <h3>舞台にかける想い：主宰・出演者特別インタビュー連載</h3>
+          </div>
+        </a>
+        <a href="#" class="media-card">
+          <div class="media-thumb-wrapper">
+            <span class="media-tag">MOVIE</span>
+            <img src="media2.jpg" alt="PV動画">
+          </div>
+          <div class="media-text">
+            <h3>【公式PV】StageLink 2026 開幕予告プロモーション映像</h3>
+          </div>
+        </a>
       </div>
     </section>
 
     <footer>
-      Copyright &copy; 早慶演劇祭実行委員会 All Rights Reserved.
+      <div class="sns">
+        <a href="https://x.com/sokei_dramalink?s=21" class="sns-item" target="_blank">
+          <img src="x.png" alt="X">
+        </a>
+        <a href="https://line.me/ti/g2/561sydqS-m-x2OiOUTy8kvMgwhPWF58wPEW7ug?utm_source=invitation&utm_medium=link_copy&utm_campaign=default" class="sns-item" target="_blank">
+          <img src="line.png" alt="LINE">
+        </a>
+        <a href="https://www.instagram.com/soukei_dramalink2026?igsh=emg2c2o1MmYwMXV2&utm_source=qr/" class="sns-item" target="_blank">
+          <img src="instagram.png" alt="Instagram">
+        </a>
+      </div>
+      <div class="footer-copy">© 2026 StageLink. All Rights Reserved.</div>
     </footer>
 
-    <div id="google_translate_element" style="display:none;"></div>
-    <script type="text/javascript">
-      function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-          pageLanguage: 'ja',
-          includedLanguages: 'ja,en,zh-CN,ko',
-          layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-          autoDisplay: false
-        }, 'google_translate_element');
-      }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
     <script>
-    /* ハンバーガーボタンメニューの動く命令 */
-    const hamburgerBtn = document.querySelector(".hamburger");
-    const menuOverlay = document.getElementById("menu-overlay");
-    
-    // ☰ボタンをクリックしたとき
-    hamburgerBtn.onclick = function() {
-      toggleMobileMenu();
-    };
-
-    // 暗い背景（オーバーレイ）をクリックしたときも閉じる
-    menuOverlay.onclick = function() {
-      toggleMobileMenu();
-    };
-
-    // メニューを開閉させる共通の処理
-    function toggleMobileMenu() {
-      const nav = document.getElementById("mobile-nav");
-      const overlay = document.getElementById("menu-overlay");
-      
-      nav.classList.toggle("open");
-      overlay.classList.toggle("show");
+    /* Google翻訳の強制UIを排除 */
+    function removeGoogleUI() {
+      document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+      document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+      document.querySelectorAll('.skiptranslate').forEach(el => {
+        if (el.innerText.includes("翻訳")) el.remove();
+      });
+      document.body.style.top = '0px';
     }
+    setInterval(removeGoogleUI, 300);
 
-    /* 言語選択メニューのトグル制御 */
-    function toggleLangMenu(event) {
-      event.stopPropagation();
+    /* 言語メニューのトグル */
+    function toggleLangMenu(e) {
+      if (e) e.stopPropagation();
       const menu = document.getElementById("lang-menu");
       if (menu.style.display === "none" || menu.style.display === "") {
         menu.style.display = "block";
@@ -691,7 +996,7 @@
       }
     }
 
-    /* 外クリックで言語メニューを閉じる */
+    /* 外クリックで閉じる */
     document.addEventListener("click", function() {
       const menu = document.getElementById("lang-menu");
       if (menu) menu.style.display = "none";
@@ -732,6 +1037,11 @@
       index = (index + 1) % slides.length;
       showSlide(index);
     }, 9000); 
+
+    /* ハンバーガーボタンメニュー */
+    document.querySelector(".hamburger").onclick = function() {
+      alert("ここにメニュー開く処理");
+    };
     </script>
   </body>
 </html>
