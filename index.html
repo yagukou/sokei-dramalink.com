@@ -750,6 +750,49 @@
     padding: 10px 20px;
     font-size: 13px;
   }
+
+/* --- スマホ用メニューの引き出し設定 --- */
+.mobile-nav {
+  position: fixed;
+  top: 0;
+  right: -100%; /* 普段は画面の右側に隠す */
+  width: 250px;
+  height: 100vh;
+  background-color: #111111;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.5);
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  padding-top: 110px;
+  transition: right 0.3s ease;
+}
+/* メニューが開いたとき */
+.mobile-nav.open {
+  right: 0; 
+}
+.mobile-nav-link {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 15px 25px;
+  font-size: 16px;
+  border-bottom: 1px solid #222;
+  font-family: sans-serif;
+}
+.mobile-nav-link:hover {
+  background-color: #b90e0e;
+}
+/* 背景を暗くするシート */
+.menu-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.6);
+  z-index: 140;
+  display: none;
+}
+.menu-overlay.show {
+  display: block;
+}
+
 }
 
     </style>
@@ -831,7 +874,15 @@
         </a>
       </div>
 
-      <div class="hamburger">☰</div>
+      <div class="hamburger" id="menu-trigger" onclick="toggleMobileMenu()">☰</div>
+
+<div class="menu-overlay" id="menu-overlay" onclick="toggleMobileMenu()"></div>
+<nav class="mobile-nav" id="mobile-nav">
+  <a href="#" class="mobile-nav-link" onclick="toggleMobileMenu()">トップページ</a>
+  <a href="#" class="mobile-nav-link" onclick="toggleMobileMenu()">チケット予約</a>
+  <a href="#announcement-section" class="mobile-nav-link" onclick="toggleMobileMenu()">公演情報</a>
+  <a href="#contents-section" class="mobile-nav-link" onclick="toggleMobileMenu()">コンテンツ・グッズ</a>
+</nav>
     </header>
 
     <div class="slider">
@@ -1042,6 +1093,16 @@
     document.querySelector(".hamburger").onclick = function() {
       alert("ここにメニュー開く処理");
     };
+
+/* ☰ を押したときにメニューを開閉する命令 */
+function toggleMobileMenu() {
+  const nav = document.getElementById("mobile-nav");
+  const overlay = document.getElementById("menu-overlay");
+  
+  nav.classList.toggle("open");
+  overlay.classList.toggle("show");
+}
+
     </script>
   </body>
 </html>
