@@ -762,6 +762,12 @@ gap: 4px;
 
 <div id="sent-requests-section"></div>
 
+<!-- ===== 自分の公演管理 ===== -->
+<div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
+  <div class="section-title"><i class="ti ti-calendar-event"></i>登録した公演の管理</div>
+  <div id="my-performances-section"></div>
+</div>
+
 <!-- ===== プロフィール編集 ===== -->
 <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
   <div class="section-title"><i class="ti ti-user-edit"></i>劇団プロフィール設定</div>
@@ -1531,6 +1537,11 @@ async function handleRegisterPerformance() {
   }
 }
 
+function startEditPerfById(perfId) {
+  selectedPerformanceId = perfId;
+  startEditPerformance();
+}
+
 function startEditPerformance() {
   const perf = performancesData.find(p => p.id === selectedPerformanceId);
   if (!perf) return;
@@ -1872,6 +1883,46 @@ function renderMyPage() {
         sentList.appendChild(item);
       });
       sentSection.appendChild(sentList);
+    }
+  }
+
+  // ── 自分の公演一覧 ──
+  const myPerfSection = document.getElementById('my-performances-section');
+  if (myPerfSection) {
+    myPerfSection.innerHTML = '';
+    const myPerfs = performancesData.filter(p => p.troupeId === currentUser.id);
+    if (myPerfs.length === 0) {
+      myPerfSection.innerHTML = '<div class="empty-state"><i class="ti ti-calendar-off"></i>まだ公演を登録していません。</div>';
+    } else {
+      myPerfs.forEach(perf => {
+        const card = document.createElement('div');
+        card.className = 'inbox-item';
+        card.style.cssText = 'display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;';
+
+        const info = document.createElement('div');
+        info.style.cssText = 'flex:1; min-width:0;';
+        info.innerHTML = `
+          <div style="font-weight:600; font-size:14px; color:var(--ink); margin-bottom:4px;">${perf.title}</div>
+          <div style="font-size:12px; color:var(--muted); display:flex; flex-wrap:wrap; gap:8px;">
+            <span><i class="ti ti-calendar"></i> 公演: ${perf.start} 〜 ${perf.end}</span>
+            <span><i class="ti ti-mail"></i> 受付: ${perf.acceptStart} 〜 ${perf.acceptEnd}</span>
+            <span><i class="ti ti-map-pin"></i> ${perf.venue || '会場未設定'}</span>
+          </div>`;
+
+        const actions = document.createElement('div');
+        actions.style.cssText = 'display:flex; gap:8px; flex-shrink:0;';
+
+        const editBtn = document.createElement('button');
+        editBtn.className = 'inbox-btn';
+        editBtn.style.cssText = 'background:var(--surface2); border-color:var(--border-neutral); color:var(--ink); display:flex; align-items:center; gap:4px;';
+        editBtn.innerHTML = '<i class="ti ti-pencil"></i> 編集';
+        editBtn.onclick = () => startEditPerfById(perf.id);
+
+        actions.appendChild(editBtn);
+        card.appendChild(info);
+        card.appendChild(actions);
+        myPerfSection.appendChild(card);
+      });
     }
   }
 }
