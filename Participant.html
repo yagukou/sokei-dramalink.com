@@ -516,13 +516,14 @@ gap: 4px;
 </div>
 </div>
 
+<div class="perf-sidebar">
 <div id="perf-my-actions" style="display: none; margin-bottom: 12px; flex-direction: column; gap: 8px;">
-  <button class="btn-primary" style="width: 100%; justify-content: center; background: var(--gold);" onclick="startEditPerformance()">
-    <i class="ti ti-edit"></i> この公演情報を修正する
-  </button>
-  <button class="btn-secondary" style="width: 100%; color: #A32D2D; background: #FEF0F0; border-color: #F8C4C4;" onclick="handleDeletePerformance()">
-    <i class="ti ti-trash"></i> この公演を削除する
-  </button>
+<button class="btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: #eef2f7; border-color: #cbd5e1;" onclick="startEditPerformance()">
+<i class="ti ti-edit"></i>この公演情報を修正する
+</button>
+<button class="btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; background: #fef2f2; border-color: #fca5a5; color: #b91c1c;" onclick="deletePerformanceClick()">
+<i class="ti ti-trash"></i>この公演を削除する
+</button>
 </div>
 
 <div class="sidebar-card">
@@ -615,13 +616,9 @@ gap: 4px;
 <div class="page-sub" id="register-page-sub">自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します</div>
 </div>
 
-<div class="submit-row">
-  <button class="btn-primary" id="register-submit-btn" onclick="handleRegisterPerformance()">
-    <i class="ti ti-device-floppy"></i> 公演情報を登録する
-  </button>
-  <button class="btn-secondary" type="button" onclick="cancelEditPerformance()">
-    キャンセル
-  </button>
+<div id="register-need-login-msg" class="info-banner" style="display:none;">
+<div class="info-banner-title"><i class="ti ti-alert-triangle"></i>ログインが必要です</div>
+<p>公演情報を登録・修正するには、マイページから劇団アカウントでログインしてください。</p>
 </div>
 
 <div id="register-form-body">
@@ -1317,60 +1314,6 @@ function openPerformanceDetail(perfId) {
   showPage('perf-detail');
 }
 
-// ▼ 新しく追加する：公演情報の編集を開始する関数
-function startEditPerformance() {
-  if (!selectedPerformanceId) return;
-  
-  // 現在選択中の公演データを取得
-  const perf = performancesData.find(p => p.id === selectedPerformanceId);
-  if (!perf) return;
-  
-  // 編集モードとしてグローバル変数（editingPerfId）にIDを記録
-  editingPerfId = perf.id;
-  
-  // 登録画面のタイトルやボタンの文言を「修正モード」用に切り替える
-  const regTitle = document.getElementById('register-page-title');
-  if (regTitle) regTitle.textContent = '公演情報の修正';
-  
-  const regSub = document.querySelector('#page-register .section-sub');
-  if (regSub) regSub.textContent = '登録済みの公演スケジュールや受け入れ条件を変更します。';
-  
-  const submitBtn = document.getElementById('register-submit-btn');
-  if (submitBtn) submitBtn.innerHTML = '<i class="ti ti-device-floppy"></i> 変更内容を保存する';
-  
-  // 各フォームに現在の登録データを自動でセット
-  document.getElementById('new-perf-title').value = perf.title || '';
-  document.getElementById('new-perf-start').value = perf.start || '';
-  document.getElementById('new-perf-end').value = perf.end || '';
-  document.getElementById('new-perf-accept-start').value = perf.acceptStart || '';
-  document.getElementById('new-perf-accept-end').value = perf.acceptEnd || '';
-  document.getElementById('new-perf-venue').value = perf.venue || '';
-  document.getElementById('new-perf-quota').value = perf.maxQuota || '';
-  document.getElementById('new-perf-desc').value = perf.desc || '';
-  
-  // 受け渡し方法のラジオボタンを復元
-  const radios = document.getElementsByName('new-perf-delivery');
-  for (let r of radios) {
-    if (r.value === perf.deliveryRestriction) {
-      r.checked = true;
-    }
-  }
-  
-  // 住所フィールドの復元
-  const addrInput = document.getElementById('new-perf-address');
-  if (addrInput) {
-    addrInput.value = perf.deliveryAddress || '';
-    // 郵送の場合の住所欄表示連動
-    const addrRow = document.getElementById('perf-address-row');
-    if (addrRow) {
-      addrRow.style.display = (perf.deliveryRestriction === '郵送・宅配便のみ' || perf.deliveryRestriction === 'どちらでも可') ? 'block' : 'none';
-    }
-  }
-  
-  // 登録フォーム画面（page-register）に遷移
-  showPage('register');
-}
-
 function handleDetailTroupeLinkClick() {
   const perf = performancesData.find(p => p.id === selectedPerformanceId);
   if (perf) openTroupeModal(perf.troupeId);
@@ -1517,191 +1460,56 @@ function prepareRegisterPage() {
   }
 }
 
-// 公演情報の編集を開始する関数
-function startEditPerformance() {
-  if (!selectedPerformanceId) return;
-  
-  // 選択中の公演データを取得
-  const perf = performancesData.find(p => p.id === selectedPerformanceId);
-  if (!perf) return;
-  
-  // 編集モードとしてIDを記録
-  editingPerfId = perf.id;
-  
-  // 登録画面のタイトルや文言を「修正」に切り替える
-  document.getElementById('register-page-title').textContent = '公演情報の修正';
-  document.getElementById('register-page-sub').textContent = '登録済みの公演スケジュールや受け入れ条件を変更します。';
-  document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-device-floppy"></i> 変更内容を保存する';
-  
-  // 各入力フォームに既存の値をセット
-  document.getElementById('new-perf-title').value = perf.title || '';
-  document.getElementById('new-perf-start').value = perf.start || '';
-  document.getElementById('new-perf-end').value = perf.end || '';
-  document.getElementById('new-perf-accept-start').value = perf.acceptStart || '';
-  document.getElementById('new-perf-accept-end').value = perf.acceptEnd || '';
-  document.getElementById('new-perf-venue').value = perf.venue || '';
-  document.getElementById('new-perf-quota').value = perf.maxQuota || 0;
-  document.getElementById('new-perf-desc').value = perf.desc || '';
-  
-  // 受け渡し方法のラジオボタンの復元
-  const deliveryRadios = document.getElementsByName('new-perf-delivery');
-  for (let r of deliveryRadios) {
-    if (r.value === perf.deliveryRestriction) {
-      r.checked = true;
-    }
-  }
-  
-  // 住所フィールドの表示・非表示と値の復元
-  const addressInput = document.getElementById('new-perf-address');
-  if (addressInput) {
-    addressInput.value = perf.deliveryAddress || '';
-    // 配送方法のコンテキストに合わせて表示制御している場合はここで呼び出し
-    if (perf.deliveryRestriction === '対面のみ') {
-      // 必要に応じて住所行を隠すロジックがあれば連動
-    }
-  }
-  
-  // 登録（編集）ページへ遷移
-  showPage('register');
-}
-
-// 編集をキャンセルしてカレンダーに戻る関数
-function cancelEditPerformance() {
-  if (editingPerfId) {
-    if (!confirm('変更内容は保存されません。キャンセルしますか？')) return;
-  }
-  resetRegisterForm();
-  showPage('calendar');
-}
-
-// フォームを通常の「新規登録」状態にリセットする関数
-function resetRegisterForm() {
-  editingPerfId = null;
-  document.getElementById('register-page-title').textContent = '公演の登録';
-  document.getElementById('register-page-sub').textContent = '自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します。';
-  document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-plus"></i> 公演情報を登録する';
-  
-  // フォームクリア
-  document.getElementById('new-perf-title').value = '';
-  document.getElementById('new-perf-start').value = '';
-  document.getElementById('new-perf-end').value = '';
-  document.getElementById('new-perf-accept-start').value = '';
-  document.getElementById('new-perf-accept-end').value = '';
-  document.getElementById('new-perf-venue').value = '';
-  document.getElementById('new-perf-quota').value = '';
-  document.getElementById('new-perf-desc').value = '';
-  document.getElementById('new-perf-address').value = '';
-  if (document.getElementsByName('new-perf-delivery')[0]) {
-    document.getElementsByName('new-perf-delivery')[0].checked = true;
-  }
-}
-
-// ===================== 公演情報の登録・修正処理（修正版） =====================
 async function handleRegisterPerformance() {
-  if (!currentUser) {
-    alert('公演情報を登録・修正するにはログインが必要です。');
-    return;
-  }
+  if (!currentUser) { alert('公演を登録するにはログインが必要です。'); return; }
 
+  // 【修正3】HTMLのID（new-perf-*）と一致させる
   const title = document.getElementById('new-perf-title').value.trim();
   const start = document.getElementById('new-perf-start').value;
   const end = document.getElementById('new-perf-end').value;
   const acceptStart = document.getElementById('new-perf-accept-start').value;
   const acceptEnd = document.getElementById('new-perf-accept-end').value;
   const venue = document.getElementById('new-perf-venue').value.trim();
-  const quotaInput = document.getElementById('new-perf-quota').value;
+  const maxQuota = parseInt(document.getElementById('new-perf-quota').value);
   const desc = document.getElementById('new-perf-desc').value.trim();
-
-  const radios = document.getElementsByName('new-perf-delivery');
+  const deliveryRadios = document.getElementsByName('new-perf-delivery');
   let deliveryRestriction = 'どちらでも可';
-  for (let r of radios) {
-    if (r.checked) {
-      deliveryRestriction = r.value;
-      break;
-    }
-  }
+  for (let r of deliveryRadios) { if (r.checked) { deliveryRestriction = r.value; break; } }
   const deliveryAddress = document.getElementById('new-perf-address').value.trim();
 
-  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || !quotaInput) {
-    alert('必須項目（*）をすべて入力してください。');
+  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || isNaN(maxQuota)) {
+    alert('必須マークの項目をすべて正しく入力してください。');
     return;
   }
-  const maxQuota = parseInt(quotaInput);
+  if (deliveryRestriction !== '対面のみ' && !deliveryAddress) {
+    alert('郵送を受け付ける場合は、郵送先住所を入力してください。');
+    document.getElementById('new-perf-address').focus();
+    return;
+  }
 
-  // 送信オブジェクトの組み立て
-  const perfPayload = {
+  const perfData = {
     troupeId: currentUser.id,
-    title,
-    start,
-    end,
-    acceptStart,
-    acceptEnd,
-    venue,
-    maxQuota,
-    desc,
-    deliveryRestriction,
-    deliveryAddress: (deliveryRestriction === '対面のみ') ? '' : deliveryAddress,
-    updatedAt: new Date().toISOString()
+    title, start, end, acceptStart, acceptEnd, venue, maxQuota, desc, deliveryRestriction,
+    deliveryAddress: deliveryRestriction !== '対面のみ' ? deliveryAddress : '',
+    email: currentUser.email
   };
 
   try {
     if (editingPerfId) {
-      // ーーーーー 【修正ポイント】既存データの変更（編集モード） ーーーーー
-      const { data, error } = await db
-        .from('performances')
-        .update(perfPayload)
-        .eq('id', editingPerfId)
-        .select(); // 更新後の最新データを取得する
-
+      const { error } = await db.from('performances').update(perfData).eq('id', editingPerfId);
       if (error) throw error;
-
-      // 1. ローカルのデータ配列（performancesData）を最新に置き換える
       const idx = performancesData.findIndex(p => p.id === editingPerfId);
-      if (idx !== -1 && data && data.length > 0) {
-        performancesData[idx] = data[0];
-      } else {
-        // 万が一 .select() でデータが返らなかった場合のフォールバック
-        perfPayload.id = editingPerfId;
-        if (idx !== -1) performancesData[idx] = { ...performancesData[idx], ...perfPayload };
-      }
-
+      if (idx !== -1) performancesData[idx] = { ...performancesData[idx], ...perfData };
+      editingPerfId = null;
       alert('公演情報を更新しました！');
-
     } else {
-      // ーーーーー 新規登録モード ーーーーー
-      const newId = 'perf_' + Date.now();
-      perfPayload.id = newId;
-      perfPayload.createdAt = new Date().toISOString();
-
-      const { data, error } = await db
-        .from('performances')
-        .insert([perfPayload])
-        .select();
-
+      perfData.id = 'perf_' + Date.now();
+      const { error } = await db.from('performances').insert([perfData]);
       if (error) throw error;
-
-      if (data && data.length > 0) {
-        performancesData.push(data[0]);
-      } else {
-        performancesData.push(perfPayload);
-      }
-
-      alert('新しい公演情報を登録しました！');
+      performancesData.push(perfData);
+      alert('新しい公演スケジュールを登録し、全体カレンダーに反映しました。');
     }
-
-    // ーーーーー 【修正ポイント】画面側への即時反映処理 ーーーーー
-    // 2. 登録・修正フォームを初期状態にリセット
-    resetRegisterForm(); 
-
-    // 3. カレンダーと劇団一覧の表示を最新データで再描画
-    renderCalendar();
-    if (typeof renderTroupes === 'function') {
-      renderTroupes(troupesData);
-    }
-
-    // 4. カレンダー画面に安全に戻す
     showPage('calendar');
-
   } catch (error) {
     console.error('公演登録/更新エラー:', error.message);
     alert('公演の登録または更新に失敗しました: ' + error.message);
@@ -2280,7 +2088,9 @@ async function openConversation(convId) {
   const myUnreadField = amA ? 'unreadForA' : 'unreadForB';
   if (getMyUnreadCount(conv) > 0) {
     conv[myUnreadField] = 0;
-    db.from('conversations').update({ [myUnreadField]: 0 }).eq('id', convId).catch(() => {});
+    try {
+      await db.from('conversations').update({ [myUnreadField]: 0 }).eq('id', convId);
+    } catch(e) { console.warn('既読リセット失敗:', e); }
   }
 
   // リスト再描画（バッジ更新）
@@ -2447,17 +2257,15 @@ function subscribeToMessages(convId) {
       chatMessages.push(msg);
       renderMessages();
 
-      // 既読リセット（相手のメッセージが来た場合）
-      if (msg.senderId !== currentUser.id) {
+      // 既読リセット（自分が会話を開いているときに相手のメッセージが来た場合）
+      if (msg.senderId !== currentUser.id && msg.senderId !== 'bot') {
         const conv = conversationsData.find(c => c.id === convId);
         if (conv) {
           const amA = conv.troupeAId === currentUser.id;
           const myField = amA ? 'unreadForA' : 'unreadForB';
-          if (conv[myField] > 0) {
-            conv[myField] = 0;
-            db.from('conversations').update({ [myField]: 0 }).eq('id', convId).catch(() => {});
-            renderConvList();
-          }
+          conv[myField] = 0;
+          db.from('conversations').update({ [myField]: 0 }).eq('id', convId).then(() => {}).catch(() => {});
+          renderConvList();
         }
       }
     })
