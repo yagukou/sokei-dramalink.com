@@ -387,8 +387,9 @@ gap: 4px;
 <button class="nav-tab" onclick="showPage('register')" id="tab-register">
 <i class="ti ti-plus"></i>公演登録
 </button>
-<button class="nav-tab" onclick="showPage('chat')" id="tab-chat">
+<button class="nav-tab" onclick="showPage('chat')" id="tab-chat" style="position:relative;">
 <i class="ti ti-messages"></i>チャット
+<span id="chat-tab-badge" style="display:none; position:absolute; top:4px; right:6px; width:8px; height:8px; border-radius:50%; background:#e53935; border:2px solid var(--white);"></span>
 </button>
 </div>
 
@@ -930,7 +931,7 @@ let currentUser = null;
 let currentDate = new Date(2026, 5, 13);
 let selectedPerformanceId = null;
 let editingPerfId = null;
-let pageHistory = [];
+let pageHistory = []; // 後方互換用（goBack()で使用）
 
 // ===================== APP INITIALIZATION =====================
 async function initApp() {
@@ -954,8 +955,18 @@ async function initApp() {
   updateFilterDropdown();
   renderLegend();
   renderTroupes(troupesData);
-  renderCalendar();
   updateAuthUI();
+  // ログイン済みの場合、起動時にも未読バッジを反映
+  if (currentUser) {
+    await loadConversations();
+    updateChatTabBadge();
+  }
+  // URLハッシュに対応するページを表示（なければカレンダー）
+  const initialPage = location.hash ? location.hash.replace('#', '') : 'calendar';
+  const validPages = ['calendar','troupes','mypage','register','chat','guide','perf-detail','request-form'];
+  const startPage = validPages.includes(initialPage) ? initialPage : 'calendar';
+  history.replaceState({ page: startPage }, '', `#${startPage}`);
+  showPage(startPage, false);
 }
 
 async function loadAllData() {
@@ -988,34 +999,38 @@ function saveAllData() {
 
 // ===================== ROUTING & UTILS =====================
 function showPage(pageId, pushToHistory = true) {
-  const activePage = document.querySelector('.page.active');
-  if (activePage && pushToHistory) pageHistory.push(activePage.id);
+  // ページIDをURLハッシュに反映（ブラウザ履歴に積む）
+  const cleanId = pageId.replace(/^page-/, '');
+  if (pushToHistory) {
+    history.pushState({ page: cleanId }, '', `#${cleanId}`);
+  }
 
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
 
-  const targetPage = document.getElementById(`page-${pageId}`);
+  const targetPage = document.getElementById(`page-${cleanId}`);
   if (targetPage) targetPage.classList.add('active');
 
-  const tab = document.getElementById(`tab-${pageId}`);
+  const tab = document.getElementById(`tab-${cleanId}`);
   if (tab) tab.classList.add('active');
 
   window.scrollTo({ top: 0 });
 
-  if (pageId === 'calendar') renderCalendar();
-  if (pageId === 'troupes') renderTroupes(troupesData);
-  if (pageId === 'mypage') renderMyPage();
-  if (pageId === 'register') prepareRegisterPage();
-  if (pageId === 'chat') initChat();
+  if (cleanId === 'calendar') renderCalendar();
+  if (cleanId === 'troupes') renderTroupes(troupesData);
+  if (cleanId === 'mypage') renderMyPage();
+  if (cleanId === 'register') prepareRegisterPage();
+  if (cleanId === 'chat') initChat();
 }
 
+// ブラウザの戻る/進むボタン対応
+window.addEventListener('popstate', (e) => {
+  const pageId = (e.state && e.state.page) || 'calendar';
+  showPage(pageId, false);
+});
+
 function goBack() {
-  if (pageHistory.length > 0) {
-    const prevPage = pageHistory.pop();
-    showPage(prevPage, false);
-  } else {
-    showPage('calendar', false);
-  }
+  history.back();
 }
 
 function getTroupeColorClass(troupeId) {
@@ -1629,7 +1644,9 @@ async function handleLogin() {
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         alert(`劇団「${found.name}」としてログインしました。`);
         await loadAllData();
+        await loadConversations();
         updateAuthUI();
+        updateChatTabBadge();
         showPage('mypage');
       } else {
         alert('パスワードが間違っています。');
@@ -2018,10 +2035,18 @@ function getTroupeColorInfo(troupeId) {
   return { bg, color };
 }
 
+function updateChatTabBadge() {
+  const badge = document.getElementById('chat-tab-badge');
+  if (!badge || !currentUser) return;
+  const hasUnread = conversationsData.some(c => getMyUnreadCount(c) > 0);
+  badge.style.display = hasUnread ? 'block' : 'none';
+}
+
 function renderConvList() {
   const list = document.getElementById('conv-list');
   if (!list) return;
   list.innerHTML = '';
+  updateChatTabBadge();
 
   if (conversationsData.length === 0) {
     list.innerHTML = '<div style="padding:1rem; font-size:12px; color:var(--muted); text-align:center; line-height:1.8;">まだ会話がありません。<br>折り込み依頼を送ると<br>自動的に開始されます。</div>';
