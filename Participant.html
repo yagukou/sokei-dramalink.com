@@ -604,6 +604,9 @@ gap: 4px;
 </div>
 </div>
 <button class="btn-primary" onclick="submitRequestForm()"><i class="ti ti-send"></i>この内容で折り込みを申請する</button>
+<button class="panel-submit-btn" id="panel-edit-btn" style="display: none; background: var(--gold);" onclick="closeSidePanel(); startEditPerformance();">
+  <i class="ti ti-edit"></i> この公演情報を編集する
+</button>
 </div>
 </div>
 </div>
@@ -1564,6 +1567,68 @@ function prepareRegisterPage() {
   }
 }
 
+function showPerformanceDetail(perfId) {
+  // ★追加：提示された関数と連動させるためにIDをグローバル変数に記録
+  selectedPerformanceId = perfId; 
+  
+  const perf = performancesData.find(p => p.id === perfId);
+  if (!perf) return;
+  
+  const status = getFoldingStatus(perf);
+  const approvedCount = foldRequestsData
+    .filter(r => r.performance_id === perfId && r.status === 'approved')
+    .reduce((sum, r) => sum + (r.count || 0), 0);
+  const quotaPercent = Math.min(100, (approvedCount / perf.max_quota) * 100);
+
+  // パネル内テキストの書き換え
+  document.getElementById('panel-perf-title').innerText = perf.title;
+  document.getElementById('panel-troupe-name').innerText = perf.troupes ? perf.troupes.name : '不明な劇団';
+  document.getElementById('panel-date-range').innerText = `${perf.start_date} 〜 ${perf.end_date}`;
+  document.getElementById('panel-venue').innerText = perf.venue;
+  document.getElementById('panel-period').innerText = `${perf.fold_start_date} 〜 ${perf.fold_end_date}`;
+  document.getElementById('panel-status').innerText = status.label;
+  document.getElementById('panel-quota-text').innerText = `承認枠状況: ${approvedCount} / ${perf.max_quota} 部`;
+  document.getElementById('panel-quota-fill').style.width = `${quotaPercent}%`;
+  
+  // 各種ボタンの取得
+  const submitBtn = document.getElementById('panel-submit-btn');
+  const editBtn = document.getElementById('panel-edit-btn'); // ★追加
+  const loginHint = document.getElementById('panel-login-hint');
+  
+  // デフォルト状態のリセット
+  submitBtn.style.display = 'block';
+  submitBtn.disabled = false;
+  if (editBtn) editBtn.style.display = 'none';
+  if (loginHint) { loginHint.style.display = 'none'; loginHint.innerText = ''; }
+  
+  // ログイン状態と権限に応じた制御
+  if (!currentUserId) {
+    submitBtn.disabled = true;
+    loginHint.style.display = 'flex';
+    loginHint.innerText = '⚠️ 折り込みを申請するにはログインが必要です。';
+  } else if (currentTroupeId === perf.troupe_id) {
+    // ★追加：自分（自劇団）の公演の場合
+    submitBtn.style.display = 'none';      // 申請ボタンを隠す
+    if (editBtn) editBtn.style.display = 'block'; // 編集ボタンを表示する
+    loginHint.style.display = 'flex';
+    loginHint.innerText = '💡 あなたの劇団の公演です。情報を編集できます。';
+  } else if (status.code !== 'open') {
+    submitBtn.disabled = true;
+    loginHint.style.display = 'flex';
+    loginHint.innerText = `⚠️ 現在のステータスが「${status.label}」のため申請できません。`;
+  }
+  
+  // フォームのリセット
+  document.getElementById('panel-count').value = '';
+  document.getElementById('panel-size').value = 'A4';
+  document.getElementById('panel-notes').value = '';
+  document.getElementById('panel-success').style.display = 'none';
+  
+  // パネルを開く
+  document.getElementById('panel-overlay').classList.add('open');
+  document.getElementById('side-panel').classList.add('open');
+}
+
 // 公演情報の編集を開始する関数
 function startEditPerformance() {
   if (!selectedPerformanceId) return;
@@ -1760,24 +1825,6 @@ async function handleRegisterPerformance() {
 // ==========================================
 
 // 編集パネルを開き、既存のデータをフォームにセットする
-function openEditPerformance(perfId) {
-  const perf = performancesData.find(p => p.id === perfId);
-  if (!perf) return;
-
-  // フォームに既存値をセット
-  document.getElementById('edit-perf-id').value = perf.id;
-  document.getElementById('edit-perf-title').value = perf.title;
-  document.getElementById('edit-perf-venue').value = perf.venue;
-  document.getElementById('edit-perf-start').value = perf.start_date;
-  document.getElementById('edit-perf-end').value = perf.end_date;
-  document.getElementById('edit-fold-start').value = perf.fold_start_date;
-  document.getElementById('edit-fold-end').value = perf.fold_end_date;
-  document.getElementById('edit-perf-quota').value = perf.max_quota;
-
-  // パネルを表示
-  document.getElementById('edit-panel-overlay').classList.add('open');
-  document.getElementById('edit-side-panel').classList.add('open');
-}
 
 // 編集パネルを閉じる
 function closeEditPanel() {
