@@ -765,14 +765,6 @@ gap: 4px;
 <div id="sent-requests-section"></div>
 
 <!-- ===== プロフィール編集 ===== -->
-
-<div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
-  <div class="section-title"><i class="ti ti-theater"></i>登録済みの公演スケジュール（編集）</div>
-  <div id="mypage-perf-list" style="display: flex; flex-direction: column; gap: 10px;">
-    <p style="font-size: 13px; color: var(--muted); font-style: italic;">登録されている公演はありません。</p>
-  </div>
-</div>
-
 <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
   <div class="section-title"><i class="ti ti-user-edit"></i>劇団プロフィール設定</div>
   <div class="form-card" style="max-width:100%; margin-bottom:0;">
@@ -1906,55 +1898,6 @@ function toggleUnivOtherField(prefix) {
 
 // ===================== MY PAGE =====================
 function renderMyPage() {
-  if (!currentUser) return;
-
-  // --- 既存のプロフィール情報セット処理がここにあれば残す ---
-  document.getElementById('edit-troupe-name').value = currentUser.name || '';
-  document.getElementById('edit-troupe-univ').value = currentUser.affiliation || '早稲田大学';
-  document.getElementById('edit-troupe-desc').value = currentUser.description || '';
-  document.getElementById('edit-troupe-hp').value = currentUser.homepage || '';
-  document.getElementById('edit-troupe-sns').value = currentUser.sns || '';
-  toggleUnivOtherField('edit');
-  // --------------------------------------------------------
-
-  // ▼▼▼【ここから追記】マイページ内に登録済み公演リストを表示する ▼▼▼
-  const perfListWrap = document.getElementById('mypage-perf-list');
-  if (perfListWrap) {
-    // ログイン中の劇団の公演のみを抽出
-    const myPerfs = performancesData.filter(p => p.troupeId === currentUser.id);
-
-    if (myPerfs.length === 0) {
-      perfListWrap.innerHTML = '<p style="font-size: 13px; color: var(--muted); font-style: italic;">現在、登録されている公演はありません。</p>';
-    } else {
-      perfListWrap.innerHTML = '';
-      myPerfs.forEach(p => {
-        const item = document.createElement('div');
-        item.style.cssText = "padding: 12px 16px; background: var(--surface); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;";
-
-        item.innerHTML = `
-          <div style="min-width: 0; flex: 1;">
-            <strong style="font-size: 13px; color: var(--ink); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.title}</strong>
-            <span style="font-size: 11px; color: var(--muted);"><i class="ti ti-calendar" style="font-size:12px;"></i> ${p.start} 〜 ${p.end} ｜ <i class="ti ti-map-pin" style="font-size:12px;"></i> ${p.venue}</span>
-          </div>
-          <button class="btn-primary" style="padding: 6px 12px; font-size: 12px; width: auto; margin: 0; flex-shrink: 0;" onclick="startMyPagePerformanceEdit('${p.id}')">
-            <i class="ti ti-edit"></i> 編集する
-          </button>
-        `;
-        perfListWrap.appendChild(item);
-      });
-    }
-  }
-  // ▲▲▲【ここまで追記】▲▲▲
-}
-
-// マイページ用の編集ボタン中継関数もあわせて追記
-function startMyPagePerformanceEdit(perfId) {
-  // グローバル変数に編集対象のIDを覚えさせる
-  selectedPerformanceId = perfId; 
-  // 既存の編集関数を呼び出して編集フォームを展開
-  startEditPerformance();
-}
-
   const authSec = document.getElementById('auth-section');
   const dashSec = document.getElementById('dashboard-section');
 
