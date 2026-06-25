@@ -765,14 +765,6 @@ gap: 4px;
 <div id="sent-requests-section"></div>
 
 <!-- ===== プロフィール編集 ===== -->
-
-<div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
-  <div class="section-title"><i class="ti ti-theater"></i>登録済みの公演スケジュール（編集・削除）</div>
-  <div id="mypage-perf-list" style="display: flex; flex-direction: column; gap: 10px;">
-    <p style="font-size: 13px; color: var(--muted); font-style: italic;">登録されている公演はありません。</p>
-  </div>
-</div>
-
 <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);">
   <div class="section-title"><i class="ti ti-user-edit"></i>劇団プロフィール設定</div>
   <div class="form-card" style="max-width:100%; margin-bottom:0;">
@@ -2734,122 +2726,6 @@ async function submitPanelRequest() {
     submitBtn.disabled = false;
     submitBtn.innerHTML = '<i class="ti ti-send"></i> この内容で折り込みを申請する';
   }
-}
-
-// 仮のログイン中公演ID (Supabaseのテーブル構造に合わせて変更してください)
-let currentEventId = 1; 
-
-// 表示モードと編集モードの切り替え
-function toggleEventEdit(isEdit) {
-  if (isEdit) {
-    // 現在の表示内容を編集用入力フォームにコピー
-    document.getElementById('edit-group-name').value = document.getElementById('view-group-name').innerText;
-    document.getElementById('edit-event-title').value = document.getElementById('view-event-title').innerText;
-    document.getElementById('edit-event-credits').value = document.getElementById('view-event-credits').innerText;
-    document.getElementById('edit-event-venue').value = document.getElementById('view-event-venue').innerText;
-    document.getElementById('edit-event-period').value = document.getElementById('view-event-period').innerText;
-    document.getElementById('edit-event-stages').value = document.getElementById('view-event-stages').innerText;
-    document.getElementById('edit-event-capacity').value = document.getElementById('view-event-capacity').innerText;
-
-    // 画面表示の切り替え
-    document.getElementById('event-view-mode').style.display = 'none';
-    document.getElementById('event-edit-mode').style.display = 'block';
-    document.getElementById('edit-event-btn').style.display = 'none';
-    document.getElementById('edit-event-actions').style.display = 'flex';
-  } else {
-    // 戻す
-    document.getElementById('event-view-mode').style.display = 'block';
-    document.getElementById('event-edit-mode').style.display = 'none';
-    document.getElementById('edit-event-btn').style.display = 'block';
-    document.getElementById('edit-event-actions').style.display = 'none';
-  }
-}
-
-// Supabaseへのデータ保存処理
-async fnction saveEventDetails() {
-  // 入力値の取得
-  const updatedData = {
-    group_name: document.getElementById('edit-group-name').value,
-    event_title: document.getElementById('edit-event-title').value,
-    credits: document.getElementById('edit-event-credits').value,
-    venue: document.getElementById('edit-event-venue').value,
-    period: document.getElementById('edit-event-period').value,
-    stages: document.getElementById('edit-event-stages').value,
-    capacity: document.getElementById('edit-event-capacity').value
-  };
-
-  try {
-    // Supabaseへの更新リクエスト (テーブル名 'events' は適宜変更してください)
-    const { data, error } = await _supabase
-      .from('events')
-      .update(updatedData)
-      .eq('id', currentEventId);
-
-    if (error) throw error;
-
-    // 画面上の表示テキストを更新
-    document.getElementById('view-group-name').innerText = updatedData.group_name;
-    document.getElementById('view-event-title').innerText = updatedData.event_title;
-    document.getElementById('view-event-credits').innerText = updatedData.credits;
-    document.getElementById('view-event-venue').innerText = updatedData.venue;
-    document.getElementById('view-event-period').innerText = updatedData.period;
-    document.getElementById('view-event-stages').innerText = updatedData.stages;
-    document.getElementById('view-event-capacity').innerText = updatedData.capacity;
-
-    // 通常モードに戻す
-    toggleEventEdit(false);
-    alert('公演詳細を更新しました。');
-
-  } catch (error) {
-    console.error('Error updating event:', error);
-    alert('更新に失敗しました: ' + error.message);
-  }
-}
-
-// マイページ内の公演一覧を更新する関数
-function renderMyPagePerformanceList() {
-  const perfListWrap = document.getElementById('mypage-perf-list');
-  if (!perfListWrap) return;
-
-  if (!currentUser) {
-    perfListWrap.innerHTML = '<p style="font-size: 13px; color: var(--muted);">ログインすると公演の管理ができます。</p>';
-    return;
-  }
-
-  // ログイン中劇団の公演のみをフィルタリング
-  const myPerfs = performancesData.filter(p => p.troupeId === currentUser.id);
-
-  if (myPerfs.length === 0) {
-    perfListWrap.innerHTML = '<p style="font-size: 13px; color: var(--muted); font-style: italic;">現在、登録されている公演はありません。</p>';
-    return;
-  }
-
-  perfListWrap.innerHTML = '';
-  myPerfs.forEach(p => {
-    const item = document.createElement('div');
-    item.style.cssText = "padding: 12px 16px; background: var(--white); border: 0.5px solid var(--border-neutral); border-radius: var(--radius-md); display: flex; justify-content: space-between; align-items: center; gap: 12px;";
-
-    item.innerHTML = `
-      <div style="min-width: 0; flex: 1;">
-        <strong style="font-size: 14px; color: var(--ink); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${p.title}</strong>
-        <span style="font-size: 12px; color: var(--muted);"><i class="ti ti-calendar" style="font-size:12px;"></i> ${p.start} 〜 ${p.end} ｜ <i class="ti ti-map-pin" style="font-size:12px;"></i> ${p.venue}</span>
-      </div>
-      <div style="display: flex; gap: 8px; flex-shrink: 0;">
-        <button class="inbox-btn inbox-btn-accept" style="padding: 6px 12px; font-weight: 500;" onclick="startEditPerformanceClick('${p.id}')">
-          <i class="ti ti-edit"></i> 編集する
-        </button>
-      </div>
-    `;
-    perfListWrap.appendChild(item);
-  });
-}
-
-// 編集ボタンが押されたときの仲介関数
-function startEditPerformanceClick(perfId) {
-  // すでにファイル内にある「公演編集開始関数」を呼び出す
-  // (IDの型が文字列か数値かに応じて適宜変換)
-  const idToEdit = isNaN(perfId) ? perfId : parseInt(perfId);
-  startEditPerformance(idToEdit);
 }
 </script>
 
