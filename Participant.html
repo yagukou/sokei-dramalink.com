@@ -615,6 +615,53 @@ gap: 4px;
 <div class="page-sub" id="register-page-sub">自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します</div>
 </div>
 
+<div class="panel-overlay" id="edit-panel-overlay" onclick="closeEditPanel()"></div>
+<div class="side-panel" id="edit-side-panel">
+  <div class="panel-header">
+    <div>
+      <div class="panel-perf-title">公演情報の編集</div>
+      <div class="panel-troupe-label">公演の基本情報や折り込み枠を変更できます</div>
+    </div>
+    <button class="panel-close-btn" onclick="closeEditPanel()">×</button>
+  </div>
+  <div class="panel-body">
+    <input type="hidden" id="edit-perf-id">
+    <div class="panel-form-row">
+      <label class="panel-form-label">公演タイトル</label>
+      <input type="text" class="panel-form-input" id="edit-perf-title">
+    </div>
+    <div class="panel-form-row">
+      <label class="panel-form-label">劇場・会場</label>
+      <input type="text" class="panel-form-input" id="edit-perf-venue">
+    </div>
+    <div class="panel-2col">
+      <div class="panel-form-row">
+        <label class="panel-form-label">公演開始日</label>
+        <input type="date" class="panel-form-input" id="edit-perf-start">
+      </div>
+      <div class="panel-form-row">
+        <label class="panel-form-label">公演終了日</label>
+        <input type="date" class="panel-form-input" id="edit-perf-end">
+      </div>
+    </div>
+    <div class="panel-2col">
+      <div class="panel-form-row">
+        <label class="panel-form-label">折り込み開始日</label>
+        <input type="date" class="panel-form-input" id="edit-fold-start">
+      </div>
+      <div class="panel-form-row">
+        <label class="panel-form-label">折り込み終了日</label>
+        <input type="date" class="panel-form-input" id="edit-fold-end">
+      </div>
+    </div>
+    <div class="panel-form-row">
+      <label class="panel-form-label">受け入れ上限部数</label>
+      <input type="number" class="panel-form-input" id="edit-perf-quota">
+    </div>
+    <button class="panel-submit-btn" onclick="updatePerformance()"><i class="ti ti-device-floppy"></i> 変更を保存する</button>
+  </div>
+</div>
+
 <div class="submit-row">
   <button class="btn-primary" id="register-submit-btn" onclick="handleRegisterPerformance()">
     <i class="ti ti-device-floppy"></i> 公演情報を登録する
@@ -1708,31 +1755,72 @@ async function handleRegisterPerformance() {
   }
 }
 
-function startEditPerformance() {
-  const perf = performancesData.find(p => p.id === selectedPerformanceId);
+// ==========================================
+// 8. 公演登録・編集機能
+// ==========================================
+
+// 編集パネルを開き、既存のデータをフォームにセットする
+function openEditPerformance(perfId) {
+  const perf = performancesData.find(p => p.id === perfId);
   if (!perf) return;
 
-  editingPerfId = selectedPerformanceId;
-  showPage('register', true);
+  // フォームに既存値をセット
+  document.getElementById('edit-perf-id').value = perf.id;
+  document.getElementById('edit-perf-title').value = perf.title;
+  document.getElementById('edit-perf-venue').value = perf.venue;
+  document.getElementById('edit-perf-start').value = perf.start_date;
+  document.getElementById('edit-perf-end').value = perf.end_date;
+  document.getElementById('edit-fold-start').value = perf.fold_start_date;
+  document.getElementById('edit-fold-end').value = perf.fold_end_date;
+  document.getElementById('edit-perf-quota').value = perf.max_quota;
 
-  document.getElementById('register-page-title').textContent = "公演情報の修正変更";
-  const submitBtn = document.getElementById('register-submit-btn');
-  submitBtn.innerHTML = '<i class="ti ti-refresh"></i>変更内容を保存する';
-  submitBtn.onclick = handleRegisterPerformance;
+  // パネルを表示
+  document.getElementById('edit-panel-overlay').classList.add('open');
+  document.getElementById('edit-side-panel').classList.add('open');
+}
 
-  document.getElementById('new-perf-title').value = perf.title;
-  document.getElementById('new-perf-start').value = perf.start;
-  document.getElementById('new-perf-end').value = perf.end;
-  document.getElementById('new-perf-accept-start').value = perf.acceptStart;
-  document.getElementById('new-perf-accept-end').value = perf.acceptEnd;
-  document.getElementById('new-perf-venue').value = perf.venue;
-  document.getElementById('new-perf-quota').value = perf.maxQuota;
-  document.getElementById('new-perf-desc').value = perf.desc || '';
-  const restriction = perf.deliveryRestriction || 'どちらでも可';
-  const deliveryRadios = document.getElementsByName('new-perf-delivery');
-  for (let r of deliveryRadios) { r.checked = (r.value === restriction); }
-  document.getElementById('new-perf-address').value = perf.deliveryAddress || '';
-  togglePerfAddressField();
+// 編集パネルを閉じる
+function closeEditPanel() {
+  document.getElementById('edit-panel-overlay').classList.remove('open');
+  document.getElementById('edit-side-panel').classList.remove('open');
+}
+
+// Supabaseのデータを更新する
+async function updatePerformance() {
+  const id = document.getElementById('edit-perf-id').value;
+  const title = document.getElementById('edit-perf-title').value;
+  const venue = document.getElementById('edit-perf-venue').value;
+  const sDate = document.getElementById('edit-perf-start').value;
+  const eDate = document.getElementById('edit-perf-end').value;
+  const fsDate = document.getElementById('edit-fold-start').value;
+  const feDate = document.getElementById('edit-fold-end').value;
+  const quota = parseInt(document.getElementById('edit-perf-quota').value);
+
+  if (!title || !venue || !sDate || !eDate || !fsDate || !feDate || !quota) {
+    alert('すべての項目を入力してください。');
+    return;
+  }
+
+  const { error } = await supabase.from('performances').update({
+    title: title,
+    venue: venue,
+    start_date: sDate,
+    end_date: eDate,
+    fold_start_date: fsDate,
+    fold_end_date: feDate,
+    max_quota: quota
+  }).eq('id', id);
+
+  if (error) {
+    alert('公演情報の更新に失敗しました: ' + error.message);
+  } else {
+    alert('公演情報を更新しました！');
+    closeEditPanel();
+    closeSidePanel(); // 詳細パネルも開いていた場合は閉じる
+    await fetchInitialData(); // データを再取得
+    renderCalendar();         // カレンダーを再描画
+    renderMyPage();           // マイページを再描画
+  }
 }
 
 function togglePerfAddressField() {
