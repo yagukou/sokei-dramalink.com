@@ -18,7 +18,7 @@
       position: static !important; 
     }
 
-    /* --- 【完全同期】ヘッダースタイル --- */
+    /* --- ヘッダースタイル --- */
     header {
       display: flex;
       justify-content: space-between;
@@ -34,13 +34,6 @@
       justify-content: space-around;
       align-items: center;
       z-index: 2;
-    }
-
-    .menu-left div, .menu-right div {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
     }
 
     .menu-left img, .menu-right img {
@@ -86,7 +79,6 @@
 
     a {
       text-decoration: none;
-      flex-direction: column;
       color: black;
       font-size: 12px;
     }
@@ -103,8 +95,8 @@
       height: 80px;  
       justify-content: center;
       box-sizing: border-box;
-      color: rgb(8, 8, 8);
       transition: 0.3s;
+      cursor: pointer;
     }
 
     .menu-1:hover {
@@ -152,12 +144,10 @@
       background: #ddd;
     }
 
-    /* --------------------------------------------------
-       📢 ニュース専用スタイル（劇団四季・宝塚ライク）
-    ----------------------------------------------------- */
+    /* 📢 ニュース専用スタイル */
     .container {
       max-width: 800px;
-      margin: 60px auto;
+      margin: 40px auto;
       padding: 0 20px;
       box-sizing: border-box;
     }
@@ -166,8 +156,8 @@
       font-size: 26px;
       text-align: center;
       letter-spacing: 2px;
-      color: #c5a059; /* 公式ゴールド */
-      margin-bottom: 40px;
+      color: #c5a059; 
+      margin-bottom: 20px;
       font-family: "Yu Mincho", serif;
     }
 
@@ -180,99 +170,147 @@
       margin: 10px auto 0;
     }
 
-    /* ニュースリストの枠 */
-    .news-list {
-      border-top: 1px solid #333;
+    /* ニュースのヘッダー部分（言語切り替え） */
+    .news-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
     }
 
-    /* 各ニュースの行（劇団四季・宝塚のスマートな並びを再現） */
-    .news-item {
-      display: flex;
-      align-items: center;
-      padding: 20px 10px;
-      border-bottom: 1px solid #222;
-      text-decoration: none;
-      color: #fff;
+    .lang-switch-btn {
+      background: #222;
+      color: #ccc;
+      border: 1px solid #444;
+      padding: 6px 15px;
+      margin-left: 5px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 13px;
       transition: 0.2s;
     }
 
-    .news-item:hover {
-      background: #1a1515; /* ほんのり赤みのある黒 */
+    .lang-switch-btn.active {
+      background: #c5a059;
+      color: #111;
+      border-color: #c5a059;
+      font-weight: bold;
+    }
+
+    /* ニュースリストのアイテム構造 */
+    .news-item {
+      padding: 20px 10px;
+      border-bottom: 1px solid #222;
+      color: #fff;
+    }
+
+    .news-meta {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 8px;
     }
 
     .news-date {
       font-family: sans-serif;
       font-size: 14px;
       color: #999;
-      width: 110px;
-      flex-shrink: 0;
     }
 
-    /* カテゴリバッジ */
-    .news-badge {
-      font-size: 11px;
+    .news-title {
+      font-size: 18px;
       font-weight: bold;
-      padding: 3px 10px;
-      border-radius: 3px;
-      margin-right: 20px;
-      flex-shrink: 0;
-      text-align: center;
-      min-width: 70px;
-      box-sizing: border-box;
-      font-family: sans-serif;
+      color: #c5a059;
+      margin: 0 0 10px 0;
+      line-height: 1.4;
     }
-    
-    /* カテゴリごとの配色設定 */
-    .badge-ticket { background: #b90e0e; color: #fff; }   /* チケット：赤 */
-    .badge-info { background: #c5a059; color: #111; }     /* お知らせ：金 */
-    .badge-important { background: #fff; color: #000; }    /* 重要：白 */
 
-    .news-text {
-      flex: 1;
-      font-size: 15px;
-      line-height: 1.5;
+    .news-content {
       color: #eee;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap; /* 長いタイトルは三点リーダーに */
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0;
+      white-space: pre-wrap;
     }
 
-    .news-item:hover .news-text {
-      color: #c5a059; /* ホバーでタイトルがゴールドに */
-      text-decoration: underline;
+    /* 自由投稿フォームのスタイル */
+    .news-post-section {
+      background: #1a1a1a;
+      padding: 25px;
+      border-radius: 8px;
+      margin-top: 5px;
+      border: 1px solid #333;
     }
 
-    /* NEWマーク */
-    .new-mark {
-      color: #ff3b30;
+    .news-post-section h3 {
+      margin-top: 0;
+      color: #c5a059;
+      font-family: "Yu Mincho", serif;
+      letter-spacing: 1px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
       font-weight: bold;
-      font-size: 11px;
-      margin-left: 10px;
-      font-family: sans-serif;
+      color: #ccc;
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
     }
 
-    /* Google翻訳用 */
-    .goog-te-banner-frame, .goog-te-banner, .goog-te-balloon-frame, #goog-gt-tt, .goog-gt-tt, iframe[id^=":1."] {
-      display: none !important;
-      visibility: hidden !important;
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      background: #222;
+      border: 1px solid #444;
+      color: white;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: #c5a059;
+      outline: none;
+    }
+
+    .submit-btn {
+      background: #b90e0e;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .submit-btn:hover {
+      background: #d61515;
     }
 
     .hamburger { display: none; }
     
-    /* レスポンシブ：スマホ対応 */
     @media (max-width: 768px) {
       header { position: relative; height: 70px; }
       .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
       .menu-left, .menu-right { display: none; }
       .hamburger { position: absolute; top: 15px; right: 20px; font-size: 30px; color: white; cursor: pointer; z-index: 1000; display: block; }
-      
-      .news-item { flex-direction: column; align-items: flex-start; gap: 8px; padding: 15px 5px; }
-      .news-date { width: auto; }
-      .news-text { white-space: normal; font-size: 14px; }
     }
     </style>
 
-    <!-- Google翻訳ロジック -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      // ★ここにあなたのSupabaseの接続情報を入力してください
+      const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
+      const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY"; // あなたのAnon Keyをここに貼り付けてください
+      const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
+
     <script>
     function toggleLangMenu(e) {
       if (e) e.stopPropagation();
@@ -287,21 +325,11 @@
       document.cookie = "googtrans=/ja/" + lang + "; path=/";
       location.reload();
     }
-    function googleTranslateElementInit() {
-      new google.translate.TranslateElement({
-        pageLanguage: 'ja',
-        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
-        autoDisplay: false
-      }, 'google_translate_element');
-    }
     </script>
-    <div id="google_translate_element" style="display:none;"></div>
-    <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   </head>
 
   <body>
 
-    <!-- 【完全同期】ヘッダー -->
     <header>
       <div class="menu-left">
         <a href="ticket.html" class="menu-1">
@@ -356,287 +384,170 @@
       <div class="hamburger">☰</div>
     </header>
 
-    <!-- メインコンテンツ -->
     <div class="container">
       <h2 class="page-title">NEWS & INFO</h2>
       
-      <!-- 📢 ここにニュースが自動生成されます -->
-      <div class="news-list" id="news-container"></div>
-    </div>
-
-<div class="news-post-section" style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-  <h3>📢 新しいニュースを掲載する</h3>
-  <form id="news-form" onsubmit="submitNews(event)">
-    <div style="margin-bottom: 15px;">
-      <label style="font-weight: bold; color: #333;">🇯🇵 タイトル (日本語) *</label>
-      <input type="text" id="news-title-ja" required style="width: 100%; padding: 8px; margin-top: 5px;" placeholder="例：早慶演劇祭のタイムテーブルが発表されました！">
+      <div class="news-header">
+        <h3 style="margin: 0; font-size: 18px; font-family: 'Yu Mincho', serif;">Latest News</h3>
+        <div>
+          <button id="btn-lang-ja" class="lang-switch-btn active" onclick="switchNewsLanguage('ja')">日本語 🇯🇵</button>
+          <button id="btn-lang-en" class="lang-switch-btn" onclick="switchNewsLanguage('en')">English 🇺🇸</button>
+        </div>
+      </div>
       
-      <label style="font-weight: bold; color: #333; margin-top: 10px; display: block;">🇯🇵 本文 (日本語) *</label>
-      <textarea id="news-content-ja" required style="width: 100%; height: 100px; padding: 8px; margin-top: 5px;" placeholder="ニュースの詳細を入力してください..."></textarea>
+      <div id="news-container" style="margin-bottom: 50px;"></div>
+
+      <div class="news-post-section">
+        <h3>📢 新しいニュースを掲載する</h3>
+        <form id="news-form" onsubmit="submitNews(event)">
+          
+          <div class="form-group">
+            <label>🇯🇵 タイトル (日本語) *</label>
+            <input type="text" id="news-title-ja" required placeholder="例：タイムテーブルが発表されました！">
+          </div>
+          <div class="form-group">
+            <label>🇯🇵 本文 (日本語) *</label>
+            <textarea id="news-content-ja" required rows="5" placeholder="ニュースの詳細を入力してください..."></textarea>
+          </div>
+
+          <hr style="border: 0; border-top: 1px dashed #444; margin: 20px 0;">
+
+          <div class="form-group">
+            <label>🇺🇸 Title (English) *</label>
+            <input type="text" id="news-title-en" required placeholder="e.g. Soko Theater Festival Timetable Released!">
+          </div>
+          <div class="form-group">
+            <label>🇺🇸 Content (English) *</label>
+            <textarea id="news-content-en" required rows="5" placeholder="Enter news details here..."></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">ニュースを掲載する</button>
+        </form>
+      </div>
     </div>
 
-    <hr style="border: 0; border-top: 1px dashed #ccc; margin: 20px 0;">
-
-    <div style="margin-bottom: 15px;">
-      <label style="font-weight: bold; color: #333;">🇺🇸 Title (English) *</label>
-      <input type="text" id="news-title-en" required style="width: 100%; padding: 8px; margin-top: 5px;" placeholder="e.g. Soko Theater Festival Timetable Released!">
-      
-      <label style="font-weight: bold; color: #333; margin-top: 10px; display: block;">🇺🇸 Content (English) *</label>
-      <textarea id="news-content-en" required style="width: 100%; height: 100px; padding: 8px; margin-top: 5px;" placeholder="Enter news details here..."></textarea>
-    </div>
-
-    <button type="submit" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">
-      <i class="ti ti-send"></i> ニュースを掲載する
-    </button>
-  </form>
-</div>
-
-<div class="news-display-section">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-    <h2>Latest News</h2>
-    <div>
-      <button onclick="switchNewsLanguage('ja')" style="padding: 5px 10px; cursor: pointer;">日本語 🇯🇵</button>
-      <button onclick="switchNewsLanguage('en')" style="padding: 5px 10px; cursor: pointer;">English 🇺🇸</button>
-    </div>
-  </div>
-  
-  <div id="news-container"></div>
-</div>
-
-<script>
-async function fetchGlobalNews() {
-  const { data: newsList, error } = await supabase
-    .from('news')
-    .select(`
-      id,
-      created_at,
-      news_translations (
-        title,
-        content
-      )
-    `)
-    // ★ここがポイント：現在選択されている言語の翻訳だけを取得する
-    .eq('news_translations.lang', currentLang)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('ニュースの取得に失敗:', error);
-    return;
-  }
-
-  renderNews(newsList);
-}
-
-    // 画面にニュースを自動で書き出す処理
-    function renderNews() {
-      const container = document.getElementById("news-container");
-      let htmlString = "";
-
-      newsData.forEach(item => {
-        // NEWマークの判定
-        const newMarkHtml = item.isNew ? '<span class="new-mark">NEW</span>' : '';
-
-        htmlString += `
-          <a href="${item.linkUrl}" class="news-item">
-            <div class="news-date">${item.date}</div>
-            <div class="news-badge ${item.badgeClass}">${item.category}</div>
-            <div class="news-text">${item.title}${newMarkHtml}</div>
-          </a>
-        `;
-      });
-
-      container.innerHTML = htmlString;
-    }
-
-    // ページ読み込み時に実行
-    document.addEventListener("DOMContentLoaded", renderNews);
-    
-    // 現在のアプリの表示言語（ユーザーの設定に合わせて 'ja' や 'en' に切り替える）
-let currentLang = 'ja'; 
-
-async function fetchGlobalNews() {
-  const { data: newsList, error } = await supabase
-    .from('news')
-    .select(`
-      id,
-      created_at,
-      news_translations (
-        title,
-        content
-      )
-    `)
-    // ★ここがポイント：現在選択されている言語の翻訳だけを取得する
-    .eq('news_translations.lang', currentLang)
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.error('ニュースの取得に失敗:', error);
-    return;
-  }
-
-  renderNews(newsList);
-}
-
-function renderNews(newsList) {
-  const newsContainer = document.getElementById('news-container');
-  newsContainer.innerHTML = ''; // 一度中身を空にする
-
-  newsList.forEach(item => {
-    // 該当言語の翻訳データがあるかチェック（なければ「翻訳なし」などのフォールバック）
-    const translation = item.news_translations[0]; 
-    if (!translation) return; 
-
-    // 日付をユーザーのローカル環境（日本ならJST）の表記に変換
-    const dateStr = new Date(item.created_at).toLocaleDateString();
-
-    // ニュース記事のHTMLを組み立て
-    const newsItem = document.createElement('div');
-    newsItem.className = 'news-card';
-    newsItem.innerHTML = `
-      <span class="news-date">${dateStr}</span>
-      <h3 class="news-title">${escapeHtml(translation.title)}</h3>
-      <p class="news-content">${escapeHtml(translation.content)}</p>
-    `;
-    
-    newsContainer.appendChild(newsItem);
-  });
-}
-
-// セキュリティ対策（XSS防止）のための簡易エスケープ関数
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-    </script>
-
-    <!-- Google翻訳隠し -->
     <script>
-    function removeGoogleUI() {
-      document.querySelectorAll('.goog-te-banner-frame, .goog-te-banner, .goog-te-balloon-frame, #goog-gt-tt, .goog-gt-tt').forEach(el => el.remove());
-      document.body.style.top = '0px';
+    let currentNewsLang = 'ja';
+
+    // ページ読み込み時にニュース一覧を取得
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchGlobalNews();
+    });
+
+    // 1. ニュースを投稿してSupabaseへ同期する関数
+    async function submitNews(event) {
+      event.preventDefault();
+
+      const titleJa = document.getElementById('news-title-ja').value;
+      const contentJa = document.getElementById('news-content-ja').value;
+      const titleEn = document.getElementById('news-title-en').value;
+      const contentEn = document.getElementById('news-content-en').value;
+
+      try {
+        // 親テーブル（news）へ空のレコードをインサートし、自動生成IDを取得
+        const { data: newNews, error: newsError } = await supabase
+          .from('news')
+          .insert([{}]) 
+          .select()
+          .single();
+
+        if (newsError) throw newsError;
+
+        const newsId = newNews.id;
+
+        // 子テーブル（news_translations）へ複数言語データを同時インサート
+        const { error: transError } = await supabase
+          .from('news_translations')
+          .insert([
+            { news_id: newsId, lang: 'ja', title: titleJa, content: contentJa },
+            { news_id: newsId, lang: 'en', title: titleEn, content: contentEn }
+          ]);
+
+        if (transError) throw transError;
+
+        alert('ニュースを掲載しました！');
+        document.getElementById('news-form').reset();
+        
+        // リストを最新化
+        await fetchGlobalNews();
+
+      } catch (error) {
+        console.error('ニュース投稿エラー:', error);
+        alert('ニュースの掲載に失敗しました: ' + error.message);
+      }
     }
-    setInterval(removeGoogleUI, 200);
 
-    // 現在選択されている表示言語（デフォルトは日本語）
-let currentNewsLang = 'ja';
+    // 2. 指定されている言語の翻訳テキストをSupabaseから取得
+    async function fetchGlobalNews() {
+      try {
+        const { data: newsList, error } = await supabase
+          .from('news')
+          .select(`
+            id,
+            created_at,
+            news_translations (
+              title,
+              content
+            )
+          `)
+          .eq('news_translations.lang', currentNewsLang)
+          .order('created_at', { ascending: false });
 
-// ページ読み込み時にニュースを取得して表示
-document.addEventListener('DOMContentLoaded', () => {
-  fetchGlobalNews();
-});
+        if (error) throw error;
 
-// 1. ニュースを自由に投稿してSupabaseに保存する関数
-async function submitNews(event) {
-  event.preventDefault(); // ページのリロードを防ぐ
+        renderNewsList(newsList);
+      } catch (error) {
+        console.error('ニュース取得エラー:', error);
+      }
+    }
 
-  // フォームの入力値を取得
-  const titleJa = document.getElementById('news-title-ja').value;
-  const contentJa = document.getElementById('news-content-ja').value;
-  const titleEn = document.getElementById('news-title-en').value;
-  const contentEn = document.getElementById('news-content-en').value;
+    // 3. ニュースデータをDOM（HTML）に反映
+    function renderNewsList(newsList) {
+      const container = document.getElementById('news-container');
+      container.innerHTML = ''; 
 
-  try {
-    // 1-1. まずは親の「news」テーブルにレコードを作って生成されたIDを取得
-    const { data: newNews, error: newsError } = await supabase
-      .from('news')
-      .insert([{}]) // 空のオブジェクトでレコード作成（created_atは自働挿入）
-      .select()
-      .single();
+      if (!newsList || newsList.length === 0) {
+        container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">現在掲載されているニュースはありません。</p>';
+        return;
+      }
 
-    if (newsError) throw newsError;
+      newsList.forEach(item => {
+        const translation = item.news_translations[0]; 
+        if (!translation) return;
 
-    const newsId = newNews.id;
+        const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {
+          year: 'numeric', month: '2-digit', day: '2-digit'
+        });
 
-    // 1-2. 生成されたIDを使って「news_translations」に日本語と英語を同時保存
-    const { error: transError } = await supabase
-      .from('news_translations')
-      .insert([
-        { news_id: newsId, lang: 'ja', title: titleJa, content: contentJa },
-        { news_id: newsId, lang: 'en', title: titleEn, content: contentEn }
-      ]);
+        const newsItem = document.createElement('div');
+        newsItem.className = 'news-item';
+        newsItem.innerHTML = `
+          <div class="news-meta">
+            <span class="news-date">${dateStr}</span>
+          </div>
+          <h4 class="news-title">${escapeHtml(translation.title)}</h4>
+          <p class="news-content">${escapeHtml(translation.content)}</p>
+        `;
+        container.appendChild(newsItem);
+      });
+    }
 
-    if (transError) throw transError;
+    // 4. 表示言語切り替えスイッチの処理
+    function switchNewsLanguage(lang) {
+      currentNewsLang = lang;
+      
+      // ボタンのアクティブ状態のクラス制御
+      document.getElementById('btn-lang-ja').classList.toggle('active', lang === 'ja');
+      document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
+      
+      fetchGlobalNews(); 
+    }
 
-    alert('ニュースを掲載しました！');
-    document.getElementById('news-form').reset(); // フォームをクリア
-    
-    // ニュース一覧を再取得して最新の状態にする
-    await fetchGlobalNews();
-
-  } catch (error) {
-    console.error('ニュース投稿エラー:', error);
-    alert('ニュースの掲載に失敗しました: ' + error.message);
-  }
-}
-
-// 2. 指定された言語のニュースをSupabaseから引っ張ってくる関数
-async function fetchGlobalNews() {
-  try {
-    const { data: newsList, error } = await supabase
-      .from('news')
-      .select(`
-        id,
-        created_at,
-        news_translations (
-          title,
-          content
-        )
-      `)
-      // ★ここがポイント：今選択されている言語（jaかen）のデータだけを合体させて取得
-      .eq('news_translations.lang', currentNewsLang)
-      .order('created_at', { ascending: false });
-
-    if (error) throw error;
-
-    renderNewsList(newsList);
-  } catch (error) {
-    console.error('ニュース取得エラー:', error);
-  }
-}
-
-// 3. ニュースを画面（HTML）にレンダリングする関数
-function renderNewsList(newsList) {
-  const container = document.getElementById('news-container');
-  container.innerHTML = ''; // 初期化
-
-  if (newsList.length === 0) {
-    container.innerHTML = '<p>現在掲載されているニュースはありません。</p>';
-    return;
-  }
-
-  newsList.forEach(item => {
-    const translation = item.news_translations[0]; // eqで絞り込んでいるため必ず0番目に入ります
-    if (!translation) return;
-
-    // 投稿日時を閲覧者のローカル（日本ならJST）の表記に変える
-    const dateStr = new Date(item.created_at).toLocaleDateString();
-
-    const newsCard = document.createElement('div');
-    newsCard.style.borderBottom = '1px solid #eee';
-    newsCard.style.padding = '15px 0';
-    newsCard.innerHTML = `
-      <small style="color: #666;">${dateStr}</small>
-      <h4 style="margin: 5px 0 10px 0; color: #111;">${escapeHtml(translation.title)}</h4>
-      <p style="color: #444; font-size: 0.95rem; white-space: pre-wrap;">${escapeHtml(translation.content)}</p>
-    `;
-    container.appendChild(newsCard);
-  });
-}
-
-// 4. 言語を切り替えるボタンの処理
-function switchNewsLanguage(lang) {
-  currentNewsLang = lang;
-  fetchGlobalNews(); // 言語変数を変えて再取得するだけで一瞬で切り替わります
-}
-
-// セキュリティ対策（XSS防止）用
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
+    // XSS脆弱性対策エスケープ
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
     </script>
-
   </body>
 </html>
-
