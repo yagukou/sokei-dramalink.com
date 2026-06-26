@@ -2876,6 +2876,59 @@ async function submitPanelRequest() {
     submitBtn.innerHTML = '<i class="ti ti-send"></i> この内容で折り込みを申請する';
   }
 }
+
+// 💡 公演編集モーダルを開き、既存のデータをセットする関数
+function openEditPerfModal(id) {
+  const perf = performancesData.find(p => p.id === id);
+  if (!perf) return;
+
+  document.getElementById('edit-perf-id').value = perf.id;
+  document.getElementById('edit-perf-title').value = perf.title;
+  document.getElementById('edit-perf-date').value = perf.date;
+  document.getElementById('edit-perf-desc').value = perf.desc || '';
+
+  const modal = document.getElementById('edit-perf-modal');
+  modal.style.display = 'flex';
+}
+
+// 💡 モーダルを閉じる関数
+function closeEditPerfModal() {
+  document.getElementById('edit-perf-modal').style.display = 'none';
+}
+
+// 💡 編集内容をクラウド・ローカルに保存する関数
+async function submitEditPerformance() {
+  const id = document.getElementById('edit-perf-id').value;
+  const title = document.getElementById('edit-perf-title').value.trim();
+  const date = document.getElementById('edit-perf-date').value;
+  const desc = document.getElementById('edit-perf-desc').value.trim();
+
+  if (!title || !date) {
+    alert('公演名と公演日は必須です。');
+    return;
+  }
+
+  // 対象の公演データを更新
+  const perfIndex = performancesData.findIndex(p => p.id === id);
+  if (perfIndex !== -1) {
+    performancesData[perfIndex].title = title;
+    performancesData[perfIndex].date = date;
+    performancesData[perfIndex].desc = desc;
+
+    // データの保存と再描画
+    await saveAllData();
+    alert('公演情報を更新しました！');
+    
+    closeEditPerfModal();
+    
+    // カレンダーとマイページを最新の状態に更新
+    renderCalendar();
+    renderDashboardInbox();
+  } else {
+    alert('公演データが見つかりませんでした。');
+  }
+}
+
 </script>
 
 <!-- ===================== SIDE PANEL HTML ===================== -->
@@ -2973,6 +3026,31 @@ async function submitPanelRequest() {
     </div>
   </div>
 </div>
+
+<div id="edit-perf-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; align-items:center; justify-content:center;">
+    <div style="background:var(--white); padding:2rem; border-radius:var(--radius-lg); max-width:500px; width:90%; box-shadow:0 4px 20px rgba(0,0,0,0.15); position:relative;">
+      <h3 style="margin-bottom:1.5rem; font-size:20px; color:var(--ink);">公演情報の編集</h3>
+      <input type="hidden" id="edit-perf-id">
+      
+      <div class="panel-form-row" style="margin-bottom:1rem;">
+        <label class="panel-form-label" style="display:block; margin-bottom:4px; font-weight:500;">公演名</label>
+        <input class="panel-form-input" id="edit-perf-title" type="text" style="width:100%; padding:8px; border:1px solid var(--border-neutral); border-radius:var(--radius-sm);">
+      </div>
+      <div class="panel-form-row" style="margin-bottom:1rem;">
+        <label class="panel-form-label" style="display:block; margin-bottom:4px; font-weight:500;">公演日 (YYYY-MM-DD)</label>
+        <input class="panel-form-input" id="edit-perf-date" type="date" style="width:100%; padding:8px; border:1px solid var(--border-neutral); border-radius:var(--radius-sm);">
+      </div>
+      <div class="panel-form-row" style="margin-bottom:1.5rem;">
+        <label class="panel-form-label" style="display:block; margin-bottom:4px; font-weight:500;">詳細説明</label>
+        <textarea class="panel-form-input" id="edit-perf-desc" rows="3" style="width:100%; padding:8px; border:1px solid var(--border-neutral); border-radius:var(--radius-sm); resize:vertical;"></textarea>
+      </div>
+      
+      <div style="display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="closeEditPerfModal()" style="padding:8px 16px; background:var(--surface2); border:none; border-radius:var(--radius-md); cursor:pointer;">キャンセル</button>
+        <button onclick="submitEditPerformance()" style="padding:8px 16px; background:var(--crimson); color:white; border:none; border-radius:var(--radius-md); cursor:pointer;">変更を保存</button>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
