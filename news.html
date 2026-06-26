@@ -305,10 +305,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      // ★ここにあなたのSupabaseの接続情報を入力してください
       const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
-      const SUPABASE_ANON_KEY = "sb_publishable_Maty8Athv2jAshtOo8CtLA_RotZGWe5"; // あなたのAnon Keyをここに貼り付けてください
-      const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const SUPABASE_ANON_KEY = "sb_publishable_Maty8Athv2jAshtOo8CtLA_RotZGWe5"; 
+      
+      // ★ window.supabase.createClient に修正し、変数の衝突を防止
+      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
 
     <script>
