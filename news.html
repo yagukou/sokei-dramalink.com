@@ -6,7 +6,7 @@
     <meta name="google" content="notranslate">
     <title>ニュース・お知らせ｜早慶演劇祭</title>
 
-    <style>
+    <style> 
     /* --- 全体設定：ブランド世界観の統一 --- */
     body {
       margin: 0;
@@ -258,7 +258,7 @@
     }
 
     .hamburger { display: none; }
-
+    
     /* レスポンシブ：スマホ対応 */
     @media (max-width: 768px) {
       header { position: relative; height: 70px; }
@@ -404,6 +404,29 @@
       }
     ];
 
+async function fetchGlobalNews() {
+  const { data: newsList, error } = await supabase
+    .from('news')
+    .select(`
+      id,
+      created_at,
+      news_translations (
+        title,
+        content
+      )
+    `)
+    // ★ここがポイント：現在選択されている言語の翻訳だけを取得する
+    .eq('news_translations.lang', currentLang)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('ニュースの取得に失敗:', error);
+    return;
+  }
+
+  renderNews(newsList);
+}
+
     // 画面にニュースを自動で書き出す処理
     function renderNews() {
       const container = document.getElementById("news-container");
@@ -427,6 +450,64 @@
 
     // ページ読み込み時に実行
     document.addEventListener("DOMContentLoaded", renderNews);
+    
+    // 現在のアプリの表示言語（ユーザーの設定に合わせて 'ja' や 'en' に切り替える）
+let currentLang = 'ja'; 
+
+async function fetchGlobalNews() {
+  const { data: newsList, error } = await supabase
+    .from('news')
+    .select(`
+      id,
+      created_at,
+      news_translations (
+        title,
+        content
+      )
+    `)
+    // ★ここがポイント：現在選択されている言語の翻訳だけを取得する
+    .eq('news_translations.lang', currentLang)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('ニュースの取得に失敗:', error);
+    return;
+  }
+
+  renderNews(newsList);
+}
+
+function renderNews(newsList) {
+  const newsContainer = document.getElementById('news-container');
+  newsContainer.innerHTML = ''; // 一度中身を空にする
+
+  newsList.forEach(item => {
+    // 該当言語の翻訳データがあるかチェック（なければ「翻訳なし」などのフォールバック）
+    const translation = item.news_translations[0]; 
+    if (!translation) return; 
+
+    // 日付をユーザーのローカル環境（日本ならJST）の表記に変換
+    const dateStr = new Date(item.created_at).toLocaleDateString();
+
+    // ニュース記事のHTMLを組み立て
+    const newsItem = document.createElement('div');
+    newsItem.className = 'news-card';
+    newsItem.innerHTML = `
+      <span class="news-date">${dateStr}</span>
+      <h3 class="news-title">${escapeHtml(translation.title)}</h3>
+      <p class="news-content">${escapeHtml(translation.content)}</p>
+    `;
+    
+    newsContainer.appendChild(newsItem);
+  });
+}
+
+// セキュリティ対策（XSS防止）のための簡易エスケープ関数
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
     </script>
 
     <!-- Google翻訳隠し -->
@@ -437,5 +518,7 @@
     }
     setInterval(removeGoogleUI, 200);
     </script>
+
   </body>
 </html>
+
