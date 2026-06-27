@@ -308,7 +308,6 @@
       const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
       const SUPABASE_ANON_KEY = "sb_publishable_Maty8Athv2jAshtOo8CtLA_RotZGWe5"; 
       
-      // ★ window.supabase.createClient に修正し、変数の衝突を防止
       const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
 
@@ -486,7 +485,7 @@
           .select(`
             id,
             created_at,
-            news_translations (
+            news_translations!inner (
               title,
               content
             )
