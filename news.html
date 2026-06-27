@@ -305,10 +305,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co/rest/v1/"; 
+      // ★ 末尾の「/rest/v1/」を削除しました
+      const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
       const SUPABASE_ANON_KEY = "sb_publishable_Maty8Athv2jAshtOo8CtLA_RotZGWe5"; 
       
-      // ★ 変数名を「db」に変更して衝突を回避
       const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
 
