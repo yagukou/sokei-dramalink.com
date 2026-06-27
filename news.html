@@ -190,7 +190,6 @@
     .news-meta {
       display: flex;
       align-items: center;
-      justify-content: space-between; /* 日付と削除ボタンを左右に分ける */
       margin-bottom: 8px;
     }
 
@@ -198,23 +197,6 @@
       font-family: sans-serif;
       font-size: 14px;
       color: #999;
-    }
-
-    /* ニュース削除ボタンのスタイル */
-    .delete-btn {
-      background: transparent;
-      color: #ff4d4d;
-      border: 1px solid #ff4d4d;
-      padding: 3px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: 0.2s;
-    }
-
-    .delete-btn:hover {
-      background: #ff4d4d;
-      color: white;
     }
 
     .news-title {
@@ -231,64 +213,6 @@
       line-height: 1.6;
       margin: 0;
       white-space: pre-wrap;
-    }
-
-    /* 自由投稿フォームのスタイル */
-    .news-post-section {
-      background: #1a1a1a;
-      padding: 25px;
-      border-radius: 8px;
-      margin-top: 5px;
-      border: 1px solid #333;
-    }
-
-    .news-post-section h3 {
-      margin-top: 0;
-      color: #c5a059;
-      font-family: "Yu Mincho", serif;
-      letter-spacing: 1px;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    .form-group label {
-      font-weight: bold;
-      color: #ccc;
-      display: block;
-      margin-bottom: 5px;
-      font-size: 14px;
-    }
-
-    .form-group input, .form-group textarea {
-      width: 100%;
-      padding: 10px;
-      background: #222;
-      border: 1px solid #444;
-      color: white;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-
-    .form-group input:focus, .form-group textarea:focus {
-      border-color: #c5a059;
-      outline: none;
-    }
-
-    .submit-btn {
-      background: #b90e0e;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.2s;
-    }
-
-    .submit-btn:hover {
-      background: #d61515;
     }
 
     .hamburger { display: none; }
@@ -390,69 +314,13 @@
       </div>
       
       <div id="news-container" style="margin-bottom: 50px;"></div>
-
-      <div class="news-post-section">
-        <h3>📢 新しいニュースを掲載する</h3>
-        <form id="news-form" onsubmit="submitNews(event)">
-          
-          <div class="form-group">
-            <label>タイトル *</label>
-            <input type="text" id="news-title-ja" required placeholder="例：タイムテーブルが発表されました！">
-          </div>
-          <div class="form-group">
-            <label>本文 *</label>
-            <textarea id="news-content-ja" required rows="5" placeholder="ニュースの詳細を入力してください..."></textarea>
-          </div>
-
-          <button type="submit" class="submit-btn">ニュースを掲載する</button>
-        </form>
-      </div>
     </div>
 
     <script>
-    // ページ読み込み時にニュース一覧を取得
     document.addEventListener('DOMContentLoaded', () => {
       fetchGlobalNews();
     });
 
-    // 1. ニュースを投稿してSupabaseへ同期する関数
-    async function submitNews(event) {
-      event.preventDefault();
-
-      const titleJa = document.getElementById('news-title-ja').value;
-      const contentJa = document.getElementById('news-content-ja').value;
-
-      try {
-        const { data: newNews, error: newsError } = await db
-          .from('news')
-          .insert([{}]) 
-          .select()
-          .single();
-
-        if (newsError) throw newsError;
-
-        const newsId = newNews.id;
-
-        const { error: transError } = await db
-          .from('news_translations')
-          .insert([
-            { news_id: newsId, lang: 'ja', title: titleJa, content: contentJa }
-          ]);
-
-        if (transError) throw transError;
-
-        alert('ニュースを掲載しました！');
-        document.getElementById('news-form').reset();
-        
-        await fetchGlobalNews();
-
-      } catch (error) {
-        console.error('ニュース投稿エラー:', error);
-        alert('ニュースの掲載に失敗しました: ' + error.message);
-      }
-    }
-
-    // 2. 翻訳テキスト（ja）をSupabaseから取得
     async function fetchGlobalNews() {
       try {
         const { data: newsList, error } = await db
@@ -469,14 +337,12 @@
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-
         renderNewsList(newsList);
       } catch (error) {
         console.error('ニュース取得エラー:', error);
       }
     }
 
-    // 3. ニュースデータをDOM（HTML）に反映
     function renderNewsList(newsList) {
       const container = document.getElementById('news-container');
       container.innerHTML = ''; 
@@ -499,7 +365,6 @@
         newsItem.innerHTML = `
           <div class="news-meta">
             <span class="news-date">${dateStr}</span>
-            <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
           </div>
           <h4 class="news-title">${escapeHtml(translation.title)}</h4>
           <p class="news-content">${escapeHtml(translation.content)}</p>
@@ -508,29 +373,6 @@
       });
     }
 
-    // 4. ニュースを削除する関数
-    async function deleteNews(newsId) {
-      const isConfirmed = confirm('このニュースを削除してもよろしいですか？');
-      if (!isConfirmed) return;
-
-      try {
-        const { error } = await db
-          .from('news')
-          .delete()
-          .eq('id', newsId);
-
-        if (error) throw error;
-
-        alert('ニュースを削除しました。');
-        await fetchGlobalNews();
-
-      } catch (error) {
-        console.error('ニュース削除エラー:', error);
-        alert('削除に失敗しました: ' + error.message);
-      }
-    }
-
-    // XSS脆弱性対策エスケープ
     function escapeHtml(str) {
       if (!str) return '';
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
