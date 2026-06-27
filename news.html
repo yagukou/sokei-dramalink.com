@@ -204,12 +204,13 @@
       padding: 20px 10px;
       border-bottom: 1px solid #222;
       color: #fff;
+      position: relative; /* 削除ボタン配置用 */
     }
 
     .news-meta {
       display: flex;
       align-items: center;
-      gap: 15px;
+      justify-content: space-between; /* 日付と削除ボタンを左右に分ける */
       margin-bottom: 8px;
     }
 
@@ -217,6 +218,23 @@
       font-family: sans-serif;
       font-size: 14px;
       color: #999;
+    }
+
+    /* ★ ニュース削除ボタンのスタイル */
+    .delete-btn {
+      background: transparent;
+      color: #ff4d4d;
+      border: 1px solid #ff4d4d;
+      padding: 3px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: #ff4d4d;
+      color: white;
     }
 
     .news-title {
@@ -305,7 +323,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      // ★ 末尾の「/rest/v1/」を削除しました
       const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
       const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8"; 
       
@@ -445,7 +462,6 @@
       const contentEn = document.getElementById('news-content-en').value;
 
       try {
-        // 親テーブル（news）へ空のレコードをインサートし、自動生成IDを取得
         const { data: newNews, error: newsError } = await db
           .from('news')
           .insert([{}]) 
@@ -456,7 +472,6 @@
 
         const newsId = newNews.id;
 
-        // 子テーブル（news_translations）へ複数言語データを同時インサート
         const { error: transError } = await db
           .from('news_translations')
           .insert([
@@ -469,7 +484,6 @@
         alert('ニュースを掲載しました！');
         document.getElementById('news-form').reset();
         
-        // リストを最新化
         await fetchGlobalNews();
 
       } catch (error) {
@@ -522,9 +536,11 @@
 
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
+        // ★ 各ニュースの右上に「削除」ボタンを組み込みました
         newsItem.innerHTML = `
           <div class="news-meta">
             <span class="news-date">${dateStr}</span>
+            <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
           </div>
           <h4 class="news-title">${escapeHtml(translation.title)}</h4>
           <p class="news-content">${escapeHtml(translation.content)}</p>
@@ -533,11 +549,34 @@
       });
     }
 
+    // ★ 5. ニュースを削除する関数を追加
+    async function deleteNews(newsId) {
+      const isConfirmed = confirm('このニュースを削除してもよろしいですか？\n(日本語・英語両方のデータが消去されます)');
+      if (!isConfirmed) return;
+
+      try {
+        // 親テーブル 'news' から対象のIDを削除。cascade設定により翻訳も自動で消えます
+        const { error } = await db
+          .from('news')
+          .delete()
+          .eq('id', newsId);
+
+        if (error) throw error;
+
+        alert('ニュースを削除しました。');
+        // 一覧を再読み込みして画面を更新
+        await fetchGlobalNews();
+
+      } catch (error) {
+        console.error('ニュース削除エラー:', error);
+        alert('削除に失敗しました: ' + error.message);
+      }
+    }
+
     // 4. 表示言語切り替えスイッチの処理
     function switchNewsLanguage(lang) {
       currentNewsLang = lang;
       
-      // ボタンのアクティブ状態のクラス制御
       document.getElementById('btn-lang-ja').classList.toggle('active', lang === 'ja');
       document.getElementById('btn-lang-en').classList.toggle('active', lang === 'en');
       
