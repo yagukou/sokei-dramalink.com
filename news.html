@@ -308,7 +308,8 @@
       const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
       const SUPABASE_ANON_KEY = "sb_publishable_Maty8Athv2jAshtOo8CtLA_RotZGWe5"; 
       
-      const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      // ★ 変数名を「db」に変更して衝突を回避
+      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
 
     <script>
@@ -445,7 +446,7 @@
 
       try {
         // 親テーブル（news）へ空のレコードをインサートし、自動生成IDを取得
-        const { data: newNews, error: newsError } = await supabase
+        const { data: newNews, error: newsError } = await db
           .from('news')
           .insert([{}]) 
           .select()
@@ -456,7 +457,7 @@
         const newsId = newNews.id;
 
         // 子テーブル（news_translations）へ複数言語データを同時インサート
-        const { error: transError } = await supabase
+        const { error: transError } = await db
           .from('news_translations')
           .insert([
             { news_id: newsId, lang: 'ja', title: titleJa, content: contentJa },
@@ -480,7 +481,7 @@
     // 2. 指定されている言語の翻訳テキストをSupabaseから取得
     async function fetchGlobalNews() {
       try {
-        const { data: newsList, error } = await supabase
+        const { data: newsList, error } = await db
           .from('news')
           .select(`
             id,
