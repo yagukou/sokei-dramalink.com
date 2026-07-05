@@ -14,8 +14,6 @@
       background: #111;  
       color: white; 
       -webkit-font-smoothing: antialiased;
-      top: 0px !important;         
-      position: static !important; 
     }
 
     /* --- ヘッダースタイル --- */
@@ -57,31 +55,12 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 1;
-      max-width: 40%;  
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
       text-decoration: none;
     }
 
-    .logo-main {
-      font-size: 22px;
-      font-weight: bold;
-      letter-spacing: 3px;
-      color: #ffffff;
-    }
-
-    .logo-sub {   
-      font-size: 16px;   
-      letter-spacing: 2px;
-      color: #d4af37;      
-    }
-
-    a {
-      text-decoration: none;
-      color: black;
-      font-size: 12px;
-    }
+    .logo-main { font-size: 22px; font-weight: bold; letter-spacing: 3px; color: #ffffff; }
+    .logo-sub { font-size: 16px; letter-spacing: 2px; color: #d4af37; }
+    a { text-decoration: none; color: black; font-size: 12px; }
 
     .menu-1 {
       display: flex;
@@ -90,7 +69,6 @@
       background: #b90e0e;
       border-radius: 12px;
       padding: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       width: 80px;   
       height: 80px;  
       justify-content: center;
@@ -98,53 +76,10 @@
       transition: 0.3s;
       cursor: pointer;
     }
+    .menu-1:hover { transform: translateY(-3px); }
+    .menu-1 span { display: block; width: 100%; text-align: center; margin-top: 5px; font-size: 11px; color: #fff; }
 
-    .menu-1:hover {
-      transform: translateY(-3px);
-    }
-
-    .menu-1 span {
-      display: block;
-      width: 100%;
-      text-align: center;       
-      margin-top: 5px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 11px;
-      color: #fff;
-    }
-
-    .lang-wrapper {
-      position: relative;
-      display: inline-block;
-    }
-
-    .lang-menu {
-      position: absolute;
-      top: 110%;   
-      left: 0;
-      width: 140px;
-      background: #f0f0f0;
-      border-radius: 12px;
-      display: none;
-      overflow: hidden;
-      z-index: 9999;
-    }
-
-    .lang-menu div {
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 13px;
-      color: black;
-    }
-
-    .lang-menu div:hover {
-      background: #ddd;
-    }
-
-    /* 📢 ニュース専用スタイル */
+    /* 📢 ニュースリストのスタイル */
     .container {
       max-width: 800px;
       margin: 40px auto;
@@ -161,47 +96,33 @@
       font-family: "Yu Mincho", serif;
     }
 
-    .page-title::after {
-      content: '';
-      display: block;
-      width: 50px;
-      height: 1px;
-      background: #c5a059;
-      margin: 10px auto 0;
-    }
-
     .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
       border-bottom: 1px solid #333;
       padding-bottom: 10px;
+      margin-bottom: 20px;
     }
 
-    /* ニュースリストのアイテム構造 */
+    /* タップ可能なニュースカード */
     .news-item {
-      padding: 20px 10px;
-      border-bottom: 1px solid #222;
-      color: #fff;
+      padding: 20px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      margin-bottom: 15px;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
     .news-item:hover {
-      background: #1a1a1a;
-    }
-
-    .news-meta {
-      display: flex;
-      align-items: center;
-      margin-bottom: 8px;
+      transform: translateY(-2px);
+      border-color: #c5a059;
     }
 
     .news-date {
-      font-family: sans-serif;
-      font-size: 14px;
-      color: #999;
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 5px;
+      display: block;
     }
 
     .news-title {
@@ -209,11 +130,11 @@
       font-weight: bold;
       color: #c5a059;
       margin: 0 0 10px 0;
-      line-height: 1.4;
     }
 
+    /* 一覧では長い本文を3行で省略表示 */
     .news-content {
-      color: #eee;
+      color: #ccc;
       font-size: 14px;
       line-height: 1.6;
       margin: 0;
@@ -224,12 +145,12 @@
       overflow: hidden;
     }
 
-    /* 💡 詳細表示用モーダルのスタイル */
+    /* 📌 タップ時に起動する詳細ポップアップ（モーダル） */
     .news-modal {
-      display: none;
+      display: none; /* 初期状態は非表示 */
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       z-index: 10000;
       justify-content: center;
       align-items: center;
@@ -241,63 +162,59 @@
       background: #1c1c1c;
       border: 1px solid #c5a059;
       border-radius: 12px;
-      max-width: 600px;
+      max-width: 650px;
       width: 100%;
       max-height: 85vh;
       overflow-y: auto;
       position: relative;
       padding: 25px;
       box-sizing: border-box;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     }
 
     .news-modal-close {
       position: absolute;
       top: 15px; right: 20px;
-      font-size: 28px;
+      font-size: 32px;
       color: #999;
       cursor: pointer;
-      transition: color 0.2s;
     }
     .news-modal-close:hover { color: #fff; }
 
     .news-modal-img {
       width: 100%;
-      max-height: 350px;
+      max-height: 380px;
       object-fit: contain;
       background: #000;
       border-radius: 6px;
       margin-bottom: 15px;
-      display: none;
+      display: none; /* 画像がある時だけJSでblockにする */
     }
 
     .news-modal-title {
       font-size: 22px;
       color: #c5a059;
-      margin-bottom: 10px;
+      margin: 0 0 8px 0;
       font-family: "Yu Mincho", serif;
     }
 
     .news-modal-date {
       font-size: 13px;
-      color: #888;
-      margin-bottom: 20px;
+      color: #777;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
     }
 
     .news-modal-text {
       font-size: 15px;
       line-height: 1.8;
-      color: #fff;
+      color: #eee;
       white-space: pre-wrap;
+      margin: 0;
     }
 
-    .hamburger { display: none; }
-    
     @media (max-width: 768px) {
-      header { position: relative; height: 70px; }
-      .logo { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
       .menu-left, .menu-right { display: none; }
-      .hamburger { position: absolute; top: 15px; right: 20px; font-size: 30px; color: white; cursor: pointer; z-index: 1000; display: block; }
     }
     </style>
 
@@ -314,8 +231,6 @@
       <div class="menu-left">
         <a href="ticket.html" class="menu-1"><img src="ticket3.png"><span>チケット</span></a>
         <a href="what.html" class="menu-1"><img src="what3.png"><span>公演紹介</span></a>
-        <a href="Participant.html" class="menu-1"><img src="Participant3.png"><span>出場団体</span></a>
-        <a href="Schedule.html" class="menu-1"><img src="Schedule3.png"><span>スケジュール</span></a>
       </div>
       <a href="index.html" class="logo">
         <div class="logo-main">早慶演劇祭</div>
@@ -323,38 +238,27 @@
       </a>
       <div class="menu-right">
         <a href="news.html" class="menu-1"><img src="news3.png"><span>ニュース</span></a>
-        <div class="lang-wrapper">
-          <a class="menu-1" onclick="toggleLangMenu(event); return false;"><img src="Language3.png"><span>Language</span></a>
-          <div id="lang-menu" class="lang-menu">
-            <div onclick="setLang('ja')">日本語</div>
-            <div onclick="setLang('en')">ENGLISH</div>
-            <div onclick="setLang('zh-CN')">简体中文</div>
-            <div onclick="setLang('ko')">한국어</div>
-          </div>
-        </div>
         <a href="Inquiry.html" class="menu-1"><img src="Inquiry3.png"><span>お問い合わせ</span></a>
-        <a href="menu.html" class="menu-1"><img src="menu3.png"><span>メニュー</span></a>
       </div>
-      <div class="hamburger">☰</div>
     </header>
 
     <div class="container">
       <h2 class="page-title">NEWS & INFO</h2>
       <div class="news-header">
-        <h3 style="margin: 0; font-size: 18px; font-family: 'Yu Mincho', serif;">最新ニュース</h3>
+        <h3 style="margin: 0; font-size: 18px; font-family: 'Yu Mincho', serif;">お知らせ一覧</h3>
       </div>
-      <div id="news-container" style="margin-bottom: 50px;">
+      <div id="news-container">
         <p style="color: #999; text-align: center; padding: 20px;">ニュースを読み込んでいます...</p>
       </div>
     </div>
 
-    <!-- 💡 追加：詳細表示用のモーダル枠 -->
+    <!-- 📌 ポップアップモーダル本体 -->
     <div id="news-detail-modal" class="news-modal" onclick="closeNewsModal()">
       <div class="news-modal-content" onclick="event.stopPropagation()">
         <span class="news-modal-close" onclick="closeNewsModal()">&times;</span>
         <img id="modal-img" class="news-modal-img" src="" alt="ニュース画像">
-        <div id="modal-date" class="news-modal-date"></div>
         <h3 id="modal-title" class="news-modal-title"></h3>
+        <div id="modal-date" class="news-modal-date"></div>
         <p id="modal-text" class="news-modal-text"></p>
       </div>
     </div>
@@ -381,6 +285,7 @@
 
         if (transError) throw transError;
 
+        // 白紙化・結合エラー対策マッピング
         fetchedNewsData = (newsList || []).map(item => {
           const trans = (transList || []).find(t => t.news_id === item.id);
           return { ...item, news_translations: trans ? [trans] : [] };
@@ -388,8 +293,8 @@
 
         renderNewsList(fetchedNewsData);
       } catch (error) {
-        console.error('ニュース取得エラー:', error);
-        container.innerHTML = '<p style="color: #ff4d4d; text-align: center; padding: 20px;">ニュースの取得に失敗しました。構造を確認してください。</p>';
+        console.error(error);
+        container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。</p>';
       }
     }
 
@@ -398,7 +303,7 @@
       container.innerHTML = ''; 
 
       if (!newsList || newsList.length === 0) {
-        container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">現在掲載されているニュースはありません。</p>';
+        container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">現在お知らせはありません。</p>';
         return;
       }
 
@@ -410,12 +315,10 @@
 
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
-        newsItem.onclick = () => openNewsModal(item.id);
+        newsItem.onclick = () => openNewsModal(item.id); // タップしたら詳細を開く
         
         newsItem.innerHTML = `
-          <div class="news-meta">
-            <span class="news-date">${dateStr}</span>
-          </div>
+          <span class="news-date">${dateStr}</span>
           <h4 class="news-title">${escapeHtml(translation.title)}</h4>
           <p class="news-content">${escapeHtml(translation.content)}</p>
         `;
@@ -423,6 +326,7 @@
       });
     }
 
+    // 💡 ポップアップを開く処理
     function openNewsModal(newsId) {
       const item = fetchedNewsData.find(n => n.id === newsId);
       if (!item) return;
@@ -435,34 +339,32 @@
       });
 
       document.getElementById('modal-title').innerText = translation.title;
-      document.getElementById('modal-date').innerText = dateStr;
+      document.getElementById('modal-date').innerText = "投稿日時: " + dateStr;
       document.getElementById('modal-text').innerText = translation.content;
 
       const modalImg = document.getElementById('modal-img');
       if (item.image_url) {
         modalImg.src = item.image_url;
-        modalImg.style.display = 'block';
+        modalImg.style.display = 'block'; // 画像があれば表示
       } else {
-        modalImg.style.display = 'none';
+        modalImg.style.display = 'none';  // なければ非表示
         modalImg.src = '';
       }
 
       document.getElementById('news-detail-modal').style.display = 'flex';
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden'; // 背面のスクロールを固定
     }
 
+    // 💡 ポップアップを閉じる処理
     function closeNewsModal() {
       document.getElementById('news-detail-modal').style.display = 'none';
-      document.body.style.overflow = '';
+      document.body.style.overflow = ''; // スクロール固定を解除
     }
 
     function escapeHtml(str) {
       if (!str) return '';
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
-    function toggleLangMenu(e) { if (e) e.stopPropagation(); const menu = document.getElementById("lang-menu"); menu.style.display = (menu.style.display === "block") ? "none" : "block"; }
-    document.addEventListener("click", function() { const menu = document.getElementById("lang-menu"); if (menu) menu.style.display = "none"; });
-    function setLang(lang) { document.cookie = "googtrans=/ja/" + lang + "; path=/"; location.reload(); }
     </script>
   </body>
 </html>
