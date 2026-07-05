@@ -48,6 +48,17 @@
     .news-title { font-size: 18px; margin: 0 0 10px 0; color: #fff; }
     .news-content { white-space: pre-wrap; color: #ccc; font-size: 14px; margin: 0; }
     
+    /* 追加：リスト内の画像確認用 */
+    .news-img-preview {
+      max-width: 200px;
+      max-height: 120px;
+      object-fit: contain;
+      display: block;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      background: #000;
+    }
+
     .form-section {
       background: #111;
       padding: 20px;
@@ -76,20 +87,27 @@
     <div class="admin-container">
       <h2>📢 ニュース管理画面 (編集・削除)</h2>
       
-      <div id="news-container"></div>
+      <div id="news-container">
+        <p style="color: #aaa; text-align: center;">読み込み中...</p>
+      </div>
 
       <div class="form-section">
         <h3>➕ 新しいニュースを掲載する</h3>
         <form id="news-form" onsubmit="submitNews(event)">
           <div class="form-group">
             <label>タイトル *</label>
-            <input type="text" id="news-title-ja" required>
+            <input type="text" id="news-title-ja" required placeholder="ニュースのタイトルを入力">
           </div>
           <div class="form-group">
             <label>本文 *</label>
-            <textarea id="news-content-ja" required rows="5"></textarea>
+            <textarea id="news-content-ja" required rows="5" placeholder="本文を入力"></textarea>
           </div>
-          <button type="submit" class="submit-btn">ニュースを掲載する</button>
+          <!-- 💡 追加：自由な画像ファイル選択フィールド -->
+          <div class="form-group">
+            <label>添付画像（任意）</label>
+            <input type="file" id="news-image" accept="image/*">
+          </div>
+          <button type="submit" class="submit-btn" id="submit-btn">ニュースを掲載する</button>
         </form>
       </div>
     </div>
@@ -99,13 +117,47 @@
 
     async function submitNews(event) {
       event.preventDefault();
+      const btn = document.getElementById('submit-btn');
       const titleJa = document.getElementById('news-title-ja').value;
       const contentJa = document.getElementById('news-content-ja').value;
+      const imageFile = document.getElementById('news-image').files[0];
+
+      btn.disabled = true;
+      btn.innerText = "投稿中...";
 
       try {
-        const { data: newNews, error: newsError } = await db.from('news').insert([{}]).select().single();
+        let imageUrl = null;
+
+        // 1. 画像がセットされている場合は先にStorageへ登録をかける
+        if (imageFile) {
+          const fileExt = imageFile.name.split('.').pop();
+          const fileName = `${Date.now()}.${fileExt}`;
+          const filePath = `news_images/${fileName}`;
+
+          const { data: uploadData, error: uploadError } = await db.storage
+            .from('news-bucket')
+            .upload(filePath, imageFile);
+
+          if (uploadError) {
+            console.warn("Storage upload warn:", uploadError.message);
+            alert("画像ストレージの送信に失敗しました。事前にSupabase側で「news-bucket」をパブリック設定で作成している必要があります。画像なしの状態でテキスト投稿のみ進めます。");
+          } else {
+            const { data: publicUrlData } = db.storage
+              .from('news-bucket')
+              .getPublicUrl(filePath);
+            imageUrl = publicUrlData.publicUrl;
+          }
+        }
+
+        // 2. 親テーブル(news)への書き込み
+        const { data: newNews, error: newsError } = await db
+          .from('news')
+          .insert([{ image_url: imageUrl }])
+          .select()
+          .single();
         if (newsError) throw newsError;
 
+        // 3. 翻訳テーブル(news_translations)への言語マッピング書き込み
         const { error: transError } = await db.from('news_translations').insert([
           { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
@@ -116,21 +168,39 @@
         await fetchGlobalNews();
       } catch (error) {
         alert('掲載に失敗しました: ' + error.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "ニュースを掲載する";
       }
     }
 
     async function fetchGlobalNews() {
+      const container = document.getElementById('news-container');
       try {
+        // 白紙化・エラー防止ロジック（テーブルが直接リレーションされていない場合も個別にマッピングして安全に結合）
         const { data: newsList, error } = await db
           .from('news')
-          .select(`id, created_at, news_translations!inner (title, content)`)
-          .eq('news_translations.lang', 'ja')
+          .select(`id, created_at, image_url`)
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        renderNewsList(newsList);
+
+        const { data: transList, error: transError } = await db
+          .from('news_translations')
+          .select('news_id, title, content')
+          .eq('lang', 'ja');
+
+        if (transError) throw transError;
+
+        const safeNewsData = (newsList || []).map(item => {
+          const trans = (transList || []).find(t => t.news_id === item.id);
+          return { ...item, news_translations: trans ? [trans] : [] };
+        });
+
+        renderNewsList(safeNewsData);
       } catch (error) {
         console.error(error);
+        container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。構造を確認してください。</p>';
       }
     }
 
@@ -145,13 +215,22 @@
         const translation = item.news_translations[0]; 
         if (!translation) return;
         const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year: 'numeric', month: '2-digit', day: '2-digit'});
+        
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
+        
+        // 画像がある場合は確認用サムネイルを表示
+        let imgHtml = '';
+        if (item.image_url) {
+          imgHtml = `<img src="${item.image_url}" class="news-img-preview" alt="添付画像">`;
+        }
+
         newsItem.innerHTML = `
           <div class="news-meta">
             <span>${dateStr}</span>
             <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
           </div>
+          ${imgHtml}
           <h4 class="news-title">${escapeHtml(translation.title)}</h4>
           <p class="news-content">${escapeHtml(translation.content)}</p>
         `;
