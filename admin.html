@@ -27,6 +27,11 @@
       padding: 15px;
       margin-bottom: 15px;
       border-radius: 6px;
+      cursor: pointer; /* 💡 クリックできることがわかるように矢印を指マークに */
+      transition: background 0.2s;
+    }
+    .news-item:hover {
+      background: #3c3c3c; /* 💡 マウスを乗せたら少し明るく */
     }
     .news-meta {
       display: flex;
@@ -74,6 +79,52 @@
       background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold;
     }
     .submit-btn:hover { background: #d61515; }
+
+    /* ========================================================
+       💡 ここから下：タップした時にその場で出てくる詳細画面（モーダル）の見た目
+       ======================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.85); /* 背景を暗く */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1; pointer-events: auto;
+    }
+    .modal-content {
+      background: #333;
+      padding: 30px;
+      border-radius: 10px;
+      max-width: 600px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto; /* 縦に長くなったらスクロールできるように */
+      position: relative;
+      border: 1px solid #555;
+    }
+    .modal-close {
+      position: absolute;
+      top: 15px; right: 15px;
+      background: #555; color: white;
+      border: none; padding: 5px 12px;
+      border-radius: 4px; cursor: pointer; font-size: 14px;
+    }
+    .modal-close:hover { background: #666; }
+    .modal-img {
+      width: 100%; max-height: 350px;
+      object-fit: contain; background: #000;
+      border-radius: 6px; margin-bottom: 20px;
+      display: none;
+    }
+    .modal-title { color: #c5a059; font-size: 24px; margin: 10px 0 15px 0; }
+    .modal-date { color: #aaa; font-size: 13px; }
+    .modal-text { color: #ddd; font-size: 15px; line-height: 1.6; white-space: pre-wrap; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -110,7 +161,21 @@
       </div>
     </div>
 
+    <!-- 💡 その場で浮き出てくる詳細画面（モーダル）のHTML要素 -->
+    <div class="modal-overlay" id="detail-modal" onclick="closeModal(event)">
+      <div class="modal-content">
+        <button class="modal-close" onclick="closeModal(event, true)">✕ 閉じる</button>
+        <div class="modal-date" id="modal-date"></div>
+        <h3 class="modal-title" id="modal-title"></h3>
+        <img src="" alt="詳細画像" class="modal-img" id="modal-img">
+        <p class="modal-text" id="modal-text"></p>
+      </div>
+    </div>
+
     <script>
+    // 全体で使うデータ保持用
+    let globalNewsData = [];
+
     document.addEventListener('DOMContentLoaded', () => { fetchGlobalNews(); });
 
     async function submitNews(event) {
@@ -131,36 +196,24 @@
           const fileName = `${Date.now()}.${fileExt}`;
           const filePath = `news_images/${fileName}`;
 
-          // 画像のアップロード
           const { data: uploadData, error: uploadError } = await db.storage
             .from('news-bucket')
             .upload(filePath, imageFile);
 
-          if (uploadError) {
-            throw new Error(`画像のアップロードに失敗しました。詳細: ${uploadError.message}`);
-          }
+          if (uploadError) throw new Error(`画像のアップロード失敗: ${uploadError.message}`);
 
-          // 公開URLの取得
-          const { data: publicUrlData } = db.storage
-            .from('news-bucket')
-            .getPublicUrl(filePath);
+          const { data: publicUrlData } = db.storage.from('news-bucket').getPublicUrl(filePath);
           imageUrl = publicUrlData.publicUrl;
         }
 
-        // 💡 400エラー対策：親テーブル(news)へ追加したあと、シンプルな select('*') に変更
         const { data: newNewsArray, error: newsError } = await db
           .from('news')
           .insert([{ image_url: imageUrl }])
           .select('*');
           
         if (newsError) throw newsError;
-        if (!newNewsArray || newNewsArray.length === 0) {
-          throw new Error("ニュースの登録に失敗しました。データが返されませんでした。");
-        }
-        
         const newNews = newNewsArray[0];
 
-        // 翻訳テーブル(news_translations)へ追加
         const { error: transError } = await db.from('news_translations').insert([
           { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
@@ -194,15 +247,15 @@
 
         if (transError) throw transError;
 
-        const safeNewsData = (newsList || []).map(item => {
+        globalNewsData = (newsList || []).map(item => {
           const trans = (transList || []).find(t => t.news_id === item.id);
           return { ...item, news_translations: trans ? [trans] : [] };
         });
 
-        renderNewsList(safeNewsData);
+        renderNewsList(globalNewsData);
       } catch (error) {
         console.error(error);
-        container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。構造を確認してください。</p>';
+        container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。</p>';
       }
     }
 
@@ -221,6 +274,13 @@
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
         
+        // 💡 項目をタップしたときに詳細ポップアップを開く設定
+        newsItem.addEventListener('click', (e) => {
+          // 削除ボタンが押された時は詳細を開かないようにガード
+          if (e.target.classList.contains('delete-btn')) return;
+          openModal(item.id, dateStr);
+        });
+        
         let imgHtml = '';
         if (item.image_url) {
           imgHtml = `<img src="${item.image_url}" class="news-img-preview" alt="添付画像">`;
@@ -237,6 +297,36 @@
         `;
         container.appendChild(newsItem);
       });
+    }
+
+    // 💡 詳細ポップアップを開く処理
+    function openModal(newsId, dateStr) {
+      const item = globalNewsData.find(n => n.id === newsId);
+      if (!item) return;
+      const trans = item.news_translations[0];
+      if (!trans) return;
+
+      document.getElementById('modal-date').innerText = dateStr;
+      document.getElementById('modal-title').innerText = trans.title;
+      document.getElementById('modal-text').innerText = trans.content;
+
+      const imgEl = document.getElementById('modal-img');
+      if (item.image_url) {
+        imgEl.src = item.image_url;
+        imgEl.style.display = 'block';
+      } else {
+        imgEl.style.display = 'none';
+      }
+
+      document.getElementById('detail-modal').classList.add('active');
+    }
+
+    // 💡 詳細ポップアップを閉じる処理
+    function closeModal(e, force = false) {
+      // 背景部分、またはバツボタンを押した時だけ閉じる
+      if (force || e.target.classList.contains('modal-overlay')) {
+        document.getElementById('detail-modal').classList.remove('active');
+      }
     }
 
     async function deleteNews(newsId) {
