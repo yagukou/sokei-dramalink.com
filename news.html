@@ -273,35 +273,35 @@
 
     document.addEventListener('DOMContentLoaded', () => { fetchGlobalNews(); });
 
-    async function fetchGlobalNews() {
-      const container = document.getElementById('news-container');
-      try {
-        // 💡 400エラー対策：selectの構文をシンプルなアスタリスク全取得に変更
-        const { data: newsList, error } = await db
-          .from('news')
-          .select('*')
-          .order('created_at', { ascending: false });
+async function fetchGlobalNews() {
+  const container = document.getElementById('news-container');
+  try {
+    // 💡 ここを完全にクリアに書き換えます
+    const { data: newsList, error } = await db
+      .from('news')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-        if (error) throw error;
+    if (error) throw error;
 
-        const { data: transList, error: transError } = await db
-          .from('news_translations')
-          .select('news_id, title, content')
-          .eq('lang', 'ja');
+    const { data: transList, error: transError } = await db
+      .from('news_translations')
+      .select('news_id, title, content')
+      .eq('lang', 'ja');
 
-        if (transError) throw transError;
+    if (transError) throw transError;
 
-        fetchedNewsData = (newsList || []).map(item => {
-          const trans = (transList || []).find(t => t.news_id === item.id);
-          return { ...item, news_translations: trans ? [trans] : [] };
-        });
+    fetchedNewsData = (newsList || []).map(item => {
+      const trans = (transList || []).find(t => t.news_id === item.id);
+      return { ...item, news_translations: trans ? [trans] : [] };
+    });
 
-        renderNewsList(fetchedNewsData);
-      } catch (error) {
-        console.error(error);
-        container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。</p>';
-      }
-    }
+    renderNewsList(fetchedNewsData);
+  } catch (error) {
+    console.error(error);
+    container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。</p>';
+  }
+}
 
     function renderNewsList(newsList) {
       const container = document.getElementById('news-container');
