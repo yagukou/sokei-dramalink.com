@@ -131,21 +131,24 @@
           const fileName = `${Date.now()}.${fileExt}`;
           const filePath = `news_images/${fileName}`;
 
+          // 画像のアップロード
           const { data: uploadData, error: uploadError } = await db.storage
             .from('news-bucket')
             .upload(filePath, imageFile);
 
           if (uploadError) {
-            console.warn("Storage upload warn:", uploadError.message);
-            alert("画像ストレージの送信に失敗しました。事前にSupabase側で「news-bucket」をパブリック設定で作成している必要があります。画像なしの状態でテキスト投稿のみ進めます。");
-          } else {
-            const { data: publicUrlData } = db.storage
-              .from('news-bucket')
-              .getPublicUrl(filePath);
-            imageUrl = publicUrlData.publicUrl;
+            // RLSポリシー違反などが発生した場合はここで明確にキャッチして処理を止めます
+            throw new Error(`画像のアップロードに失敗しました。SupabaseのStorageにて「news-bucket」のRLSポリシー(INSERT)が許可されているか確認してください。詳細: ${uploadError.message}`);
           }
+
+          // 公開URLの取得
+          const { data: publicUrlData } = db.storage
+            .from('news-bucket')
+            .getPublicUrl(filePath);
+          imageUrl = publicUrlData.publicUrl;
         }
 
+        // 親テーブル(news)へ追加
         const { data: newNews, error: newsError } = await db
           .from('news')
           .insert([{ image_url: imageUrl }])
@@ -153,6 +156,7 @@
           .single();
         if (newsError) throw newsError;
 
+        // 翻訳テーブル(news_translations)へ追加
         const { error: transError } = await db.from('news_translations').insert([
           { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
@@ -162,7 +166,7 @@
         document.getElementById('news-form').reset();
         await fetchGlobalNews();
       } catch (error) {
-        alert('掲載に失敗しました: ' + error.message);
+        alert(error.message);
       } finally {
         btn.disabled = false;
         btn.innerText = "ニュースを掲載する";
@@ -172,7 +176,6 @@
     async function fetchGlobalNews() {
       const container = document.getElementById('news-container');
       try {
-        // 💡 400エラー対策：selectの構文をシンプルなアスタリスク全取得に変更
         const { data: newsList, error } = await db
           .from('news')
           .select('*')
@@ -195,7 +198,7 @@
         renderNewsList(safeNewsData);
       } catch (error) {
         console.error(error);
-        container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。構造を確認してください。</p>';
+        container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。</p>';
       }
     }
 
