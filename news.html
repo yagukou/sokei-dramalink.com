@@ -7,7 +7,6 @@
     <title>ニュース・お知らせ｜早慶演劇祭</title>
 
     <style> 
-    /* --- 全体設定：ブランド世界観の統一 --- */
     body {
       margin: 0;
       font-family: "Times New Roman", "Yu Mincho", "游明朝", "Noto Serif JP", serif;
@@ -16,7 +15,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* --- ヘッダースタイル --- */
     header {
       display: flex;
       justify-content: space-between;
@@ -79,7 +77,6 @@
     .menu-1:hover { transform: translateY(-3px); }
     .menu-1 span { display: block; width: 100%; text-align: center; margin-top: 5px; font-size: 11px; color: #fff; }
 
-    /* 📢 ニュースリストのスタイル */
     .container {
       max-width: 800px;
       margin: 40px auto;
@@ -102,7 +99,6 @@
       margin-bottom: 20px;
     }
 
-    /* 📌 タップ可能なニュースカード */
     .news-item {
       padding: 22px;
       background: #1a1a1a;
@@ -132,10 +128,9 @@
       font-weight: bold;
       color: #c5a059;
       margin: 0 0 12px 0;
-      padding-right: 80px; /* 詳細リンクと被らないように余白確保 */
+      padding-right: 80px;
     }
 
-    /* 一覧では長い本文を3行で省略表示 */
     .news-content {
       color: #ccc;
       font-size: 14px;
@@ -148,7 +143,6 @@
       overflow: hidden;
     }
 
-    /* 💡 「タップして詳細が見られること」を強調するリンクテキスト */
     .news-more-link {
       display: block;
       text-align: right;
@@ -157,9 +151,9 @@
       font-weight: bold;
     }
 
-    /* 📌 タップ時に起動するポップアップ（モーダル） */
+    /* 📌 ポップアップモーダル（詳細画面） */
     .news-modal {
-      display: none; /* 初期状態は非表示 */
+      display: none; 
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.85);
@@ -199,7 +193,7 @@
       background: #000;
       border-radius: 6px;
       margin-bottom: 20px;
-      display: none; /* 画像がある時だけJavaScriptでblockにする */
+      display: none; 
     }
 
     .news-modal-title {
@@ -264,7 +258,6 @@
       </div>
     </div>
 
-    <!-- 📌 ポップアップモーダル枠（初期状態は非表示） -->
     <div id="news-detail-modal" class="news-modal" onclick="closeNewsModal()">
       <div class="news-modal-content" onclick="event.stopPropagation()">
         <span class="news-modal-close" onclick="closeNewsModal()">&times;</span>
@@ -283,9 +276,10 @@
     async function fetchGlobalNews() {
       const container = document.getElementById('news-container');
       try {
+        // 💡 400エラー対策：selectの構文をシンプルなアスタリスク全取得に変更
         const { data: newsList, error } = await db
           .from('news')
-          .select(`id, created_at, image_url`)
+          .select('*')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -297,7 +291,6 @@
 
         if (transError) throw transError;
 
-        // 白紙化・エラー防止用セーフマッピング
         fetchedNewsData = (newsList || []).map(item => {
           const trans = (transList || []).find(t => t.news_id === item.id);
           return { ...item, news_translations: trans ? [trans] : [] };
@@ -327,7 +320,7 @@
 
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
-        newsItem.onclick = () => openNewsModal(item.id); // 💡 カード全体をタップしたらポップアップ起動
+        newsItem.onclick = () => openNewsModal(item.id); 
         
         newsItem.innerHTML = `
           <span class="news-date">${dateStr}</span>
@@ -339,7 +332,6 @@
       });
     }
 
-    // 💡 詳細ポップアップを開く
     function openNewsModal(newsId) {
       const item = fetchedNewsData.find(n => n.id === newsId);
       if (!item) return;
@@ -358,20 +350,19 @@
       const modalImg = document.getElementById('modal-img');
       if (item.image_url) {
         modalImg.src = item.image_url;
-        modalImg.style.display = 'block'; // 画像があれば枠を展開して表示
+        modalImg.style.display = 'block'; 
       } else {
-        modalImg.style.display = 'none';  // なければ枠ごと隠す
+        modalImg.style.display = 'none';  
         modalImg.src = '';
       }
 
       document.getElementById('news-detail-modal').style.display = 'flex';
-      document.body.style.overflow = 'hidden'; // 背面の背景スクロールを止める
+      document.body.style.overflow = 'hidden'; 
     }
 
-    // 💡 ポップアップを閉じる
     function closeNewsModal() {
       document.getElementById('news-detail-modal').style.display = 'none';
-      document.body.style.overflow = ''; // スクロール制限を解除
+      document.body.style.overflow = ''; 
     }
 
     function escapeHtml(str) {

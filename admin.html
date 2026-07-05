@@ -48,7 +48,6 @@
     .news-title { font-size: 18px; margin: 0 0 10px 0; color: #fff; }
     .news-content { white-space: pre-wrap; color: #ccc; font-size: 14px; margin: 0; }
     
-    /* 追加：リスト内の画像確認用 */
     .news-img-preview {
       max-width: 200px;
       max-height: 120px;
@@ -102,7 +101,6 @@
             <label>本文 *</label>
             <textarea id="news-content-ja" required rows="5" placeholder="本文を入力"></textarea>
           </div>
-          <!-- 💡 追加：自由な画像ファイル選択フィールド -->
           <div class="form-group">
             <label>添付画像（任意）</label>
             <input type="file" id="news-image" accept="image/*">
@@ -128,7 +126,6 @@
       try {
         let imageUrl = null;
 
-        // 1. 画像がセットされている場合は先にStorageへ登録をかける
         if (imageFile) {
           const fileExt = imageFile.name.split('.').pop();
           const fileName = `${Date.now()}.${fileExt}`;
@@ -149,7 +146,6 @@
           }
         }
 
-        // 2. 親テーブル(news)への書き込み
         const { data: newNews, error: newsError } = await db
           .from('news')
           .insert([{ image_url: imageUrl }])
@@ -157,7 +153,6 @@
           .single();
         if (newsError) throw newsError;
 
-        // 3. 翻訳テーブル(news_translations)への言語マッピング書き込み
         const { error: transError } = await db.from('news_translations').insert([
           { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
@@ -177,10 +172,10 @@
     async function fetchGlobalNews() {
       const container = document.getElementById('news-container');
       try {
-        // 白紙化・エラー防止ロジック（テーブルが直接リレーションされていない場合も個別にマッピングして安全に結合）
+        // 💡 400エラー対策：selectの構文をシンプルなアスタリスク全取得に変更
         const { data: newsList, error } = await db
           .from('news')
-          .select(`id, created_at, image_url`)
+          .select('*')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -219,7 +214,6 @@
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
         
-        // 画像がある場合は確認用サムネイルを表示
         let imgHtml = '';
         if (item.image_url) {
           imgHtml = `<img src="${item.image_url}" class="news-img-preview" alt="添付画像">`;
