@@ -185,6 +185,12 @@
       padding: 20px 10px;
       border-bottom: 1px solid #222;
       color: #fff;
+      cursor: pointer; /* 💡 タップ可能であることがわかるように変更 */
+      transition: background 0.2s;
+    }
+
+    .news-item:hover {
+      background: #1a1a1a; /* 💡 ホバー時に少し明るく */
     }
 
     .news-meta {
@@ -212,6 +218,77 @@
       font-size: 14px;
       line-height: 1.6;
       margin: 0;
+      white-space: pre-wrap;
+      /* 💡 リスト上では3行までに制限（詳細はポップアップで読ませる） */
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* 💡 詳細表示用モーダルのスタイル */
+    .news-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 10000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .news-modal-content {
+      background: #1c1c1c;
+      border: 1px solid #c5a059;
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      padding: 25px;
+      box-sizing: border-box;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .news-modal-close {
+      position: absolute;
+      top: 15px; right: 20px;
+      font-size: 28px;
+      color: #999;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .news-modal-close:hover { color: #fff; }
+
+    .news-modal-img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      display: none; /* 画像があるときだけJSで表示 */
+    }
+
+    .news-modal-title {
+      font-size: 22px;
+      color: #c5a059;
+      margin-bottom: 10px;
+      font-family: "Yu Mincho", serif;
+    }
+
+    .news-modal-date {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 20px;
+    }
+
+    .news-modal-text {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #fff;
       white-space: pre-wrap;
     }
 
@@ -316,18 +393,34 @@
       <div id="news-container" style="margin-bottom: 50px;"></div>
     </div>
 
+    <!-- 💡 追加：詳細表示用のモーダルHTML構造 -->
+    <div id="news-detail-modal" class="news-modal" onclick="closeNewsModal()">
+      <div class="news-modal-content" onclick="event.stopPropagation()">
+        <span class="news-modal-close" onclick="closeNewsModal()">&times;</span>
+        <img id="modal-img" class="news-modal-img" src="" alt="ニュース画像">
+        <div id="modal-date" class="news-modal-date"></div>
+        <h3 id="modal-title" class="news-modal-title"></h3>
+        <p id="modal-text" class="news-modal-text"></p>
+      </div>
+    </div>
+
     <script>
+    // 💡 グローバルで取得データを保持する配列
+    let fetchedNewsData = [];
+
     document.addEventListener('DOMContentLoaded', () => {
       fetchGlobalNews();
     });
 
     async function fetchGlobalNews() {
       try {
+        // バックエンド(Supabase)から image_url も一緒にセレクトするように変更
         const { data: newsList, error } = await db
           .from('news')
           .select(`
             id,
             created_at,
+            image_url, 
             news_translations!inner (
               title,
               content
@@ -337,7 +430,9 @@
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        renderNewsList(newsList);
+        
+        fetchedNewsData = newsList || []; // データを保持
+        renderNewsList(fetchedNewsData);
       } catch (error) {
         console.error('ニュース取得エラー:', error);
       }
@@ -362,6 +457,9 @@
 
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
+        // 💡 クリックイベントを追加して詳細を開けるように設定
+        newsItem.onclick = () => openNewsModal(item.id);
+        
         newsItem.innerHTML = `
           <div class="news-meta">
             <span class="news-date">${dateStr}</span>
@@ -371,6 +469,44 @@
         `;
         container.appendChild(newsItem);
       });
+    }
+
+    // 💡 追加：詳細ポップアップを開く処理
+    function openNewsModal(newsId) {
+      const item = fetchedNewsData.find(n => n.id === newsId);
+      if (!item) return;
+
+      const translation = item.news_translations[0];
+      if (!translation) return;
+
+      const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {
+        year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
+      });
+
+      // 各要素にデータを流し込む
+      document.getElementById('modal-title').innerText = translation.title;
+      document.getElementById('modal-date').innerText = dateStr;
+      document.getElementById('modal-text').innerText = translation.content;
+
+      // 画像の有無によって表示を切り替える
+      const modalImg = document.getElementById('modal-img');
+      if (item.image_url) {
+        modalImg.src = item.image_url;
+        modalImg.style.display = 'block';
+      } else {
+        modalImg.style.display = 'none';
+        modalImg.src = '';
+      }
+
+      // モーダルを表示
+      document.getElementById('news-detail-modal').style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // 背後のスクロールを固定
+    }
+
+    // 💡 追加：詳細ポップアップを閉じる処理
+    function closeNewsModal() {
+      document.getElementById('news-detail-modal').style.display = 'none';
+      document.body.style.overflow = ''; // スクロール固定を解除
     }
 
     function escapeHtml(str) {
