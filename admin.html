@@ -137,8 +137,7 @@
             .upload(filePath, imageFile);
 
           if (uploadError) {
-            // RLSポリシー違反などが発生した場合はここで明確にキャッチして処理を止めます
-            throw new Error(`画像のアップロードに失敗しました。SupabaseのStorageにて「news-bucket」のRLSポリシー(INSERT)が許可されているか確認してください。詳細: ${uploadError.message}`);
+            throw new Error(`画像のアップロードに失敗しました。詳細: ${uploadError.message}`);
           }
 
           // 公開URLの取得
@@ -148,13 +147,18 @@
           imageUrl = publicUrlData.publicUrl;
         }
 
-        // 親テーブル(news)へ追加
-        const { data: newNews, error: newsError } = await db
+        // 💡 400エラー対策：親テーブル(news)へ追加したあと、シンプルな select('*') に変更
+        const { data: newNewsArray, error: newsError } = await db
           .from('news')
           .insert([{ image_url: imageUrl }])
-          .select()
-          .single();
+          .select('*');
+          
         if (newsError) throw newsError;
+        if (!newNewsArray || newNewsArray.length === 0) {
+          throw new Error("ニュースの登録に失敗しました。データが返されませんでした。");
+        }
+        
+        const newNews = newNewsArray[0];
 
         // 翻訳テーブル(news_translations)へ追加
         const { error: transError } = await db.from('news_translations').insert([
@@ -173,35 +177,34 @@
       }
     }
 
-async function fetchGlobalNews() {
-  const container = document.getElementById('news-container');
-  try {
-    // 💡 ここを完全にクリアに書き換えます
-    const { data: newsList, error } = await db
-      .from('news')
-      .select('*')
-      .order('created_at', { ascending: false });
+    async function fetchGlobalNews() {
+      const container = document.getElementById('news-container');
+      try {
+        const { data: newsList, error } = await db
+          .from('news')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-    if (error) throw error;
+        if (error) throw error;
 
-    const { data: transList, error: transError } = await db
-      .from('news_translations')
-      .select('news_id, title, content')
-      .eq('lang', 'ja');
+        const { data: transList, error: transError } = await db
+          .from('news_translations')
+          .select('news_id, title, content')
+          .eq('lang', 'ja');
 
-    if (transError) throw transError;
+        if (transError) throw transError;
 
-    const safeNewsData = (newsList || []).map(item => {
-      const trans = (transList || []).find(t => t.news_id === item.id);
-      return { ...item, news_translations: trans ? [trans] : [] };
-    });
+        const safeNewsData = (newsList || []).map(item => {
+          const trans = (transList || []).find(t => t.news_id === item.id);
+          return { ...item, news_translations: trans ? [trans] : [] };
+        });
 
-    renderNewsList(safeNewsData);
-  } catch (error) {
-    console.error(error);
-    container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。構造を確認してください。</p>';
-  }
-}
+        renderNewsList(safeNewsData);
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = '<p style="color: #ff4d4d; text-align: center;">データの取得に失敗しました。構造を確認してください。</p>';
+      }
+    }
 
     function renderNewsList(newsList) {
       const container = document.getElementById('news-container');
