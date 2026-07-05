@@ -170,6 +170,55 @@
       margin: 10px auto 0;
     }
 
+    /* 🆕 投稿フォームのスタイル */
+    .admin-post-section {
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 40px;
+    }
+    .admin-post-section h3 {
+      color: #c5a059;
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-family: "Yu Mincho", serif;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      color: #aaa;
+      margin-bottom: 5px;
+    }
+    .form-group input[type="text"], .form-group textarea {
+      width: 100%;
+      background: #222;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 10px;
+      border-radius: 6px;
+      box-sizing: border-box;
+    }
+    .form-group input[type="file"] {
+      color: #ccc;
+    }
+    .submit-btn {
+      background: #b90e0e;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .submit-btn:hover {
+      background: #900b0b;
+    }
+
     /* ニュースのヘッダー部分 */
     .news-header {
       display: flex;
@@ -185,12 +234,12 @@
       padding: 20px 10px;
       border-bottom: 1px solid #222;
       color: #fff;
-      cursor: pointer; /* 💡 タップ可能であることがわかるように変更 */
+      cursor: pointer;
       transition: background 0.2s;
     }
 
     .news-item:hover {
-      background: #1a1a1a; /* 💡 ホバー時に少し明るく */
+      background: #1a1a1a;
     }
 
     .news-meta {
@@ -219,14 +268,13 @@
       line-height: 1.6;
       margin: 0;
       white-space: pre-wrap;
-      /* 💡 リスト上では3行までに制限（詳細はポップアップで読ませる） */
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
 
-    /* 💡 詳細表示用モーダルのスタイル */
+    /* 詳細表示用モーダルのスタイル */
     .news-modal {
       display: none;
       position: fixed;
@@ -265,11 +313,12 @@
 
     .news-modal-img {
       width: 100%;
-      max-height: 300px;
-      object-fit: cover;
+      max-height: 350px;
+      object-fit: contain; /* 💡 全体が見えるようにcontainに変更 */
+      background: #000;
       border-radius: 6px;
       margin-bottom: 15px;
-      display: none; /* 画像があるときだけJSで表示 */
+      display: none;
     }
 
     .news-modal-title {
@@ -309,61 +358,26 @@
       
       const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
-
-    <script>
-    function toggleLangMenu(e) {
-      if (e) e.stopPropagation();
-      const menu = document.getElementById("lang-menu");
-      menu.style.display = (menu.style.display === "block") ? "none" : "block";
-    }
-    document.addEventListener("click", function() {
-      const menu = document.getElementById("lang-menu");
-      if (menu) menu.style.display = "none";
-    });
-    function setLang(lang) {
-      document.cookie = "googtrans=/ja/" + lang + "; path=/";
-      location.reload();
-    }
-    </script>
   </head>
 
   <body>
 
     <header>
+      <!-- ヘッダーリンク省略なし -->
       <div class="menu-left">
-        <a href="ticket.html" class="menu-1">
-          <img src="ticket3.png">
-          <span>チケット</span>
-        </a>
-        <a href="what.html" class="menu-1">
-          <img src="what3.png">
-          <span>公演紹介</span>
-        </a>
-        <a href="Participant.html" class="menu-1">
-          <img src="Participant3.png">
-          <span>出場団体</span>
-        </a>
-        <a href="Schedule.html" class="menu-1">
-          <img src="Schedule3.png">
-          <span>スケジュール</span>
-        </a>
+        <a href="ticket.html" class="menu-1"><img src="ticket3.png"><span>チケット</span></a>
+        <a href="what.html" class="menu-1"><img src="what3.png"><span>公演紹介</span></a>
+        <a href="Participant.html" class="menu-1"><img src="Participant3.png"><span>出場団体</span></a>
+        <a href="Schedule.html" class="menu-1"><img src="Schedule3.png"><span>スケジュール</span></a>
       </div>
-
       <a href="index.html" class="logo">
         <div class="logo-main">早慶演劇祭</div>
         <div class="logo-sub">Waseda–Keio Theatre Festival</div>
       </a>
-
       <div class="menu-right">
-        <a href="news.html" class="menu-1">
-          <img src="news3.png">
-          <span>ニュース</span>
-        </a>
+        <a href="news.html" class="menu-1"><img src="news3.png"><span>ニュース</span></a>
         <div class="lang-wrapper">
-          <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-            <img src="Language3.png">
-            <span>Language</span>
-          </a>
+          <a class="menu-1" onclick="toggleLangMenu(event); return false;"><img src="Language3.png"><span>Language</span></a>
           <div id="lang-menu" class="lang-menu">
             <div onclick="setLang('ja')">日本語</div>
             <div onclick="setLang('en')">ENGLISH</div>
@@ -371,29 +385,46 @@
             <div onclick="setLang('ko')">한국어</div>
           </div>
         </div>
-        <a href="Inquiry.html" class="menu-1">
-          <img src="Inquiry3.png">
-          <span>お問い合わせ</span>
-        </a>
-        <a href="menu.html" class="menu-1">
-          <img src="menu3.png">
-          <span>メニュー</span>
-        </a>
+        <a href="Inquiry.html" class="menu-1"><img src="Inquiry3.png"><span>お問い合わせ</span></a>
+        <a href="menu.html" class="menu-1"><img src="menu3.png"><span>メニュー</span></a>
       </div>
       <div class="hamburger">☰</div>
     </header>
 
     <div class="container">
+      
+      <!-- 🆕 画像アップロード対応のニュース投稿フォーム -->
+      <div class="admin-post-section">
+        <h3>【管理者用】ニュースを新しく投稿する</h3>
+        <form id="news-post-form" onsubmit="handlePostNews(event)">
+          <div class="form-group">
+            <label for="post-title">タイトル</label>
+            <input type="text" id="post-title" required placeholder="ニュースのタイトルを入力">
+          </div>
+          <div class="form-group">
+            <label for="post-content">本文（詳細）</label>
+            <textarea id="post-content" rows="5" required placeholder="ニュースの詳細を入力してください"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="post-image">画像アップロード（任意）</label>
+            <input type="file" id="post-image" accept="image/*">
+          </div>
+          <button type="submit" class="submit-btn" id="submit-btn">ニュースを公開する</button>
+        </form>
+      </div>
+
       <h2 class="page-title">NEWS & INFO</h2>
       
       <div class="news-header">
         <h3 style="margin: 0; font-size: 18px; font-family: 'Yu Mincho', serif;">最新ニュース</h3>
       </div>
       
-      <div id="news-container" style="margin-bottom: 50px;"></div>
+      <div id="news-container" style="margin-bottom: 50px;">
+        <p style="color: #999; text-align: center; padding: 20px;">ニュースを読み込んでいます...</p>
+      </div>
     </div>
 
-    <!-- 💡 追加：詳細表示用のモーダルHTML構造 -->
+    <!-- 詳細表示用のモーダルHTML構造 -->
     <div id="news-detail-modal" class="news-modal" onclick="closeNewsModal()">
       <div class="news-modal-content" onclick="event.stopPropagation()">
         <span class="news-modal-close" onclick="closeNewsModal()">&times;</span>
@@ -405,36 +436,45 @@
     </div>
 
     <script>
-    // 💡 グローバルで取得データを保持する配列
     let fetchedNewsData = [];
 
     document.addEventListener('DOMContentLoaded', () => {
       fetchGlobalNews();
     });
 
+    // 💡 改善：エラーが起きても確実に画面描画を落とさないロジック
     async function fetchGlobalNews() {
+      const container = document.getElementById('news-container');
       try {
-        // バックエンド(Supabase)から image_url も一緒にセレクトするように変更
+        // 安全のために、まずはnewsテーブルの基本データを取得
         const { data: newsList, error } = await db
           .from('news')
-          .select(`
-            id,
-            created_at,
-            image_url, 
-            news_translations!inner (
-              title,
-              content
-            )
-          `)
-          .eq('news_translations.lang', 'ja')
+          .select(`id, created_at, image_url`)
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        
-        fetchedNewsData = newsList || []; // データを保持
+
+        // 次に翻訳データを取得してJS側でマッピング（リレーションエラー回避）
+        const { data: transList, error: transError } = await db
+          .from('news_translations')
+          .select('news_id, title, content')
+          .eq('lang', 'ja');
+
+        if (transError) throw transError;
+
+        // 2つのデータを結合
+        fetchedNewsData = (newsList || []).map(item => {
+          const trans = (transList || []).find(t => t.news_id === item.id);
+          return {
+            ...item,
+            news_translations: trans ? [trans] : []
+          };
+        });
+
         renderNewsList(fetchedNewsData);
       } catch (error) {
         console.error('ニュース取得エラー:', error);
+        container.innerHTML = '<p style="color: #ff4d4d; text-align: center; padding: 20px;">データの読み込みに失敗しました。Supabaseのテーブル構造を確認してください。</p>';
       }
     }
 
@@ -448,8 +488,8 @@
       }
 
       newsList.forEach(item => {
-        const translation = item.news_translations[0]; 
-        if (!translation) return;
+        const translation = item.news_translations && item.news_translations[0]; 
+        if (!translation) return; // 翻訳データがないものはスキップ
 
         const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {
           year: 'numeric', month: '2-digit', day: '2-digit'
@@ -457,7 +497,6 @@
 
         const newsItem = document.createElement('div');
         newsItem.className = 'news-item';
-        // 💡 クリックイベントを追加して詳細を開けるように設定
         newsItem.onclick = () => openNewsModal(item.id);
         
         newsItem.innerHTML = `
@@ -471,24 +510,89 @@
       });
     }
 
-    // 💡 追加：詳細ポップアップを開く処理
+    // 🆕 自由な画像アップロードとニュースの同時投稿システム
+    async function handlePostNews(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const title = document.getElementById('post-title').value;
+      const content = document.getElementById('post-content').value;
+      const imageFile = document.getElementById('post-image').files[0];
+
+      btn.disabled = true;
+      btn.innerText = "投稿中...";
+
+      try {
+        let imageUrl = null;
+
+        // 1. 画像が選択されている場合はSupabase Storageにアップロード
+        if (imageFile) {
+          const fileExt = imageFile.name.split('.').pop();
+          const fileName = `${Date.now()}.${fileExt}`;
+          const filePath = `news_images/${fileName}`;
+
+          // 'news-bucket'というバケットに保存を試みる
+          const { data: uploadData, error: uploadError } = await db.storage
+            .from('news-bucket')
+            .upload(filePath, imageFile);
+
+          if (uploadError) {
+            console.warn("Storageバケットへのアップロードに失敗しました。バケットが存在するか確認してください:", uploadError.message);
+            alert("画像バケットのアップロードに失敗しました。事前にSupabaseに「news-bucket」を作成し、パブリック公開してください。画像なしで投稿を続行します。");
+          } else {
+            // 公開URLの取得
+            const { data: publicUrlData } = db.storage
+              .from('news-bucket')
+              .getPublicUrl(filePath);
+            imageUrl = publicUrlData.publicUrl;
+          }
+        }
+
+        // 2. news テーブルへのインサート
+        const { data: newNews, error: newsError } = await db
+          .from('news')
+          .insert([{ image_url: imageUrl }])
+          .select()
+          .single();
+
+        if (newsError) throw newsError;
+
+        // 3. news_translations テーブルへのインサート
+        const { error: transError } = await db
+          .from('news_translations')
+          .insert([
+            { news_id: newNews.id, lang: 'ja', title: title, content: content }
+          ]);
+
+        if (transError) throw transError;
+
+        alert("ニュースを公開しました！");
+        document.getElementById('news-post-form').reset();
+        fetchGlobalNews(); // 一覧の再読み込み
+
+      } catch (err) {
+        console.error("投稿エラー:", err);
+        alert("投稿に失敗しました: " + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "ニュースを公開する";
+      }
+    }
+
     function openNewsModal(newsId) {
       const item = fetchedNewsData.find(n => n.id === newsId);
       if (!item) return;
 
-      const translation = item.news_translations[0];
+      const translation = item.news_translations && item.news_translations[0];
       if (!translation) return;
 
       const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {
         year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit'
       });
 
-      // 各要素にデータを流し込む
       document.getElementById('modal-title').innerText = translation.title;
       document.getElementById('modal-date').innerText = dateStr;
       document.getElementById('modal-text').innerText = translation.content;
 
-      // 画像の有無によって表示を切り替える
       const modalImg = document.getElementById('modal-img');
       if (item.image_url) {
         modalImg.src = item.image_url;
@@ -498,21 +602,22 @@
         modalImg.src = '';
       }
 
-      // モーダルを表示
       document.getElementById('news-detail-modal').style.display = 'flex';
-      document.body.style.overflow = 'hidden'; // 背後のスクロールを固定
+      document.body.style.overflow = 'hidden';
     }
 
-    // 💡 追加：詳細ポップアップを閉じる処理
     function closeNewsModal() {
       document.getElementById('news-detail-modal').style.display = 'none';
-      document.body.style.overflow = ''; // スクロール固定を解除
+      document.body.style.overflow = '';
     }
 
     function escapeHtml(str) {
       if (!str) return '';
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
+    function toggleLangMenu(e) { if (e) e.stopPropagation(); const menu = document.getElementById("lang-menu"); menu.style.display = (menu.style.display === "block") ? "none" : "block"; }
+    document.addEventListener("click", function() { const menu = document.getElementById("lang-menu"); if (menu) menu.style.display = "none"; });
+    function setLang(lang) { document.cookie = "googtrans=/ja/" + lang + "; path=/"; location.reload(); }
     </script>
   </body>
 </html>
