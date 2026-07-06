@@ -42,6 +42,10 @@
             <input type="text" id="news-title" required>
           </div>
           <div class="form-group">
+            <label>画像URL (任意)</label>
+            <input type="text" id="news-img-url" placeholder="例: ticket3.png や https://... などの画像のURL">
+          </div>
+          <div class="form-group">
             <label>本文 *</label>
             <textarea id="news-content" rows="4" required></textarea>
           </div>
@@ -57,23 +61,27 @@
         const { data } = await db.from('news').select(`id, category, news_translations!inner(title)`).eq('news_translations.lang', 'ja').order('created_at', {ascending:false});
         const container = document.getElementById('admin-news-list');
         container.innerHTML = '';
-        data.forEach(item => {
-          container.innerHTML += `
-            <div class="news-item">
-              <div><strong>[${item.category}]</strong> ${item.news_translations[0].title}</div>
-              <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
-            </div>
-          `;
-        });
+        if(data) {
+          data.forEach(item => {
+            container.innerHTML += `
+              <div class="news-item">
+                <div><strong>[${item.category || 'トピックス'}]</strong> ${item.news_translations[0].title}</div>
+                <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
+              </div>
+            `;
+          });
+        }
       }
 
       async function submitNews(event) {
         event.preventDefault();
         const category = document.getElementById('news-category').value;
         const title = document.getElementById('news-title').value;
+        const imageUrl = document.getElementById('news-img-url').value;
         const content = document.getElementById('news-content').value;
 
-        const { data: newNews } = await db.from('news').insert([{ category }]).select().single();
+        // 🌟 image_urlも一緒にデータベースに保存する
+        const { data: newNews } = await db.from('news').insert([{ category, image_url: imageUrl }]).select().single();
         await db.from('news_translations').insert([{ news_id: newNews.id, lang: 'ja', title, content }]);
         
         alert('投稿しました！');

@@ -8,140 +8,54 @@
     <style>
       body {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         background: #fcfbfa;
         color: #333;
         padding-bottom: 60px;
       }
-      .container {
-        max-width: 900px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      .breadcrumb {
-        font-size: 13px;
-        color: #888;
-        margin-bottom: 10px;
-      }
-      .page-title {
-        font-size: 28px;
-        font-weight: bold;
-        margin: 0 0 30px 0;
-        color: #111;
-      }
-      /* タブ（カテゴリー）スタイル */
-      .category-tabs {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-bottom: 30px;
-        border-bottom: 1px solid #eaeaea;
-        padding-bottom: 20px;
-      }
-      .tab-btn {
-        background: #f1f0ea;
-        color: #555;
-        border: none;
-        padding: 8px 18px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        transition: 0.2s;
-      }
-      .tab-btn:hover {
-        background: #e5e4de;
-      }
-      .tab-btn.active {
-        background: #111;
-        color: #fff;
-      }
-      /* ニュースリストスタイル */
-      .news-list {
-        border-top: 1px solid #eaeaea;
-      }
-      .news-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 10px;
-        border-bottom: 1px solid #eaeaea;
-        text-decoration: none;
-        color: inherit;
-        transition: background 0.2s;
-      }
-      .news-item:hover {
-        background: #faf9f6;
-      }
-      .news-left-box {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        flex: 1;
-      }
-      .news-date-tag {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        width: 110px;
-        flex-shrink: 0;
-      }
-      .news-date {
-        font-size: 13px;
-        color: #888;
-        font-family: monospace, sans-serif;
-      }
-      .news-tag {
-        display: inline-block;
-        font-size: 11px;
-        font-weight: bold;
-        padding: 4px 10px;
-        border-radius: 12px;
-        text-align: center;
-        width: fit-content;
-      }
-      /* カテゴリーごとの色分け */
+      .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+      .breadcrumb { font-size: 13px; color: #888; margin-bottom: 10px; }
+      .page-title { font-size: 28px; font-weight: bold; margin: 0 0 30px 0; color: #111; }
+      
+      /* カテゴリータブ */
+      .category-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 1px solid #eaeaea; padding-bottom: 20px; }
+      .tab-btn { background: #f1f0ea; color: #555; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
+      .tab-btn:hover { background: #e5e4de; }
+      .tab-btn.active { background: #111; color: #fff; }
+      
+      /* ニュースリスト */
+      .news-list { border-top: 1px solid #eaeaea; }
+      .news-item { display: flex; align-items: center; justify-content: space-between; padding: 20px 10px; border-bottom: 1px solid #eaeaea; cursor: pointer; transition: background 0.2s; }
+      .news-item:hover { background: #faf9f6; }
+      .news-left-box { display: flex; align-items: center; gap: 20px; flex: 1; }
+      .news-date-tag { display: flex; flex-direction: column; gap: 5px; width: 110px; flex-shrink: 0; }
+      .news-date { font-size: 13px; color: #888; font-family: monospace; }
+      .news-tag { display: inline-block; font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 12px; text-align: center; width: fit-content; }
+      
+      /* タグの色分け */
       .tag-ticket { background: #dbeafe; color: #1e40af; }
       .tag-info { background: #fef3c7; color: #92400e; }
       .tag-topics { background: #f3f4f6; color: #374151; }
       .tag-notice { background: #fee2e2; color: #991b1b; }
       
-      .news-title {
-        font-size: 15px;
-        font-weight: 600;
-        color: #222;
-        margin: 0;
-        line-height: 1.5;
-      }
-      .arrow-icon {
-        color: #ccc;
-        font-size: 16px;
-        padding-left: 10px;
-      }
+      .news-title { font-size: 15px; font-weight: 600; color: #222; margin: 0; line-height: 1.5; }
+      .arrow-icon { color: #ccc; font-size: 16px; padding-left: 10px; }
+      
       /* ページネーション */
-      .pagination {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        margin-top: 40px;
-      }
-      .page-btn {
-        background: #f1f0ea;
-        color: #333;
-        border: none;
-        width: 36px;
-        height: 36px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .page-btn.active {
-        background: #111;
-        color: #fff;
-      }
+      .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
+      .page-btn { background: #f1f0ea; color: #333; border: none; width: 36px; height: 36px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+      .page-btn.active { background: #111; color: #fff; }
+
+      /* 🌟 タップした時のポップアップ（モーダル） */
+      .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+      .modal-overlay.active { display: flex; }
+      .modal-box { background: white; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; border-radius: 12px; padding: 30px; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: fadeIn 0.3s ease; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+      .modal-close { position: absolute; top: 15px; right: 20px; font-size: 24px; background: none; border: none; cursor: pointer; color: #888; }
+      .modal-meta { display: flex; gap: 15px; align-items: center; margin-bottom: 15px; }
+      .modal-title { font-size: 22px; font-weight: bold; margin: 0 0 20px 0; color: #111; line-height: 1.4; }
+      .modal-img { width: 100%; max-height: 350px; object-fit: contain; background: #f7f7f7; border-radius: 8px; margin-bottom: 20px; display: none; }
+      .modal-content { font-size: 15px; line-height: 1.8; color: #444; white-space: pre-wrap; margin: 0; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -162,15 +76,27 @@
       </div>
 
       <div id="news-list" class="news-list"></div>
-
       <div id="pagination" class="pagination"></div>
+    </div>
+
+    <div id="news-modal" class="modal-overlay" onclick="closeModal()">
+      <div class="modal-box" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeModal()">×</button>
+        <div class="modal-meta">
+          <span id="modal-date" class="news-date"></span>
+          <span id="modal-tag" class="news-tag"></span>
+        </div>
+        <h3 id="modal-title" class="modal-title"></h3>
+        <img id="modal-img" class="modal-img" src="" alt="ニュース画像">
+        <p id="modal-content" class="modal-content"></p>
+      </div>
     </div>
 
     <script>
       let allNews = [];
       let currentCategory = 'すべて';
       let currentPage = 1;
-      const itemsPerPage = 5; // 1ページあたりの件数
+      const itemsPerPage = 5;
 
       document.addEventListener('DOMContentLoaded', fetchNews);
 
@@ -178,22 +104,19 @@
         try {
           const { data, error } = await db
             .from('news')
-            .select(`id, created_at, category, news_translations!inner (title, content)`)
+            .select(`id, created_at, category, image_url, news_translations!inner (title, content)`)
             .eq('news_translations.lang', 'ja')
             .order('created_at', { ascending: false });
 
           if (error) throw error;
           allNews = data;
           renderData();
-        } catch (error) {
-          console.error(error);
-        }
+        } catch (error) { console.error(error); }
       }
 
       function filterCategory(cat) {
         currentCategory = cat;
         currentPage = 1;
-        // タブのアクティブ変更
         document.querySelectorAll('.tab-btn').forEach(btn => {
           btn.classList.toggle('active', btn.innerText === cat);
         });
@@ -201,37 +124,30 @@
       }
 
       function renderData() {
-        // カテゴリーで絞り込み
-        const filtered = currentCategory === 'すべて' 
-          ? allNews 
-          : allNews.filter(item => item.category === currentCategory);
+        const filtered = currentCategory === 'すべて' ? allNews : allNews.filter(item => item.category === currentCategory);
+        const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+        const pageItems = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-        // ページネーション計算
-        const totalItems = filtered.length;
-        const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const pageItems = filtered.slice(start, end);
-
-        // リスト描画
         const listContainer = document.getElementById('news-list');
         listContainer.innerHTML = '';
 
         if (pageItems.length === 0) {
           listContainer.innerHTML = '<p style="padding:20px; color:#888; text-align:center;">該当するニュースはありません。</p>';
         } else {
-          pageItems.forEach(item => {
+          pageItems.forEach((item, index) => {
             const trans = item.news_translations[0];
             const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '.');
             
-            // タグクラスの選定
             let tagClass = 'tag-topics';
             if (item.category === 'チケット') tagClass = 'tag-ticket';
             if (item.category === '公演情報') tagClass = 'tag-info';
             if (item.category === '重要なお知らせ') tagClass = 'tag-notice';
 
+            // 全体データの中のインデックス番号を特定
+            const globalIndex = allNews.findIndex(n => n.id === item.id);
+
             listContainer.innerHTML += `
-              <div class="news-item">
+              <div class="news-item" onclick="openModal(${globalIndex})">
                 <div class="news-left-box">
                   <div class="news-date-tag">
                     <span class="news-date">${dateStr}</span>
@@ -245,7 +161,6 @@
           });
         }
 
-        // ページボタン描画
         const pager = document.getElementById('pagination');
         pager.innerHTML = '';
         for (let i = 1; i <= totalPages; i++) {
@@ -253,15 +168,46 @@
         }
       }
 
-      function changePage(page) {
-        currentPage = page;
-        renderData();
-        window.scrollTo(0, 0);
+      // 🌟 ポップアップを開く関数
+      function openModal(index) {
+        const item = allNews[index];
+        const trans = item.news_translations[0];
+        const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '.');
+
+        document.getElementById('modal-date').innerText = dateStr;
+        
+        const tag = document.getElementById('modal-tag');
+        tag.innerText = item.category || 'トピックス';
+        tag.className = 'news-tag';
+        if (item.category === 'チケット') tag.classList.add('tag-ticket');
+        if (item.category === '公演情報') tag.classList.add('tag-info');
+        if (item.category === '重要なお知らせ') tag.classList.add('tag-notice');
+        if (!item.category || item.category === 'トピックス') tag.classList.add('tag-topics');
+
+        document.getElementById('modal-title').innerText = trans.title;
+        document.getElementById('modal-content').innerText = trans.content;
+
+        // 画像URLがある場合だけ画像を表示する
+        const imgEl = document.getElementById('modal-img');
+        if (item.image_url && item.image_url.trim() !== "") {
+          imgEl.src = item.image_url;
+          imgEl.style.display = "block";
+        } else {
+          imgEl.style.display = "none";
+        }
+
+        document.getElementById('news-modal').classList.add('active');
+        document.body.style.overflow = "hidden"; // 背景スクロール禁止
       }
 
-      function escapeHtml(str) {
-        return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : '';
+      // 🌟 ポップアップを閉じる関数
+      function closeModal() {
+        document.getElementById('news-modal').classList.remove('active');
+        document.body.style.overflow = "auto";
       }
+
+      function changePage(page) { currentPage = page; renderData(); window.scrollTo(0, 0); }
+      function escapeHtml(str) { return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : ''; }
     </script>
   </body>
 </html>
