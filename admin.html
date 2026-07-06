@@ -62,7 +62,6 @@
     .form-group input, .form-group textarea, .form-group select {
       width: 100%; padding: 10px; background: #222; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box;
     }
-    /* ファイル選択ボタンを見やすく調整 */
     .form-group input[type="file"] {
       background: #333;
       border: 1px dashed #666;
@@ -78,9 +77,8 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      // 正しいURLとキーを設定し直しました
       const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8"; 
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8"; 
       const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
   </head>
@@ -115,8 +113,14 @@
           </div>
           
           <div class="form-group">
-            <label>本文 *</label>
-            <textarea id="news-content-ja" required rows="5" placeholder="ニュースの本文を入力してください"></textarea>
+            <label>一覧用の一言（本文） *</label>
+            <textarea id="news-content-ja" required rows="3" placeholder="カード一覧画面に表示される短い説明文を入力してください"></textarea>
+          </div>
+
+          <!-- 🌟 長い詳細説明の入力欄を復活 -->
+          <div class="form-group">
+            <label>タップ後の詳細説明 (任意)</label>
+            <textarea id="news-detail-content-ja" rows="6" placeholder="ニュースをタップしたポップアップ内に表示する、詳細な本文を入力してください（空欄の場合は上記の一言と同じ内容が表示されます）"></textarea>
           </div>
 
           <button type="submit" class="submit-btn">ニュースを掲載する</button>
@@ -133,37 +137,43 @@
       const fileInput = document.getElementById('news-file');
       const titleJa = document.getElementById('news-title-ja').value;
       const contentJa = document.getElementById('news-content-ja').value;
+      const detailContentJa = document.getElementById('news-detail-content-ja').value; // 追加
 
       try {
         let imageUrl = "";
 
-        // 画像が選ばれている場合は保存処理を行う
         if (fileInput && fileInput.files.length > 0) {
           const file = fileInput.files[0];
           const fileExt = file.name.split('.').pop();
           const fileName = `${Date.now()}.${fileExt}`;
           const filePath = `${fileName}`;
 
+          // ⭕ 保存先を「news-bucket」に一元修正！
           const { data: uploadData, error: uploadError } = await db.storage
-            .from('news-images')
+            .from('news-bucket')
             .upload(filePath, file);
 
           if (uploadError) throw uploadError;
 
           const { data: publicUrlData } = db.storage
-            .from('news-images')
+            .from('news-bucket')
             .getPublicUrl(filePath);
           
           imageUrl = publicUrlData.publicUrl;
         }
 
-        // 親テーブル（news）へカテゴリーと画像URLを登録
         const { data: newNews, error: newsError } = await db.from('news').insert([{ category, image_url: imageUrl }]).select().single();
         if (newsError) throw newsError;
 
-        // 日本語テーブルへ登録
+        // 🌟 detail_content も一緒にデータベースへ登録するように修正
         const { error: transError } = await db.from('news_translations').insert([
-          { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa }
+          { 
+            news_id: newNews.id, 
+            lang: 'ja', 
+            title: titleJa, 
+            content: contentJa,
+            detail_content: detailContentJa ? detailContentJa : null
+          }
         ]);
         if (transError) throw transError;
 
