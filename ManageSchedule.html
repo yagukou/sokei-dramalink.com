@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>早慶演劇祭リンク - 公演設定・登録</title>
+    <style>
+        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+        h1 { border-bottom: 3px solid #333; padding-bottom: 10px; margin-bottom: 30px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
+        input[type="text"], input[type="datetime-local"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        textarea { height: 120px; resize: vertical; }
+        .btn-submit { background-color: #2ed573; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .btn-submit:hover { background-color: #26af5f; }
+        .nav-link { display: inline-block; margin-top: 20px; color: #57606f; text-decoration: none; }
+        .nav-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>🎭 新しい公演の設定・登録</h1>
+
+    <!-- 公演情報を入力してバックエンド（Python）に送るフォーム -->
+    <form method="POST">
+        <!-- Djangoのセキュリティ対策用のお守りコード（必須） -->
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="title">公演名・タイトル</label>
+            <input type="text" id="title" name="title" placeholder="例：ロミオとジュリエット" required>
+        </div>
+
+        <div class="form-group">
+            <label for="theater_group">主宰劇団名</label>
+            <input type="text" id="theater_group" name="theater_group" placeholder="例：◯◯舞台 / 慶應◯◯" required>
+        </div>
+
+        <div class="form-group">
+            <label for="start_date">開演日時（スタート）</label>
+            <input type="datetime-local" id="start_date" name="start_date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="end_date">終演日時（千穐楽・ラスト）</label>
+            <input type="datetime-local" id="end_date" name="end_date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">公演の紹介文・詳細</label>
+            <textarea id="description" name="description" placeholder="あらすじやチケット情報などを入力してください。"></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit">🚀 この内容で公演を設定する</button>
+    </form>
+
+    <a href="/schedule/" class="nav-link">← スケジュール一覧ページに戻る</a>
+
+</body>
+</html>
