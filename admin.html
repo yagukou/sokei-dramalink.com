@@ -19,6 +19,8 @@
     .form-group input, .form-group textarea, .form-group select {
       width: 100%; padding: 10px; background: #222; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box;
     }
+    /* 🌟 ファイル選択ボタンがしっかり見えるように調整 */
+    .form-group input[type="file"] { background: #333; border: 1px dashed #666; padding: 10px; cursor: pointer; }
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #c5a059; outline: none; }
     .submit-btn { background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
     .submit-btn:hover { background: #d61515; }
@@ -30,7 +32,7 @@
   </head>
   <body>
     <div class="admin-container">
-      <h2>📢 ニュース管理画面 (編集・削除)</h2>
+      <h2>📢 ニュース管理画面</h2>
       <div id="news-container"></div>
 
       <div class="form-section">
@@ -48,30 +50,18 @@
           </div>
 
           <div class="form-group">
-            <label>画像URL (任意)</label>
-            <input type="text" id="news-img-url" placeholder="例: ticket3.png や https://... などのURLパス">
+            <label>画像ファイルを選択 (任意)</label>
+            <input type="file" id="news-file" accept="image/*">
           </div>
 
-          <hr style="border: 0; border-top: 1px dashed #444; margin: 20px 0;">
-
           <div class="form-group">
-            <label>🇯🇵 タイトル (日本語) *</label>
-            <input type="text" id="news-title-ja" required>
+            <label>タイトル *</label>
+            <input type="text" id="news-title-ja" required placeholder="ニュースのタイトルを入力">
           </div>
+          
           <div class="form-group">
-            <label>🇯🇵 本文 (日本語) *</label>
-            <textarea id="news-content-ja" required rows="4"></textarea>
-          </div>
-
-          <hr style="border: 0; border-top: 1px dashed #444; margin: 20px 0;">
-
-          <div class="form-group">
-            <label>🇺🇸 Title (English) *</label>
-            <input type="text" id="news-title-en" required>
-          </div>
-          <div class="form-group">
-            <label>🇺🇸 Content (English) *</label>
-            <textarea id="news-content-en" required rows="4"></textarea>
+            <label>本文 *</label>
+            <textarea id="news-content-ja" required rows="5" placeholder="ニュースの本文を入力"></textarea>
           </div>
 
           <button type="submit" class="submit-btn">ニュースを掲載する</button>
@@ -85,21 +75,41 @@
     async function submitNews(event) {
       event.preventDefault();
       const category = document.getElementById('news-category').value;
-      const imageUrl = document.getElementById('news-img-url').value;
+      const fileInput = document.getElementById('news-file');
       const titleJa = document.getElementById('news-title-ja').value;
       const contentJa = document.getElementById('news-content-ja').value;
-      const titleEn = document.getElementById('news-title-en').value;
-      const contentEn = document.getElementById('news-content-en').value;
 
       try {
-        // categoryとimage_urlも一緒に親テーブルへ登録
+        let imageUrl = "";
+
+        // 画像ファイルが選択されている場合、Supabase Storageにアップロード
+        if (fileInput.files.length > 0) {
+          const file = fileInput.files[0];
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Date.now()}.${fileExt}`;
+          const filePath = `${fileName}`;
+
+          const { data: uploadData, error: uploadError } = await db.storage
+            .from('news-images')
+            .upload(filePath, file);
+
+          if (uploadError) throw uploadError;
+
+          // 公開URLを取得
+          const { data: publicUrlData } = db.storage
+            .from('news-images')
+            .getPublicUrl(filePath);
+          
+          imageUrl = publicUrlData.publicUrl;
+        }
+
+        // 親テーブル（news）へ登録
         const { data: newNews, error: newsError } = await db.from('news').insert([{ category, image_url: imageUrl }]).select().single();
         if (newsError) throw newsError;
 
-        // 日本語・英語の翻訳データを同時に子テーブルへ登録
+        // 日本語の翻訳データ（lang: 'ja'）を子テーブルへ登録
         const { error: transError } = await db.from('news_translations').insert([
-          { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa },
-          { news_id: newNews.id, lang: 'en', title: titleEn, content: contentEn }
+          { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
         if (transError) throw transError;
 
