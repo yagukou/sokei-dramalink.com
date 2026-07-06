@@ -2,62 +2,109 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>早慶演劇祭リンク - 公演スケジュール</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>早慶演劇祭リンク - スケジュール</title>
     <style>
-        /* 画面を見やすくするための簡易デザイン */
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 40px auto; padding: 0 20px; }
-        h1 { border-bottom: 3px solid #333; padding-bottom: 10px; }
-        h2 { color: #2c3e50; margin-top: 30px; }
-        .performance-card { border: 1px solid #ddd; padding: 20px; margin-bottom: 15px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        .current { border-left: 6px solid #ff4757; background-color: #fff5f6; }
-        .archive { border-left: 6px solid #747d8c; background-color: #f1f2f6; }
-        .tag { display: inline-block; padding: 3px 8px; font-size: 12px; font-weight: bold; color: white; border-radius: 3px; margin-bottom: 10px; }
-        .tag-current { background-color: #ff4757; }
-        .tag-archive { background-color: #747d8c; }
-        .date { font-size: 14px; color: #555; }
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #4f46e5; /* モダンなインディゴ */
+            --accent-live: #ef4444; /* 上演中のビビッド赤 */
+            --accent-archive: #94a3b8; /* アーカイブのグレー */
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --radius: 12px;
+        }
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 40px 20px; line-height: 1.5; }
+        .container { max-width: 900px; margin: 0 auto; }
+        
+        /* ヘッダーデザイン */
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; border-bottom: 1px solid #e2e8f0; padding-bottom: 20px; }
+        h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.05em; margin: 0; background: linear-gradient(to right, #4f46e5, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-add { background-color: var(--primary); color: white; text-decoration: none; padding: 10px 18px; font-weight: 600; border-radius: 8px; font-size: 14px; transition: all 0.2s; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(79, 70, 229, 0.3); }
+        
+        h2 { font-size: 20px; font-weight: 700; margin-top: 40px; margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+        
+        /* グリッド・カードデザイン */
+        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 1fr; } }
+        
+        .card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); border: 1px solid #f1f5f9; position: relative; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+        .card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1); }
+        
+        /* バッジ */
+        .badge { display: inline-block; padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 20px; text-transform: uppercase; margin-bottom: 12px; width: fit-content; }
+        .badge-live { background-color: #fee2e2; color: var(--accent-live); }
+        .badge-archive { background-color: #f1f5f9; color: var(--text-muted); }
+        
+        .card-title { font-size: 18px; font-weight: 700; margin: 0 0 6px 0; color: var(--text-main); }
+        .group-name { font-size: 14px; font-weight: 600; color: var(--primary); margin-bottom: 12px; }
+        .date { font-size: 13px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; margin-bottom: 12px; }
+        .desc { font-size: 14px; color: #475569; margin: 0; line-height: 1.6; }
+        
+        /* 編集ボタン */
+        .btn-edit { position: absolute; top: 20px; right: 20px; background: #f1f5f9; color: var(--text-muted); text-decoration: none; padding: 6px 12px; font-size: 12px; font-weight: 600; border-radius: 6px; transition: background 0.2s, color 0.2s; }
+        .btn-edit:hover { background: #e2e8f0; color: var(--text-main); }
+        
+        .empty-message { color: var(--text-muted); font-size: 14px; background: #f1f5f9; padding: 20px; text-align: center; border-radius: var(--radius); border: 2px dashed #cbd5e1; }
     </style>
 </head>
 <body>
 
-    <h1>公演スケジュール</h1>
+    <div class="container">
+        <header>
+            <h1>早慶演劇祭リンク</h1>
+            <a href="/schedule/add/" class="btn-add">＋ 新しい公演を設定</a>
+        </header>
 
-    <!-- 🔴 1. 現在開演中の公演セクション -->
-    <section>
-        <h2>🔥 現在開演中の公演</h2>
-        {% if current_performances %}
-            {% for play in current_performances %}
-                <div class="performance-card current">
-                    <span class="tag tag-current">上演中</span>
-                    <h3>{{ play.title }}</h3>
-                    <p><strong>主宰団体：</strong>{{ play.theater_group }}</p>
-                    <p class="date"><strong>公演期間：</strong>{{ play.start_date|date:"Y年m月d日" }} ～ {{ play.end_date|date:"Y年m月d日" }}</p>
-                    <p>{{ play.description }}</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>現在、上演中の公演はありません。</p>
-        {% endif %}
-    </section>
+        <!-- 🔴 現在開演中 -->
+        <section>
+            <h2><span style="color: var(--accent-live);">●</span> 現在開演中の公演</h2>
+            <div class="grid">
+                {% if current_performances %}
+                    {% for play in current_performances %}
+                        <div class="card">
+                            <div>
+                                <span class="badge badge-live">NOW ON STAGE</span>
+                                <a href="/schedule/edit/{{ play.pk }}/" class="btn-edit">編集</a>
+                                <h3 class="card-title">{{ play.title }}</h3>
+                                <div class="group-name">👤 {{ play.theater_group }}</div>
+                                <div class="date">📅 {{ play.start_date|date:"Y/m/d H:i" }} 〜 {{ play.end_date|date:"m/d H:i" }}</div>
+                            </div>
+                            <p class="desc">{{ play.description|truncatechars:80 }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-message">現在、上演中の公演はありません。</div>
+                {% endif %}
+            </div>
+        </section>
 
-    <hr style="margin: 40px 0; border: 0; border-top: 1px dashed #ccc;">
-
-    <!-- 📁 2. アーカイブ（過去の公演）セクション -->
-    <section>
-        <h2>📁 過去の公演（アーカイブ）</h2>
-        {% if archive_performances %}
-            {% for play in archive_performances %}
-                <div class="performance-card archive">
-                    <span class="tag tag-archive">終演</span>
-                    <h3>{{ play.title }}</h3>
-                    <p><strong>主宰団体：</strong>{{ play.theater_group }}</p>
-                    <p class="date"><strong>公演期間：</strong>{{ play.start_date|date:"Y年m月d日" }} ～ {{ play.end_date|date:"Y年m月d日" }}</p>
-                    <p>{{ play.description }}</p>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p>過去の公演データはありません。</p>
-        {% endif %}
-    </section>
+        <!-- 📁 アーカイブ -->
+        <section>
+            <h2><span style="color: var(--accent-archive);">●</span> 過去の公演（アーカイブ）</h2>
+            <div class="grid">
+                {% if archive_performances %}
+                    {% for play in archive_performances %}
+                        <div class="card" style="opacity: 0.85;">
+                            <div>
+                                <span class="badge badge-archive">ARCHIVE</span>
+                                <a href="/schedule/edit/{{ play.pk }}/" class="btn-edit">編集</a>
+                                <h3 class="card-title">{{ play.title }}</h3>
+                                <div class="group-name">👤 {{ play.theater_group }}</div>
+                                <div class="date">📅 {{ play.start_date|date:"Y/m/d" }} 〜 {{ play.end_date|date:"Y/m/d" }}</div>
+                            </div>
+                            <p class="desc">{{ play.description|truncatechars:80 }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-message">過去の公演データはありません。</div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
 
 </body>
 </html>

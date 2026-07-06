@@ -2,58 +2,81 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>早慶演劇祭リンク - 公演設定・登録</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if is_edit %}公演情報の編集{% else %}新しい公演の設定{% endif %}</title>
     <style>
-        body { font-family: 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 40px auto; padding: 0 20px; }
-        h1 { border-bottom: 3px solid #333; padding-bottom: 10px; margin-bottom: 30px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; color: #2c3e50; }
-        input[type="text"], input[type="datetime-local"], textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --primary: #4f46e5;
+            --radius: 12px;
+        }
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 40px 20px; }
+        .form-container { max-width: 550px; margin: 0 auto; background: var(--card-bg); padding: 40px; border-radius: var(--radius); box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.05); border: 1px solid #e2e8f0; }
+        
+        h1 { font-size: 24px; font-weight: 800; margin-top: 0; margin-bottom: 8px; color: var(--text-main); }
+        .subtitle { font-size: 14px; color: #64748b; margin-bottom: 32px; }
+        
+        .form-group { margin-bottom: 24px; }
+        label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; color: #334155; }
+        
+        input[type="text"], input[type="datetime-local"], textarea { width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 8px; box-sizing: border-box; font-size: 15px; background-color: #f8fafc; transition: all 0.2s; }
+        input[type="text"]:focus, input[type="datetime-local"]:focus, textarea :focus { outline: none; border-color: var(--primary); background-color: #fff; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); }
+        
         textarea { height: 120px; resize: vertical; }
-        .btn-submit { background-color: #2ed573; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 4px; cursor: pointer; width: 100%; transition: background 0.2s; }
-        .btn-submit:hover { background-color: #26af5f; }
-        .nav-link { display: inline-block; margin-top: 20px; color: #57606f; text-decoration: none; }
-        .nav-link:hover { text-decoration: underline; }
+        
+        .btn-submit { background-color: var(--primary); color: white; border: none; padding: 14px; font-size: 16px; font-weight: 700; border-radius: 8px; cursor: pointer; width: 100%; transition: background 0.2s; margin-top: 10px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2); }
+        .btn-submit:hover { background-color: #4338ca; }
+        
+        .btn-cancel { display: block; text-align: center; margin-top: 16px; color: #64748b; text-decoration: none; font-size: 14px; font-weight: 500; }
+        .btn-cancel:hover { color: var(--text-main); text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <h1>🎭 新しい公演の設定・登録</h1>
+    <div class="form-container">
+        <!-- 状況（新規 or 編集）によってタイトルを自動で切り替える -->
+        <h1>{% if is_edit %}📝 公演情報の編集{% else %}🎭 新しい公演の設定{% endif %}</h1>
+        <p class="subtitle">日時の入力に応じて、一覧とアーカイブへ自動で仕分けられます。</p>
 
-    <!-- 公演情報を入力してバックエンド（Python）に送るフォーム -->
-    <form method="POST">
-        <!-- Djangoのセキュリティ対策用のお守りコード（必須） -->
-        {% csrf_token %}
+        <form method="POST">
+            {% csrf_token %}
 
-        <div class="form-group">
-            <label for="title">公演名・タイトル</label>
-            <input type="text" id="title" name="title" placeholder="例：ロミオとジュリエット" required>
-        </div>
+            <div class="form-group">
+                <label for="title">公演名・タイトル</label>
+                <!-- value属性に既存のデータ（performance.titleなど）を指定することで、編集時に自動で文字が入ります -->
+                <input type="text" id="title" name="title" value="{{ performance.title }}" placeholder="例：ロミオとジュリエット" required>
+            </div>
 
-        <div class="form-group">
-            <label for="theater_group">主宰劇団名</label>
-            <input type="text" id="theater_group" name="theater_group" placeholder="例：◯◯舞台 / 慶應◯◯" required>
-        </div>
+            <div class="form-group">
+                <label for="theater_group">主宰劇団名</label>
+                <input type="text" id="theater_group" name="theater_group" value="{{ performance.theater_group }}" placeholder="例：◯◯舞台 / 慶應◯◯" required>
+            </div>
 
-        <div class="form-group">
-            <label for="start_date">開演日時（スタート）</label>
-            <input type="datetime-local" id="start_date" name="start_date" required>
-        </div>
+            <div class="form-group">
+                <label for="start_date">開演日時（スタート）</label>
+                <!-- Djangoの仕様に合わせて日時のフォーマットを整えて流し込みます -->
+                <input type="datetime-local" id="start_date" name="start_date" value="{{ performance.start_date|date:'Y-m-d\TH:i' }}" required>
+            </div>
 
-        <div class="form-group">
-            <label for="end_date">終演日時（千穐楽・ラスト）</label>
-            <input type="datetime-local" id="end_date" name="end_date" required>
-        </div>
+            <div class="form-group">
+                <label for="end_date">終演日時（千穐楽・ラスト）</label>
+                <input type="datetime-local" id="end_date" name="end_date" value="{{ performance.end_date|date:'Y-m-d\TH:i' }}" required>
+            </div>
 
-        <div class="form-group">
-            <label for="description">公演の紹介文・詳細</label>
-            <textarea id="description" name="description" placeholder="あらすじやチケット情報などを入力してください。"></textarea>
-        </div>
+            <div class="form-group">
+                <label for="description">公演の紹介文・詳細</label>
+                <textarea id="description" name="description" placeholder="あらすじやチケット情報などを入力してください。">{{ performance.description }}</textarea>
+            </div>
 
-        <button type="submit" class="btn-submit">🚀 この内容で公演を設定する</button>
-    </form>
+            <button type="submit" class="btn-submit">
+                {% if is_edit %}更新を保存する{% else %}🚀 この内容で公演を設定する{% endif %}
+            </button>
+        </form>
 
-    <a href="/schedule/" class="nav-link">← スケジュール一覧ページに戻る</a>
+        <a href="/schedule/" class="btn-cancel">キャンセルして戻る</a>
+    </div>
 
 </body>
 </html>
