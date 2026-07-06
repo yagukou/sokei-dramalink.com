@@ -3,31 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>【管理】ニュース投稿・削除</title>
-    <style>
-      body { font-family: sans-serif; background: #222; color: #fff; padding: 20px; }
-      .container { max-width: 800px; margin: 0 auto; }
-      .news-item { background: #333; padding: 15px; margin-bottom: 10px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
-      .delete-btn { background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-      .form-section { background: #111; padding: 20px; border-radius: 8px; margin-top: 30px; }
-      .form-group { margin-bottom: 15px; }
-      .form-group label { display: block; margin-bottom: 5px; color: #ccc; }
-      .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: #222; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box; }
-      .submit-btn { background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+    <title>【管理画面】ニュース編集・削除</title>
+    <style> 
+    body { font-family: sans-serif; background: #222; color: white; padding: 20px; }
+    .admin-container { max-width: 800px; margin: 0 auto; }
+    h2 { color: #c5a059; border-bottom: 2px solid #c5a059; padding-bottom: 10px; }
+    .news-item { background: #333; padding: 15px; margin-bottom: 15px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
+    .news-info { flex: 1; }
+    .delete-btn { background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; flex-shrink: 0; }
+    .delete-btn:hover { background: #e04343; }
+    
+    .form-section { background: #111; padding: 20px; border-radius: 8px; margin-top: 40px; border: 1px solid #444; }
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; color: #ccc; font-size: 14px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; padding: 10px; background: #222; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #c5a059; outline: none; }
+    .submit-btn { background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+    .submit-btn:hover { background: #d61515; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      const db = window.supabase.createClient("https://blviywoprvcatwwrrysi.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8");
+      const db = window.supabase.createClient("https://blviywoprvcatwwrrysi.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8");
     </script>
   </head>
   <body>
-    <div class="container">
-      <h2>📢 ニュース管理画面</h2>
-      <div id="admin-news-list"></div>
+    <div class="admin-container">
+      <h2>📢 ニュース管理画面 (編集・削除)</h2>
+      <div id="news-container"></div>
 
       <div class="form-section">
-        <h3>➕ ニュースを投稿する</h3>
-        <form onsubmit="submitNews(event)">
+        <h3>➕ 新しいニュースを掲載する</h3>
+        <form id="news-form" onsubmit="submitNews(event)">
+          
           <div class="form-group">
             <label>カテゴリー *</label>
             <select id="news-category">
@@ -37,62 +46,120 @@
               <option value="重要なお知らせ">重要なお知らせ</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>タイトル *</label>
-            <input type="text" id="news-title" required>
-          </div>
+
           <div class="form-group">
             <label>画像URL (任意)</label>
-            <input type="text" id="news-img-url" placeholder="例: ticket3.png や https://... などの画像のURL">
+            <input type="text" id="news-img-url" placeholder="例: ticket3.png や https://... などのURLパス">
+          </div>
+
+          <hr style="border: 0; border-top: 1px dashed #444; margin: 20px 0;">
+
+          <div class="form-group">
+            <label>🇯🇵 タイトル (日本語) *</label>
+            <input type="text" id="news-title-ja" required>
           </div>
           <div class="form-group">
-            <label>本文 *</label>
-            <textarea id="news-content" rows="4" required></textarea>
+            <label>🇯🇵 本文 (日本語) *</label>
+            <textarea id="news-content-ja" required rows="4"></textarea>
           </div>
+
+          <hr style="border: 0; border-top: 1px dashed #444; margin: 20px 0;">
+
+          <div class="form-group">
+            <label>🇺🇸 Title (English) *</label>
+            <input type="text" id="news-title-en" required>
+          </div>
+          <div class="form-group">
+            <label>🇺🇸 Content (English) *</label>
+            <textarea id="news-content-en" required rows="4"></textarea>
+          </div>
+
           <button type="submit" class="submit-btn">ニュースを掲載する</button>
         </form>
       </div>
     </div>
 
     <script>
-      document.addEventListener('DOMContentLoaded', fetchAdminNews);
+    document.addEventListener('DOMContentLoaded', () => { fetchGlobalNews(); });
 
-      async function fetchAdminNews() {
-        const { data } = await db.from('news').select(`id, category, news_translations!inner(title)`).eq('news_translations.lang', 'ja').order('created_at', {ascending:false});
-        const container = document.getElementById('admin-news-list');
-        container.innerHTML = '';
-        if(data) {
-          data.forEach(item => {
-            container.innerHTML += `
-              <div class="news-item">
-                <div><strong>[${item.category || 'トピックス'}]</strong> ${item.news_translations[0].title}</div>
-                <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
-              </div>
-            `;
-          });
-        }
+    async function submitNews(event) {
+      event.preventDefault();
+      const category = document.getElementById('news-category').value;
+      const imageUrl = document.getElementById('news-img-url').value;
+      const titleJa = document.getElementById('news-title-ja').value;
+      const contentJa = document.getElementById('news-content-ja').value;
+      const titleEn = document.getElementById('news-title-en').value;
+      const contentEn = document.getElementById('news-content-en').value;
+
+      try {
+        // categoryとimage_urlも一緒に親テーブルへ登録
+        const { data: newNews, error: newsError } = await db.from('news').insert([{ category, image_url: imageUrl }]).select().single();
+        if (newsError) throw newsError;
+
+        // 日本語・英語の翻訳データを同時に子テーブルへ登録
+        const { error: transError } = await db.from('news_translations').insert([
+          { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa },
+          { news_id: newNews.id, lang: 'en', title: titleEn, content: contentEn }
+        ]);
+        if (transError) throw transError;
+
+        alert('ニュースを掲載しました！');
+        document.getElementById('news-form').reset();
+        await fetchGlobalNews();
+      } catch (error) {
+        alert('掲載に失敗しました: ' + error.message);
       }
+    }
 
-      async function submitNews(event) {
-        event.preventDefault();
-        const category = document.getElementById('news-category').value;
-        const title = document.getElementById('news-title').value;
-        const imageUrl = document.getElementById('news-img-url').value;
-        const content = document.getElementById('news-content').value;
+    async function fetchGlobalNews() {
+      try {
+        const { data: newsList, error } = await db
+          .from('news')
+          .select(`id, created_at, category, news_translations!inner (title)`)
+          .eq('news_translations.lang', 'ja')
+          .order('created_at', { ascending: false });
 
-        // 🌟 image_urlも一緒にデータベースに保存する
-        const { data: newNews } = await db.from('news').insert([{ category, image_url: imageUrl }]).select().single();
-        await db.from('news_translations').insert([{ news_id: newNews.id, lang: 'ja', title, content }]);
+        if (error) throw error;
+        renderNewsList(newsList);
+      } catch (error) { console.error(error); }
+    }
+
+    function renderNewsList(newsList) {
+      const container = document.getElementById('news-container');
+      container.innerHTML = ''; 
+      if (!newsList || newsList.length === 0) {
+        container.innerHTML = '<p style="color: #aaa;">現在掲載されているニュースはありません。</p>';
+        return;
+      }
+      newsList.forEach(item => {
+        const translation = item.news_translations[0]; 
+        if (!translation) return;
+        const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year: 'numeric', month: '2-digit', day: '2-digit'});
         
-        alert('投稿しました！');
-        location.reload();
-      }
+        container.innerHTML += `
+          <div class="news-item">
+            <div class="news-info">
+              <span style="color:#c5a059; font-size:13px; margin-right:10px;">[${item.category || 'トピックス'}]</span>
+              <span style="color:#aaa; font-size:13px;">${dateStr}</span>
+              <h4 style="margin:5px 0 0 0; color:#fff;">${escapeHtml(translation.title)}</h4>
+            </div>
+            <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
+          </div>
+        `;
+      });
+    }
 
-      async function deleteNews(id) {
-        if(!confirm('削除しますか？')) return;
-        await db.from('news').delete().eq('id', id);
-        fetchAdminNews();
-      }
+    async function deleteNews(newsId) {
+      if (!confirm('このニュースを削除してもよろしいですか？')) return;
+      try {
+        const { error } = await db.from('news').delete().eq('id', newsId);
+        if (error) throw error;
+        alert('ニュースを削除しました。');
+        await fetchGlobalNews();
+      } catch (error) { alert('削除に失敗しました: ' + error.message); }
+    }
+
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
     </script>
   </body>
 </html>
