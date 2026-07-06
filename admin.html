@@ -5,34 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>【管理画面】ニュース編集・削除</title>
     <style> 
-    body { font-family: sans-serif; background: #222; color: white; padding: 20px; }
-    .admin-container { max-width: 800px; margin: 0 auto; }
-    h2 { color: #c5a059; border-bottom: 2px solid #c5a059; padding-bottom: 10px; }
-    .news-item { background: #333; padding: 15px; margin-bottom: 15px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
-    .news-info { flex: 1; }
-    .delete-btn { background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; flex-shrink: 0; }
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #222;  
+      color: white; 
+      padding: 20px;
+    }
+    .admin-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h2 {
+      color: #c5a059;
+      border-bottom: 2px solid #c5a059;
+      padding-bottom: 10px;
+    }
+    .news-item {
+      background: #333;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .news-info {
+      flex: 1;
+    }
+    .news-meta {
+      color: #aaa;
+      font-size: 13px;
+      margin-bottom: 5px;
+    }
+    .delete-btn {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
     .delete-btn:hover { background: #e04343; }
+    .news-title { font-size: 16px; margin: 5px 0 0 0; color: #fff; }
     
-    .form-section { background: #111; padding: 20px; border-radius: 8px; margin-top: 40px; border: 1px solid #444; }
+    .form-section {
+      background: #111;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 40px;
+      border: 1px solid #444;
+    }
     .form-group { margin-bottom: 15px; }
     .form-group label { display: block; margin-bottom: 5px; color: #ccc; font-size: 14px; }
     .form-group input, .form-group textarea, .form-group select {
       width: 100%; padding: 10px; background: #222; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box;
     }
-    /* 🌟 ファイル選択ボタンがしっかり見えるように調整 */
-    .form-group input[type="file"] { background: #333; border: 1px dashed #666; padding: 10px; cursor: pointer; }
+    /* ファイル選択ボタンを見やすく調整 */
+    .form-group input[type="file"] {
+      background: #333;
+      border: 1px dashed #666;
+      padding: 12px;
+      cursor: pointer;
+      color: #fff;
+    }
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #c5a059; outline: none; }
-    .submit-btn { background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
+    .submit-btn {
+      background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;
+    }
     .submit-btn:hover { background: #d61515; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      const db = window.supabase.createClient("https://blviywoprvcatwwrrysi.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8");
+      // 正しいURLとキーを設定し直しました
+      const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8"; 
+      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
   </head>
   <body>
     <div class="admin-container">
       <h2>📢 ニュース管理画面</h2>
+      
       <div id="news-container"></div>
 
       <div class="form-section">
@@ -56,12 +111,12 @@
 
           <div class="form-group">
             <label>タイトル *</label>
-            <input type="text" id="news-title-ja" required placeholder="ニュースのタイトルを入力">
+            <input type="text" id="news-title-ja" required placeholder="ニュースのタイトルを入力してください">
           </div>
           
           <div class="form-group">
             <label>本文 *</label>
-            <textarea id="news-content-ja" required rows="5" placeholder="ニュースの本文を入力"></textarea>
+            <textarea id="news-content-ja" required rows="5" placeholder="ニュースの本文を入力してください"></textarea>
           </div>
 
           <button type="submit" class="submit-btn">ニュースを掲載する</button>
@@ -82,8 +137,8 @@
       try {
         let imageUrl = "";
 
-        // 画像ファイルが選択されている場合、Supabase Storageにアップロード
-        if (fileInput.files.length > 0) {
+        // 画像が選ばれている場合は保存処理を行う
+        if (fileInput && fileInput.files.length > 0) {
           const file = fileInput.files[0];
           const fileExt = file.name.split('.').pop();
           const fileName = `${Date.now()}.${fileExt}`;
@@ -95,7 +150,6 @@
 
           if (uploadError) throw uploadError;
 
-          // 公開URLを取得
           const { data: publicUrlData } = db.storage
             .from('news-images')
             .getPublicUrl(filePath);
@@ -103,11 +157,11 @@
           imageUrl = publicUrlData.publicUrl;
         }
 
-        // 親テーブル（news）へ登録
+        // 親テーブル（news）へカテゴリーと画像URLを登録
         const { data: newNews, error: newsError } = await db.from('news').insert([{ category, image_url: imageUrl }]).select().single();
         if (newsError) throw newsError;
 
-        // 日本語の翻訳データ（lang: 'ja'）を子テーブルへ登録
+        // 日本語テーブルへ登録
         const { error: transError } = await db.from('news_translations').insert([
           { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
@@ -131,7 +185,9 @@
 
         if (error) throw error;
         renderNewsList(newsList);
-      } catch (error) { console.error(error); }
+      } catch (error) {
+        console.error('ニュース取得エラー:', error);
+      }
     }
 
     function renderNewsList(newsList) {
@@ -149,9 +205,11 @@
         container.innerHTML += `
           <div class="news-item">
             <div class="news-info">
-              <span style="color:#c5a059; font-size:13px; margin-right:10px;">[${item.category || 'トピックス'}]</span>
-              <span style="color:#aaa; font-size:13px;">${dateStr}</span>
-              <h4 style="margin:5px 0 0 0; color:#fff;">${escapeHtml(translation.title)}</h4>
+              <div class="news-meta">
+                <span style="color:#c5a059; margin-right:10px;">[${item.category || 'トピックス'}]</span>
+                <span>${dateStr}</span>
+              </div>
+              <h4 class="news-title">${escapeHtml(translation.title)}</h4>
             </div>
             <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
           </div>
@@ -166,10 +224,15 @@
         if (error) throw error;
         alert('ニュースを削除しました。');
         await fetchGlobalNews();
-      } catch (error) { alert('削除に失敗しました: ' + error.message); }
+      } catch (error) {
+        alert('削除に失敗しました: ' + error.message);
+      }
     }
 
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
     </script>
   </body>
 </html>
