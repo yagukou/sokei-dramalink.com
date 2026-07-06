@@ -19,7 +19,7 @@
       body {
         margin: 0;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", sans-serif;
-        background: #fcfbfa; /* 早慶演劇祭のベースに合わせた明るい背景 */
+        background: #fcfbfa; 
         color: #333;
         padding-bottom: 60px;
       }
@@ -27,20 +27,17 @@
       .breadcrumb { font-size: 13px; color: #888; margin-bottom: 10px; }
       .page-title { font-size: 28px; font-weight: bold; margin: 0 0 30px 0; color: #111; }
       
-      /* カテゴリータブ */
       .category-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 1px solid #eaeaea; padding-bottom: 20px; }
       .tab-btn { background: #f1f0ea; color: #555; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
       .tab-btn:hover { background: #e5e4de; }
       .tab-btn.active { background: #111; color: #fff; }
       
-      /* 🌟 横並びカードレイアウトの適用 */
       .news-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 25px;
       }
 
-      /* 🌟 カード型デザインのブラッシュアップ（白背景にマッチする高級感） */
       .news-item { 
         background: #ffffff; 
         border-radius: 12px; 
@@ -58,7 +55,6 @@
         box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       }
 
-      /* 画像エリア */
       .news-img-wrapper {
         width: 100%;
         height: 180px;
@@ -96,7 +92,6 @@
       .news-date { color: #888; font-family: monospace; }
       .news-tag { display: inline-block; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 12px; }
       
-      /* タグの色分け */
       .tag-ticket { background: #dbeafe; color: #1e40af; }
       .tag-info { background: #fef3c7; color: #92400e; }
       .tag-topics { background: #f3f4f6; color: #374151; }
@@ -125,12 +120,10 @@
         white-space: pre-wrap;
       }
       
-      /* ページネーション */
       .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
       .page-btn { background: #f1f0ea; color: #333; border: none; width: 36px; height: 36px; border-radius: 6px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; }
       .page-btn.active { background: #111; color: #fff; }
 
-      /* 🌟 高級感のあるポップアップ（モーダル）演出 */
       .modal-overlay { 
         display: none; 
         position: fixed; 
@@ -139,7 +132,7 @@
         width: 100%; 
         height: 100%; 
         background: rgba(0,0,0,0.6); 
-        backdrop-filter: blur(8px); /* 背景ぼかしを追加 */
+        backdrop-filter: blur(8px); 
         z-index: 1000; 
         justify-content: center; 
         align-items: center; 
@@ -168,7 +161,7 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      // 読み込み先フォルダを news-bucket に修正済
+      // ⭕ 正しく動く共通のキーに統一（401エラー対策）
       const db = window.supabase.createClient("https://blviywoprvcatwwrrysi.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8");
     </script>
   </head>
@@ -177,7 +170,6 @@
       <div class="breadcrumb">ホーム / ニュース</div>
       <h2 class="page-title">ニュース一覧</h2>
 
-      <!-- カテゴリータブ -->
       <div class="category-tabs">
         <button class="tab-btn active" onclick="filterCategory('すべて')">すべて</button>
         <button class="tab-btn" onclick="filterCategory('チケット')">チケット</button>
@@ -186,12 +178,10 @@
         <button class="tab-btn" onclick="filterCategory('重要なお知らせ')">重要なお知らせ</button>
       </div>
 
-      <!-- ニュースリスト（グリッドカード形式） -->
       <div id="news-list" class="news-grid"></div>
       <div id="pagination" class="pagination"></div>
     </div>
 
-    <!-- ポップアップ（モーダル） -->
     <div id="news-modal" class="modal-overlay" onclick="closeModal()">
       <div class="modal-box" onclick="event.stopPropagation()">
         <button class="modal-close" onclick="closeModal()">×</button>
@@ -209,7 +199,7 @@
       let allNews = [];
       let currentCategory = 'すべて';
       let currentPage = 1;
-      const itemsPerPage = 6; // グリッドに合わせ6件ずつ表示
+      const itemsPerPage = 6;
 
       document.addEventListener('DOMContentLoaded', fetchNews);
 
@@ -298,8 +288,6 @@
         if (!item.category || item.category === 'トピックス') tag.classList.add('tag-topics');
 
         document.getElementById('modal-title').innerText = trans.title;
-        
-        // 🌟 長い詳細文（detail_content）があればそれを表示、なければ通常の本文
         document.getElementById('modal-content').innerText = trans.detail_content || trans.content;
 
         const imgEl = document.getElementById('modal-img');
