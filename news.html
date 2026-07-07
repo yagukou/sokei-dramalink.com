@@ -23,7 +23,7 @@
       .tab-btn:hover { background: #e5e4de; }
       .tab-btn.active { background: #111; color: #fff; }
       
-      /* リスト形式（行並び）レイアウト */
+      /* リスト形式Layout */
       .news-list-container {
         border-top: 1px solid #eaeaea;
         margin-bottom: 30px;
@@ -44,7 +44,6 @@
         background-color: #f7f6f0; 
       }
 
-      /* 左側のメタ情報（日付とタグを縦に並べる） */
       .news-meta { 
         display: flex;
         flex-direction: column;
@@ -78,7 +77,6 @@
       .tag-topics { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; } 
       .tag-notice { background: #fee2e2; color: #991b1b; } 
 
-      /* 右側のタイトルエリア */
       .news-title { 
         font-size: 16px; 
         font-weight: 600;
@@ -89,7 +87,6 @@
         padding-right: 20px;
       }
 
-      /* 右端の矢印（ > ） */
       .news-arrow {
         color: #b3b3b3;
         font-family: monospace;
@@ -99,46 +96,63 @@
         padding-right: 5px;
       }
       
-      /* ページネーション */
       .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
       .page-btn { background: #f1f0ea; color: #333; border: none; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 14px; }
       .page-btn.active { background: #111; color: #fff; }
 
-      /* ポップアップ（モーダル）演出 */
-      .modal-overlay { 
-        display: none; 
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        background: rgba(0,0,0,0.6); 
-        backdrop-filter: blur(8px); 
-        z-index: 1000; 
-        justify-content: center; 
-        align-items: center; 
-        padding: 20px; 
-        box-sizing: border-box; 
+      /* 🌟 全画面詳細表示のスタイル */
+      .detail-container {
+        display: none; /* 初期状態は非表示 */
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        animation: fadeIn 0.3s ease-out;
       }
-      .modal-overlay.active { display: flex; }
-      .modal-box { 
-        background: white; 
-        max-width: 600px; 
-        width: 100%; 
-        max-height: 85vh; 
-        overflow-y: auto; 
-        border-radius: 16px; 
-        padding: 40px; 
-        position: relative; 
-        box-shadow: 0 20px 50px rgba(0,0,0,0.3); 
-        animation: fadeIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+      .back-btn {
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
       }
-      @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-      .modal-close { position: absolute; top: 20px; right: 20px; font-size: 24px; background: none; border: none; cursor: pointer; color: #888; }
-      .modal-close:hover { color: #111; }
-      .modal-title { font-size: 22px; font-weight: bold; margin: 0 0 20px 0; color: #111; line-height: 1.4; padding-right: 40px; }
-      .modal-img { width: 100%; max-height: 380px; object-fit: contain; background: #f7f7f7; border-radius: 8px; margin-bottom: 25px; display: none; border: 1px solid #eaeaea; }
-      .modal-content { font-size: 15px; line-height: 1.8; color: #444; white-space: pre-wrap; margin: 0; }
+      .back-btn:hover { color: #111; }
+      .detail-header-meta {
+        margin-bottom: 15px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .detail-title {
+        font-size: 26px;
+        font-weight: bold;
+        margin: 0 0 30px 0;
+        color: #111;
+        line-height: 1.4;
+      }
+      .detail-img {
+        width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+        background: #f7f7f7;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        display: none;
+        border: 1px solid #eaeaea;
+      }
+      .detail-content {
+        font-size: 16px;
+        line-height: 1.9;
+        color: #333;
+        white-space: pre-wrap;
+        margin: 0;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -146,11 +160,11 @@
     </script>
   </head>
   <body>
-    <div class="container">
+    
+    <div id="list-view" class="container">
       <div class="breadcrumb">ホーム / ニュース</div>
       <h2 class="page-title">ニュース一覧</h2>
 
-      <!-- カテゴリータブ -->
       <div class="category-tabs">
         <button class="tab-btn active" onclick="filterCategory('すべて')">すべて</button>
         <button class="tab-btn" onclick="filterCategory('チケット')">チケット</button>
@@ -159,23 +173,21 @@
         <button class="tab-btn" onclick="filterCategory('重要なお知らせ')">重要なお知らせ</button>
       </div>
 
-      <!-- ニュースリスト -->
       <div id="news-list" class="news-list-container"></div>
       <div id="pagination" class="pagination"></div>
     </div>
 
-    <!-- ポップアップ（モーダル） -->
-    <div id="news-modal" class="modal-overlay" onclick="closeModal()">
-      <div class="modal-box" onclick="event.stopPropagation()">
-        <button class="modal-close" onclick="closeModal()">×</button>
-        <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
-          <span id="modal-date" style="color: #666; font-size: 14px; font-family: monospace;"></span>
-          <span id="modal-tag" class="news-tag" style="width: auto; padding: 3px 12px;"></span>
-        </div>
-        <h3 id="modal-title" class="modal-title"></h3>
-        <img id="modal-img" class="modal-img" src="" alt="ニュース画像">
-        <p id="modal-content" class="modal-content"></p>
+    <div id="detail-view" class="detail-container">
+      <button class="back-btn" onclick="closeDetailPage()">← ニュース一覧に戻る</button>
+      
+      <div class="detail-header-meta">
+        <span id="detail-date" style="color: #666; font-size: 14px; font-family: monospace;"></span>
+        <span id="detail-tag" class="news-tag" style="width: auto; padding: 3px 12px;"></span>
       </div>
+      
+      <h1 id="detail-title" class="detail-title"></h1>
+      <img id="detail-img" class="detail-img" src="" alt="ニュース画像">
+      <p id="detail-content" class="detail-content"></p>
     </div>
 
     <script>
@@ -231,9 +243,8 @@
 
             const globalIndex = allNews.findIndex(n => n.id === item.id);
 
-            // ⭕ 一覧用の小さなサムネイル（thumbHtml）を削除しました
             listContainer.innerHTML += `
-              <div class="news-item" onclick="openModal(${globalIndex})">
+              <div class="news-item" onclick="openDetailPage(${globalIndex})">
                 <div class="news-meta">
                   <span class="news-date">${dateStr}</span>
                   <span class="news-tag ${tagClass}">${item.category || 'トピックス'}</span>
@@ -252,14 +263,15 @@
         }
       }
 
-      function openModal(index) {
+      // 🌟 全画面で詳細を開く処理
+      function openDetailPage(index) {
         const item = allNews[index];
         const trans = item.news_translations[0];
         const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '.');
 
-        document.getElementById('modal-date').innerText = dateStr;
+        document.getElementById('detail-date').innerText = dateStr;
         
-        const tag = document.getElementById('modal-tag');
+        const tag = document.getElementById('detail-tag');
         tag.innerText = item.category || 'トピックス';
         tag.className = 'news-tag';
         if (item.category === 'チケット') tag.classList.add('tag-ticket');
@@ -267,24 +279,28 @@
         if (item.category === '重要なお知らせ') tag.classList.add('tag-notice');
         if (!item.category || item.category === 'トピックス') tag.classList.add('tag-topics');
 
-        document.getElementById('modal-title').innerText = trans.title;
-        document.getElementById('modal-content').innerText = trans.detail_content || trans.content;
+        document.getElementById('detail-title').innerText = trans.title;
+        document.getElementById('detail-content').innerText = trans.detail_content || trans.content;
 
-        const imgEl = document.getElementById('modal-img');
+        const imgEl = document.getElementById('detail-img');
         if (item.image_url && item.image_url.trim() !== "") {
           imgEl.src = item.image_url;
-          imgEl.style.display = "block"; // ポップアップ内では画像を表示する
+          imgEl.style.display = "block";
         } else {
           imgEl.style.display = "none";
         }
 
-        document.getElementById('news-modal').classList.add('active');
-        document.body.style.overflow = "hidden";
+        // 一覧画面を隠して、詳細画面を表示
+        document.getElementById('list-view').style.display = 'none';
+        document.getElementById('detail-view').style.display = 'block';
+        window.scrollTo(0, 0);
       }
 
-      function closeModal() {
-        document.getElementById('news-modal').classList.remove('active');
-        document.body.style.overflow = "auto";
+      // 🌟 詳細画面を閉じて一覧に戻る処理
+      function closeDetailPage() {
+        document.getElementById('detail-view').style.display = 'none';
+        document.getElementById('list-view').style.display = 'block';
+        window.scrollTo(0, 0);
       }
 
       function changePage(page) { currentPage = page; renderData(); window.scrollTo(0, 0); }
