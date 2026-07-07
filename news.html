@@ -17,146 +17,46 @@
       .breadcrumb { font-size: 13px; color: #888; margin-bottom: 10px; }
       .page-title { font-size: 28px; font-weight: bold; margin: 0 0 30px 0; color: #111; }
       
-      /* カテゴリータブ */
       .category-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 1px solid #eaeaea; padding-bottom: 20px; }
       .tab-btn { background: #f1f0ea; color: #555; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
       .tab-btn:hover { background: #e5e4de; }
       .tab-btn.active { background: #111; color: #fff; }
       
-      /* リスト形式Layout */
-      .news-list-container {
-        border-top: 1px solid #eaeaea;
-        margin-bottom: 30px;
-      }
-
-      .news-item { 
-        display: flex;
-        align-items: center;
-        padding: 20px 0;
-        border-bottom: 1px solid #eaeaea;
-        cursor: pointer; 
-        transition: background-color 0.2s ease;
-        text-decoration: none;
-        color: inherit;
-      }
-
-      .news-item:hover { 
-        background-color: #f7f6f0; 
-      }
-
-      .news-meta { 
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-        width: 140px;
-        flex-shrink: 0;
-      }
-
-      .news-date { 
-        color: #666; 
-        font-size: 14px; 
-        font-family: 'Helvetica Neue', Arial, sans-serif; 
-        font-weight: 500;
-      }
-
-      .news-tag { 
-        display: inline-block; 
-        font-size: 12px; 
-        font-weight: bold; 
-        padding: 4px 0;
-        width: 110px;
-        text-align: center;
-        border-radius: 12px; 
-        border: 1px solid transparent;
-      }
+      .news-list-container { border-top: 1px solid #eaeaea; margin-bottom: 30px; }
+      .news-item { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #eaeaea; cursor: pointer; transition: background-color 0.2s ease; text-decoration: none; color: inherit; }
+      .news-item:hover { background-color: #f7f6f0; }
+      .news-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; width: 140px; flex-shrink: 0; }
+      .news-date { color: #666; font-size: 14px; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500; }
+      .news-tag { display: inline-block; font-size: 12px; font-weight: bold; padding: 4px 0; width: 110px; text-align: center; border-radius: 12px; border: 1px solid transparent; }
       
-      /* タグの色分け */
       .tag-ticket { background: #e0ebf7; color: #4a779d; } 
       .tag-info { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; } 
       .tag-topics { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; } 
       .tag-notice { background: #fee2e2; color: #991b1b; } 
 
-      .news-title { 
-        font-size: 16px; 
-        font-weight: 600;
-        line-height: 1.5;
-        margin: 0; 
-        color: #222;
-        flex-grow: 1;
-        padding-right: 20px;
-      }
-
-      .news-arrow {
-        color: #b3b3b3;
-        font-family: monospace;
-        font-size: 18px;
-        font-weight: bold;
-        flex-shrink: 0;
-        padding-right: 5px;
-      }
+      .news-title { font-size: 16px; font-weight: 600; line-height: 1.5; margin: 0; color: #222; flex-grow: 1; padding-right: 20px; }
+      .news-arrow { color: #b3b3b3; font-family: monospace; font-size: 18px; font-weight: bold; flex-shrink: 0; padding-right: 5px; }
       
       .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
       .page-btn { background: #f1f0ea; color: #333; border: none; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 14px; }
       .page-btn.active { background: #111; color: #fff; }
 
-      /* 🌟 全画面詳細表示のスタイル */
-      .detail-container {
-        display: none; /* 初期状態は非表示 */
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        animation: fadeIn 0.3s ease-out;
-      }
+      /* 全画面詳細表示 */
+      .detail-container { display: none; max-width: 800px; margin: 0 auto; padding: 20px; animation: fadeIn 0.3s ease-out; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-      .back-btn {
-        background: none;
-        border: none;
-        color: #666;
-        font-size: 14px;
-        cursor: pointer;
-        padding: 0;
-        margin-bottom: 25px;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
+      .back-btn { background: none; border: none; color: #666; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 25px; display: flex; align-items: center; gap: 5px; }
       .back-btn:hover { color: #111; }
-      .detail-header-meta {
-        margin-bottom: 15px;
-        display: flex;
-        gap: 12px;
-        align-items: center;
-      }
-      .detail-title {
-        font-size: 26px;
-        font-weight: bold;
-        margin: 0 0 30px 0;
-        color: #111;
-        line-height: 1.4;
-      }
-      .detail-img {
-        width: 100%;
-        max-height: 500px;
-        object-fit: contain;
-        background: #f7f7f7;
-        border-radius: 12px;
-        margin-bottom: 30px;
-        display: none;
-        border: 1px solid #eaeaea;
-      }
-      .detail-content {
-        font-size: 16px;
-        line-height: 1.9;
-        color: #333;
-        white-space: pre-wrap;
-        margin: 0;
-      }
+      .detail-header-meta { margin-bottom: 15px; display: flex; gap: 12px; align-items: center; }
+      .detail-title { font-size: 26px; font-weight: bold; margin: 0 0 30px 0; color: #111; line-height: 1.4; }
+      
+      /* 🌟 本文の中に埋め込まれる画像のスタイル */
+      .inline-story-img { width: 100%; max-height: 500px; object-fit: contain; background: #f7f7f7; border-radius: 12px; margin: 15px 0; border: 1px solid #eaeaea; display: block; }
+      
+      .detail-content { font-size: 16px; line-height: 1.9; color: #333; white-space: pre-wrap; margin: 0; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      const db = window.supabase.createClient("https://blviywoprvcatwwrrysi.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8");
+      const db = window.supabase.createClient("https://blviywoprvcatwwrrysi.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI4MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8");
     </script>
   </head>
   <body>
@@ -186,8 +86,7 @@
       </div>
       
       <h1 id="detail-title" class="detail-title"></h1>
-      <img id="detail-img" class="detail-img" src="" alt="ニュース画像">
-      <p id="detail-content" class="detail-content"></p>
+      <div id="detail-content-area" class="detail-content"></div>
     </div>
 
     <script>
@@ -263,7 +162,7 @@
         }
       }
 
-      // 🌟 全画面で詳細を開く処理
+      // 全画面で詳細を開く処理
       function openDetailPage(index) {
         const item = allNews[index];
         const trans = item.news_translations[0];
@@ -280,15 +179,21 @@
         if (!item.category || item.category === 'トピックス') tag.classList.add('tag-topics');
 
         document.getElementById('detail-title').innerText = trans.title;
-        document.getElementById('detail-content').innerText = trans.detail_content || trans.content;
 
-        const imgEl = document.getElementById('detail-img');
+        // 🌟 本文の中にある [image1] などの記述を実際の画像タグに置き換える処理
+        let bodyHtml = escapeHtml(trans.detail_content || trans.content);
+        
         if (item.image_url && item.image_url.trim() !== "") {
-          imgEl.src = item.image_url;
-          imgEl.style.display = "block";
-        } else {
-          imgEl.style.display = "none";
+          const imagesList = item.image_url.split(','); // カンマ区切りのURLを配列に戻す
+          imagesList.forEach((url, i) => {
+            const code = `\\[image${i + 1}\\]`;
+            const imgTag = `<img class="inline-story-img" src="${url.trim()}" alt="ニュース内画像">`;
+            const regex = new RegExp(code, 'g');
+            bodyHtml = bodyHtml.replace(regex, imgTag);
+          });
         }
+
+        document.getElementById('detail-content-area').innerHTML = bodyHtml;
 
         // 一覧画面を隠して、詳細画面を表示
         document.getElementById('list-view').style.display = 'none';
@@ -296,7 +201,6 @@
         window.scrollTo(0, 0);
       }
 
-      // 🌟 詳細画面を閉じて一覧に戻る処理
       function closeDetailPage() {
         document.getElementById('detail-view').style.display = 'none';
         document.getElementById('list-view').style.display = 'block';

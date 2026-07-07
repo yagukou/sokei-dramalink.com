@@ -1,247 +1,310 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" translate="no">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>【管理画面】ニュース編集・削除</title>
-    <style> 
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #222;  
-      color: white; 
-      padding: 20px;
-    }
-    .admin-container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    h2 {
-      color: #c5a059;
-      border-bottom: 2px solid #c5a059;
-      padding-bottom: 10px;
-    }
-    .news-item {
-      background: #333;
-      padding: 15px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .news-info {
-      flex: 1;
-    }
-    .news-meta {
-      color: #aaa;
-      font-size: 13px;
-      margin-bottom: 5px;
-    }
-    .delete-btn {
-      background: #ff4d4d;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      flex-shrink: 0;
-    }
-    .delete-btn:hover { background: #e04343; }
-    .news-title { font-size: 16px; margin: 5px 0 0 0; color: #fff; }
-    
-    .form-section {
-      background: #111;
-      padding: 20px;
-      border-radius: 8px;
-      margin-top: 40px;
-      border: 1px solid #444;
-    }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; color: #ccc; font-size: 14px; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%; padding: 10px; background: #222; border: 1px solid #555; color: white; border-radius: 4px; box-sizing: border-box;
-    }
-    .form-group input[type="file"] {
-      background: #333;
-      border: 1px dashed #666;
-      padding: 12px;
-      cursor: pointer;
-      color: #fff;
-    }
-    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #c5a059; outline: none; }
-    .submit-btn {
-      background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%;
-    }
-    .submit-btn:hover { background: #d61515; }
+    <meta name="google" content="notranslate">
+    <title>ニュース一覧｜早慶演劇祭</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", sans-serif;
+        background: #fcfbfa; 
+        color: #333;
+        padding-bottom: 60px;
+      }
+      .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+      .breadcrumb { font-size: 13px; color: #888; margin-bottom: 10px; }
+      .page-title { font-size: 28px; font-weight: bold; margin: 0 0 30px 0; color: #111; }
+      
+      /* カテゴリータブ */
+      .category-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 1px solid #eaeaea; padding-bottom: 20px; }
+      .tab-btn { background: #f1f0ea; color: #555; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
+      .tab-btn:hover { background: #e5e4de; }
+      .tab-btn.active { background: #111; color: #fff; }
+      
+      /* リスト形式Layout */
+      .news-list-container {
+        border-top: 1px solid #eaeaea;
+        margin-bottom: 30px;
+      }
+
+      .news-item { 
+        display: flex;
+        align-items: center;
+        padding: 20px 0;
+        border-bottom: 1px solid #eaeaea;
+        cursor: pointer; 
+        transition: background-color 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .news-item:hover { 
+        background-color: #f7f6f0; 
+      }
+
+      .news-meta { 
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        width: 140px;
+        flex-shrink: 0;
+      }
+
+      .news-date { 
+        color: #666; 
+        font-size: 14px; 
+        font-family: 'Helvetica Neue', Arial, sans-serif; 
+        font-weight: 500;
+      }
+
+      .news-tag { 
+        display: inline-block; 
+        font-size: 12px; 
+        font-weight: bold; 
+        padding: 4px 0;
+        width: 110px;
+        text-align: center;
+        border-radius: 12px; 
+        border: 1px solid transparent;
+      }
+      
+      /* タグの色分け */
+      .tag-ticket { background: #e0ebf7; color: #4a779d; } 
+      .tag-info { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; } 
+      .tag-topics { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; } 
+      .tag-notice { background: #fee2e2; color: #991b1b; } 
+
+      .news-title { 
+        font-size: 16px; 
+        font-weight: 600;
+        line-height: 1.5;
+        margin: 0; 
+        color: #222;
+        flex-grow: 1;
+        padding-right: 20px;
+      }
+
+      .news-arrow {
+        color: #b3b3b3;
+        font-family: monospace;
+        font-size: 18px;
+        font-weight: bold;
+        flex-shrink: 0;
+        padding-right: 5px;
+      }
+      
+      .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
+      .page-btn { background: #f1f0ea; color: #333; border: none; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+      .page-btn.active { background: #111; color: #fff; }
+
+      /* 🌟 全画面詳細表示のスタイル */
+      .detail-container {
+        display: none; /* 初期状態は非表示 */
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        animation: fadeIn 0.3s ease-out;
+      }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+      .back-btn {
+        background: none;
+        border: none;
+        color: #666;
+        font-size: 14px;
+        cursor: pointer;
+        padding: 0;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .back-btn:hover { color: #111; }
+      .detail-header-meta {
+        margin-bottom: 15px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+      .detail-title {
+        font-size: 26px;
+        font-weight: bold;
+        margin: 0 0 30px 0;
+        color: #111;
+        line-height: 1.4;
+      }
+      .detail-img {
+        width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+        background: #f7f7f7;
+        border-radius: 12px;
+        margin-bottom: 30px;
+        display: none;
+        border: 1px solid #eaeaea;
+      }
+      .detail-content {
+        font-size: 16px;
+        line-height: 1.9;
+        color: #333;
+        white-space: pre-wrap;
+        margin: 0;
+      }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      // ⭕ 正しく動く共通のキー（401エラー対策）
-      const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8"; 
-      const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const db = window.supabase.createClient("https://blviywoprvcatwwrrysi.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8");
     </script>
   </head>
   <body>
-    <div class="admin-container">
-      <h2>📢 ニュース管理画面</h2>
-      
-      <div id="news-container"></div>
+    
+    <div id="list-view" class="container">
+      <div class="breadcrumb">ホーム / ニュース</div>
+      <h2 class="page-title">ニュース一覧</h2>
 
-      <div class="form-section">
-        <h3>➕ 新しいニュースを掲載する</h3>
-        <form id="news-form" onsubmit="submitNews(event)">
-          
-          <div class="form-group">
-            <label>カテゴリー *</label>
-            <select id="news-category">
-              <option value="トピックス">トピックス</option>
-              <option value="チケット">チケット</option>
-              <option value="公演情報">公演情報</option>
-              <option value="重要なお知らせ">重要なお知らせ</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>画像ファイルを選択 (任意)</label>
-            <input type="file" id="news-file" accept="image/*">
-          </div>
-
-          <div class="form-group">
-            <label>タイトル *</label>
-            <input type="text" id="news-title-ja" required placeholder="ニュースのタイトルを入力してください">
-          </div>
-          
-          <div class="form-group">
-            <label>一覧用の一言（本文） *</label>
-            <textarea id="news-content-ja" required rows="3" placeholder="カード一覧画面に表示される短い説明文を入力してください"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label>タップ後の詳細説明 (任意)</label>
-            <textarea id="news-detail-content-ja" rows="6" placeholder="ニュースをタップしたポップアップ内に表示する、詳細な本文を入力してください（空欄の場合は上記の一言と同じ内容が表示されます）"></textarea>
-          </div>
-
-          <button type="submit" class="submit-btn">ニュースを掲載する</button>
-        </form>
+      <div class="category-tabs">
+        <button class="tab-btn active" onclick="filterCategory('すべて')">すべて</button>
+        <button class="tab-btn" onclick="filterCategory('チケット')">チケット</button>
+        <button class="tab-btn" onclick="filterCategory('公演情報')">公演情報</button>
+        <button class="tab-btn" onclick="filterCategory('トピックス')">トピックス</button>
+        <button class="tab-btn" onclick="filterCategory('重要なお知らせ')">重要なお知らせ</button>
       </div>
+
+      <div id="news-list" class="news-list-container"></div>
+      <div id="pagination" class="pagination"></div>
+    </div>
+
+    <div id="detail-view" class="detail-container">
+      <button class="back-btn" onclick="closeDetailPage()">← ニュース一覧に戻る</button>
+      
+      <div class="detail-header-meta">
+        <span id="detail-date" style="color: #666; font-size: 14px; font-family: monospace;"></span>
+        <span id="detail-tag" class="news-tag" style="width: auto; padding: 3px 12px;"></span>
+      </div>
+      
+      <h1 id="detail-title" class="detail-title"></h1>
+      <img id="detail-img" class="detail-img" src="" alt="ニュース画像">
+      <p id="detail-content" class="detail-content"></p>
     </div>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => { fetchGlobalNews(); });
+      let allNews = [];
+      let currentCategory = 'すべて';
+      let currentPage = 1;
+      const itemsPerPage = 7; 
 
-    async function submitNews(event) {
-      event.preventDefault();
-      const category = document.getElementById('news-category').value;
-      const fileInput = document.getElementById('news-file');
-      const titleJa = document.getElementById('news-title-ja').value;
-      const contentJa = document.getElementById('news-content-ja').value;
-      const detailContentJa = document.getElementById('news-detail-content-ja').value;
+      document.addEventListener('DOMContentLoaded', fetchNews);
 
-      try {
-        let imageUrl = "";
+      async function fetchNews() {
+        try {
+          const { data, error } = await db
+            .from('news')
+            .select(`id, created_at, category, image_url, news_translations!inner (title, content, detail_content)`)
+            .eq('news_translations.lang', 'ja')
+            .order('created_at', { ascending: false });
 
-        if (fileInput && fileInput.files.length > 0) {
-          const file = fileInput.files[0];
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${Date.now()}.${fileExt}`;
-          const filePath = `${fileName}`;
+          if (error) throw error;
+          allNews = data;
+          renderData();
+        } catch (error) { console.error(error); }
+      }
 
-          // ⭕ 画像の保存先を news-bucket に修正済
-          const { data: uploadData, error: uploadError } = await db.storage
-            .from('news-bucket')
-            .upload(filePath, file);
+      function filterCategory(cat) {
+        currentCategory = cat;
+        currentPage = 1;
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          btn.classList.toggle('active', btn.innerText === cat);
+        });
+        renderData();
+      }
 
-          if (uploadError) throw uploadError;
+      function renderData() {
+        const filtered = currentCategory === 'すべて' ? allNews : allNews.filter(item => item.category === currentCategory);
+        const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
+        const pageItems = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
-          const { data: publicUrlData } = db.storage
-            .from('news-bucket')
-            .getPublicUrl(filePath);
-          
-          imageUrl = publicUrlData.publicUrl;
+        const listContainer = document.getElementById('news-list');
+        listContainer.innerHTML = '';
+
+        if (pageItems.length === 0) {
+          listContainer.innerHTML = '<p style="padding:40px 0; color:#888; text-align:center;">該当するニュースはありません。</p>';
+        } else {
+          pageItems.forEach((item) => {
+            const trans = item.news_translations[0];
+            const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '.');
+            
+            let tagClass = 'tag-topics';
+            if (item.category === 'チケット') tagClass = 'tag-ticket';
+            if (item.category === '公演情報') tagClass = 'tag-info';
+            if (item.category === '重要なお知らせ') tagClass = 'tag-notice';
+
+            const globalIndex = allNews.findIndex(n => n.id === item.id);
+
+            listContainer.innerHTML += `
+              <div class="news-item" onclick="openDetailPage(${globalIndex})">
+                <div class="news-meta">
+                  <span class="news-date">${dateStr}</span>
+                  <span class="news-tag ${tagClass}">${item.category || 'トピックス'}</span>
+                </div>
+                <h4 class="news-title">${escapeHtml(trans.title)}</h4>
+                <span class="news-arrow">&gt;</span>
+              </div>
+            `;
+          });
         }
 
-        const { data: newNews, error: newsError } = await db.from('news').insert([{ category, image_url: imageUrl }]).select().single();
-        if (newsError) throw newsError;
-
-        const { error: transError } = await db.from('news_translations').insert([
-          { 
-            news_id: newNews.id, 
-            lang: 'ja', 
-            title: titleJa, 
-            content: contentJa,
-            detail_content: detailContentJa ? detailContentJa : null
-          }
-        ]);
-        if (transError) throw transError;
-
-        alert('ニュースを掲載しました！');
-        document.getElementById('news-form').reset();
-        await fetchGlobalNews();
-      } catch (error) {
-        alert('掲載に失敗しました: ' + error.message);
+        const pager = document.getElementById('pagination');
+        pager.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+          pager.innerHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+        }
       }
-    }
 
-    async function fetchGlobalNews() {
-      try {
-        const { data: newsList, error } = await db
-          .from('news')
-          .select(`id, created_at, category, news_translations!inner (title)`)
-          .eq('news_translations.lang', 'ja')
-          .order('created_at', { ascending: false });
+      // 🌟 全画面で詳細を開く処理
+      function openDetailPage(index) {
+        const item = allNews[index];
+        const trans = item.news_translations[0];
+        const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '.');
 
-        if (error) throw error;
-        renderNewsList(newsList);
-      } catch (error) {
-        console.error('ニュース取得エラー:', error);
-      }
-    }
-
-    function renderNewsList(newsList) {
-      const container = document.getElementById('news-container');
-      container.innerHTML = ''; 
-      if (!newsList || newsList.length === 0) {
-        container.innerHTML = '<p style="color: #aaa;">現在掲載されているニュースはありません。</p>';
-        return;
-      }
-      newsList.forEach(item => {
-        const translation = item.news_translations[0]; 
-        if (!translation) return;
-        const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year: 'numeric', month: '2-digit', day: '2-digit'});
+        document.getElementById('detail-date').innerText = dateStr;
         
-        container.innerHTML += `
-          <div class="news-item">
-            <div class="news-info">
-              <div class="news-meta">
-                <span style="color:#c5a059; margin-right:10px;">[${item.category || 'トピックス'}]</span>
-                <span>${dateStr}</span>
-              </div>
-              <h4 class="news-title">${escapeHtml(translation.title)}</h4>
-            </div>
-            <button class="delete-btn" onclick="deleteNews('${item.id}')">削除</button>
-          </div>
-        `;
-      });
-    }
+        const tag = document.getElementById('detail-tag');
+        tag.innerText = item.category || 'トピックス';
+        tag.className = 'news-tag';
+        if (item.category === 'チケット') tag.classList.add('tag-ticket');
+        if (item.category === '公演情報') tag.classList.add('tag-info');
+        if (item.category === '重要なお知らせ') tag.classList.add('tag-notice');
+        if (!item.category || item.category === 'トピックス') tag.classList.add('tag-topics');
 
-    async function deleteNews(newsId) {
-      if (!confirm('このニュースを削除してもよろしいですか？')) return;
-      try {
-        const { error } = await db.from('news').delete().eq('id', newsId);
-        if (error) throw error;
-        alert('ニュースを削除しました。');
-        await fetchGlobalNews();
-      } catch (error) {
-        alert('削除に失敗しました: ' + error.message);
+        document.getElementById('detail-title').innerText = trans.title;
+        document.getElementById('detail-content').innerText = trans.detail_content || trans.content;
+
+        const imgEl = document.getElementById('detail-img');
+        if (item.image_url && item.image_url.trim() !== "") {
+          imgEl.src = item.image_url;
+          imgEl.style.display = "block";
+        } else {
+          imgEl.style.display = "none";
+        }
+
+        // 一覧画面を隠して、詳細画面を表示
+        document.getElementById('list-view').style.display = 'none';
+        document.getElementById('detail-view').style.display = 'block';
+        window.scrollTo(0, 0);
       }
-    }
 
-    function escapeHtml(str) {
-      if (!str) return '';
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-    }
+      // 🌟 詳細画面を閉じて一覧に戻る処理
+      function closeDetailPage() {
+        document.getElementById('detail-view').style.display = 'none';
+        document.getElementById('list-view').style.display = 'block';
+        window.scrollTo(0, 0);
+      }
+
+      function changePage(page) { currentPage = page; renderData(); window.scrollTo(0, 0); }
+      function escapeHtml(str) { return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : ''; }
     </script>
   </body>
 </html>
