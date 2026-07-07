@@ -71,6 +71,7 @@
         <button class="tab-btn" onclick="filterCategory('公演情報')">公演情報</button>
         <button class="tab-btn" onclick="filterCategory('トピックス')">トピックス</button>
         <button class="tab-btn" onclick="filterCategory('重要なお知らせ')">重要なお知らせ</button>
+        <button class="tab-btn" onclick="filterCategory('アーカイブ')">アーカイブ</button>
       </div>
 
       <div id="news-list" class="news-list-container"></div>
@@ -139,6 +140,7 @@
             if (item.category === 'チケット') tagClass = 'tag-ticket';
             if (item.category === '公演情報') tagClass = 'tag-info';
             if (item.category === '重要なお知らせ') tagClass = 'tag-notice';
+            if (item.category === 'アーカイブ') tagClass = 'tag-ago';
 
             const globalIndex = allNews.findIndex(n => n.id === item.id);
 
@@ -176,6 +178,7 @@
         if (item.category === '公演情報') tag.classList.add('tag-info');
         if (item.category === '重要なお知らせ') tag.classList.add('tag-notice');
         if (!item.category || item.category === 'トピックス') tag.classList.add('tag-topics');
+        if (!item.category || item.category === 'アーカイブ') tag.classList.add('tag-ago');
 
         document.getElementById('detail-title').innerText = trans.title;
 
