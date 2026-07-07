@@ -125,7 +125,6 @@
       try {
         const imageUrlsString = uploadedImages.join(',');
 
-        // 🌟 親データの登録（確実に生成されたIDを取得するため .select() を徹底）
         const { data: newsRows, error: newsError } = await db
           .from('news')
           .insert([{ category, image_url: imageUrlsString }])
@@ -136,7 +135,6 @@
 
         const insertedNews = newsRows[0];
 
-        // 🌟 日本語テーブルへ登録
         const { error: transError } = await db.from('news_translations').insert([
           { news_id: insertedNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
@@ -160,7 +158,10 @@
           .eq('news_translations.lang', 'ja')
           .order('created_at', { ascending: false });
 
-        if (error) throw error;
+        if (error) {
+          console.error('ニュース取得エラー詳細:', error);
+          return;
+        }
         renderNewsList(newsList);
       } catch (error) { console.error('ニュース取得エラー:', error); }
     }
