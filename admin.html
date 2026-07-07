@@ -26,7 +26,6 @@
     .submit-btn { background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; }
     .submit-btn:hover { background: #d61515; }
 
-    /* 貼り付けコード確認エリア */
     .upload-status { background: #222; border: 1px solid #444; padding: 10px; margin-top: 5px; border-radius: 4px; font-size: 13px; display: none; color: #c5a059; }
     .code-badge { background: #444; color: #fff; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; }
     </style>
@@ -69,7 +68,7 @@
           
           <div class="form-group">
             <label>本文 * (上に表示されたコードを好きな位置に貼り付けてください)</label>
-            <textarea id="news-content-ja" required rows="10" placeholder="ニュースの本文を入力してください。&#13;&#10;例: こちらが当日のタイムスケジュールです。&#13;&#10;[image1]&#13;&#10;皆様のご来場をお待ちしております！"></textarea>
+            <textarea id="news-content-ja" required rows="10" placeholder="ニュースの本文を入力してください。&#13;&#10;例: [image1]&#13;&#10;皆様のご来場をお待ちしております！"></textarea>
           </div>
 
           <button type="submit" class="submit-btn">ニュースを掲載する</button>
@@ -78,15 +77,13 @@
     </div>
 
     <script>
-    let uploadedImages = []; // アップロードされた画像のURLを一時保存する配列
+    let uploadedImages = []; 
 
     document.addEventListener('DOMContentLoaded', () => { fetchGlobalNews(); });
 
-    // 画像が選択されたら即座にストレージにアップロードしてコードを発行する
     async function uploadInlineImage() {
       const fileInput = document.getElementById('news-file');
       const statusDiv = document.getElementById('upload-status');
-      
       if (!fileInput || fileInput.files.length === 0) return;
       
       statusDiv.style.display = "block";
@@ -111,11 +108,9 @@
         const imageUrl = publicUrlData.publicUrl;
         uploadedImages.push(imageUrl);
 
-        // 本文に貼り付けるための番号付きコードを作成
         const imageCode = `[image${uploadedImages.length}]`;
-        
         statusDiv.innerHTML = `✅ アップロード完了！本文の好きな場所に <span class="code-badge">${imageCode}</span> と直接入力するか貼り付けてください。`;
-        fileInput.value = ""; // 次の画像も選べるようにリセット
+        fileInput.value = ""; 
       } catch (error) {
         statusDiv.innerHTML = "❌ アップロード失敗: " + error.message;
       }
@@ -128,23 +123,29 @@
       const contentJa = document.getElementById('news-content-ja').value;
 
       try {
-        // 画像URLリストをカンマ区切りの文字列にしてimage_urlカラムに一括保存
         const imageUrlsString = uploadedImages.join(',');
 
-        // 親テーブル（news）へ登録
-        const { data: newNews, error: newsError } = await db.from('news').insert([{ category, image_url: imageUrlsString }]).select().single();
+        // 🌟 親データの登録（確実に生成されたIDを取得するため .select() を徹底）
+        const { data: newsRows, error: newsError } = await db
+          .from('news')
+          .insert([{ category, image_url: imageUrlsString }])
+          .select();
+        
         if (newsError) throw newsError;
+        if (!newsRows || newsRows.length === 0) throw new Error("データの作成に失敗しました。");
 
-        // 日本語テーブルへ登録
+        const insertedNews = newsRows[0];
+
+        // 🌟 日本語テーブルへ登録
         const { error: transError } = await db.from('news_translations').insert([
-          { news_id: newNews.id, lang: 'ja', title: titleJa, content: contentJa }
+          { news_id: insertedNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
         if (transError) throw transError;
 
         alert('ニュースを掲載しました！');
         document.getElementById('news-form').reset();
         document.getElementById('upload-status').style.display = "none";
-        uploadedImages = []; // 配列をリセット
+        uploadedImages = []; 
         await fetchGlobalNews();
       } catch (error) {
         alert('掲載に失敗しました: ' + error.message);
