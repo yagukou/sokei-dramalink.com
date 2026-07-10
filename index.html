@@ -620,6 +620,41 @@
         }
       }
     });
+
+  const menuBtn = document.querySelector(".pc-menu-btn");
+  const sideMenu = document.getElementById("side-menu");
+  const overlay = document.getElementById("menu-overlay");
+  const closeBtn = document.getElementById("menu-close-btn");
+
+  function openMenu() {
+    sideMenu.classList.add("active");
+    overlay.classList.add("active");
+  }
+
+  function closeMenu() {
+    sideMenu.classList.remove("active");
+    overlay.classList.remove("active");
+  }
+
+  menuBtn.onclick = (e) => { e.preventDefault(); openMenu(); };
+  closeBtn.onclick = closeMenu;
+  overlay.onclick = closeMenu;
+</script>
+
+<style>
+  #side-menu {
+    position: fixed; top: 0; right: -300px; width: 300px; height: 100%;
+    background: #111; z-index: 1000; transition: right 0.4s ease;
+    display: flex; flex-direction: column; padding: 50px 20px;
+  }
+  #side-menu.active { right: 0; }
+  #menu-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); z-index: 999; display: none;
+  }
+  #menu-overlay.active { display: block; }
+  #menu-close-btn { color: white; background: none; border: none; font-size: 30px; align-self: flex-end; cursor: pointer; }
+</style>
   </script>
 </body>
 </html>
