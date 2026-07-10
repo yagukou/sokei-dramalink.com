@@ -762,9 +762,55 @@
   }
 }
 
+/* 📱 スマホ用ドロップダウンメニューの見た目 */
+    #mobile-dropdown {
+      position: fixed;
+      top: 70px; /* スマホ用ヘッダーの直下に配置 */
+      left: 0;
+      width: 100%;
+      background: #111111;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      z-index: 999;
+      max-height: 0; /* 🌟 最初は高さを0にして完全に隠しておく */
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out; /* 🌟 下にバーッと広がるアニメーション */
+      display: none; /* PC画面では見えないようにする */
+      flex-direction: column;
+    }
+
+    /* メニュー内のリンクボタン */
+    #mobile-dropdown a {
+      color: #ffffff !important;
+      text-decoration: none;
+      padding: 18px 25px;
+      font-size: 15px;
+      border-bottom: 1px solid #222;
+      font-family: sans-serif;
+      transition: background 0.2s;
+    }
+
+    /* 指をのせた（タップした）ときに赤くする */
+    #mobile-dropdown a:hover {
+      background-color: #b90e0e;
+    }
+
+    /* 🌟 プログラムから「open」という命令がついた瞬間、450pxの高さまでバーッと広がる */
+    #mobile-dropdown.open {
+      max-height: 450px;
+    }
+
     </style>
 
   </head>
+
+    <nav id="mobile-dropdown">
+      <a href="Philosophy.html">・私たちの思い ーPhilosophy</a>
+      <a href="what.html">・企画紹介</a>
+      <a href="Participant.html">・ビラネット</a>
+      <a href="news.html">・ニュース</a>
+      <a href="Member.html">・メンバー</a>
+      <a href="Inquiry.html">・お問い合わせ</a>
+    </nav>
 
   <body>
     <script>
@@ -1038,90 +1084,68 @@
        ========================================================================== */
 
     // 1. スマホの画面上に、メニュー画面（HTML）とデザイン（CSS）を自動で作成して追加します
-const menuHTML = `
-  <div id="menu-overlay" style="
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6); z-index: 998;
-    opacity: 0; visibility: hidden; transition: all 0.3s ease;
-  "></div>
+// ==========================================
+// 📱 スマホ用・下へバーッと広がるメニュー（最新版）
+// ==========================================
 
-  <nav id="mobile-nav" style="
-    position: fixed; top: 0; right: -300px; width: 300px; height: 100vh;
-    background: #111111; box-shadow: -4px 0 12px rgba(0,0,0,0.5); z-index: 999;
-    display: flex; flex-direction: column; padding-top: 90px; box-sizing: border-box;
-    transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+// 1. メニューのHTML構造を挿入（ヘッダーの下から縦に広がるデザイン）
+const menuHTML = `
+  <nav id="mobile-dropdown" style="
+    position: fixed; 
+    top: 70px; /* スマホ時のヘッダーの高さの直下に配置 */
+    left: 0; 
+    width: 100%; 
+    background: #111111; 
+    box-shadow: 0 8px 20px rgba(0,0,0,0.6); 
+    z-index: 999;
+    max-height: 0; /* 最初は高さを0にして完全に隠す */
+    overflow: hidden; 
+    transition: max-height 0.4s ease-in-out; /* 下にバーッと広がるアニメーション */
+    display: flex; 
+    flex-direction: column;
   ">
-    <button id="menu-close-btn" style="
-      position: absolute; top: 20px; right: 20px; background: none; border: none;
-      color: #ffffff; font-size: 32px; cursor: pointer; padding: 5px; z-index: 1000;
-    "><i class="ti ti-x"></i></button>
-    
-    <a href="index.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">ホーム</a>
-    <a href="About.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">早慶演劇祭とは</a>
-    <a href="Timetable.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">タイムテーブル</a>
-    <a href="news.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">ニュース</a>
-    <a href="Ticket.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">チケット</a>
-    <a href="Flyer.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">ビラネットワーク</a>
-    <a href="Inquiry.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">お問い合わせ</a>
+    <a href="Philosophy.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:18px 25px; font-size:15px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">・私たちの思い ーPhilosophy</a>
+    <a href="what.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:18px 25px; font-size:15px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">・企画紹介</a>
+    <a href="Participant.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:18px 25px; font-size:15px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">・ビラネット</a>
+    <a href="news.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:18px 25px; font-size:15px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">・ニュース</a>
+    <a href="Member.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:18px 25px; font-size:15px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">・メンバー</a>
+    <a href="Inquiry.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:18px 25px; font-size:15px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">・お問い合わせ</a>
   </nav>
 `;
 document.body.insertAdjacentHTML('beforeend', menuHTML);
 
-// 2. 動きをつけるための要素をそれぞれ取得
-const hamburgerBtn = document.querySelector(".hamburger"); // 三本線ボタン
-const closeBtn = document.getElementById("menu-close-btn");   // ×ボタン
-const mobileNav = document.getElementById("mobile-nav");
-const menuOverlay = document.getElementById("menu-overlay");
+// 2. 要素の取得と開閉コントロール
+const hamburgerBtn = document.querySelector(".hamburger"); 
+const mobileDropdown = document.getElementById("mobile-dropdown");
 const menuLinks = document.querySelectorAll(".m-link");
 
-// 🌟 メニューを開く処理（画面外から右端 0px の位置へ滑らかに移動）
-function openMobileMenu() {
-  mobileNav.style.right = "0px";
-  menuOverlay.style.opacity = "1";
-  menuOverlay.style.visibility = "visible";
-}
+let isMenuOpen = false; // メニューが開いているかどうかの状態
 
-// 🌟 メニューを閉じる処理（画面の右外側 -300px の位置へ隠す）
-function closeMobileMenu() {
-  mobileNav.style.right = "-300px";
-  menuOverlay.style.opacity = "0";
-  menuOverlay.style.visibility = "hidden";
-}
-
-// 3. 各ボタンをクリックしたときの動作を設定
-if (hamburgerBtn) {
-  hamburgerBtn.onclick = function() {
-    openMobileMenu();
-  };
-}
-
-if (closeBtn) {
-  closeBtn.onclick = function() {
-    closeMobileMenu();
-  };
-}
-
-if (menuOverlay) {
-  menuOverlay.onclick = function() {
-    closeMobileMenu();
-  };
-}
-
-// 4. メニュー内のリンクをホバー（指を乗せたとき）したときに赤くする設定
-menuLinks.forEach(link => {
-  link.onmouseenter = () => link.style.backgroundColor = '#b90e0e';
-  link.onmouseleave = () => link.style.backgroundColor = 'transparent';
-});
-
-    // メニューを開閉させる共通の命令
-    function toggleMobileMenu() {
-      if (mobileNav.style.right === "0px") {
-        mobileNav.style.right = "-100%";
-        menuOverlay.style.display = "none";
-      } else {
-        mobileNav.style.right = "0px";
-        menuOverlay.style.display = "block";
-      }
+if (hamburgerBtn && mobileDropdown) {
+  hamburgerBtn.onclick = function(e) {
+    if (e) e.preventDefault(); // ページ移行（ジャンプ）を確実に防止
+    
+    isMenuOpen = !isMenuOpen; // クリックするたびに開・閉を切り替え
+    
+    if (isMenuOpen) {
+      mobileDropdown.style.maxHeight = "450px"; // 🌟 バーッと下に広げる（中身が収まる高さ）
+    } else {
+      mobileDropdown.style.maxHeight = "0px";   // 閉じる
     }
-    </script>
-  </body>
+  };
+}
+
+// 3. メニュー内のリンクに指をのせた（ホバー）ときの演出
+menuLinks.forEach(link => {
+  link.onmouseenter = () => link.style.backgroundColor = '#b90e0e'; // 赤くする
+  link.onmouseleave = () => link.style.backgroundColor = 'transparent';
+  
+  // リンクがタップされたらメニューを自動で閉じる
+  link.onclick = () => {
+    isMenuOpen = false;
+    mobileDropdown.style.maxHeight = "0px";
+  };
+});
+// ==========================================
+// 📱 スマホ用・下へバーッと広がるメニュー（ここまで）
+// ==========================================
