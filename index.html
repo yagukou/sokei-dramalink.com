@@ -333,7 +333,7 @@
     }
 
     /* ==========================================================
-       📱 スマートフォン用CSS
+       📱 スマートフォン・タブレット用レイアウト設定
        ========================================================== */
     @media (max-width: 768px) {
       header { 
@@ -388,23 +388,23 @@
       .slider-container { height: 40vh; }
     }
 
-    /* 📱 スマホ用ドロップダウンメニューの見た目設定 */
-    #mobile-dropdown {
+    /* 🌐 画面共通ドロップダウンメニューの見た目設定（PC・スマホ両対応） */
+    #global-dropdown {
       position: fixed;
-      top: 70px; 
+      top: 90px; /* PCヘッダー(90px)の直下にピタッと配置 */
       left: 0;
       width: 100%;
       background: #111111;
       box-shadow: 0 8px 20px rgba(0,0,0,0.6);
       z-index: 999;
-      max-height: 0; 
+      max-height: 0; /* 最初は高さを0にして隠す */
       overflow: hidden;
-      transition: max-height 0.4s ease-in-out; 
-      display: none; 
+      transition: max-height 0.4s ease-in-out; /* 下にバーッと広がるアニメーション */
+      display: flex; 
       flex-direction: column;
     }
 
-    #mobile-dropdown a {
+    #global-dropdown a {
       color: #ffffff !important;
       text-decoration: none;
       padding: 18px 25px;
@@ -414,16 +414,19 @@
       transition: background 0.2s;
     }
 
-    #mobile-dropdown a:hover {
+    #global-dropdown a:hover {
       background-color: #b90e0e;
     }
 
-    #mobile-dropdown.open {
+    /* 「open」命令がついた瞬間、450pxの高さまでバーッと広げる */
+    #global-dropdown.open {
       max-height: 450px;
     }
 
     @media (max-width: 768px) {
-      #mobile-dropdown { display: flex; }
+      #global-dropdown { 
+        top: 70px; /* スマホ画面のときはスマホヘッダー(70px)の直下に調整 */
+      }
     }
   </style>
 </head>
@@ -453,13 +456,13 @@
     <div class="menu-right">
       <a href="news.html" class="menu-1"><img src="news3.png"><span>ニュース</span></a>
       <a href="Inquiry.html" class="menu-1"><img src="Inquiry3.png"><span>お問い合わせ</span></a>
-      <a href="menu.html" class="menu-1"><img src="menu3.png"><span>メニュー</span></a>
+      <a href="#" class="menu-1 pc-menu-btn"><img src="menu3.png"><span>メニュー</span></a>
     </div>
 
     <div class="hamburger">☰</div>
   </header>
 
-  <nav id="mobile-dropdown">
+  <nav id="global-dropdown">
     <a href="Philosophy.html">・私たちの思い ーPhilosophy</a>
     <a href="what.html">・企画紹介</a>
     <a href="Participant.html">・ビラネット</a>
@@ -574,23 +577,48 @@
     document.querySelector(".prev").onclick = () => { index = (index - 1 + slides.length) % slides.length; showSlide(index); };
     setInterval(() => { index = (index + 1) % slides.length; showSlide(index); }, 9000); 
 
-    /* 📱 スマホ用ハンバーガーボタンメニューの開閉処理 */
-    const hamburgerBtn = document.querySelector(".hamburger");
-    const mobileDropdown = document.getElementById("mobile-dropdown");
-    const dropdownLinks = document.querySelectorAll("#mobile-dropdown a");
+    /* ==========================================================
+       🌐 メニューボタン（PC版メニュー・スマホ版ハンバーガー両対応）の開閉処理
+       ========================================================== */
+    const hamburgerBtn = document.querySelector(".hamburger"); // スマホ用の三本線
+    const pcMenuBtn = document.querySelector(".pc-menu-btn");     // PC用の「メニュー」ボタン
+    const globalDropdown = document.getElementById("global-dropdown");
+    const dropdownLinks = document.querySelectorAll("#global-dropdown a");
 
-    if (hamburgerBtn && mobileDropdown) {
-      hamburgerBtn.onclick = function(e) {
-        if (e) e.stopPropagation(); 
-        mobileDropdown.classList.toggle("open");
-      };
+    // メニューを開閉する共通命令
+    function toggleMenu(e) {
+      if (e) {
+        e.preventDefault();  // ページジャンプを確実に防止
+        e.stopPropagation();  // イベントの連動をシャットアウト
+      }
+      globalDropdown.classList.toggle("open");
     }
 
-    // メニュー内の各リンクをクリックした瞬間に自動でメニューを閉じる命令
+    // スマホ用ハンバーガーボタンクリック時
+    if (hamburgerBtn) {
+      hamburgerBtn.onclick = toggleMenu;
+    }
+
+    // PC用「メニュー」ボタンクリック時
+    if (pcMenuBtn) {
+      pcMenuBtn.onclick = toggleMenu;
+    }
+
+    // メニュー内の各リンクをクリックした瞬間に、自動でメニューを閉じる設定
     dropdownLinks.forEach(link => {
       link.onclick = function() {
-        mobileDropdown.classList.remove("open");
+        globalDropdown.classList.remove("open");
       };
+    });
+
+    // 🌟 メニューの「外側（背景や他のセクション）」をクリックしたときにも自動でメニューを閉じる安全対策
+    document.addEventListener("click", function(e) {
+      if (globalDropdown.classList.contains("open")) {
+        // クリックされた場所がメニュー自体、ハンバーガーボタン、PCメニューボタンのいずれでもない場合
+        if (!globalDropdown.contains(e.target) && e.target !== hamburgerBtn && !pcMenuBtn.contains(e.target)) {
+          globalDropdown.classList.remove("open");
+        }
+      }
     });
   </script>
 </body>
