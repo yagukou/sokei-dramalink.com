@@ -1038,41 +1038,80 @@
        ========================================================================== */
 
     // 1. スマホの画面上に、メニュー画面（HTML）とデザイン（CSS）を自動で作成して追加します
-    const menuHTML = `
-      <div id="menu-overlay" style="position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:140; display:none;"></div>
-      <nav id="mobile-nav" style="position:fixed; top:0; right:-100%; width:250px; height:100vh; background-color:#111111; box-shadow:-4px 0 12px rgba(0,0,0,0.5); z-index:150; display:flex; flex-direction:column; padding-top:90px; transition:right 0.3s ease;">
-        <a href="index.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">トップページ</a>
-        <a href="ticket.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">チケット予約</a>
-        <a href="Schedule.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">スケジュール</a>
-        <a href="news.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">ニュース</a>
-        <a href="what.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">公演紹介</a>
-        <a href="Participant.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">ビラネットワーク</a>
-        <a href="Inquiry.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif;">お問い合わせ</a>
-      </nav>
-    `;
-    document.body.insertAdjacentHTML('beforeend', menuHTML);
+const menuHTML = `
+  <div id="menu-overlay" style="
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6); z-index: 998;
+    opacity: 0; visibility: hidden; transition: all 0.3s ease;
+  "></div>
 
-    // 2. ボタンやリンクをクリックしたときの動きを設定します
-    const hamburgerBtn = document.querySelector(".hamburger");
-    const mobileNav = document.getElementById("mobile-nav");
-    const menuOverlay = document.getElementById("menu-overlay");
-    const menuLinks = document.querySelectorAll(".m-link");
+  <nav id="mobile-nav" style="
+    position: fixed; top: 0; right: -300px; width: 300px; height: 100vh;
+    background: #111111; box-shadow: -4px 0 12px rgba(0,0,0,0.5); z-index: 999;
+    display: flex; flex-direction: column; padding-top: 90px; box-sizing: border-box;
+    transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  ">
+    <button id="menu-close-btn" style="
+      position: absolute; top: 20px; right: 20px; background: none; border: none;
+      color: #ffffff; font-size: 32px; cursor: pointer; padding: 5px; z-index: 1000;
+    "><i class="ti ti-x"></i></button>
+    
+    <a href="index.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">ホーム</a>
+    <a href="About.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">早慶演劇祭とは</a>
+    <a href="Timetable.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">タイムテーブル</a>
+    <a href="news.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">ニュース</a>
+    <a href="Ticket.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">チケット</a>
+    <a href="Flyer.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">ビラネットワーク</a>
+    <a href="Inquiry.html" class="m-link" style="color:#ffffff; text-decoration:none; padding:15px 25px; font-size:16px; border-bottom:1px solid #222; font-family:sans-serif; transition: background 0.2s;">お問い合わせ</a>
+  </nav>
+`;
+document.body.insertAdjacentHTML('beforeend', menuHTML);
 
-    // ☰ボタンをクリックしたとき：メニューを開く
-    hamburgerBtn.onclick = function() {
-      toggleMobileMenu();
-    };
+// 2. 動きをつけるための要素をそれぞれ取得
+const hamburgerBtn = document.querySelector(".hamburger"); // 三本線ボタン
+const closeBtn = document.getElementById("menu-close-btn");   // ×ボタン
+const mobileNav = document.getElementById("mobile-nav");
+const menuOverlay = document.getElementById("menu-overlay");
+const menuLinks = document.querySelectorAll(".m-link");
 
-    // 暗い背景をクリックしたとき：メニューを閉じる
-    menuOverlay.onclick = function() {
-      toggleMobileMenu();
-    };
+// 🌟 メニューを開く処理（画面外から右端 0px の位置へ滑らかに移動）
+function openMobileMenu() {
+  mobileNav.style.right = "0px";
+  menuOverlay.style.opacity = "1";
+  menuOverlay.style.visibility = "visible";
+}
 
-    // メニュー内のリンク（各ページ）をクリックしたとき、ホバー（指をのせたとき）に赤くするデザイン
-    menuLinks.forEach(link => {
-      link.onmouseenter = () => link.style.backgroundColor = '#b90e0e';
-      link.onmouseleave = () => link.style.backgroundColor = 'transparent';
-    });
+// 🌟 メニューを閉じる処理（画面の右外側 -300px の位置へ隠す）
+function closeMobileMenu() {
+  mobileNav.style.right = "-300px";
+  menuOverlay.style.opacity = "0";
+  menuOverlay.style.visibility = "hidden";
+}
+
+// 3. 各ボタンをクリックしたときの動作を設定
+if (hamburgerBtn) {
+  hamburgerBtn.onclick = function() {
+    openMobileMenu();
+  };
+}
+
+if (closeBtn) {
+  closeBtn.onclick = function() {
+    closeMobileMenu();
+  };
+}
+
+if (menuOverlay) {
+  menuOverlay.onclick = function() {
+    closeMobileMenu();
+  };
+}
+
+// 4. メニュー内のリンクをホバー（指を乗せたとき）したときに赤くする設定
+menuLinks.forEach(link => {
+  link.onmouseenter = () => link.style.backgroundColor = '#b90e0e';
+  link.onmouseleave = () => link.style.backgroundColor = 'transparent';
+});
 
     // メニューを開閉させる共通の命令
     function toggleMobileMenu() {
