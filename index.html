@@ -319,7 +319,6 @@
     .sns-item:hover { transform: translateY(-3px); filter: brightness(1.2); }
     .sns-item img { width: 36px; height: 36px; }
     .footer-copy { font-size: 11px; color: #555; letter-spacing: 1px; font-family: sans-serif; }
-
     .hamburger { display: none; }
 
     /* PC・タブレット共通レスポンシブ */
@@ -391,38 +390,46 @@
     /* 🌐 画面共通ドロップダウンメニューの見た目設定（PC・スマホ両対応） */
     #global-dropdown {
       position: fixed;
-      top: 90px; /* PCヘッダー(90px)の直下にピタッと配置 */
-      left: 0;
-      width: 100%;
+      top: 0;
+      right: -300px; /* 最初は画面の右外側に隠す */
+      width: 300px;
+      height: 100vh;
       background: #111111;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-      z-index: 999;
-      max-height: 0; /* 最初は高さを0にして隠す */
-      overflow: hidden;
-      transition: max-height 0.4s ease-in-out; /* 下にバーッと広がるアニメーション */
+      box-shadow: -5px 0 25px rgba(0,0,0,0.7);
+      z-index: 9999;
       display: flex; 
       flex-direction: column;
+      padding-top: 60px;
+      transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    #global-dropdown a {
-      color: #ffffff !important;
-      text-decoration: none;
-      padding: 18px 25px;
-      font-size: 15px;
-      border-bottom: 1px solid #222;
-      font-family: sans-serif;
-      transition: background 0.2s;
-    }
-
-    #global-dropdown a:hover {
-      background-color: #b90e0e;
-    }
-
-    /* 「open」命令がついた瞬間、450pxの高さまでバーッと広げる */
+/* メニュー表示時 */
     #global-dropdown.open {
-      max-height: 450px;
+      right: 0;
     }
 
+    /* 閉じるボタン（メニュー内に追加推奨） */
+    .menu-close-btn {
+      align-self: flex-end;
+      font-size: 30px;
+      color: #fff;
+      background: transparent;
+      border: none;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+
+    /* 暗い背景レイヤー */
+    #menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 9998;
+      display: none;
+    }
+    #menu-overlay.open { display: block; }
+    
     @media (max-width: 768px) {
       #global-dropdown { 
         top: 70px; /* スマホ画面のときはスマホヘッダー(70px)の直下に調整 */
@@ -620,41 +627,6 @@
         }
       }
     });
-
-  const menuBtn = document.querySelector(".pc-menu-btn");
-  const sideMenu = document.getElementById("side-menu");
-  const overlay = document.getElementById("menu-overlay");
-  const closeBtn = document.getElementById("menu-close-btn");
-
-  function openMenu() {
-    sideMenu.classList.add("active");
-    overlay.classList.add("active");
-  }
-
-  function closeMenu() {
-    sideMenu.classList.remove("active");
-    overlay.classList.remove("active");
-  }
-
-  menuBtn.onclick = (e) => { e.preventDefault(); openMenu(); };
-  closeBtn.onclick = closeMenu;
-  overlay.onclick = closeMenu;
-</script>
-
-<style>
-  #side-menu {
-    position: fixed; top: 0; right: -300px; width: 300px; height: 100%;
-    background: #111; z-index: 1000; transition: right 0.4s ease;
-    display: flex; flex-direction: column; padding: 50px 20px;
-  }
-  #side-menu.active { right: 0; }
-  #menu-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); z-index: 999; display: none;
-  }
-  #menu-overlay.active { display: block; }
-  #menu-close-btn { color: white; background: none; border: none; font-size: 30px; align-self: flex-end; cursor: pointer; }
-</style>
   </script>
 </body>
 </html>
