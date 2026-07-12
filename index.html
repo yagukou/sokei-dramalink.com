@@ -321,6 +321,50 @@
     .footer-copy { font-size: 11px; color: #555; letter-spacing: 1px; font-family: sans-serif; }
     .hamburger { display: none; }
 
+/* 🌐 右側からスライドインするメニュー */
+    #global-dropdown {
+      position: fixed;
+      top: 0;
+      right: -300px; /* 普段は右側に隠す */
+      width: 300px;
+      height: 100vh;
+      background: #111111;
+      box-shadow: -5px 0 25px rgba(0,0,0,0.7);
+      z-index: 9999;
+      display: flex; 
+      flex-direction: column;
+      padding-top: 60px;
+      transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    #global-dropdown.open {
+      right: 0; /* 表示時は0の位置に */
+    }
+
+    /* メニュー内のリンクデザイン（微調整） */
+    #global-dropdown a {
+      color: #fff;
+      padding: 20px 30px;
+      text-decoration: none;
+      font-size: 16px;
+      border-bottom: 1px solid #222;
+    }
+
+    /* 暗い背景レイヤー */
+    #menu-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 9998;
+      display: none; /* 初期は非表示 */
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    #menu-overlay.open {
+      display: block;
+      opacity: 1;
+    }
+
     /* PC・タブレット共通レスポンシブ */
     @media (max-width: 960px) {
       .guide-grid { grid-template-columns: 1fr; gap: 25px; }
@@ -387,27 +431,6 @@
       .slider-container { height: 40vh; }
     }
 
-    /* 🌐 画面共通ドロップダウンメニューの見た目設定（PC・スマホ両対応） */
-    #global-dropdown {
-      position: fixed;
-      top: 0;
-      right: -300px; /* 最初は画面の右外側に隠す */
-      width: 300px;
-      height: 100vh;
-      background: #111111;
-      box-shadow: -5px 0 25px rgba(0,0,0,0.7);
-      z-index: 9999;
-      display: flex; 
-      flex-direction: column;
-      padding-top: 60px;
-      transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-/* メニュー表示時 */
-    #global-dropdown.open {
-      right: 0;
-    }
-
     /* 閉じるボタン（メニュー内に追加推奨） */
     .menu-close-btn {
       align-self: flex-end;
@@ -429,16 +452,13 @@
       display: none;
     }
     #menu-overlay.open { display: block; }
-    
-    @media (max-width: 768px) {
-      #global-dropdown { 
-        top: 70px; /* スマホ画面のときはスマホヘッダー(70px)の直下に調整 */
-      }
-    }
+
   </style>
 </head>
 
 <body>
+  <div id="menu-overlay"></div>
+
   <script>
   window.difyChatbotConfig = { token: 'cfUgpimDdajARduo', inputs: {}, systemVariables: {}, userVariables: {} }
   </script>
@@ -589,8 +609,6 @@
        ========================================================== */
     const hamburgerBtn = document.querySelector(".hamburger"); // スマホ用の三本線
     const pcMenuBtn = document.querySelector(".pc-menu-btn");     // PC用の「メニュー」ボタン
-    const globalDropdown = document.getElementById("global-dropdown");
-    const dropdownLinks = document.querySelectorAll("#global-dropdown a");
 
     // メニューを開閉する共通命令
     function toggleMenu(e) {
@@ -627,6 +645,32 @@
         }
       }
     });
+
+    const hamburgerBtn = document.querySelector(".hamburger");
+    const pcMenuBtn = document.querySelector(".pc-menu-btn");
+    const globalDropdown = document.getElementById("global-dropdown");
+    const menuOverlay = document.getElementById("menu-overlay"); // 追加
+
+    // メニューとオーバーレイを開閉する共通命令
+    function toggleMenu(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      globalDropdown.classList.toggle("open");
+      menuOverlay.classList.toggle("open"); // 🌟追加：オーバーレイも開閉
+    }
+
+    if (hamburgerBtn) hamburgerBtn.onclick = toggleMenu;
+    if (pcMenuBtn) pcMenuBtn.onclick = toggleMenu;
+
+    // メニュー内のリンクをクリックした時も閉じる
+    document.querySelectorAll("#global-dropdown a").forEach(link => {
+      link.onclick = toggleMenu; 
+    });
+
+    // メニューの外側（オーバーレイ）をクリックした時に閉じる
+    menuOverlay.onclick = toggleMenu;
   </script>
 </body>
 </html>
