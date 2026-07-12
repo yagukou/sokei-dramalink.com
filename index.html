@@ -593,7 +593,7 @@
   </footer>
 
   <script>
-    /* スライダー制御 */
+/* 1. スライダー制御 */
     let index = 0;
     const slides = document.querySelectorAll(".slide");
     function showSlide(n) {
@@ -604,73 +604,36 @@
     document.querySelector(".prev").onclick = () => { index = (index - 1 + slides.length) % slides.length; showSlide(index); };
     setInterval(() => { index = (index + 1) % slides.length; showSlide(index); }, 9000); 
 
-    /* ==========================================================
-       🌐 メニューボタン（PC版メニュー・スマホ版ハンバーガー両対応）の開閉処理
-       ========================================================== */
-    const hamburgerBtn = document.querySelector(".hamburger"); // スマホ用の三本線
-    const pcMenuBtn = document.querySelector(".pc-menu-btn");     // PC用の「メニュー」ボタン
-
-    // メニューを開閉する共通命令
-    function toggleMenu(e) {
-      if (e) {
-        e.preventDefault();  // ページジャンプを確実に防止
-        e.stopPropagation();  // イベントの連動をシャットアウト
-      }
-      globalDropdown.classList.toggle("open");
-    }
-
-    // スマホ用ハンバーガーボタンクリック時
-    if (hamburgerBtn) {
-      hamburgerBtn.onclick = toggleMenu;
-    }
-
-    // PC用「メニュー」ボタンクリック時
-    if (pcMenuBtn) {
-      pcMenuBtn.onclick = toggleMenu;
-    }
-
-    // メニュー内の各リンクをクリックした瞬間に、自動でメニューを閉じる設定
-    dropdownLinks.forEach(link => {
-      link.onclick = function() {
-        globalDropdown.classList.remove("open");
-      };
-    });
-
-    // 🌟 メニューの「外側（背景や他のセクション）」をクリックしたときにも自動でメニューを閉じる安全対策
-    document.addEventListener("click", function(e) {
-      if (globalDropdown.classList.contains("open")) {
-        // クリックされた場所がメニュー自体、ハンバーガーボタン、PCメニューボタンのいずれでもない場合
-        if (!globalDropdown.contains(e.target) && e.target !== hamburgerBtn && !pcMenuBtn.contains(e.target)) {
-          globalDropdown.classList.remove("open");
-        }
-      }
-    });
-
+    /* 2. サイドメニューの開閉処理 */
     const hamburgerBtn = document.querySelector(".hamburger");
     const pcMenuBtn = document.querySelector(".pc-menu-btn");
     const globalDropdown = document.getElementById("global-dropdown");
-    const menuOverlay = document.getElementById("menu-overlay"); // 追加
+    const menuOverlay = document.getElementById("menu-overlay");
 
-    // メニューとオーバーレイを開閉する共通命令
+    // メニューとオーバーレイを一緒に開閉する関数
     function toggleMenu(e) {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
       }
       globalDropdown.classList.toggle("open");
-      menuOverlay.classList.toggle("open"); // 🌟追加：オーバーレイも開閉
+      menuOverlay.classList.toggle("open");
     }
 
+    // イベントリスナーの登録
     if (hamburgerBtn) hamburgerBtn.onclick = toggleMenu;
     if (pcMenuBtn) pcMenuBtn.onclick = toggleMenu;
+    
+    // オーバーレイ（背景）クリックで閉じる
+    if (menuOverlay) menuOverlay.onclick = toggleMenu;
 
     // メニュー内のリンクをクリックした時も閉じる
     document.querySelectorAll("#global-dropdown a").forEach(link => {
-      link.onclick = toggleMenu; 
+      link.onclick = () => {
+        globalDropdown.classList.remove("open");
+        menuOverlay.classList.remove("open");
+      };
     });
-
-    // メニューの外側（オーバーレイ）をクリックした時に閉じる
-    menuOverlay.onclick = toggleMenu;
   </script>
 </body>
 </html>
