@@ -365,6 +365,24 @@
       opacity: 1;
     }
 
+/* 1. 空間を消すためのリセット */
+.slider, .slides, .slide {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block; /* 余計な隙間を防ぐ */
+}
+
+/* 2. ヒーローテキスト下の余白を強制ゼロに */
+.hero-text {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* 3. セクション間の不自然な隙間を詰める */
+section {
+  margin-top: -1px; /* わずかなズレを補正 */
+}
+
     /* PC・タブレット共通レスポンシブ */
     @media (max-width: 960px) {
       .guide-grid { grid-template-columns: 1fr; gap: 25px; }
