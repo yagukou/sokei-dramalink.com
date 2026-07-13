@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ja" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <meta name="google" content="notranslate" />
+  <meta name="format-detection" content="email=no,telephone=no,address=no" />
+
+  <title>Members - StageLink</title>
+
+  <link rel="stylesheet" href="./static/css/mvp.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.4.0/dist/tabler-icons.min.css">
+
+  <link rel="icon" href="https://blviywoprvcatwwrrysi.supabase.co/storage/v1/object/public/assets/Untitled%20folder/favicon.ico" type="image/x-icon" />
+  
+  <style>
+    /* --- 全体設定：index.html共通 --- */
+    body {
+      margin: 0;
+      font-family: "Times New Roman", "Yu Mincho", "游明朝", "Noto Serif JP", serif;
+      background: #0b0b0b;  
+      color: #ffffff; 
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* --- ヘッダー設定 --- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #b90e0e !important; 
+      padding: 0 30px;
+      height: 90px;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      font-family: sans-serif;
+    }
+
+    .menu-left, .menu-right {
+      display: flex;
+      gap: 15px;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .menu-left img, .menu-right img {
+       width: 30px;
+       height: 30px;
+       margin-bottom: 5px;
+       filter: brightness(0) invert(1); 
+    }
+
+    .logo {
+      text-decoration: none;
+      font-family: "Times New Roman", serif;
+      letter-spacing: 3px;
+      text-align: center;
+      line-height: 1.2;
+      display: flex;
+      flex-direction: column;  
+      align-items: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%); 
+      z-index: 1;
+    }
+
+    .logo-main { font-size: 24px; font-weight: bold; color: #ffffff; }
+    .logo-sub { font-size: 13px; color: #d4af37; margin-top: 2px; letter-spacing: 2px; }
+
+    a { text-decoration: none; color: white; font-size: 12px; }
+
+    .menu-1 {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 5px 10px;
+      transition: 0.3s;
+    }
+    .menu-1 span { font-size: 12px; font-weight: 600; color: #ffffff !important; margin-top: 5px; }
+    .menu-1:hover { transform: translateY(-3px); }
+
+    /* --- メインコンテンツの共通設定 --- */
+    .member-section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 60px 20px 120px;
+    }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    .section-en { color: #c5a059; letter-spacing: 6px; font-size: 14px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
+    .section-head h2 { font-size: 32px; margin: 0; font-family: "Yu Mincho", serif; font-weight: 500; letter-spacing: 2px; }
+    .section-head::after { content: ""; display: block; width: 40px; height: 1px; background: #c5a059; margin: 20px auto 0; }
+
+    /* --- 上部：2名の横並びレイアウト --- */
+    .leader-container {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+      margin-bottom: 80px;
+    }
+    .leader-card {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      background: #121212;
+      padding: 30px;
+      border: 1px solid #222;
+      border-radius: 8px;
+    }
+    .leader-img {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #222; /* 画像がない時のダミー背景 */
+      border: 2px solid #c5a059;
+      flex-shrink: 0;
+    }
+    .leader-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .leader-info .line-1 { font-size: 14px; color: #c5a059; font-weight: bold; }
+    .leader-info .line-2 { font-size: 22px; font-family: "Yu Mincho", serif; font-weight: bold; color: #fff; }
+    .leader-info .line-3 { font-size: 14px; color: #aaa; line-height: 1.6; }
+
+    /* --- 中段：4列×2段のグリッドレイアウト --- */
+    .member-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-bottom: 100px;
+    }
+    .member-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      background: #121212;
+      padding: 25px 15px;
+      border: 1px solid #222;
+      border-radius: 8px;
+    }
+    .member-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #222;
+      border: 1px solid #444;
+      margin-bottom: 15px;
+    }
+    .member-name { font-size: 16px; font-family: "Yu Mincho", serif; font-weight: 500; color: #fff; margin-bottom: 5px; }
+    .member-role { font-size: 12px; color: #c5a059; }
+
+    /* --- 下部：メンバー募集エリア --- */
+    .recruitment-box {
+      text-align: center;
+      padding: 40px;
+      border: 2px dashed #b90e0e;
+      background: rgba(185, 14, 14, 0.05);
+      border-radius: 8px;
+    }
+    .recruitment-box h3 {
+      font-size: 28px;
+      font-family: "Yu Mincho", serif;
+      color: #ffffff;
+      margin: 0;
+      letter-spacing: 4px;
+    }
+
+    /* --- フッター設定 --- */
+    footer { background: #070707; border-top: 1px solid #1a1a1a; padding: 60px 5% 40px; text-align: center; }
+    .sns { display: flex; justify-content: center; gap: 35px; margin-bottom: 40px; }
+    .sns-item img { width: 36px; height: 36px; }
+    .footer-copy { font-size: 11px; color: #555; letter-spacing: 1px; font-family: sans-serif; }
+    .hamburger { display: none; }
+
+    /* --- 右側スライドメニュー --- */
+    #global-dropdown {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background: #111111;
+      box-shadow: -5px 0 25px rgba(0,0,0,0.7);
+      z-index: 9999;
+      display: flex; 
+      flex-direction: column;
+      padding-top: 60px;
+      transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+    #global-dropdown.open { right: 0; }
+    #global-dropdown a { color: #fff; padding: 20px 30px; text-decoration: none; font-size: 16px; border-bottom: 1px solid #222; display: block;}
+    #menu-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); z-index: 9998; display: none; opacity: 0; transition: opacity 0.3s; }
+    #menu-overlay.open { display: block; opacity: 1; }
+
+    /* --- レスポンシブ設定 --- */
+    @media (max-width: 768px) {
+      header { height: 70px; padding: 0 20px; }
+      .logo { max-width: 55%; }
+      .logo-main { font-size: 20px; }
+      .logo-sub { font-size: 11px; }
+      .menu-left, .menu-right { display: none !important; }
+      .hamburger { display: block; position: absolute; top: 50%; right: 20px; transform: translateY(-50%); font-size: 28px; color: white; cursor: pointer; z-index: 9999; }
+      
+      .leader-card { flex-direction: column; text-align: center; padding: 20px; }
+      .member-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="menu-overlay"></div>
+
+  <!-- ヘッダー -->
+  <header>
+    <div class="menu-left">
+      <a href="what.html" class="menu-1"><img src="what3.png"><span>企画</span></a>
+      <a href="Participant.html" class="menu-1"><img src="Participant3.png"><span>ビラネット</span></a>
+      <a href="Schedule.html" class="menu-1"><img src="Schedule3.png"><span>スケジュール</span></a>
+    </div>
+
+    <a href="index.html" class="logo">
+      <div class="logo-main">StageLink</div>
+      <div class="logo-sub">Official Website</div>
+    </a>
+
+    <div class="menu-right">
+      <a href="news.html" class="menu-1"><img src="news3.png"><span>ニュース</span></a>
+      <a href="Inquiry.html" class="menu-1"><img src="Inquiry3.png"><span>お問い合わせ</span></a>
+      <a href="#" class="menu-1 pc-menu-btn"><img src="menu3.png"><span>メニュー</span></a>
+    </div>
+
+    <div class="hamburger">☰</div>
+  </header>
+
+  <!-- サイドメニュー -->
+  <nav id="global-dropdown">
+    <a href="Philosophy.html">・私たちの思い ーPhilosophy</a>
+    <a href="what.html">・企画紹介</a>
+    <a href="Participant.html">・ビラネット</a>
+    <a href="news.html">・ニュース</a>
+    <a href="menber.html">・メンバー</a>
+    <a href="Inquiry.html">・お問い合わせ</a>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <main class="member-section">
+    <div class="section-head">
+      <p class="section-en">Members</p>
+      <h2>運営メンバー</h2>
+    </div>
+
+    <!-- 上部：2名（横並び） -->
+    <div class="leader-container">
+      <!-- 1人目 -->
+      <div class="leader-card">
+        <img src="" class="leader-img" alt="役職1">
+        <div class="leader-info">
+          <div class="line-1">役職名・肩書きなど（1行目）</div>
+          <div class="line-2">メンバー氏名（2行目）</div>
+          <div class="line-3">紹介文や一言コメント、プロフィールなどが入ります（3行目）</div>
+        </div>
+      </div>
+      <!-- 2人目 -->
+      <div class="leader-card">
+        <img src="" class="leader-img" alt="役職2">
+        <div class="leader-info">
+          <div class="line-1">役職名・肩書きなど（1行目）</div>
+          <div class="line-2">メンバー氏名（2行目）</div>
+          <div class="line-3">紹介文や一言コメント、プロフィールなどが入ります（3行目）</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 中段：4列×2段のグリッド -->
+    <div class="member-grid">
+      <!-- 1段目（4人） -->
+      <div class="member-card">
+        <img src="" class="member-img" alt="メンバー1">
+        <div class="member-name">名前1</div>
+        <div class="member-role">役職/部署</div>
+      </div>
+      <div class="member-card">
+        <img src="" class="member-img" alt="メンバー2">
+        <div class="member-name">名前2</div>
+        <div class="member-role">役職/部署</div>
+      </div>
+      <div class="member-card">
+        <img src="" class="member-img" alt="メンバー3">
+        <div class="member-name">名前3</div>
+        <div class="member-role">役職/部署</div>
+      </div>
+      <div class="member-card">
+        <img src="" class="member-img" alt="メンバー4">
+        <div class="member-name">名前4</div>
+        <div class="member-role">役職/部署</div>
+      </div>
+
+      <!-- 2段目（4人） -->
+      <div class="member-card">
+        <img src="" class="member-img" alt="メンバー5">
+        <div class="member-name">名前5</div>
+        <div class="member-role">役職/部署</div>
+      </div>
+      <div class="member-card">
+        <img src="" class="member-img" alt="メンバー6">
+        <div class="member-name">名前6</div>
+        <div class="member-role">役職/部署</div>
+      </div>
+      <div class="member-card">
+        <img src="" class="member-img" alt="メンバー7">
+        <div class="member-name">名前7</div>
+        <div class="member-role">役職/部署</div>
+      </div>
+      <div class="member-card">
+        <img src="" class="member-img" alt="メンバー8">
+        <div class="member-name">名前8</div>
+        <div class="member-role">役職/部署</div>
+      </div>
+    </div>
+
+    <!-- 下部：メンバー募集中 -->
+    <div class="recruitment-box">
+      <h3>メンバー募集中！！</h3>
+    </div>
+  </main>
+
+  <!-- フッター -->
+  <footer>
+    <div class="sns">
+      <a href="https://x.com/sokei_dramalink?s=21" target="_blank"><img src="x.png" alt="X"></a>
+      <a href="https://line.me/ti/g2/561sydqS-m-x2OiOUTy8kvMgwhPWF58wPEW7ug" target="_blank"><img src="line.png" alt="LINE"></a>
+      <a href="https://www.instagram.com/soukei_dramalink2026" target="_blank"><img src="instagram.png" alt="Instagram"></a>
+    </div>
+    <div class="footer-copy">© 2026 StageLink. All Rights Reserved.</div>
+  </footer>
+
+  <!-- スクリプト（メニュー制御用） -->
+  <script>
+    const hamburgerBtn = document.querySelector(".hamburger");
+    const pcMenuBtn = document.querySelector(".pc-menu-btn");
+    const globalDropdown = document.getElementById("global-dropdown");
+    const menuOverlay = document.getElementById("menu-overlay");
+
+    function toggleMenu(e) {
+      if (e) { e.preventDefault(); e.stopPropagation(); }
+      globalDropdown.classList.toggle("open");
+      menuOverlay.classList.toggle("open");
+    }
+
+    if (hamburgerBtn) hamburgerBtn.onclick = toggleMenu;
+    if (pcMenuBtn) pcMenuBtn.onclick = toggleMenu;
+    if (menuOverlay) menuOverlay.onclick = toggleMenu;
+
+    document.querySelectorAll("#global-dropdown a").forEach(link => {
+      link.onclick = () => {
+        globalDropdown.classList.remove("open");
+        menuOverlay.classList.remove("open");
+      };
+    });
+  </script>
+</body>
+</html>
