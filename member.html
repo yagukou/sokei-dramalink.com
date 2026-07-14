@@ -114,15 +114,16 @@
       border: 1px solid #222;
       border-radius: 8px;
     }
-    .leader-img {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #222; /* 画像がない時のダミー背景 */
-      border: 2px solid #c5a059;
-      flex-shrink: 0;
-    }
+.leader-img {
+  width: 160px;
+  height: 200px;
+  /* border-radius: 50%; を削除 */
+  border-radius: 0; /* これを追加してもOK */
+  object-fit: cover;
+  background: #222;
+  border: 2px solid #c5a059;
+  flex-shrink: 0;
+}
     .leader-info {
       display: flex;
       flex-direction: column;
@@ -265,11 +266,15 @@
     <div class="leader-container">
       <!-- 1人目 -->
       <div class="leader-card">
-        <img src="" class="leader-img" alt="役職1">
+        <img src="" class="member1.png" alt="役職1">
         <div class="leader-info">
-          <div class="line-1">役職名・肩書きなど（1行目）</div>
-          <div class="line-2">メンバー氏名（2行目）</div>
-          <div class="line-3">紹介文や一言コメント、プロフィールなどが入ります（3行目）</div>
+          <div class="line-1">EnTRoPy</div>
+          <div class="line-2">宮川久</div>
+          <div class="line-3">慶應義塾大学環境情報学部 在学中。中学2年のときに演劇に出会い、バスケットボール部から転部して活動を始めた。高校2年時には県代表として東京「シアター1010」の舞台に立ち、他県の強豪校の作品に触れたことで、表現の自由さや舞台のあり方の多用性に強く惹かれる。
+
+                              大学進学後もさまざまな舞台を観る中で、「この面白さに触れる入口を、もっと増やせたら」という想いが強くなり、Stage Link を立ち上げる。演劇の魅力が自然に伝わり、初めての人でも一歩踏み出しやすい場をつくることを目指して運営している。
+
+                              現在は主に劇団EnTRoPy 所属。第11回全国学生演劇祭実行委員。大学では演劇とは全く関係のない、航空データ解析・航空気象を研究している。</div>
         </div>
       </div>
       <!-- 2人目 -->
