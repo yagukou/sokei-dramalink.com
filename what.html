@@ -1,475 +1,1198 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-     <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #111;  
-      color: white; 
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: #b90e0e;
-      padding: 10px 20px;
-    }
-
-    .menu-left, .menu-right {
-      display: flex;
-      gap: 10px;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 2;
-    }
-
-    .menu-left div, .menu-right div {
-      display: flex;
-      flex-direction: column;  /* ←縦にする */
-      align-items: center;
-      text-align: center;
-}
-
-    .menu-left img, .menu-right img {
-       width: 30px;
-       height: 30px;
-       margin-bottom: 5px;
-}
-
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      font-family: "Times New Roman", serif;
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 3px;
-      color: #222;
-      text-align: center;
-      line-height: 1.2;
-      display: flex;
-      flex-direction: column;  
-      align-items: center;
-      position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1;
-
-  max-width: 40%;  /* ←これ超重要 */
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-    }
-
-    .logo-main {
-  font-size: 22px;
-  font-weight: bold;
-  letter-spacing: 3px;
-}
-
-.logo-sub {   
-  font-size: 16px;   
-  letter-spacing: 2px;
-  color: #d4af37;      
-}
-
-    a {
-      text-decoration: none;
-      flex-direction: column;
-      color: black;
-      font-size: 12px;
-    }
-
-        .menu-1 {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 80px;   /* 横幅固定 */
-  height: 80px;  /* 高さ固定 */
-  justify-content: center;
-}
-
-.menu-1, .language-btn {
-  background: #b90e0e;; /* 好きな色 */
-  color: rgb(8, 8, 8);
-}
-
-.goog-te-banner-frame,
-  .goog-te-banner-frame.skiptranslate,
-  .goog-te-gadget-icon,
-  .goog-te-gadget-simple,
-  .goog-te-balloon-frame,
-  .skiptranslate {
-    display: none !important;
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stage Link Actions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f3ecdf;
+    --ink: #1f1a16;
+    --sub-ink: #7d6f61;
+    --wine: #7c2946;
+    --wine-deep: #4a1428;
+    --gold: #b8863f;
+    --gold-deep: #7c5a1e;
+    --navy: #33495f;
+    --navy-deep: #17222d;
+    --line: #e0d3bd;
+    --card-bg: #fffcf5;
   }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
 
   body {
-    top: 0px !important;
-    position: static !important;
-  }
-
-/* ホバー効果 */
-.menu-1:hover {
-  transform: translateY(-3px);
-  transition: 0.3s;
-}
-
-.menu-1 img {
-  width: 30px !important;
-  height: 30px !important;
-}
-
-.slider {
-  position: relative;
-  width: 80%;
-  margin: 30px auto;
-  overflow: hidden;
-}
-
-.slides {
-  position: relative;
-}
-
-.slide {
-  width: 100%;
-  display: none;
-  border-radius: 10px;
-  opacity: 0;
-  transition: 0.5s;
-  position: absolute;
-}
-
-.slide.active {
-  display: block;
-  opacity: 1;
-  position: relative;
-}
-
-button.prev, button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.prev { left: 10px; }
-.next { right: 10px; }
-
-.lang-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-/* ↓ 下にポップアップさせる */
-.lang-menu {
-  position: absolute;
-  top: 110%;   /* ←ボタンの真下 */
-  left: 0;
-  width: 140px;
-
-  background: #f0f0f0;
-  border-radius: 12px;
-  display: none;
-  overflow: hidden;
-  z-index: 9999;
-}
-
-/* 中身 */
-.lang-menu div {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 13px;
-  color: black
-}
-
-/* ホバー */
-.lang-menu div:hover {
-  background: #ddd;
-}
-
-.lang-wrapper .lang-menu {
-  display: none;
-}
-
-.menu-1 span {
-  display: block;
-  width: 100%;
-  text-align: center;       /* 真ん中に */
-  margin-top: 5px;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11px;
-}
-
-.goog-te-banner-frame.skiptranslate {
-  display: none !important;
-}
-
-.goog-te-banner-frame {
-  display: none !important;
-}
-
-body {
-  top: 0px !important;
-  position: static !important;
-}
-
-body.translated-ltr .logo-main {
-  font-size: 22px;
-}
-
-body.translated-ltr .logo-sub {
-  font-size: 14px;
-}
-
-.hamburger {
-  display: none;
-}
-
-@media (max-width: 768px) {
-
-  header {
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 300;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse 900px 500px at 8% -8%, rgba(124,41,70,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(184,134,63,0.10), transparent 55%);
+    color: var(--ink);
+    line-height: 1.9;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
     position: relative;
-    height: 70px;
   }
 
-  /* ロゴ中央 */
-  .logo {
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    z-index: 999;
+  }
+
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity .8s cubic-bezier(.22,.8,.28,1), transform .8s cubic-bezier(.22,.8,.28,1);
+  }
+  .reveal.is-in { opacity: 1; transform: translateY(0); }
+
+  .hero {
+    padding: 108px 0 40px;
+    position: relative;
+  }
+
+  .hero-kicker {
+    display: inline-block;
+    font-family: "Oswald", sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--wine-deep);
+    padding: 7px 16px 6px;
+    transform: rotate(-1.2deg);
+    margin-bottom: 34px;
+  }
+
+  .masthead {
+    font-family: "Oswald", sans-serif;
+    line-height: 0.86;
+  }
+
+  .masthead .line1 {
+    display: block;
+    font-weight: 300;
+    font-size: clamp(22px, 3.4vw, 32px);
+    letter-spacing: 0.16em;
+    color: var(--sub-ink);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .masthead .line2 {
+    display: block;
+    font-weight: 700;
+    font-size: clamp(72px, 15vw, 176px);
+    letter-spacing: -0.02em;
+    color: var(--wine-deep);
+    text-transform: uppercase;
+    position: relative;
+  }
+
+  .masthead-rule {
+    width: 130px;
+    height: 6px;
+    background: var(--gold);
+    margin: 26px 0 30px;
+    transform: rotate(-1deg);
+  }
+
+  .hero-tagline {
+    font-family: "Noto Serif JP", serif;
+    font-weight: 500;
+    font-size: clamp(14px, 1.8vw, 17px);
+    color: var(--ink);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 560px) {
+    .hero-tagline { white-space: normal; }
+  }
+
+  .intro-grid {
+    margin-top: 84px;
+    display: flex;
+    align-items: flex-start;
+    gap: 56px;
+    flex-wrap: wrap;
+  }
+
+  .intro-text {
+    flex: 1 1 460px;
+    min-width: 0;
+  }
+
+  .intro-photo {
+    flex: 0 0 380px;
+    width: 380px;
+    margin-top: 10px;
+  }
+
+  .intro-photo > img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center 30%;
+    border-radius: 44% 56% 61% 39% / 49% 44% 56% 51%;
+    border: 8px solid #fff;
+    box-shadow: 0 28px 50px rgba(31,26,22,0.22);
+    transform: rotate(3deg);
+  }
+
+  @media (max-width: 900px) {
+    .intro-photo { flex-basis: 260px; width: 260px; margin: 0 auto; }
+  }
+
+  .intro-logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+  }
+
+  .logo-block {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .logo-anim {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 484 / 611;
+    margin: 0 auto;
+    perspective: 1400px;
+  }
+
+  .logo-layer {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    margin: 0;
-  }
-
-  /* 左メニュー消す */
-  .menu-left {
-    display: none;
-  }
-
-  /* 右メニューも消す */
-  .menu-right {
-    display: none;
-  }
-
-  /* ハンバーガー（右上） */
-  .hamburger {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    font-size: 30px;
-    color: white;
-    cursor: pointer;
-    z-index: 1000;
     display: block;
   }
-}
 
-  </style>
- </head>
-
- <script>
-function toggleLangMenu(e) {
-  if (e) e.stopPropagation();
-
-  const menu = document.getElementById("lang-menu");
-
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "block";
+  .logo-L {
+    left: -10.537%;
+    top: 6.547%;
+    width: 112.397%;
+    height: 89.034%;
+    transform-origin: 50.17% 50.0%;
+    transform: rotateY(0deg);
+    transition: transform 2s cubic-bezier(.45,0,.55,1);
+    will-change: transform;
   }
-}
 
-/* 外クリックで閉じる */
-document.addEventListener("click", function() {
-  const menu = document.getElementById("lang-menu");
-  if (menu) menu.style.display = "none";
-});
+  .logo-S {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
 
-/* ←これが無かったから翻訳されてない */
-function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
-}
-</script>
+  #sPath {
+    fill: none;
+    stroke: #d60a0a;
+    stroke-width: 5.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 
-<div id="google_translate_element" style="display:none;"></div>
+  .s-dot {
+    fill: #b40707;
+  }
 
-<script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
-</script>
+  .s-dot.dot-end {
+    opacity: 0;
+  }
 
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  .logo-text {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
 
-  <body>
-    <header>
-  <!-- 左 -->
-  <div class="menu-left">
-    <a href="ticket.html" class="menu-1">
-  <img src="ticket3.png" width="50">
-  <span>チケット</span>
-  </a>
-  <a href="what.html" class="menu-1">
-  <img src="what3.png" width="50">
-  <span>公演紹介</span>
-  </a>
-      <a href="Participant.html" class="menu-1">
-  <img src="Participant3.png" width="50">
-  <span>出場団体</span>
-  </a>
-    <a href="Schedule.html" class="menu-1">
-  <img src="Schedule3.png" width="50">
-  <span>スケジュール</span>
-</a>
-  </div>
+  .logo-block.in-view .logo-L { transform: rotateY(-360deg); }
 
-  <!-- 真ん中 -->
-  <a href="index.html" class="logo">
-  <div class="logo-main">早慶演劇祭</div>
-  <div class="logo-sub">Waseda–Keio Theatre Festival</div>
-</a>
+  @media (max-width: 900px) {
+    .intro-logo { justify-content: center; }
+  }
 
-  <!-- 右 -->
-  <div class="menu-right">
-     <a href="news.html" class="menu-1">
-  <img src="news3.png" width="50">
-  <span>ニュース</span>
-  </a>
-     <div class="lang-wrapper">
-    <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-      <img src="Language3.png">
-      <span>Language</span>
-    </a>
+  .intro-eyebrow {
+    font-family: "Oswald", sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 14px;
+  }
 
-  <div id="lang-menu" class="lang-menu">
-    <div onclick="setLang('ja')">日本語</div>
-    <div onclick="setLang('en')">ENGLISH</div>
-    <div onclick="setLang('zh-CN')">简体中文</div>
-    <div onclick="setLang('ko')">한국어</div>
-  </div>
-</div>
-   <a href="Inquiry.html" class="menu-1">
-  <img src="Inquiry3.png" width="50">
-  <span>お問い合わせ</span>
-  </a>
-    <a href="menu.html" class="menu-1">
-  <img src="menu3.png" width="50">
-  <span>メニュー</span>
-  </a>
-  </div>
-  <div class="hamburger">
-  ☰
-  </div>
-</header>
+  .intro-title {
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 700;
+    font-size: clamp(26px, 3.2vw, 34px);
+    line-height: 1.5;
+    color: var(--wine-deep);
+    letter-spacing: 0.01em;
+    margin-bottom: 18px;
+  }
 
-<script>
-function removeGoogleUI() {
-  // バナー
-  document.querySelectorAll('.goog-te-banner-frame').forEach(el => el.remove());
+  .intro-title-rule {
+    width: 64px;
+    height: 4px;
+    background: var(--gold);
+    margin-bottom: 28px;
+  }
 
-  // ポップアップ（翻訳されました表示）
-  document.querySelectorAll('.goog-te-balloon-frame').forEach(el => el.remove());
+  .intro-copy { position: relative; max-width: 660px; }
 
-  // その他UI
-  document.querySelectorAll('.skiptranslate').forEach(el => {
-    if (el.innerText.includes("翻訳")) el.remove();
-  });
+  .intro-copy p.body-text {
+    font-family: "Noto Serif JP", serif;
+    font-weight: 500;
+    font-size: 15.5px;
+    line-height: 1.95;
+    color: var(--ink);
+    text-align: justify;
+    text-justify: inter-character;
+  }
 
-  // 位置ズレ修正
-  document.body.style.top = '0px';
-}
+  .intro-copy p.body-text + p.body-text { margin-top: 14px; }
 
-/* ずっと監視して消す */
-setInterval(removeGoogleUI, 300);
-</script>
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 38px;
+    padding: 15px 32px;
+    background: var(--wine-deep);
+    color: #fff;
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    border-radius: 999px;
+    box-shadow: 0 10px 24px rgba(74,20,40,0.28);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+  }
 
-  </body>
+  .cta-link:hover {
+    background: var(--wine);
+    transform: translateY(-3px) rotate(-0.6deg);
+    box-shadow: 0 14px 28px rgba(74,20,40,0.34);
+  }
 
-</html>
+  .cta-link .arrow { transition: transform 0.25s ease; }
+  .cta-link:hover .arrow { transform: translateX(5px); }
 
-<section class="about">
-  <h1>INTRODUCTION</h1>
+  .actions {
+    padding: 130px 0 60px;
+  }
 
-  <p>
-    早慶演劇祭とは、慶應義塾大学と早稲田大学所属の劇団や演劇集団が舞台を通じて熱くぶつかり合う演劇対抗祭です。
-  </p>
+  /* ---------- Fan deck (scroll-driven) ---------- */
+  .fan-driver {
+    position: relative;
+    height: 190vh;
+  }
 
-  <p>
-    両大学の間には、早慶戦とよばれるスポーツを通じた大学間交流が100年以上にもわたり行われており、学内外を通してその文化が広く根付いています。
-  </p>
+  .fan-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+  }
 
-  <p>
-    一方、演劇や舞台は、各劇団における特色が作品や演出に強く出ている一方で、それらが劇団単位で交じり合い、共創する場所は、これまで多くありませんでした。
-  </p>
+  .fan-heading {
+    width: min(1360px, 94vw);
+  }
 
-  <p>
-    早慶演劇祭は、早慶という枠組みを通じて、演劇の魅力や舞台制作の在り方を再定義し、両大学劇団の共演・共創により、より多くの人に舞台の面白さを発信することを目指します。
-  </p>
-</section>
+  .fan-heading .intro-title-rule { margin-bottom: 0; }
 
-<style>
-.about {
-  max-width: 800px;
-  margin: 50px auto;
-  padding: 20px;
-  background :rgba(252, 251, 251, 0.7);
-  border-radius: 10px;
-  line-height: 1.8;
-  text-align: center;
-}
+  .fan-cards {
+    position: relative;
+    width: min(1360px, 94vw);
+    height: 660px;
+  }
 
-.about h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  font-size: 28px;
-  color: #030300; /* 黒色 */
-  letter-spacing: 2px;
-}
+  .fan-item {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: var(--w, 380px);
+    transform: translate3d(calc(-50% + var(--tx, 0px)), var(--ty, 0px), 0) rotate(var(--rot, 0deg)) scale(var(--sc, 1));
+    transition: transform .12s linear;
+    will-change: transform;
+  }
 
-body {
-  background-image: url("theatre.jpg"); /* pexels.com */
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed; /* ←スクロールで動かない */
-}
+  .fan-hint {
+    position: absolute;
+    bottom: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: "Oswald", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--sub-ink);
+    opacity: calc(1 - var(--p, 0) * 6);
+    transition: opacity .2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
 
-.logo {
-  display: block;
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  letter-spacing: 3px;
-  margin: 20px 0;
+  @media (max-width: 900px) {
+    .fan-driver { height: auto; }
+    .fan-stage { position: static; height: auto; display: block; padding: 10px 0 20px; }
+    .fan-heading { width: 100%; margin-bottom: 28px; }
+    .fan-heading .intro-title-rule { margin-bottom: 0; }
+    .fan-cards { position: static; width: 100%; height: auto; display: flex; flex-direction: column; gap: 30px; }
+    .fan-item { position: static; width: 100% !important; transform: none !important; transition: none; }
+    .fan-hint { display: none; }
+  }
 
-  color: white;
-  text-decoration: none;
-}
+  .card {
+    background: var(--card-bg);
+    border-radius: 6px 18px 6px 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 26px rgba(31,26,22,0.09);
+    border: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform .35s cubic-bezier(.22,.85,.3,1), box-shadow .35s ease;
+  }
 
-/* ホバー */
-.logo:hover {
-  opacity: 0.8;
-}
+  .card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 30px 50px rgba(31,26,22,0.2);
+  }
 
+  .card-glow {
+    position: absolute;
+    inset: -30px;
+    border-radius: inherit;
+    opacity: 0;
+    filter: blur(34px);
+    transition: opacity .5s ease;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .fan-item:nth-child(1) .card-glow { background: radial-gradient(circle at 30% 20%, var(--wine) 0%, transparent 70%); }
+  .fan-item:nth-child(2) .card-glow { background: radial-gradient(circle at 30% 20%, var(--gold) 0%, transparent 70%); }
+  .fan-item:nth-child(3) .card-glow { background: radial-gradient(circle at 30% 20%, var(--navy) 0%, transparent 70%); }
+  .card:hover .card-glow { opacity: 0.5; }
+
+  .card-media {
+    height: 220px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .card-media .glyph {
+    font-size: 50px;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.18));
+    transition: transform .4s cubic-bezier(.22,.85,.3,1);
+  }
+  .card:hover .card-media .glyph { transform: scale(1.12) rotate(-4deg); }
+
+  .fan-item:nth-child(1) .card-media { background: linear-gradient(135deg, #8a3b57, var(--wine-deep)); }
+  .fan-item:nth-child(2) .card-media {
+    background-image: linear-gradient(180deg, rgba(23,34,45,0) 55%, rgba(23,34,45,0.32) 100%), url('images/hiyoshi-kinenkan.jpg');
+    background-size: cover;
+    background-position: center 55%;
+  }
+
+  .card-media.layered {
+    height: 300px;
+    background-image: url('images/biraNe-calendar-crop2.png');
+    background-size: cover;
+    background-position: center 30%;
+    justify-content: flex-start;
+  }
+
+  .card-media.layered::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(15,20,26,0.18) 0%, rgba(15,20,26,0) 55%);
+  }
+
+  .card-media.layered .poster-tag {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-family: "Oswald", sans-serif;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(15,20,26,0.55);
+    padding: 4px 10px;
+    border-radius: 999px;
+    z-index: 2;
+  }
+
+  .card-media.layered .poster {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+    width: 130px;
+    aspect-ratio: 601 / 855;
+    object-fit: contain;
+    transform: rotate(-6deg);
+    border: 4px solid #fff;
+    border-radius: 3px;
+    box-shadow: 0 14px 22px rgba(0,0,0,0.4);
+    z-index: 1;
+    transition: transform .4s cubic-bezier(.22,.85,.3,1);
+  }
+  .card:hover .card-media.layered .poster { transform: rotate(-2deg) scale(1.04); }
+
+  .card-body {
+    padding: 34px 30px 32px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    position: relative;
+  }
+
+  .card-index {
+    position: absolute;
+    top: -4px;
+    right: 22px;
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    font-size: 92px;
+    line-height: 1;
+    color: var(--ink);
+    opacity: 0.06;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .card-title {
+    font-family: "Noto Sans JP", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--wine-deep);
+    text-wrap: balance;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-subtitle {
+    font-size: 14px;
+    color: var(--sub-ink);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 20px;
+    line-height: 1.75;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-desc {
+    font-size: 14.5px;
+    font-weight: 300;
+    color: var(--ink);
+    opacity: 0.78;
+    margin-bottom: 24px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 20px;
+    width: 100%;
+  }
+
+  .card-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ink);
+    background: rgba(31,26,22,0.05);
+    padding: 6px 13px 5px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .card-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: "Oswald", sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid var(--ink);
+    width: fit-content;
+    transition: color .25s ease, border-color .25s ease, gap .25s ease;
+  }
+
+  .fan-item:nth-child(1) .card-btn:hover { color: var(--wine); border-color: var(--wine); }
+  .fan-item:nth-child(2) .card-btn:hover { color: var(--gold-deep); border-color: var(--gold-deep); }
+  .fan-item:nth-child(3) .card-btn:hover { color: var(--navy); border-color: var(--navy); }
+  .card-btn:hover { gap: 13px; }
+
+  .card-btn .arrow { transition: transform 0.25s ease; }
+  .card-btn:hover .arrow { transform: translateX(3px); }
+
+  footer {
+    padding: 30px 0 56px;
+  }
+
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 26px;
+    border-top: 1px solid var(--line);
+  }
+
+  footer .brand {
+    font-family: "Oswald", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+    text-transform: uppercase;
+  }
+
+  footer .meta {
+    font-size: 11px;
+    color: var(--sub-ink);
+    letter-spacing: 0.06em;
+  }
+
+  /* ---------- FAQ ---------- */
+  .faq {
+    padding: 40px 0 130px;
+    position: relative;
+  }
+
+  .faq-heading {
+    max-width: 760px;
+    margin: 0 auto 48px;
+  }
+
+  .faq-lead {
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--sub-ink);
+    letter-spacing: 0.03em;
+  }
+
+  .faq-list {
+    max-width: 820px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .faq-item {
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 6px 18px 6px 18px;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(31,26,22,0.06);
+    transition: box-shadow .3s ease, border-color .3s ease;
+  }
+
+  .faq-item.is-open {
+    border-color: var(--gold);
+    box-shadow: 0 16px 32px rgba(31,26,22,0.12);
+  }
+
+  .faq-q {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 22px 26px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .faq-q-label {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 500;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .faq-q-mark {
+    flex: 0 0 auto;
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    color: var(--wine-deep);
+  }
+
+  .faq-icon {
+    flex: 0 0 auto;
+    font-family: "Oswald", sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--gold-deep);
+    transform: rotate(0deg);
+    transition: transform .35s cubic-bezier(.22,.85,.3,1), color .3s ease;
+  }
+
+  .faq-item.is-open .faq-icon {
+    color: var(--wine-deep);
+    transform: rotate(45deg);
+  }
+
+  .faq-answer-wrap {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows .45s cubic-bezier(.22,.85,.3,1);
+  }
+
+  .faq-item.is-open .faq-answer-wrap {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-answer-inner {
+    overflow: hidden;
+  }
+
+  .faq-answer {
+    padding: 0 26px 26px 60px;
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 300;
+    font-size: 14.5px;
+    line-height: 1.95;
+    color: var(--ink);
+  }
+
+  .faq-answer p + p {
+    margin-top: 12px;
+  }
+
+  .faq-sublist {
+    list-style: none;
+    margin: 14px 0 4px;
+  }
+
+  .faq-sublist li {
+    position: relative;
+    padding-left: 18px;
+    margin-bottom: 10px;
+  }
+
+  .faq-sublist li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+  }
+
+  .faq-sublist strong {
+    color: var(--wine-deep);
+    font-weight: 700;
+  }
+
+  .faq-note {
+    margin-top: 16px;
+    padding: 13px 18px;
+    background: rgba(184,134,63,0.08);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    font-family: "Noto Sans JP", sans-serif;
+    font-weight: 300;
+    font-size: 13.3px;
+    line-height: 1.85;
+    color: var(--ink);
+  }
+
+  .faq-note strong {
+    color: var(--gold-deep);
+    font-weight: 500;
+  }
+
+  .faq-note--muted {
+    background: rgba(125,111,97,0.06);
+    border-left-color: var(--sub-ink);
+  }
+
+  .faq-note--muted strong {
+    color: var(--sub-ink);
+  }
+
+  .faq-note a {
+    color: var(--wine-deep);
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .faq-cta {
+    margin-top: 22px;
+  }
+
+  @media (max-width: 560px) {
+    .faq-answer { padding-left: 26px; }
+    .faq-q { padding: 18px 18px; }
+  }
 </style>
+</head>
+<body>
 
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-kicker reveal">Event &amp; Product</p>
+
+      <h1 class="masthead">
+        <span class="line1 reveal">Stage Link</span>
+        <span class="line2 reveal">Actions.</span>
+      </h1>
+      <div class="masthead-rule reveal"></div>
+
+      <p class="hero-tagline reveal">舞台で繋がる（Stage Link）ことから始まる、私たちの共創。</p>
+
+      <div class="intro-grid reveal">
+        <div class="intro-text">
+          <p class="intro-eyebrow">Meet / Connect / Create</p>
+          <h2 class="intro-title">出会う、つながる、つくる。</h2>
+          <div class="intro-title-rule"></div>
+
+          <div class="intro-copy">
+            <p class="body-text">より多くの方に演劇に親しみを持っていただくために、Stage Link は、さまざまな特色を持つ演劇集団が既存の枠組みを超えて交わるプラットフォームを目指しています。</p>
+            <p class="body-text">単一の劇団の努力に留まらず、お互いの強みを活かし合い、演劇をよりオープンに、より面白くしていく。そんな「共創」の場をつくるため、私たちは以下のような企画を展開しています。</p>
+
+            <a href="#philosophy" class="cta-link">Philosophyについて知る <span class="arrow">➔</span></a>
+          </div>
+        </div>
+
+        <div class="intro-photo intro-logo">
+          <div class="logo-block" id="logoBlock">
+            <div class="logo-anim" role="img" aria-label="Stage Link ロゴ">
+              <img class="logo-layer logo-text" src="images/logo_text.png" alt="">
+              <img class="logo-layer logo-L" src="images/logo_L.png" alt="">
+              <svg class="logo-layer logo-S" viewBox="0 0 484 611" xmlns="http://www.w3.org/2000/svg">
+                <path id="sPath" d="M 150.3 11.4 C 149.1 12.8 144.3 18.6 142.0 21.5 C 139.6 24.3 136.1 28.8 133.9 31.7 C 131.6 34.6 128.2 39.1 126.0 42.1 C 123.8 45.1 120.4 49.6 118.3 52.6 C 116.1 55.6 112.9 60.3 110.8 63.3 C 108.7 66.3 105.5 71.0 103.5 74.1 C 101.4 77.2 98.3 81.9 96.4 85.1 C 94.4 88.2 91.4 93.0 89.5 96.1 C 87.5 99.3 84.6 104.1 82.8 107.3 C 80.9 110.5 78.1 115.4 76.3 118.7 C 74.5 121.9 71.8 126.9 70.0 130.1 C 68.3 133.4 65.7 138.4 64.0 141.7 C 62.3 145.0 59.8 150.0 58.2 153.4 C 56.5 156.7 54.1 161.8 52.6 165.1 C 51.0 168.5 48.7 173.6 47.2 177.0 C 45.7 180.4 43.5 185.6 42.0 189.0 C 40.6 192.4 38.5 197.7 37.1 201.1 C 35.8 204.6 33.8 209.8 32.5 213.3 C 31.2 216.8 29.3 222.1 28.1 225.6 C 26.9 229.1 25.1 234.5 24.0 238.0 C 22.9 241.5 21.3 246.9 20.4 250.5 C 19.4 254.1 18.0 259.5 17.1 263.1 C 16.2 266.7 15.0 272.3 14.3 275.9 C 13.6 279.5 12.7 285.1 12.1 288.8 C 11.6 292.4 10.9 298.0 10.5 301.7 C 10.2 305.4 9.7 311.0 9.6 314.7 C 9.4 318.4 9.3 324.1 9.3 327.8 C 9.3 331.5 9.5 337.1 9.8 340.8 C 10.1 344.5 10.7 350.1 11.5 353.7 C 12.3 357.3 13.9 362.8 15.4 366.1 C 16.9 369.5 19.9 374.4 22.3 377.2 C 24.6 380.0 28.8 384.0 31.8 386.1 C 34.8 388.1 40.0 390.7 43.4 391.8 C 46.9 392.8 52.7 393.5 56.3 393.5 C 60.0 393.6 65.7 392.8 69.3 392.0 C 72.9 391.3 78.3 389.6 81.8 388.4 C 85.3 387.2 90.5 385.1 93.9 383.6 C 97.3 382.1 102.4 379.6 105.7 377.9 C 109.0 376.3 113.9 373.6 117.2 371.8 C 120.4 369.9 125.2 367.0 128.3 365.0 C 131.5 363.1 136.2 359.9 139.2 357.8 C 142.3 355.7 146.8 352.4 149.8 350.2 C 152.8 348.0 157.2 344.5 160.1 342.2 C 163.0 339.9 167.4 336.3 170.2 333.9 C 173.0 331.5 177.3 327.8 180.0 325.3 C 182.8 322.9 186.9 319.0 189.6 316.5 C 192.4 314.0 196.5 310.1 199.1 307.5 C 201.8 305.0 205.8 301.0 208.5 298.5 C 211.1 295.9 215.1 291.9 217.7 289.3 C 220.4 286.7 224.4 282.6 227.0 280.0 C 229.6 277.4 233.6 273.4 236.2 270.8 C 238.8 268.2 242.8 264.2 245.4 261.6 C 248.1 259.0 252.1 255.0 254.8 252.5 C 257.4 249.9 261.5 246.0 264.2 243.5 C 266.9 240.9 271.0 237.1 273.8 234.6 C 276.5 232.1 280.8 228.4 283.6 226.0 C 286.4 223.6 290.7 220.0 293.6 217.6 C 296.5 215.3 300.9 211.8 303.8 209.5 C 306.8 207.3 311.3 203.9 314.3 201.7 C 317.3 199.6 321.9 196.3 325.0 194.2 C 328.0 192.2 332.7 189.0 335.9 187.0 C 339.0 185.1 343.8 182.2 347.1 180.4 C 350.4 178.7 355.5 176.3 359.0 175.0 C 362.4 173.7 367.9 172.1 371.5 171.5 C 375.1 170.9 380.9 170.7 384.5 171.1 C 388.1 171.5 393.8 172.9 397.1 174.4 C 400.4 175.9 405.2 179.2 407.8 181.7 C 410.3 184.3 413.3 189.3 414.9 192.6 C 416.5 195.9 418.2 201.3 419.1 204.9 C 420.1 208.5 421.1 214.1 421.6 217.7 C 422.1 221.4 422.6 227.0 422.8 230.7 C 422.9 234.4 422.9 240.1 422.8 243.7 C 422.7 247.4 422.3 253.1 422.0 256.8 C 421.7 260.5 421.1 266.1 420.6 269.7 C 420.2 273.4 419.4 279.0 418.9 282.7 C 418.4 286.3 417.5 291.9 417.0 295.6 C 416.4 299.2 415.4 304.8 414.8 308.4 C 414.1 312.1 413.1 317.6 412.4 321.3 C 411.7 324.9 410.5 330.4 409.8 334.1 C 409.0 337.7 407.8 343.2 407.0 346.8 C 406.1 350.4 404.9 355.9 404.0 359.5 C 403.1 363.1 401.8 368.6 400.8 372.2 C 399.9 375.8 398.5 381.2 397.5 384.8 C 396.6 388.4 395.1 393.8 394.1 397.4 C 393.1 400.9 391.5 406.4 390.5 409.9 C 389.4 413.5 387.8 418.9 386.7 422.4 C 385.7 426.0 384.0 431.4 382.9 434.9 C 381.8 438.4 380.1 443.8 379.0 447.3 C 377.8 450.8 376.1 456.2 374.9 459.7 C 373.8 463.2 372.0 468.6 370.8 472.1 C 369.6 475.6 367.8 481.0 366.6 484.5 C 365.4 488.0 363.5 493.3 362.3 496.8 C 361.1 500.3 359.2 505.6 358.0 509.1 C 356.8 512.6 354.3 519.7 353.7 521.4"></path>
+                <circle class="s-dot dot-start" cx="150.3" cy="11.4" r="4.5"></circle>
+                <circle class="s-dot dot-end" cx="353.7" cy="521.4" r="8"></circle>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="actions">
+    <div class="fan-driver">
+      <div class="fan-stage">
+        <div class="fan-heading reveal">
+          <p class="intro-eyebrow">Our Actions</p>
+          <h2 class="intro-title">Stage Link Originals</h2>
+          <div class="intro-title-rule"></div>
+        </div>
+        <div class="fan-cards">
+
+          <div class="fan-item">
+            <article class="card">
+              <div class="card-glow"></div>
+              <div class="card-media"><span class="glyph">🛠️</span></div>
+              <div class="card-body">
+                <span class="card-index">01</span>
+                <h3 class="card-title">夏の交流WS＋BBQ</h3>
+                <p class="card-subtitle">劇団の垣根を越えて、新たな表現技法と仲間に出会う</p>
+                <p class="card-desc">所属サークルを超えて、誰もがフラットに集まるワークショップです（慶應義塾の劇団所属メンバー限定）</p>
+                <div class="card-tags">
+                  <span class="card-tag">2026年9月開催決定！</span>
+                </div>
+                <a href="#" class="card-btn">詳しく見る <span class="arrow">➔</span></a>
+              </div>
+            </article>
+          </div>
+
+          <div class="fan-item">
+            <article class="card">
+              <div class="card-glow"></div>
+              <div class="card-media"></div>
+              <div class="card-body">
+                <span class="card-index">02</span>
+                <h3 class="card-title">慶劇祭（慶應義塾大学演劇祭）</h3>
+                <p class="card-subtitle">個性が交わる特別な舞台。慶應義塾の舞台のすべてが集結</p>
+                <p class="card-desc">塾生注目～！異なる特色を持つ劇団が1つの舞台に集う、Stage Link最大のフェスティバルです！</p>
+                <div class="card-tags">
+                  <span class="card-tag">2027年開催予定</span>
+                  <span class="card-tag">舞台・公演</span>
+                </div>
+                <a href="#" class="card-btn">詳しく見る <span class="arrow">➔</span></a>
+              </div>
+            </article>
+          </div>
+
+          <div class="fan-item">
+            <article class="card">
+              <div class="card-glow"></div>
+              <div class="card-media layered">
+                <span class="poster-tag">ビラネットワーク画面</span>
+                <img class="poster" src="images/flyer-sample.png" alt="劇団EnTRoPy 七夕祭公演「借り物の星」のビラ">
+              </div>
+              <div class="card-body">
+                <span class="card-index">03</span>
+                <h3 class="card-title">ビラネットワーク</h3>
+                <p class="card-subtitle">どこの劇団でも利用可能！宣伝の力をシェアして、劇団のファンを増やそう</p>
+                <p class="card-desc">折り込みをもっとシンプルに。公演カレンダーからすぐに折り込み依頼が送れる！</p>
+                <div class="card-tags">
+                  <span class="card-tag">🎫 集客を強化したい</span>
+                  <span class="card-tag">🌐 慶應外部も利用可能</span>
+                  <span class="card-tag">📢 利用劇団募集中</span>
+                </div>
+                <a href="https://sokei-dramalink.com/news.html" class="card-btn" target="_blank" rel="noopener">詳しく見る <span class="arrow">➔</span></a>
+              </div>
+            </article>
+          </div>
+
+          <p class="fan-hint">Scroll to open ↓</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faq">
+    <div class="wrap">
+      <div class="faq-heading reveal">
+        <p class="intro-eyebrow">FAQ</p>
+        <h2 class="intro-title">よくある質問</h2>
+        <div class="intro-title-rule"></div>
+        <p class="faq-lead">疑問を解消し、次のステップへ。</p>
+      </div>
+
+      <div class="faq-list">
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-label"><span class="faq-q-mark">Q</span>9月開催の「交流会＆WS」は、どんなイベントですか？</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer-wrap">
+            <div class="faq-answer-inner">
+              <div class="faq-answer">
+                <p>所属団体の枠を飛び越え、異なる劇団の仲間と「出会い、語り、遊ぶ」1日完結の夏限定プログラムです。「他の劇団の稽古って何してる？」「もっと他団体の役者・スタッフと話してみたい！」そんな声に応えるため、気軽に参加できるワークショップと、夏の終わりを詰め込んだフランクな交流会を用意しています。手ぶらで飛び込める、いちばん熱い1日をお届けします。</p>
+                <div class="faq-note">
+                  <p><strong>9月開催分に関する重要なお知らせ</strong><br>9月開催分、Stage Linkと協力関係にある慶應義塾大学内の劇団員メンバーのみを対象とした限定募集となります。他大学の劇団員の方、および一般の方の参加は承っておりませんので、あらかじめご了承ください。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-label"><span class="faq-q-mark">Q</span>ビラネットワークの利用に費用はかかりますか？</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer-wrap">
+            <div class="faq-answer-inner">
+              <div class="faq-answer">
+                <p>劇団の皆様の基本的なシステム利用、公演カレンダーへの掲載、および折り込み（挟み込み）依頼の送信はすべて完全無料でご利用いただけます。Stage Linkは学生演劇の持続可能なインフラとして、合理的なプロモーションを全面的にサポートします。</p>
+                <div class="faq-note faq-note--muted">
+                  <p>※演劇団体以外のイベントでのご利用や、特別なタイアップ運営等につきましては、個別で最適なお手伝いをいたしますので、👉 <a href="#">Contact</a> よりお気軽にご相談ください。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-label"><span class="faq-q-mark">Q</span>慶應（SFCや三田・日吉）以外の他大学の劇団ですが、企画に参加できますか？</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer-wrap">
+            <div class="faq-answer-inner">
+              <div class="faq-answer">
+                <p>企画の特性に合わせて、以下のように窓口を開放しています。</p>
+                <ul class="faq-sublist">
+                  <li><strong>交流会・WS ＆ 慶劇祭：</strong>原則として、慶應義塾大学を拠点に活動するサークル・団体・メンバーを対象としています。</li>
+                  <li><strong>ビラネットワーク：</strong>大学やサークルの垣根、さらには慶應の内外さえも問わず、日本全国すべての劇団・表現者が完全無料でご利用いただけます。他大学の劇団や、プロ・アマ問わず大歓迎ですので、ぜひ宣伝力のシェアリングにご参加ください。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-label"><span class="faq-q-mark">Q</span>折り込み（ビラ配布）の依頼ルールや流れを教えてください。</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer-wrap">
+            <div class="faq-answer-inner">
+              <div class="faq-answer">
+                <p>驚くほどシンプルです。ビラネットワーク内の「公演カレンダー」から折り込みを依頼したい公演を選び、画面のガイドに沿って必要事項を入力・申請するだけで完了します。</p>
+                <p>「何度もメールを往復させる」「フォーマットを気にして連絡する」といった煩雑なコミュニケーションコストを極限までゼロにデザインしています。詳しい画面操作や使い方のコツは、定期開催している「利用説明会」にてデモを交えてご紹介しています。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item reveal">
+          <button class="faq-q" aria-expanded="false">
+            <span class="faq-q-label"><span class="faq-q-mark">Q</span>ビラネットワークに参加したい！どうしたらいい？</span>
+            <span class="faq-icon" aria-hidden="true">+</span>
+          </button>
+          <div class="faq-answer-wrap">
+            <div class="faq-answer-inner">
+              <div class="faq-answer">
+                <p>まずは、定期開催している<strong>「ビラネットワーク オンライン利用説明会」</strong>へご参加ください！ 劇団の制作担当者様向けに、システムの概要やメリットを30分程度でスッキリ解説します。説明会への参加完了後、その場ですぐにアカウントが発行され、サービスをご利用いただけます。</p>
+                <p>「まずは話だけ聞いてみたい」「登録するか迷っている」という段階でのご参加も大歓迎です。ご不明な点があれば、いつでも公式Instagram / XのDMやメール窓口にて受け付けております。</p>
+                <a href="#" class="cta-link faq-cta">利用説明会へのエントリーはこちら <span class="arrow">➔</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-inner">
+        <span class="brand">Stage Link</span>
+        <span class="meta">Meet / Connect / Create</span>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  (function () {
+    var targets = document.querySelectorAll('.reveal');
+    targets.forEach(function (el, i) {
+      el.style.transitionDelay = (0.06 * (i % 6)) + 's';
+    });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    targets.forEach(function (el) { io.observe(el); });
+  })();
+
+  (function () {
+    var driver = document.querySelector('.fan-driver');
+    var stage = document.querySelector('.fan-stage');
+    var cardsBox = document.querySelector('.fan-cards');
+    var items = Array.prototype.slice.call(document.querySelectorAll('.fan-item'));
+    if (!driver || !items.length) return;
+
+    var GAP = 26;
+    var fannedTx = 380;
+    var ticking = false;
+
+    var stacked = [
+      { tx: -16, ty: 10, rot: -7, sc: 0.93, z: 1 },
+      { tx: 0,   ty: 0,  rot: -1, sc: 1,    z: 3 },
+      { tx: 16,  ty: 14, rot: 7,  sc: 0.94, z: 2 }
+    ];
+
+    function fanned(i) {
+      var d = i - 1;
+      return { tx: d * fannedTx, ty: (i === 1 ? -16 : 14), rot: d * 4, sc: 1, z: stacked[i].z };
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function clamp01(v) { return Math.max(0, Math.min(1, v)); }
+
+    function recalc() {
+      var w = cardsBox.clientWidth;
+      var cardW = (w - GAP * 2) / 3;
+      cardW = Math.max(260, Math.min(cardW, 460));
+      fannedTx = cardW + GAP;
+      items.forEach(function (el) { el.style.setProperty('--w', cardW + 'px'); });
+    }
+
+    function isActive() { return window.innerWidth > 900; }
+
+    function update() {
+      ticking = false;
+      if (!isActive()) return;
+      var rect = driver.getBoundingClientRect();
+      var scrollable = rect.height - window.innerHeight;
+      var p = scrollable > 0 ? clamp01(-rect.top / scrollable) : 0;
+      stage.style.setProperty('--p', p.toFixed(4));
+
+      items.forEach(function (el, i) {
+        var s = stacked[i];
+        var f = fanned(i);
+        var tx = lerp(s.tx, f.tx, p);
+        var ty = lerp(s.ty, f.ty, p);
+        var rot = lerp(s.rot, f.rot, p);
+        var sc = lerp(s.sc, f.sc, p);
+        el.style.setProperty('--tx', tx.toFixed(1) + 'px');
+        el.style.setProperty('--ty', ty.toFixed(1) + 'px');
+        el.style.setProperty('--rot', rot.toFixed(2) + 'deg');
+        el.style.setProperty('--sc', sc.toFixed(3));
+        el.style.zIndex = s.z;
+      });
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    }
+
+    function onResize() {
+      recalc();
+      update();
+    }
+
+    recalc();
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize);
+  })();
+
+  (function () {
+    var block = document.getElementById('logoBlock');
+    if (!block) return;
+    var sPath = document.getElementById('sPath');
+    var dotEnd = block.querySelector('.dot-end');
+    var DRAW_DELAY = 0;
+    var DRAW_DURATION = 3500;
+    var len = 0;
+
+    if (sPath) {
+      len = sPath.getTotalLength();
+      sPath.style.strokeDasharray = len;
+      sPath.style.strokeDashoffset = len;
+    }
+
+    function playAnimation() {
+      if (sPath && sPath.animate) {
+        sPath.animate(
+          [{ strokeDashoffset: len }, { strokeDashoffset: 0 }],
+          { duration: DRAW_DURATION, delay: DRAW_DELAY, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'forwards' }
+        );
+      } else if (sPath) {
+        sPath.style.strokeDashoffset = 0;
+      }
+      if (dotEnd && dotEnd.animate) {
+        dotEnd.animate(
+          [{ opacity: 0 }, { opacity: 1 }],
+          { duration: 300, delay: DRAW_DELAY + DRAW_DURATION - 100, easing: 'ease-out', fill: 'forwards' }
+        );
+      } else if (dotEnd) {
+        dotEnd.style.opacity = 1;
+      }
+    }
+
+    var triggered = false;
+    var isIntersecting = false;
+    var hasScrolled = false;
+
+    function tryTrigger() {
+      if (triggered || !isIntersecting || !hasScrolled) return;
+      triggered = true;
+      block.classList.add('in-view');
+      playAnimation();
+      io.unobserve(block);
+      window.removeEventListener('scroll', onFirstScroll);
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        isIntersecting = entry.isIntersecting;
+        tryTrigger();
+      });
+    }, { threshold: 0.35, rootMargin: '0px 0px -60px 0px' });
+    io.observe(block);
+
+    function onFirstScroll() {
+      hasScrolled = true;
+      tryTrigger();
+    }
+    window.addEventListener('scroll', onFirstScroll, { passive: true });
+  })();
+
+  (function () {
+    var items = Array.prototype.slice.call(document.querySelectorAll('.faq-item'));
+    if (!items.length) return;
+
+    items.forEach(function (item) {
+      var btn = item.querySelector('.faq-q');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var wasOpen = item.classList.contains('is-open');
+        items.forEach(function (other) {
+          other.classList.remove('is-open');
+          var otherBtn = other.querySelector('.faq-q');
+          if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+        });
+        if (!wasOpen) {
+          item.classList.add('is-open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  })();
+</script>
+
+</body>
+</html>
