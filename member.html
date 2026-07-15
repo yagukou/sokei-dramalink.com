@@ -109,9 +109,11 @@
       display: flex;
       align-items: center;
       gap: 30px;
-      background: #121212;
+      background: rgba(255, 255, 255, 0.65);
       padding: 30px;
-      border: 1px solid #222;
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       border-radius: 8px;
     }
 .leader-img {
@@ -130,8 +132,8 @@
       gap: 8px;
     }
     .leader-info .line-1 { font-size: 18px; color: #c5a059; font-weight: bold; }
-    .leader-info .line-2 { font-size: 25px; font-family: "Yu Mincho", serif; font-weight: bold; color: #fff; }
-    .leader-info .line-3 { font-size: 14px; color: #aaa; line-height: 1.6; }
+    .leader-info .line-2 { font-size: 25px; font-family: "Yu Mincho", serif; font-weight: bold; color: #1a1a1a; }
+    .leader-info .line-3 { font-size: 14px; color: #333333;; line-height: 1.6; }
 
     /* --- 中段：4列×2段のグリッドレイアウト --- */
     .member-grid {
@@ -145,9 +147,11 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      background: #121212;
+      background: rgba(255, 255, 255, 0.65); /* 半透明の白 */
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
       padding: 25px 15px;
-      border: 1px solid #222;
       border-radius: 8px;
     }
     .member-img {
@@ -160,7 +164,7 @@
   border: 2px solid #c5a059;
   flex-shrink: 0;
     }
-    .member-name { font-size: 19px; font-family: "Yu Mincho", serif; font-weight: 500; color: #fff; margin-bottom: 5px; }
+    .member-name { font-size: 19px; font-family: "Yu Mincho", serif; font-weight: 500; color: #1a1a1a; margin-bottom: 5px; }
     .member-role { font-size: 15px; color: #c5a059; }
 
     /* --- 下部：メンバー募集エリア --- */
@@ -284,7 +288,12 @@
         <div class="leader-info">
           <div class="line-1">創造工房</div>
           <div class="line-2">柳町&ensp;聖和</div>
-          <div class="line-3">紹介文や一言コメント、プロフィールなどが入ります（3行目）</div>
+          <div class="line-3">&emsp;慶應義塾大学経済学部 在学中。大学の最初の半年まで野球をしており、演劇などの創作物に触れる機会は希薄だった。
+怪我などで選手としてプレーし続けることに疑問を持っている中で、創像工房に出あい、演劇に触れるようになる。定性的なものをどのように面白さや美しさに繋げていくのか考えていく中で、演劇に熱中するようになり現在に至る。
+
+より多くの交流と技術交換が各々の演劇の幅を広げ、より演劇を楽しめるようになるという考えから、Stage linkに携わるようになる。
+　
+現在は創像工房に属し役者をこなしながら、自身の目標に邁進している。</div>
         </div>
       </div>
     </div>
@@ -304,30 +313,30 @@
       </div>
       <div class="member-card">
         <img src="member5.png" class="member-img" alt="メンバー3">
-        <div class="member-name">名前３</div>
-        <div class="member-role">役職/部署</div>
+        <div class="member-name">加治屋&ensp;栞</div>
+        <div class="member-role">EnTRoPy</div>
       </div>
       <div class="member-card">
         <img src="member6.png" class="member-img" alt="メンバー4">
-        <div class="member-name">名前4</div>
-        <div class="member-role">役職/部署</div>
+        <div class="member-name">岡田&ensp;奈和実</div>
+        <div class="member-role">創造工房</div>
       </div>
 
       <!-- 2段目（4人） -->
       <div class="member-card">
         <img src="member7.png" class="member-img" alt="メンバー5">
-        <div class="member-name">名前5</div>
-        <div class="member-role">役職/部署</div>
+        <div class="member-name">Air</div>
+        <div class="member-role">鳥取大学演劇サークル</div>
       </div>
       <div class="member-card">
         <img src="member8.png" class="member-img" alt="メンバー6">
-        <div class="member-name">名前6</div>
-        <div class="member-role">役職/部署</div>
+        <div class="member-name">片桐&ensp;野々香</div>
+        <div class="member-role">EnTRoPy</div>
       </div>
       <div class="member-card">
         <img src="member9.png" class="member-img" alt="メンバー7">
-        <div class="member-name">名前7</div>
-        <div class="member-role">役職/部署</div>
+        <div class="member-name">白鳥&ensp;晃路</div>
+        <div class="member-role">創造工房</div>
       </div>
       <div class="member-card">
         <img src="member10.png" class="member-img" alt="メンバー8">
