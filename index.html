@@ -472,6 +472,12 @@ section {
     #menu-overlay.open { display: block; }
 
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8";
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
 </head>
 
 <body>
@@ -542,13 +548,14 @@ section {
     </div>
   </section>
 
-  <section class="news-section">
+<section class="news-section">
     <div class="section-head"><p class="section-en">News</p><h2>ニュース</h2></div>
-    <div class="news-list">
-      <a href="news.html" class="news-item"><div class="news-date">2026.08.10</div><div class="news-title">最新のニュース1</div></a>
-      <a href="news.html" class="news-item"><div class="news-date">2026.08.05</div><div class="news-title">最新のニュース2</div></a>
-      <a href="news.html" class="news-item"><div class="news-date">2026.08.01</div><div class="news-title">最新のニュース3</div></a>
-      <div style="text-align:center; margin-top:30px;"><a href="news.html" class="news-item" style="border:none;">もっと見る</a></div>
+    <!-- id="top-news-list" を追加 -->
+    <div class="news-list" id="top-news-list">
+      <!-- ここに最新3件が自動挿入されます -->
+    </div>
+    <div style="text-align:center; margin-top:30px;">
+      <a href="news.html" class="news-item" style="border:none; justify-content:center;">もっと見る ➔</a>
     </div>
   </section>
 
@@ -620,6 +627,56 @@ section {
         menuOverlay.classList.remove("open");
       };
     });
+
+    /* 3. Supabaseから最新ニュース3件を取得して表示 */
+    document.addEventListener('DOMContentLoaded', fetchTopNews);
+
+    async function fetchTopNews() {
+      const newsContainer = document.getElementById('top-news-list');
+      if (!newsContainer) return;
+
+      try {
+        // 作成日時順（降順）で最新3件のみ取得
+        const { data, error } = await db
+          .from('news')
+          .select(`id, created_at, category, news_translations!inner (title)`)
+          .eq('news_translations.lang', 'ja')
+          .order('created_at', { ascending: false })
+          .limit(3);
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          newsContainer.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">ニュースはありません。</p>';
+          return;
+        }
+
+        newsContainer.innerHTML = ''; // クリア
+
+        data.forEach(item => {
+          const trans = item.news_translations[0];
+          // 日付フォーマット (YYYY.MM.DD)
+          const dateStr = new Date(item.created_at)
+            .toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' })
+            .replace(/\//g, '.');
+
+          newsContainer.innerHTML += `
+            <a href="news.html" class="news-item">
+              <div class="news-date">${dateStr}</div>
+              <div class="news-category">${escapeHtml(item.category || 'トピックス')}</div>
+              <div class="news-title">${escapeHtml(trans ? trans.title : '')}</div>
+              <span class="news-arrow">&gt;</span>
+            </a>
+          `;
+        });
+      } catch (err) {
+        console.error('トップページニュース取得エラー:', err);
+      }
+    }
+
+    function escapeHtml(str) {
+      return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : '';
+    }
   </script>
 </body>
 </html>
