@@ -9,47 +9,52 @@
       body {
         margin: 0;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", sans-serif;
-        background: #fcfbfa; 
+        background: #fcfbfa;
         color: #333;
         padding-bottom: 60px;
       }
       .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
       .breadcrumb { font-size: 13px; color: #888; margin-bottom: 10px; }
       .page-title { font-size: 28px; font-weight: bold; margin: 0 0 30px 0; color: #111; }
-      
+
       .category-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; border-bottom: 1px solid #eaeaea; padding-bottom: 20px; }
       .tab-btn { background: #f1f0ea; color: #555; border: none; padding: 8px 18px; border-radius: 20px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; }
       .tab-btn:hover { background: #e5e4de; }
       .tab-btn.active { background: #111; color: #fff; }
-      
+
       .news-list-container { border-top: 1px solid #eaeaea; margin-bottom: 30px; }
       .news-item { display: flex; align-items: center; padding: 20px 0; border-bottom: 1px solid #eaeaea; cursor: pointer; transition: background-color 0.2s ease; text-decoration: none; color: inherit; }
       .news-item:hover { background-color: #f7f6f0; }
       .news-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; width: 140px; flex-shrink: 0; }
       .news-date { color: #666; font-size: 14px; font-family: 'Helvetica Neue', Arial, sans-serif; font-weight: 500; }
       .news-tag { display: inline-block; font-size: 12px; font-weight: bold; padding: 4px 0; width: 110px; text-align: center; border-radius: 12px; border: 1px solid transparent; }
-      
-      .tag-ticket { background: #e0ebf7; color: #4a779d; } 
-      .tag-info { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; } 
-      .tag-topics { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; } 
-      .tag-notice { background: #fee2e2; color: #991b1b; } 
 
+      .tag-ticket { background: #e0ebf7; color: #4a779d; }
+      .tag-info { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; }
+      .tag-topics { background: #f3eff0; color: #6e645e; border: 1px solid #e1dad7; }
+      .tag-notice { background: #fee2e2; color: #991b1b; }
       .news-title { font-size: 16px; font-weight: 600; line-height: 1.5; margin: 0; color: #222; flex-grow: 1; padding-right: 20px; }
       .news-arrow { color: #b3b3b3; font-family: monospace; font-size: 18px; font-weight: bold; flex-shrink: 0; padding-right: 5px; }
-      
+
       .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
       .page-btn { background: #f1f0ea; color: #333; border: none; width: 38px; height: 38px; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; font-size: 14px; }
       .page-btn.active { background: #111; color: #fff; }
-
       .detail-container { display: none; max-width: 800px; margin: 0 auto; padding: 20px; animation: fadeIn 0.3s ease-out; }
       @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
       .back-btn { background: none; border: none; color: #666; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 25px; display: flex; align-items: center; gap: 5px; }
       .back-btn:hover { color: #111; }
       .detail-header-meta { margin-bottom: 15px; display: flex; gap: 12px; align-items: center; }
       .detail-title { font-size: 26px; font-weight: bold; margin: 0 0 30px 0; color: #111; line-height: 1.4; }
-      
+
       .inline-story-img { width: 100%; max-height: 500px; object-fit: contain; background: #f7f7f7; border-radius: 12px; margin: 15px 0; border: 1px solid #eaeaea; display: block; }
-      .detail-content { font-size: 16px; line-height: 1.9; color: #333; white-space: pre-wrap; margin: 0; }
+
+      /* ▼ 本文はリッチテキスト（見出し・太字・下線・文字サイズ）を含むHTMLとして描画 */
+      .detail-content { font-size: 16px; line-height: 1.9; color: #333; margin: 0; }
+      .detail-content p { margin: 0 0 16px; }
+      .detail-content h2 { font-size: 24px; font-weight: bold; margin: 28px 0 14px; color: #111; line-height: 1.5; }
+      .detail-content h3 { font-size: 19px; font-weight: bold; margin: 22px 0 10px; color: #111; line-height: 1.5; }
+      .detail-content b, .detail-content strong { font-weight: bold; }
+      .detail-content u { text-decoration: underline; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -60,11 +65,10 @@
     </script>
   </head>
   <body>
-    
+
     <div id="list-view" class="container">
       <div class="breadcrumb">ホーム / ニュース</div>
       <h2 class="page-title">ニュース一覧</h2>
-
       <div class="category-tabs">
         <button class="tab-btn active" onclick="filterCategory('すべて')">すべて</button>
         <button class="tab-btn" onclick="filterCategory('チケット')">チケット</button>
@@ -73,31 +77,26 @@
         <button class="tab-btn" onclick="filterCategory('重要なお知らせ')">重要なお知らせ</button>
         <button class="tab-btn" onclick="filterCategory('アーカイブ')">アーカイブ</button>
       </div>
-
       <div id="news-list" class="news-list-container"></div>
       <div id="pagination" class="pagination"></div>
     </div>
-
     <div id="detail-view" class="detail-container">
       <button class="back-btn" onclick="closeDetailPage()">← ニュース一覧に戻る</button>
-      
+
       <div class="detail-header-meta">
         <span id="detail-date" style="color: #666; font-size: 14px; font-family: monospace;"></span>
         <span id="detail-tag" class="news-tag" style="width: auto; padding: 3px 12px;"></span>
       </div>
-      
+
       <h1 id="detail-title" class="detail-title"></h1>
       <div id="detail-content-area" class="detail-content"></div>
     </div>
-
     <script>
       let allNews = [];
       let currentCategory = 'すべて';
       let currentPage = 1;
-      const itemsPerPage = 7; 
-
+      const itemsPerPage = 7;
       document.addEventListener('DOMContentLoaded', fetchNews);
-
       async function fetchNews() {
         try {
           const { data, error } = await db
@@ -105,13 +104,11 @@
             .select(`id, created_at, category, image_url, news_translations!inner (title, content)`)
             .eq('news_translations.lang', 'ja')
             .order('created_at', { ascending: false });
-
           if (error) throw error;
           allNews = data;
           renderData();
         } catch (error) { console.error('ニュース読み込みエラー:', error); }
       }
-
       function filterCategory(cat) {
         currentCategory = cat;
         currentPage = 1;
@@ -120,30 +117,25 @@
         });
         renderData();
       }
-
       function renderData() {
         const filtered = currentCategory === 'すべて' ? allNews : allNews.filter(item => item.category === currentCategory);
         const totalPages = Math.ceil(filtered.length / itemsPerPage) || 1;
         const pageItems = filtered.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
         const listContainer = document.getElementById('news-list');
         listContainer.innerHTML = '';
-
         if (pageItems.length === 0) {
           listContainer.innerHTML = '<p style="padding:40px 0; color:#888; text-align:center;">該当するニュースはありません。</p>';
         } else {
           pageItems.forEach((item) => {
             const trans = item.news_translations[0];
             const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '.');
-            
+
             let tagClass = 'tag-topics';
             if (item.category === 'チケット') tagClass = 'tag-ticket';
             if (item.category === '公演情報') tagClass = 'tag-info';
             if (item.category === '重要なお知らせ') tagClass = 'tag-notice';
             if (item.category === 'アーカイブ') tagClass = 'tag-ago';
-
             const globalIndex = allNews.findIndex(n => n.id === item.id);
-
             listContainer.innerHTML += `
               <div class="news-item" onclick="openDetailPage(${globalIndex})">
                 <div class="news-meta">
@@ -156,21 +148,18 @@
             `;
           });
         }
-
         const pager = document.getElementById('pagination');
         pager.innerHTML = '';
         for (let i = 1; i <= totalPages; i++) {
           pager.innerHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
         }
       }
-
       function openDetailPage(index) {
         const item = allNews[index];
         const trans = item.news_translations[0];
         const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '.');
-
         document.getElementById('detail-date').innerText = dateStr;
-        
+
         const tag = document.getElementById('detail-tag');
         tag.innerText = item.category || 'トピックス';
         tag.className = 'news-tag';
@@ -179,11 +168,15 @@
         if (item.category === '重要なお知らせ') tag.classList.add('tag-notice');
         if (!item.category || item.category === 'トピックス') tag.classList.add('tag-topics');
         if (!item.category || item.category === 'アーカイブ') tag.classList.add('tag-ago');
-
         document.getElementById('detail-title').innerText = trans.title;
 
-        let bodyHtml = escapeHtml(trans.content);
-        
+        // 本文の描画：新形式（リッチテキストHTML）はそのまま、
+        // 旧形式（プレーンテキスト）はエスケープ＋改行変換で表示（後方互換）
+        let bodyHtml = trans.content || '';
+        if (!/<[a-z][\s\S]*>/i.test(bodyHtml)) {
+          bodyHtml = escapeHtml(bodyHtml).replace(/\n/g, '<br>');
+        }
+
         if (item.image_url && item.image_url.trim() !== "") {
           const imagesList = item.image_url.split(',');
           imagesList.forEach((url, i) => {
@@ -193,20 +186,16 @@
             bodyHtml = bodyHtml.replace(regex, imgTag);
           });
         }
-
         document.getElementById('detail-content-area').innerHTML = bodyHtml;
-
         document.getElementById('list-view').style.display = 'none';
         document.getElementById('detail-view').style.display = 'block';
         window.scrollTo(0, 0);
       }
-
       function closeDetailPage() {
         document.getElementById('detail-view').style.display = 'none';
         document.getElementById('list-view').style.display = 'block';
         window.scrollTo(0, 0);
       }
-
       function changePage(page) { currentPage = page; renderData(); window.scrollTo(0, 0); }
       function escapeHtml(str) { return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : ''; }
     </script>
