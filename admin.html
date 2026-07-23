@@ -4,22 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>【管理画面】ニュース編集・削除</title>
-    <style> 
+    <style>
     body { margin: 0; font-family: sans-serif; background: #222; color: white; padding: 20px; }
     .admin-container { max-width: 800px; margin: 0 auto; }
     h2 { color: #c5a059; border-bottom: 2px solid #c5a059; padding-bottom: 10px; }
-    
+
     .news-item { background: #333; padding: 15px; margin-bottom: 15px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; }
     .news-info { flex: 1; }
     .news-meta { color: #aaa; font-size: 13px; margin-bottom: 5px; }
     .news-title { font-size: 16px; margin: 5px 0 0 0; color: #fff; }
-    
+
     .btn-group { display: flex; gap: 8px; flex-shrink: 0; }
     .edit-btn { background: #c5a059; color: black; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
     .edit-btn:hover { background: #ae8a47; }
     .delete-btn { background: #ff4d4d; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
     .delete-btn:hover { background: #e04343; }
-    
+
     .form-section { background: #111; padding: 20px; border-radius: 8px; margin-top: 40px; border: 1px solid #444; }
     .form-section.editing { border-color: #c5a059; box-shadow: 0 0 10px rgba(197, 160, 89, 0.2); }
     .form-group { margin-bottom: 15px; }
@@ -29,19 +29,37 @@
     }
     .form-group input[type="file"] { background: #333; border: 1px dashed #666; padding: 12px; cursor: pointer; color: #fff; }
     .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: #c5a059; outline: none; }
-    
+
+    /* ▼ リッチテキストエディタ用ツールバー */
+    .editor-toolbar { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; align-items: center; }
+    .editor-toolbar select { width: auto; padding: 6px 8px; background: #222; border: 1px solid #555; color: white; border-radius: 4px; font-size: 13px; }
+    .toolbar-btn { background: #333; border: 1px solid #555; color: white; width: 36px; height: 36px; border-radius: 4px; cursor: pointer; font-size: 14px; }
+    .toolbar-btn:hover { background: #444; border-color: #c5a059; }
+    .toolbar-btn.active { background: #c5a059; color: black; border-color: #c5a059; }
+
+    /* ▼ 本文エディタ本体（contenteditable） */
+    .rich-editor {
+      width: 100%; min-height: 220px; max-height: 500px; overflow-y: auto;
+      padding: 10px; background: #222; border: 1px solid #555; color: white; border-radius: 4px;
+      box-sizing: border-box; line-height: 1.8; font-size: 16px;
+    }
+    .rich-editor:focus { border-color: #c5a059; outline: none; }
+    .rich-editor:empty:before { content: attr(data-placeholder); color: #777; white-space: pre-wrap; }
+    .rich-editor h2 { font-size: 24px; margin: 14px 0 8px; color: #fff; }
+    .rich-editor h3 { font-size: 19px; margin: 12px 0 6px; color: #fff; }
+    .rich-editor p { margin: 0 0 10px; }
+
     .submit-btn { background: #b90e0e; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; width: 100%; margin-bottom: 10px; }
     .submit-btn:hover { background: #d61515; }
     .cancel-btn { background: #444; color: white; border: none; padding: 10px 24px; border-radius: 4px; cursor: pointer; width: 100%; display: none; }
     .cancel-btn:hover { background: #555; }
-
     .upload-status { background: #222; border: 1px solid #444; padding: 10px; margin-top: 5px; border-radius: 4px; font-size: 13px; display: none; color: #c5a059; }
     .code-badge { background: #444; color: #fff; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-weight: bold; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-      const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co"; 
-      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8"; 
+      const SUPABASE_URL = "https://blviywoprvcatwwrrysi.supabase.co";
+      const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJsdml5d29wcnZjYXR3d3JyeXNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MzM2MDUsImV4cCI6MjA5ODAwOTYwNX0.SAp7KNf21RKE5SStRlazyX5zKe-LVVCcEHz_fBV6UP8";
       const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
   </head>
@@ -49,11 +67,10 @@
     <div class="admin-container">
       <h2>📢 ニュース管理画面</h2>
       <div id="news-container"></div>
-
       <div id="form-panel" class="form-section">
         <h3 id="form-title">➕ 新しいニュースを掲載する</h3>
         <form id="news-form" onsubmit="handleFormSubmit(event)">
-          
+
           <div class="form-group">
             <label>カテゴリー *</label>
             <select id="news-category">
@@ -64,72 +81,119 @@
               <option value="アーカイブ">アーカイブ</option>
             </select>
           </div>
-
           <div class="form-group">
             <label>画像をアップロードして本文用コードを発行する</label>
             <input type="file" id="news-file" accept="image/*" onchange="uploadInlineImage()">
             <div id="upload-status" class="upload-status"></div>
           </div>
-
           <div class="form-group">
             <label>タイトル *</label>
             <input type="text" id="news-title-ja" required placeholder="ニュースのタイトルを入力してください">
           </div>
-          
-          <div class="form-group">
-            <label>本文 * (上に表示されたコードを好きな位置に貼り付けてください)</label>
-            <textarea id="news-content-ja" required rows="10" placeholder="ニュースの本文を入力してください。&#13;&#10;例: [image1]&#13;&#10;皆様のご来場をお待ちしております！"></textarea>
-          </div>
 
+          <div class="form-group">
+            <label>本文 * （下のツールバーで見出しや文字サイズ、太字・下線を設定できます。画像コードも好きな位置に貼り付けてください）</label>
+            <div class="editor-toolbar">
+              <select id="format-block-select" onchange="applyFormatBlock(this.value); this.selectedIndex = 0;">
+                <option value="" disabled selected>見出し／本文</option>
+                <option value="P">本文</option>
+                <option value="H2">大見出し</option>
+                <option value="H3">小見出し</option>
+              </select>
+              <select id="font-size-select" onchange="applyFontSize(this.value); this.selectedIndex = 0;">
+                <option value="" disabled selected>文字サイズ</option>
+                <option value="13">小 (13px)</option>
+                <option value="16">標準 (16px)</option>
+                <option value="20">大 (20px)</option>
+                <option value="26">特大 (26px)</option>
+              </select>
+              <button type="button" class="toolbar-btn" id="bold-btn" title="太字" onmousedown="event.preventDefault()" onclick="execFormat('bold', this)"><b>B</b></button>
+              <button type="button" class="toolbar-btn" id="underline-btn" title="下線" onmousedown="event.preventDefault()" onclick="execFormat('underline', this)"><u>U</u></button>
+            </div>
+            <div id="news-content-ja" class="rich-editor" contenteditable="true"
+              data-placeholder="ニュースの本文を入力してください。&#13;&#10;例: [image1]&#13;&#10;皆様のご来場をお待ちしております！"></div>
+          </div>
           <button type="submit" id="submit-button" class="submit-btn">ニュースを掲載する</button>
           <button type="button" id="cancel-button" class="cancel-btn" onclick="exitEditMode()">編集をキャンセル</button>
         </form>
       </div>
     </div>
-
     <script>
     let allNewsData = []; // 取得した全ニュースをローカルで保持
     let uploadedImages = []; // 現在のフォームに紐づいている画像URLの配列
     let editingNewsId = null; // 編集中のニュースID（新規作成時はnull）
-
     document.addEventListener('DOMContentLoaded', () => { fetchGlobalNews(); });
+
+    // ▼ リッチテキストエディタのツールバー操作
+    function execFormat(command, btn) {
+      const editor = document.getElementById('news-content-ja');
+      editor.focus();
+      document.execCommand(command, false, null);
+      if (btn) btn.classList.toggle('active', document.queryCommandState(command));
+    }
+    function applyFormatBlock(tag) {
+      if (!tag) return;
+      const editor = document.getElementById('news-content-ja');
+      editor.focus();
+      document.execCommand('formatBlock', false, tag);
+    }
+    function applyFontSize(px) {
+      if (!px) return;
+      const editor = document.getElementById('news-content-ja');
+      editor.focus();
+      // execCommandの固定サイズ(1-7)を使い、生成された<font size="7">を実際のpxに置き換える
+      document.execCommand('fontSize', false, '7');
+      editor.querySelectorAll('font[size="7"]').forEach(el => {
+        el.removeAttribute('size');
+        el.style.fontSize = px + 'px';
+      });
+    }
+    // 選択範囲に合わせてB/Uボタンのアクティブ表示を更新
+    document.addEventListener('selectionchange', () => {
+      const editor = document.getElementById('news-content-ja');
+      if (!editor || document.activeElement !== editor) return;
+      document.getElementById('bold-btn').classList.toggle('active', document.queryCommandState('bold'));
+      document.getElementById('underline-btn').classList.toggle('active', document.queryCommandState('underline'));
+    });
+
+    // 既存データ（古いプレーンテキストのニュース）をエディタ用HTMLに変換
+    function looksLikeHtml(str) {
+      return /<[a-z][\s\S]*>/i.test(str || '');
+    }
+    function plainTextToHtml(str) {
+      return escapeHtml(str || '').replace(/\n/g, '<br>');
+    }
 
     // 画像のアップロード処理
     async function uploadInlineImage() {
       const fileInput = document.getElementById('news-file');
       const statusDiv = document.getElementById('upload-status');
       if (!fileInput || fileInput.files.length === 0) return;
-      
+
       statusDiv.style.display = "block";
       statusDiv.innerHTML = "⏳ 画像をアップロード中...";
-
       try {
         const file = fileInput.files[0];
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}.${fileExt}`;
         const filePath = `${fileName}`;
-
         const { data: uploadData, error: uploadError } = await db.storage
           .from('news-images')
           .upload(filePath, file);
-
         if (uploadError) throw uploadError;
-
         const { data: publicUrlData } = db.storage
           .from('news-images')
           .getPublicUrl(filePath);
-        
+
         const imageUrl = publicUrlData.publicUrl;
         uploadedImages.push(imageUrl);
-
         const imageCode = `[image${uploadedImages.length}]`;
         statusDiv.innerHTML = `✅ アップロード完了！本文の好きな場所に <span class="code-badge">${imageCode}</span> と直接入力するか貼り付けてください。`;
-        fileInput.value = ""; 
+        fileInput.value = "";
       } catch (error) {
         statusDiv.innerHTML = "❌ アップロード失敗: " + error.message;
       }
     }
-
     // フォーム送信時の分岐（新規追加 or 更新保存）
     async function handleFormSubmit(event) {
       event.preventDefault();
@@ -139,31 +203,30 @@
         await submitNews();
       }
     }
-
     // 新規ニュースの掲載処理
     async function submitNews() {
       const category = document.getElementById('news-category').value;
-      const titleJa = document.getElementById('news-title-ja').value;
-      const contentJa = document.getElementById('news-content-ja').value;
-
+      const titleJa = document.getElementById('news-title-ja').value.trim();
+      const editor = document.getElementById('news-content-ja');
+      const contentJa = editor.innerHTML.trim();
+      if (!titleJa || !editor.textContent.trim()) {
+        alert('タイトルと本文を入力してください。');
+        return;
+      }
       try {
         const imageUrlsString = uploadedImages.join(',');
-
         const { data: newsRows, error: newsError } = await db
           .from('news')
           .insert([{ category, image_url: imageUrlsString }])
           .select();
-        
+
         if (newsError) throw newsError;
         if (!newsRows || newsRows.length === 0) throw new Error("データの作成に失敗しました。");
-
         const insertedNews = newsRows[0];
-
         const { error: transError } = await db.from('news_translations').insert([
           { news_id: insertedNews.id, lang: 'ja', title: titleJa, content: contentJa }
         ]);
         if (transError) throw transError;
-
         alert('ニュースを掲載しました！');
         resetForm();
         await fetchGlobalNews();
@@ -171,33 +234,32 @@
         alert('掲載に失敗しました: ' + error.message);
       }
     }
-
     // 🌟 既存ニュースの更新（上書き）処理
     async function updateNews() {
       const category = document.getElementById('news-category').value;
-      const titleJa = document.getElementById('news-title-ja').value;
-      const contentJa = document.getElementById('news-content-ja').value;
-
+      const titleJa = document.getElementById('news-title-ja').value.trim();
+      const editor = document.getElementById('news-content-ja');
+      const contentJa = editor.innerHTML.trim();
+      if (!titleJa || !editor.textContent.trim()) {
+        alert('タイトルと本文を入力してください。');
+        return;
+      }
       try {
         const imageUrlsString = uploadedImages.join(',');
-
         // 1. 親テーブル（news）のカテゴリーと画像URLを更新
         const { error: newsError } = await db
           .from('news')
           .update({ category, image_url: imageUrlsString })
           .eq('id', editingNewsId);
-        
-        if (newsError) throw newsError;
 
+        if (newsError) throw newsError;
         // 2. 子テーブル（news_translations）のタイトルと本文を更新
         const { error: transError } = await db
           .from('news_translations')
           .update({ title: titleJa, content: contentJa })
           .eq('news_id', editingNewsId)
           .eq('lang', 'ja');
-
         if (transError) throw transError;
-
         alert('ニュースを更新しました！');
         exitEditMode();
         await fetchGlobalNews();
@@ -205,20 +267,20 @@
         alert('更新に失敗しました: ' + error.message);
       }
     }
-
     // 🌟 一覧の「編集」ボタンが押されたときの処理
     function startEditMode(index) {
       const item = allNewsData[index];
       const translation = item.news_translations[0];
       if (!item || !translation) return;
-
       editingNewsId = item.id;
-
       // フォームの各項目に現在のデータをセット
       document.getElementById('news-category').value = item.category || 'トピックス';
       document.getElementById('news-title-ja').value = translation.title || '';
-      document.getElementById('news-content-ja').value = translation.content || '';
-      
+      const editor = document.getElementById('news-content-ja');
+      const content = translation.content || '';
+      // 旧データ（プレーンテキスト）はHTMLに変換し、新データ（リッチテキスト）はそのまま読み込む
+      editor.innerHTML = looksLikeHtml(content) ? content : plainTextToHtml(content);
+
       // 画像URLリストを復元
       if (item.image_url && item.image_url.trim() !== '') {
         uploadedImages = item.image_url.split(',').map(url => url.trim());
@@ -228,17 +290,14 @@
         uploadedImages = [];
         document.getElementById('upload-status').style.display = "none";
       }
-
       // 見た目を「編集モード」に変更
       document.getElementById('form-panel').classList.add('editing');
       document.getElementById('form-title').innerText = "✏️ ニュースを編集する";
       document.getElementById('submit-button').innerText = "ニュースを更新する";
       document.getElementById('cancel-button').style.display = "block";
-
       // 入力フォームの位置まで画面をスクロール
       document.getElementById('form-panel').scrollIntoView({ behavior: 'smooth' });
     }
-
     // 編集モードを抜ける処理
     function exitEditMode() {
       editingNewsId = null;
@@ -248,14 +307,13 @@
       document.getElementById('cancel-button').style.display = "none";
       resetForm();
     }
-
     // フォームの入力内容をクリア
     function resetForm() {
       document.getElementById('news-form').reset();
+      document.getElementById('news-content-ja').innerHTML = '';
       document.getElementById('upload-status').style.display = "none";
       uploadedImages = [];
     }
-
     // グローバルニュース一覧の取得
     async function fetchGlobalNews() {
       try {
@@ -264,7 +322,6 @@
           .select(`id, created_at, category, image_url, news_translations!inner (title, content)`)
           .eq('news_translations.lang', 'ja')
           .order('created_at', { ascending: false });
-
         if (error) {
           console.error('ニュース取得エラー詳細:', error);
           return;
@@ -273,20 +330,19 @@
         renderNewsList(newsList);
       } catch (error) { console.error('ニュース取得エラー:', error); }
     }
-
     // ニュース一覧のHTML描画
     function renderNewsList(newsList) {
       const container = document.getElementById('news-container');
-      container.innerHTML = ''; 
+      container.innerHTML = '';
       if (!newsList || newsList.length === 0) {
         container.innerHTML = '<p style="color: #aaa;">現在掲載されているニュースはありません。</p>';
         return;
       }
       newsList.forEach((item, index) => {
-        const translation = item.news_translations[0]; 
+        const translation = item.news_translations[0];
         if (!translation) return;
         const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year: 'numeric', month: '2-digit', day: '2-digit'});
-        
+
         container.innerHTML += `
           <div class="news-item">
             <div class="news-info">
@@ -304,7 +360,6 @@
         `;
       });
     }
-
     // 削除処理
     async function deleteNews(newsId) {
       if (!confirm('このニュースを削除してもよろしいですか？')) return;
@@ -316,7 +371,6 @@
         await fetchGlobalNews();
       } catch (error) { alert('削除に失敗しました: ' + error.message); }
     }
-
     function escapeHtml(str) { if (!str) return ''; return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
     </script>
   </body>
