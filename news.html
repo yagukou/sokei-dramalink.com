@@ -55,6 +55,8 @@
       .detail-content h3 { font-size: 19px; font-weight: bold; margin: 22px 0 10px; color: #111; line-height: 1.5; }
       .detail-content b, .detail-content strong { font-weight: bold; }
       .detail-content u { text-decoration: underline; }
+      .detail-content a { color: #4a779d; text-decoration: underline; word-break: break-all; }
+      .detail-content a:hover { color: #35597a; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -176,6 +178,8 @@
         if (!/<[a-z][\s\S]*>/i.test(bodyHtml)) {
           bodyHtml = escapeHtml(bodyHtml).replace(/\n/g, '<br>');
         }
+        // プレーンテキストのまま入力されたURLも自動的にリンク化する
+        bodyHtml = linkifyHtml(bodyHtml);
 
         if (item.image_url && item.image_url.trim() !== "") {
           const imagesList = item.image_url.split(',');
@@ -190,6 +194,54 @@
         document.getElementById('list-view').style.display = 'none';
         document.getElementById('detail-view').style.display = 'block';
         window.scrollTo(0, 0);
+      }
+      // 本文中のプレーンテキストURL（<a>タグになっていないもの）を自動でリンクに変換する
+      // 既に<a>タグの中にあるテキストは対象にしない（href属性を壊さないため）
+      function linkifyHtml(html) {
+        const container = document.createElement('div');
+        container.innerHTML = html;
+        const urlRegex = /(https?:\/\/[^\s<]+)/g;
+        function walk(node) {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const text = node.textContent;
+            urlRegex.lastIndex = 0;
+            if (!urlRegex.test(text)) return;
+            urlRegex.lastIndex = 0;
+            const frag = document.createDocumentFragment();
+            let lastIndex = 0;
+            let match;
+            while ((match = urlRegex.exec(text)) !== null) {
+              let url = match[0];
+              // 末尾の句読点やカッコはリンクに含めない
+              const trailingPunct = /[.,;:!?、。）」』\)\]]+$/;
+              const trimMatch = url.match(trailingPunct);
+              let trail = '';
+              if (trimMatch) {
+                trail = trimMatch[0];
+                url = url.slice(0, url.length - trail.length);
+              }
+              if (match.index > lastIndex) {
+                frag.appendChild(document.createTextNode(text.slice(lastIndex, match.index)));
+              }
+              const a = document.createElement('a');
+              a.href = url;
+              a.target = '_blank';
+              a.rel = 'noopener noreferrer';
+              a.textContent = url;
+              frag.appendChild(a);
+              if (trail) frag.appendChild(document.createTextNode(trail));
+              lastIndex = match.index + match[0].length;
+            }
+            if (lastIndex < text.length) {
+              frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+            }
+            node.parentNode.replaceChild(frag, node);
+          } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName !== 'A') {
+            Array.from(node.childNodes).forEach(walk);
+          }
+        }
+        Array.from(container.childNodes).forEach(walk);
+        return container.innerHTML;
       }
       function closeDetailPage() {
         document.getElementById('detail-view').style.display = 'none';
