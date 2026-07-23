@@ -109,8 +109,9 @@
               </select>
               <button type="button" class="toolbar-btn" id="bold-btn" title="太字" onmousedown="event.preventDefault()" onclick="execFormat('bold', this)"><b>B</b></button>
               <button type="button" class="toolbar-btn" id="underline-btn" title="下線" onmousedown="event.preventDefault()" onclick="execFormat('underline', this)"><u>U</u></button>
+              <button type="button" class="toolbar-btn" id="clean-btn" title="書式をクリア（他サイトから貼り付けた装飾を削除）" onmousedown="event.preventDefault()" onclick="cleanEditorFormatting()">🧹</button>
             </div>
-            <div id="news-content-ja" class="rich-editor" contenteditable="true"
+            <div id="news-content-ja" class="rich-editor" contenteditable="true" onpaste="handlePaste(event)"
               data-placeholder="ニュースの本文を入力してください。&#13;&#10;例: [image1]&#13;&#10;皆様のご来場をお待ちしております！"></div>
           </div>
           <button type="submit" id="submit-button" class="submit-btn">ニュースを掲載する</button>
@@ -147,6 +148,70 @@
         el.removeAttribute('size');
         el.style.fontSize = px + 'px';
       });
+    }
+    // 他サイト（Notion/Word/Googleドキュメント等）から貼り付けた際に含まれる
+    // 余計なフォント指定・文字色・背景色などをすべて取り除き、サイトのデザインに統一する
+    const ALLOWED_TAG_MAP = {
+      P: 'P', DIV: 'P', BR: 'BR', B: 'B', STRONG: 'B', U: 'U',
+      H1: 'H2', H2: 'H2', H3: 'H3', H4: 'H3', A: 'A'
+    };
+    function sanitizeNode(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return document.createTextNode(node.textContent);
+      }
+      if (node.nodeType !== Node.ELEMENT_NODE) return null;
+      const fragment = document.createDocumentFragment();
+      Array.from(node.childNodes).forEach(child => {
+        const cleaned = sanitizeNode(child);
+        if (cleaned) fragment.appendChild(cleaned);
+      });
+      const mapped = ALLOWED_TAG_MAP[node.tagName];
+      if (!mapped) {
+        // 対応していないタグ（span, font, tableなど）は中身だけ残してタグを剥がす
+        return fragment;
+      }
+      if (mapped === 'BR') return document.createElement('BR');
+      const el = document.createElement(mapped);
+      if (mapped === 'A') {
+        const href = node.getAttribute('href');
+        if (href) {
+          el.setAttribute('href', href);
+          el.setAttribute('target', '_blank');
+          el.setAttribute('rel', 'noopener noreferrer');
+        }
+      }
+      el.appendChild(fragment);
+      return el;
+    }
+    function sanitizeHtmlString(html) {
+      const template = document.createElement('template');
+      template.innerHTML = html;
+      const wrapper = document.createElement('div');
+      Array.from(template.content.childNodes).forEach(node => {
+        const cleaned = sanitizeNode(node);
+        if (cleaned) wrapper.appendChild(cleaned);
+      });
+      return wrapper.innerHTML;
+    }
+    // 貼り付け時に自動で書式（フォント・色・背景など）をクリアする
+    function handlePaste(e) {
+      e.preventDefault();
+      const clipboard = e.clipboardData || window.clipboardData;
+      const html = clipboard.getData('text/html');
+      let insertHtml;
+      if (html) {
+        insertHtml = sanitizeHtmlString(html);
+      } else {
+        insertHtml = escapeHtml(clipboard.getData('text/plain')).replace(/\n/g, '<br>');
+      }
+      document.execCommand('insertHTML', false, insertHtml);
+    }
+    // 既に入力済みの本文の書式を後からまとめてクリアするボタン用
+    function cleanEditorFormatting() {
+      const editor = document.getElementById('news-content-ja');
+      if (!editor.textContent.trim()) return;
+      if (!confirm('本文の装飾（フォント・色・背景など）をすべて取り除き、サイトの標準デザインに揃えます。よろしいですか？')) return;
+      editor.innerHTML = sanitizeHtmlString(editor.innerHTML);
     }
     // 選択範囲に合わせてB/Uボタンのアクティブ表示を更新
     document.addEventListener('selectionchange', () => {
