@@ -44,6 +44,8 @@
       .back-btn { background: none; border: none; color: #666; font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 25px; display: flex; align-items: center; gap: 5px; }
       .back-btn:hover { color: #111; }
       .detail-header-meta { margin-bottom: 15px; display: flex; gap: 12px; align-items: center; }
+      .copy-link-btn { margin-left: auto; background: #f1f0ea; color: #555; border: none; padding: 6px 14px; border-radius: 16px; cursor: pointer; font-size: 13px; }
+      .copy-link-btn:hover { background: #e5e4de; color: #111; }
       .detail-title { font-size: 26px; font-weight: bold; margin: 0 0 30px 0; color: #111; line-height: 1.4; }
 
       .inline-story-img { width: 100%; max-height: 500px; object-fit: contain; background: #f7f7f7; border-radius: 12px; margin: 15px 0; border: 1px solid #eaeaea; display: block; }
@@ -88,6 +90,7 @@
       <div class="detail-header-meta">
         <span id="detail-date" style="color: #666; font-size: 14px; font-family: monospace;"></span>
         <span id="detail-tag" class="news-tag" style="width: auto; padding: 3px 12px;"></span>
+        <button id="copy-link-btn" class="copy-link-btn" onclick="copyNewsLink()">🔗 このニュースのリンクをコピー</button>
       </div>
 
       <h1 id="detail-title" class="detail-title"></h1>
@@ -109,6 +112,8 @@
           if (error) throw error;
           allNews = data;
           renderData();
+          // URLに個別ニュースへのリンク（#news-<id>）が含まれていれば、その記事を直接開く
+          handleHashRoute();
         } catch (error) { console.error('ニュース読み込みエラー:', error); }
       }
       function filterCategory(cat) {
@@ -156,8 +161,14 @@
           pager.innerHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
         }
       }
+      // 記事クリック時：URLのハッシュにその記事のIDをセットする（実際の表示はhandleHashRoute経由で行う）
       function openDetailPage(index) {
         const item = allNews[index];
+        if (!item) return;
+        location.hash = 'news-' + item.id;
+      }
+      // 個別記事の詳細画面を描画する
+      function renderDetailView(item) {
         const trans = item.news_translations[0];
         const dateStr = new Date(item.created_at).toLocaleDateString('ja-JP', {year:'numeric', month:'2-digit', day:'2-digit'}).replace(/\//g, '.');
         document.getElementById('detail-date').innerText = dateStr;
@@ -193,6 +204,38 @@
         document.getElementById('detail-content-area').innerHTML = bodyHtml;
         document.getElementById('list-view').style.display = 'none';
         document.getElementById('detail-view').style.display = 'block';
+        window.scrollTo(0, 0);
+      }
+      // URLのハッシュ（#news-<id>）を見て、一覧を出すか個別記事を出すか判断する
+      // ブラウザの戻る/進むボタンや、共有された直リンクを開いたときにも呼ばれる
+      function handleHashRoute() {
+        const match = (location.hash || '').match(/^#news-(.+)$/);
+        if (match) {
+          const targetId = decodeURIComponent(match[1]);
+          const item = allNews.find(n => String(n.id) === targetId);
+          if (item) {
+            renderDetailView(item);
+            return;
+          }
+        }
+        showListView();
+      }
+      window.addEventListener('hashchange', handleHashRoute);
+      // このニュースへの直リンクをクリップボードにコピーする
+      function copyNewsLink() {
+        const url = location.href;
+        const btn = document.getElementById('copy-link-btn');
+        const original = btn.innerText;
+        const showCopied = () => { btn.innerText = '✅ コピーしました'; setTimeout(() => { btn.innerText = original; }, 1800); };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(showCopied).catch(() => { prompt('このURLをコピーしてください:', url); });
+        } else {
+          prompt('このURLをコピーしてください:', url);
+        }
+      }
+      function showListView() {
+        document.getElementById('detail-view').style.display = 'none';
+        document.getElementById('list-view').style.display = 'block';
         window.scrollTo(0, 0);
       }
       // 本文中のプレーンテキストURL（<a>タグになっていないもの）を自動でリンクに変換する
@@ -244,9 +287,10 @@
         return container.innerHTML;
       }
       function closeDetailPage() {
-        document.getElementById('detail-view').style.display = 'none';
-        document.getElementById('list-view').style.display = 'block';
-        window.scrollTo(0, 0);
+        if (location.hash) {
+          history.pushState('', document.title, window.location.pathname + window.location.search);
+        }
+        showListView();
       }
       function changePage(page) { currentPage = page; renderData(); window.scrollTo(0, 0); }
       function escapeHtml(str) { return str ? str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : ''; }
