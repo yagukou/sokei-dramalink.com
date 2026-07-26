@@ -8,19 +8,22 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;500;700;900&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 
 <style>
-/* ====== サイト共通ヘッダー（既存ナビゲーション。他ページと共通。ロゴのみStage Link表記） ====== */
+/* ====== サイト共通ヘッダー（index.htmlの実装をそのまま流用） ====== */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #b90e0e;
-  padding: 10px 20px;
+  background-color: #b90e0e !important;
+  padding: 0 30px;
+  height: 90px;
   position: relative;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  font-family: sans-serif;
 }
 
 .menu-left, .menu-right {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   justify-content: space-around;
   align-items: center;
   z-index: 2;
@@ -37,14 +40,13 @@ header {
   width: 30px;
   height: 30px;
   margin-bottom: 5px;
+  filter: brightness(0) invert(1);
 }
 
 .logo {
+  text-decoration: none;
   font-family: "Times New Roman", serif;
-  font-size: 28px;
-  font-weight: bold;
   letter-spacing: 3px;
-  color: #222;
   text-align: center;
   line-height: 1.2;
   display: flex;
@@ -52,51 +54,41 @@ header {
   align-items: center;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1;
   max-width: 40%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  text-decoration: none;
 }
 
 .logo-main {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
   letter-spacing: 3px;
+  color: #ffffff;
 }
 
 .logo-sub {
-  font-size: 16px;
+  font-size: 13px;
   letter-spacing: 2px;
   color: #d4af37;
+  margin-top: 2px;
 }
 
 .menu-1 {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: white;
-  border-radius: 12px;
-  padding: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 80px;
-  height: 80px;
   justify-content: center;
-  text-decoration: none;
-  color: black;
-  font-size: 12px;
-}
-
-.menu-1:hover {
-  transform: translateY(-3px);
+  background: transparent !important;
+  box-shadow: none !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 5px 10px;
   transition: 0.3s;
-}
-
-.menu-1 img {
-  width: 30px !important;
-  height: 30px !important;
+  text-decoration: none;
 }
 
 .menu-1 span {
@@ -107,74 +99,94 @@ header {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff !important;
 }
 
-.lang-wrapper {
-  position: relative;
-  display: inline-block;
+.menu-1:hover {
+  transform: translateY(-3px);
 }
 
-.lang-menu {
-  position: absolute;
-  top: 110%;
-  left: 0;
-  width: 140px;
-  background: #f0f0f0;
-  border-radius: 12px;
-  display: none;
-  overflow: hidden;
+.hamburger { display: none; }
+
+/* 右側からスライドインするメニュー */
+#global-dropdown {
+  position: fixed;
+  top: 0;
+  right: -300px;
+  width: 300px;
+  height: 100vh;
+  background: #111111;
+  box-shadow: -5px 0 25px rgba(0,0,0,0.7);
   z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  padding-top: 60px;
+  transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.lang-menu div {
-  padding: 10px;
-  text-align: center;
-  cursor: pointer;
-  font-size: 13px;
-  color: black;
+#global-dropdown.open {
+  right: 0;
 }
 
-.lang-menu div:hover {
-  background: #ddd;
+#global-dropdown a {
+  color: #fff;
+  padding: 20px 30px;
+  text-decoration: none;
+  font-size: 16px;
+  border-bottom: 1px solid #222;
 }
 
-.goog-te-banner-frame,
-.goog-te-banner-frame.skiptranslate,
-.goog-te-gadget-icon,
-.goog-te-gadget-simple,
-.goog-te-balloon-frame,
-.skiptranslate {
-  display: none !important;
-}
-
-.hamburger {
+#menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 9998;
   display: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+#menu-overlay.open {
+  display: block;
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
   header {
-    position: relative;
-    height: 70px;
+    height: 70px !important;
+    padding: 0 20px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
   }
+
   .logo {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     margin: 0;
+    max-width: 55% !important;
   }
-  .menu-left { display: none; }
-  .menu-right { display: none; }
+  .logo-main { font-size: 20px; }
+  .logo-sub { font-size: 11px; }
+
+  .menu-left, .menu-right { display: none !important; }
+
   .hamburger {
+    display: block !important;
     position: absolute;
-    top: 15px;
+    top: 50%;
     right: 20px;
-    font-size: 30px;
-    color: white;
+    transform: translateY(-50%);
+    font-size: 28px;
+    color: white !important;
     cursor: pointer;
-    z-index: 1000;
-    display: block;
+    z-index: 9999 !important;
+    font-family: sans-serif;
+    line-height: 1;
   }
 }
 </style>
@@ -967,88 +979,66 @@ header {
 </head>
 <body>
 
+<div id="menu-overlay"></div>
+
 <header>
   <div class="menu-left">
-    <a href="ticket.html" class="menu-1">
-      <img src="ticket3.png" width="50">
-      <span>チケット</span>
-    </a>
-    <a href="what.html" class="menu-1">
-      <img src="what3.png" width="50">
-      <span>公演紹介</span>
-    </a>
-    <a href="Participant.html" class="menu-1">
-      <img src="Participant3.png" width="50">
-      <span>出場団体</span>
-    </a>
-    <a href="Schedule.html" class="menu-1">
-      <img src="Schedule3.png" width="50">
-      <span>スケジュール</span>
-    </a>
+    <a href="what.html" class="menu-1"><img src="what3.png"><span>企画</span></a>
+    <a href="Participant.html" class="menu-1"><img src="Participant3.png"><span>ビラネット</span></a>
+    <a href="Schedule.html" class="menu-1"><img src="Schedule3.png"><span>スケジュール</span></a>
   </div>
 
   <a href="index.html" class="logo">
-    <div class="logo-main">Stage Link</div>
-    <div class="logo-sub">Meet / Connect / Create</div>
+    <div class="logo-main">StageLink</div>
+    <div class="logo-sub">Official Website</div>
   </a>
 
   <div class="menu-right">
-    <a href="news.html" class="menu-1">
-      <img src="news3.png" width="50">
-      <span>ニュース</span>
-    </a>
-    <div class="lang-wrapper">
-      <a class="menu-1" onclick="toggleLangMenu(event); return false;">
-        <img src="Language3.png">
-        <span>Language</span>
-      </a>
-      <div id="lang-menu" class="lang-menu">
-        <div onclick="setLang('ja')">日本語</div>
-        <div onclick="setLang('en')">ENGLISH</div>
-        <div onclick="setLang('zh-CN')">简体中文</div>
-        <div onclick="setLang('ko')">한국어</div>
-      </div>
-    </div>
-    <a href="Inquiry.html" class="menu-1">
-      <img src="Inquiry3.png" width="50">
-      <span>お問い合わせ</span>
-    </a>
-    <a href="menu.html" class="menu-1">
-      <img src="menu3.png" width="50">
-      <span>メニュー</span>
-    </a>
+    <a href="news.html" class="menu-1"><img src="news3.png"><span>ニュース</span></a>
+    <a href="Inquiry.html" class="menu-1"><img src="Inquiry3.png"><span>お問い合わせ</span></a>
+    <a href="#" class="menu-1 pc-menu-btn"><img src="menu3.png"><span>メニュー</span></a>
   </div>
+
+  <div class="hamburger">☰</div>
 </header>
 
-<script>
-function toggleLangMenu(e) {
-  if (e) e.stopPropagation();
-  const menu = document.getElementById("lang-menu");
-  if (menu.style.display === "block") {
-    menu.style.display = "none";
-  } else {
-    menu.style.display = "block";
-  }
-}
-document.addEventListener("click", function() {
-  const menu = document.getElementById("lang-menu");
-  if (menu) menu.style.display = "none";
-});
-function setLang(lang) {
-  document.cookie = "googtrans=/ja/" + lang + "; path=/";
-  location.reload();
-}
-</script>
+<nav id="global-dropdown">
+  <a href="Philosophy.html">・私たちの思い ーPhilosophy</a>
+  <a href="what.html">・企画紹介</a>
+  <a href="Participant.html">・ビラネット</a>
+  <a href="news.html">・ニュース</a>
+  <a href="member.html">・メンバー</a>
+  <a href="Inquiry.html">・お問い合わせ</a>
+</nav>
 
-<div id="google_translate_element" style="display:none;"></div>
 <script>
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({
-    pageLanguage: 'ja'
-  }, 'google_translate_element');
-}
+  (function () {
+    var hamburgerBtn = document.querySelector(".hamburger");
+    var pcMenuBtn = document.querySelector(".pc-menu-btn");
+    var globalDropdown = document.getElementById("global-dropdown");
+    var menuOverlay = document.getElementById("menu-overlay");
+
+    function toggleMenu(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      globalDropdown.classList.toggle("open");
+      menuOverlay.classList.toggle("open");
+    }
+
+    if (hamburgerBtn) hamburgerBtn.onclick = toggleMenu;
+    if (pcMenuBtn) pcMenuBtn.onclick = toggleMenu;
+    if (menuOverlay) menuOverlay.onclick = toggleMenu;
+
+    document.querySelectorAll("#global-dropdown a").forEach(function (link) {
+      link.onclick = function () {
+        globalDropdown.classList.remove("open");
+        menuOverlay.classList.remove("open");
+      };
+    });
+  })();
 </script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <section class="hero">
     <div class="wrap">
