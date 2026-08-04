@@ -980,7 +980,7 @@ let troupesData = [];
 let performancesData = [];
 let incomingRequests = [];
 let currentUser = null;
-let currentDate = new Date(2026, 5, 13);
+let currentDate = new Date();
 let selectedPerformanceId = null;
 let editingPerfId = null;
 let pageHistory = [];
@@ -1146,7 +1146,12 @@ function renderCalendar() {
 
   for (let day = 1; day <= totalDays; day++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const isToday = (year === 2026 && month === 5 && day === 13);
+    const today = new Date();
+    const isToday = (
+          year === today.getFullYear() &&
+          month === today.getMonth() &&
+          day === today.getDate()
+          );
     let cell = document.createElement('div');
     cell.className = `cal-cell ${isToday ? 'today' : ''}`;
     cell.innerHTML = `<div class="cal-day-num">${day}</div>`;
