@@ -27,6 +27,17 @@
 --radius-sm: 4px;
 --radius-md: 8px;
 --radius-lg: 10px;
+
+/* Slack風チャット用テーマ変数 */
+--slack-dark: #1A1D21;
+--slack-sidebar-bg: #19171D;
+--slack-sidebar-hover: #27242C;
+--slack-sidebar-active: #111013;
+--slack-sidebar-text: #D1D2D3;
+--slack-green: #007A5A;
+--slack-green-hover: #148567;
+--slack-border: #DDDDDD;
+--slack-mention-bg: #F2C74433;
 }
 
 html, body {
@@ -323,43 +334,60 @@ gap: 4px;
 .panel-success.show { display: block; }
 .panel-login-hint { background: var(--crimson-pale); border: 1px solid rgba(139,26,47,0.2); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: var(--crimson); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
 
-/* ===================== CHAT ===================== */
+/* ===================== CHAT (SLACK STYLE) ===================== */
 #page-chat { max-width: 1200px; padding: 1rem 1.5rem; }
-.chat-layout { display: flex; height: calc(100vh - 180px); background: var(--white); border: 1px solid var(--border-neutral); border-radius: var(--radius-lg); overflow: hidden; }
-.chat-sidebar { width: 280px; flex-shrink: 0; border-right: 1px solid var(--border-neutral); display: flex; flex-direction: column; overflow: hidden; }
-.chat-sidebar-header { padding: 14px 16px; font-size: 14px; font-weight: 600; border-bottom: 1px solid var(--border-neutral); display: flex; align-items: center; gap: 8px; background: var(--surface); flex-shrink: 0; }
+.chat-layout { display: flex; height: calc(100vh - 180px); background: #FFFFFF; border: 1px solid var(--slack-border); border-radius: var(--radius-md); overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+/* Slack Left Sidebar */
+.chat-sidebar { width: 260px; flex-shrink: 0; background: var(--slack-sidebar-bg); color: var(--slack-sidebar-text); display: flex; flex-direction: column; overflow: hidden; }
+.chat-sidebar-header { padding: 16px; font-size: 16px; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 8px; background: var(--slack-sidebar-bg); color: #FFFFFF; flex-shrink: 0; }
+.chat-sidebar-section-title { font-size: 12px; color: #9A9B9E; padding: 12px 16px 4px 16px; font-weight: 600; }
 .conv-list { flex: 1; overflow-y: auto; }
-.chat-conv-item { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; border-bottom: 0.5px solid var(--border-neutral); transition: background 0.15s; }
-.chat-conv-item:hover { background: var(--surface2); }
-.chat-conv-item.active { background: var(--crimson-pale); }
-.chat-conv-meta { flex: 1; min-width: 0; }
-.chat-conv-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.chat-conv-preview { font-size: 11px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
-.chat-unread { background: var(--crimson); color: white; font-size: 11px; font-weight: 600; border-radius: 10px; padding: 1px 6px; min-width: 18px; text-align: center; flex-shrink: 0; }
-.chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: var(--white); }
+.chat-conv-item { display: flex; align-items: center; gap: 8px; padding: 6px 16px; cursor: pointer; color: var(--slack-sidebar-text); transition: background 0.1s; position: relative; }
+.chat-conv-item:hover { background: var(--slack-sidebar-hover); }
+.chat-conv-item.active { background: var(--slack-sidebar-active); color: #FFFFFF; font-weight: 600; }
+.chat-conv-avatar { width: 20px; height: 20px; border-radius: 4px; background: #616061; color: #FFF; font-size: 11px; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.chat-conv-meta { flex: 1; min-width: 0; display: flex; align-items: center; justify-content: space-between; }
+.chat-conv-name { font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.chat-conv-preview { display: none; } /* Slackっぽく一覧プレビューは隠すかシンプルに */
+.chat-unread { background: #E01E5A; color: white; font-size: 11px; font-weight: 700; border-radius: 10px; padding: 1px 6px; min-width: 18px; text-align: center; flex-shrink: 0; }
+
+/* Slack Chat Main */
+.chat-main { flex: 1; display: flex; flex-direction: column; min-width: 0; background: #FFFFFF; }
 .chat-view { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
-.chat-header { padding: 12px 16px; border-bottom: 1px solid var(--border-neutral); display: flex; align-items: center; gap: 10px; background: var(--white); flex-shrink: 0; }
-.chat-messages { flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 8px; }
-.chat-msg-wrap { display: flex; align-items: flex-end; gap: 6px; }
-.chat-msg-wrap.mine { flex-direction: row-reverse; }
-.chat-msg-wrap.bot { justify-content: center; }
-.chat-bubble { max-width: 65%; padding: 8px 12px; border-radius: 14px; font-size: 13px; line-height: 1.5; word-break: break-word; white-space: pre-wrap; }
-.chat-bubble.mine { background: var(--crimson); color: white; border-bottom-right-radius: 4px; }
-.chat-bubble.theirs { background: var(--surface2); color: var(--ink); border-bottom-left-radius: 4px; }
-.chat-bubble.bot { background: var(--surface); color: var(--muted); font-size: 12px; border-radius: 8px; max-width: 80%; text-align: center; padding: 6px 14px; border: 0.5px solid var(--border-neutral); }
-.chat-time { font-size: 10px; color: var(--muted); flex-shrink: 0; align-self: flex-end; }
-.chat-input-area { padding: 10px 14px; border-top: 1px solid var(--border-neutral); display: flex; gap: 8px; align-items: center; background: var(--white); position: relative; flex-shrink: 0; }
-.chat-text-input { flex: 1; padding: 8px 12px; border: 1px solid var(--border-neutral); border-radius: 20px; font-size: 13px; font-family: inherit; outline: none; }
-.chat-text-input:focus { border-color: var(--crimson); }
-.chat-send-btn { width: 36px; height: 36px; background: var(--crimson); border: none; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
-.chat-send-btn:hover { background: var(--crimson-light); }
-.emoji-toggle { width: 34px; height: 34px; background: none; border: none; font-size: 20px; cursor: pointer; flex-shrink: 0; padding: 0; line-height: 1; }
-.emoji-picker-popup { position: absolute; bottom: 58px; left: 14px; background: var(--white); border: 1px solid var(--border-neutral); border-radius: var(--radius-md); padding: 8px; display: none; grid-template-columns: repeat(8, 32px); gap: 2px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); z-index: 50; }
+.chat-header { padding: 12px 20px; border-bottom: 1px solid var(--slack-border); display: flex; align-items: center; gap: 10px; background: #FFFFFF; flex-shrink: 0; height: 56px; }
+.chat-header .chat-conv-avatar { width: 24px; height: 24px; font-size: 12px; }
+
+/* Slack Message Flow */
+.chat-messages { flex: 1; overflow-y: auto; padding: 16px 20px; display: flex; flex-direction: column; gap: 16px; background: #FFFFFF; }
+.chat-msg-group { display: flex; gap: 12px; align-items: flex-start; }
+.chat-msg-avatar { width: 36px; height: 36px; border-radius: 8px; background: #4A154B; color: #FFF; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.chat-msg-content { flex: 1; min-width: 0; }
+.chat-msg-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.chat-msg-author { font-size: 15px; font-weight: 900; color: #1D1C1D; }
+.chat-msg-time { font-size: 12px; color: #616061; }
+.chat-msg-text { font-size: 15px; color: #1D1C1D; line-height: 1.4667; word-break: break-word; white-space: pre-wrap; }
+
+/* Slack-style Rich Editor Input Box */
+.chat-input-area { padding: 0 20px 20px 20px; background: #FFFFFF; position: relative; flex-shrink: 0; }
+.slack-input-box { border: 1px solid #868686; border-radius: 8px; background: #FFFFFF; transition: border-color 0.15s ease; }
+.slack-input-box:focus-within { border-color: #1D1C1D; box-shadow: 0 0 0 1px #1D1C1D; }
+.slack-input-textarea { width: 100%; border: none; padding: 12px 12px 8px 12px; font-size: 15px; font-family: inherit; outline: none; resize: none; min-height: 44px; max-height: 120px; background: transparent; color: #1D1C1D; line-height: 1.4; }
+.slack-input-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 4px 8px; background: #F8F8F8; border-bottom-left-radius: 7px; border-bottom-right-radius: 7px; border-top: 1px solid #F0F0F0; }
+.slack-toolbar-left { display: flex; align-items: center; gap: 2px; }
+.slack-icon-btn { width: 28px; height: 28px; background: none; border: none; border-radius: 4px; color: #616061; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: background 0.1s; }
+.slack-icon-btn:hover { background: #E8E8E8; color: #1D1C1D; }
+.slack-send-btn { background: var(--slack-green); color: white; border: none; border-radius: 4px; padding: 4px 12px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; height: 28px; transition: background 0.15s; }
+.slack-send-btn:hover { background: var(--slack-green-hover); }
+.slack-send-btn:disabled { background: #DDDDDD; color: #868686; cursor: default; }
+
+/* Popups & States */
+.emoji-picker-popup { position: absolute; bottom: 70px; left: 20px; background: var(--white); border: 1px solid var(--slack-border); border-radius: var(--radius-md); padding: 8px; display: none; grid-template-columns: repeat(8, 32px); gap: 2px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); z-index: 50; }
 .emoji-picker-popup.open { display: grid; }
 .emoji-picker-popup span { font-size: 18px; width: 30px; height: 30px; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
 .emoji-picker-popup span:hover { background: var(--surface2); }
-.chat-empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 10px; font-size: 14px; }
-.chat-empty-state i { font-size: 48px; color: var(--border-neutral); display: block; }
+.chat-empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #616061; gap: 10px; font-size: 15px; }
+.chat-empty-state i { font-size: 48px; color: #DDDDDD; display: block; }
 </style>
 </head>
 <body>
@@ -534,7 +562,6 @@ gap: 4px;
 </div>
 <div class="quota-text" id="detail-quota-summary">0 / 300 部（申請中含む）</div>
 <button class="request-btn" id="detail-request-btn" onclick="openRequestForm()">折り込みを依頼する</button>
-</div>
 </div>
 </div>
 </div>
@@ -874,11 +901,11 @@ gap: 4px;
 
 </div>
 
-<!-- ===================== CHAT PAGE ===================== -->
+<!-- ===================== CHAT PAGE (SLACK STYLE) ===================== -->
 <div class="page" id="page-chat">
 <div class="page-header" style="margin-bottom:0.75rem;">
-<div class="page-title">チャット</div>
-<div class="page-sub">折り込みを依頼した劇団とメッセージを交換できます</div>
+<div class="page-title">ダイレクトメッセージ</div>
+<div class="page-sub">折り込み依頼先の劇団とリアルタイムで連絡を取ることができます</div>
 </div>
 <div id="chat-login-prompt" class="info-banner" style="display:none;">
 <div class="info-banner-title"><i class="ti ti-alert-triangle"></i>ログインが必要です</div>
@@ -886,33 +913,52 @@ gap: 4px;
 </div>
 <div class="chat-layout" id="chat-layout" style="display:none;">
 <div class="chat-sidebar">
-<div class="chat-sidebar-header"><i class="ti ti-messages" style="color:var(--crimson);"></i>会話</div>
+<div class="chat-sidebar-header">
+  <i class="ti ti-brand-slack" style="font-size: 20px;"></i> メッセージ
+</div>
+<div class="chat-sidebar-section-title">ダイレクトメッセージ</div>
 <div class="conv-list" id="conv-list"></div>
 </div>
 <div class="chat-main">
 <div class="chat-empty-state" id="chat-empty-state">
-<i class="ti ti-message-circle"></i>
-<span>左の劇団を選んでメッセージ</span>
+<i class="ti ti-messages"></i>
+<span>左側のリストから会話する劇団を選択してください</span>
 </div>
 <div class="chat-view" id="chat-view" style="display:none;">
 <div class="chat-header">
-<div id="chat-header-avatar" class="troupe-avatar" style="width:36px; height:36px; font-size:14px; flex-shrink:0;"></div>
+<div id="chat-header-avatar" class="chat-conv-avatar"></div>
 <div>
-<div id="chat-header-name" style="font-size:14px; font-weight:600;"></div>
-<div id="chat-header-univ" style="font-size:12px; color:var(--muted);"></div>
+<div id="chat-header-name" style="font-size:15px; font-weight:700; color:#1D1C1D;"></div>
 </div>
 </div>
 <div class="chat-messages" id="chat-messages"></div>
+
+<!-- Slack風のリッチメッセージ入力エリア -->
 <div class="chat-input-area">
-<button class="emoji-toggle" onclick="toggleEmojiPicker()" title="絵文字">😊</button>
 <div class="emoji-picker-popup" id="chat-emoji-picker"></div>
-<input type="text" class="chat-text-input" id="chat-text-input"
-  placeholder="メッセージを入力... (Enterで送信)"
-  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}">
-<button class="chat-send-btn" onclick="sendChatMessage()" title="送信">
-<i class="ti ti-send" style="font-size:15px;"></i>
-</button>
+<div class="slack-input-box">
+  <textarea class="slack-input-textarea" id="chat-text-input" rows="1"
+    placeholder="メッセージを送信..."
+    onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}"></textarea>
+  <div class="slack-input-toolbar">
+    <div class="slack-toolbar-left">
+      <button class="slack-icon-btn" onclick="toggleEmojiPicker()" title="絵文字を追加">
+        <i class="ti ti-mood-smile"></i>
+      </button>
+      <button class="slack-icon-btn" onclick="document.getElementById('chat-text-input').value+='*';" title="太字">
+        <i class="ti ti-bold"></i>
+      </button>
+      <button class="slack-icon-btn" onclick="document.getElementById('chat-text-input').value+='_';" title="斜体">
+        <i class="ti ti-italic"></i>
+      </button>
+    </div>
+    <button class="slack-send-btn" onclick="sendChatMessage()" title="送信">
+      送信 <i class="ti ti-send" style="font-size:12px;"></i>
+    </button>
+  </div>
 </div>
+</div>
+
 </div>
 </div>
 </div>
@@ -946,14 +992,10 @@ gap: 4px;
 </div>
 
 <!-- =====================================================================
-     JavaScript: 単一の <script> ブロック（重複なし・Supabase統合版）
+     JavaScript: 単一の <script> ブロック（重複なし・Supabase統合・Slack風チャット追加版）
      ===================================================================== -->
 <script>
 // ===================== SUPABASE 初期化 =====================
-// 【修正1】CDN版は window.supabase にモジュールが展開される。
-//           createClient を分割代入で取り出し、クライアントは別名 db に格納して
-//           window.supabase を上書きしないようにする。
-// 【修正2】SUPABASE_URL は /rest/v1/ なしのベースURLを使う。
 const SUPABASE_URL = 'https://azdvqobryrpxriftaale.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6ZHZxb2JyeXJweHJpZnRhYWxlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEzMzIzNjYsImV4cCI6MjA5NjkwODM2Nn0.tLopMSF670ok2jXHq6_G-MYtIajdCrxmsQ4TDIv5u_A';
 const { createClient } = window.supabase;
@@ -975,25 +1017,30 @@ const DEFAULT_REQUESTS = [
   { id: "req-mock-2", perfId: "perf-1", toTroupeId: "troupe-a", fromName: "劇団アクトゼロ", fromEmail: "zero@example.com", address: "", deliveryMethod: "対面", copies: 80, size: "A4二つ折り", notes: "折り込みよろしくお願いいたします！アトリエまで手持ち搬入（対面）を予定しております。", status: "accepted", timestamp: "2026-06-03 09:15" }
 ];
 
-// ===================== グローバル変数（1回だけ宣言） =====================
+// ===================== グローバル変数 =====================
 let troupesData = [];
 let performancesData = [];
 let incomingRequests = [];
+let messagesData = [];
 let currentUser = null;
 let currentDate = new Date();
 let selectedPerformanceId = null;
 let editingPerfId = null;
+let activeChatPartnerId = null;
 let pageHistory = [];
 
 // ===================== APP INITIALIZATION =====================
+window.addEventListener('DOMContentLoaded', () => {
+  initApp();
+  initEmojiPicker();
+});
+
 async function initApp() {
   await loadAllData();
-  // localStorage からセッションを復元
   try {
     const saved = localStorage.getItem('currentUser');
     if (saved) {
       const parsed = JSON.parse(saved);
-      // DBから最新情報を取得して復元
       const { data: freshData } = await db.from('troupes').select('*').eq('id', parsed.id);
       if (freshData && freshData.length > 0) {
         currentUser = freshData[0];
@@ -1025,18 +1072,15 @@ async function loadAllData() {
     if (requestsError) throw requestsError;
     incomingRequests = requests || [];
 
-    console.log('Supabaseからデータを読み込みました。', { troupes: troupesData.length, performances: performancesData.length, requests: incomingRequests.length });
+    const { data: msgs, error: msgsError } = await db.from('messages').select('*');
+    if (!msgsError && msgs) messagesData = msgs;
+
   } catch (error) {
     console.error('データ読み込みエラー（フォールバック使用）:', error.message);
     troupesData = [...DEFAULT_TROUPES];
     performancesData = [...DEFAULT_PERFORMANCES];
     incomingRequests = [...DEFAULT_REQUESTS];
   }
-}
-
-function saveAllData() {
-  // Supabase連携ではこの関数は各操作関数で個別に処理するため何もしない
-  console.log('saveAllData: Supabase連携では各関数内で個別保存します。');
 }
 
 // ===================== ROUTING & UTILS =====================
@@ -1147,11 +1191,7 @@ function renderCalendar() {
   for (let day = 1; day <= totalDays; day++) {
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
     const today = new Date();
-    const isToday = (
-          year === today.getFullYear() &&
-          month === today.getMonth() &&
-          day === today.getDate()
-          );
+    const isToday = (year === today.getFullYear() && month === today.getMonth() && day === today.getDate());
     let cell = document.createElement('div');
     cell.className = `cal-cell ${isToday ? 'today' : ''}`;
     cell.innerHTML = `<div class="cal-day-num">${day}</div>`;
@@ -1164,7 +1204,7 @@ function renderCalendar() {
         ev.className = `cal-event ${colorClass}`;
         ev.textContent = p.title;
         ev.title = p.title;
-        ev.onclick = (e) => { e.stopPropagation(); openSidePanel(p.id); };
+        ev.onclick = (e) => { e.stopPropagation(); openPerformanceDetail(p.id); };
         cell.appendChild(ev);
       }
     });
@@ -1306,7 +1346,7 @@ function openTroupeModal(troupeId) {
       item.style.cssText = "padding:10px 12px; background:var(--surface); border:0.5px solid var(--border-neutral); border-radius:var(--radius-md); cursor:pointer; display:flex; flex-direction:column; gap:4px; transition:border-color 0.2s;";
       item.onmouseover = () => item.style.borderColor = "var(--crimson)";
       item.onmouseout = () => item.style.borderColor = "var(--border-neutral)";
-      item.onclick = () => { closeTroupeModal(); openSidePanel(p.id); };
+      item.onclick = () => { closeTroupeModal(); openPerformanceDetail(p.id); };
       item.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:8px;">
           <strong style="font-size:13px; color:var(--ink); flex:1;">${p.title}</strong>
@@ -1372,28 +1412,19 @@ function openPerformanceDetail(perfId) {
   showPage('perf-detail');
 }
 
-// ▼ 新しく追加する：公演情報の編集を開始する関数
 function startEditPerformance() {
   if (!selectedPerformanceId) return;
-  
-  // 現在選択中の公演データを取得
   const perf = performancesData.find(p => p.id === selectedPerformanceId);
   if (!perf) return;
   
-  // 編集モードとしてグローバル変数（editingPerfId）にIDを記録
   editingPerfId = perf.id;
   
-  // 登録画面のタイトルやボタンの文言を「修正モード」用に切り替える
   const regTitle = document.getElementById('register-page-title');
   if (regTitle) regTitle.textContent = '公演情報の修正';
-  
-  const regSub = document.querySelector('#page-register .section-sub');
-  if (regSub) regSub.textContent = '登録済みの公演スケジュールや受け入れ条件を変更します。';
   
   const submitBtn = document.getElementById('register-submit-btn');
   if (submitBtn) submitBtn.innerHTML = '<i class="ti ti-device-floppy"></i> 変更内容を保存する';
   
-  // 各フォームに現在の登録データを自動でセット
   document.getElementById('new-perf-title').value = perf.title || '';
   document.getElementById('new-perf-start').value = perf.start || '';
   document.getElementById('new-perf-end').value = perf.end || '';
@@ -1403,7 +1434,6 @@ function startEditPerformance() {
   document.getElementById('new-perf-quota').value = perf.maxQuota || '';
   document.getElementById('new-perf-desc').value = perf.desc || '';
   
-  // 受け渡し方法のラジオボタンを復元
   const radios = document.getElementsByName('new-perf-delivery');
   for (let r of radios) {
     if (r.value === perf.deliveryRestriction) {
@@ -1411,18 +1441,11 @@ function startEditPerformance() {
     }
   }
   
-  // 住所フィールドの復元
   const addrInput = document.getElementById('new-perf-address');
   if (addrInput) {
     addrInput.value = perf.deliveryAddress || '';
-    // 郵送の場合の住所欄表示連動
-    const addrRow = document.getElementById('perf-address-row');
-    if (addrRow) {
-      addrRow.style.display = (perf.deliveryRestriction === '郵送・宅配便のみ' || perf.deliveryRestriction === 'どちらでも可') ? 'block' : 'none';
-    }
   }
   
-  // 登録フォーム画面（page-register）に遷移
   showPage('register');
 }
 
@@ -1480,6 +1503,7 @@ async function submitRequestForm() {
     id: 'req_' + Date.now(),
     perfId: selectedPerformanceId,
     toTroupeId: perf.troupeId,
+    fromTroupeId: currentUser ? currentUser.id : null,
     fromName,
     fromEmail,
     address,
@@ -1497,33 +1521,6 @@ async function submitRequestForm() {
 
     incomingRequests.push(newRequest);
 
-    // Resend メール通知（Edge Function経由）
-    try {
-      const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
-      if (targetTroupe && targetTroupe.email) {
-        await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({
-            fromName,
-            fromEmail,
-            toEmail: targetTroupe.email,
-            perfTitle: perf.title,
-            copies,
-            size,
-            deliveryMethod,
-            address: address || '',
-            notes: notes || '',
-          }),
-        });
-      }
-    } catch (emailError) {
-      console.warn('メール通知スキップ（依頼データは保存済み）:', emailError);
-    }
-
     document.getElementById('success-banner').classList.add('show');
     document.getElementById('request-form-body').style.display = 'none';
 
@@ -1536,16 +1533,7 @@ async function submitRequestForm() {
 
 // ===================== REGISTER & EDIT PERFORMANCE =====================
 function prepareRegisterPage() {
-  const msg = document.getElementById('register-need-login-msg');
   const body = document.getElementById('register-form-body');
-
-  if (!currentUser) {
-    msg.style.display = 'block';
-    body.style.display = 'none';
-    return;
-  }
-
-  msg.style.display = 'none';
   body.style.display = 'block';
 
   document.getElementById('register-page-title').textContent = "新しい公演情報の公開登録";
@@ -1554,149 +1542,10 @@ function prepareRegisterPage() {
   submitBtn.onclick = handleRegisterPerformance;
 
   if (!editingPerfId) {
-    const today = new Date();
-    const toDateStr = d => d.toISOString().split('T')[0];
-    const perfStart = new Date(today); perfStart.setDate(today.getDate() + 21);
-    const perfEnd = new Date(perfStart); perfEnd.setDate(perfStart.getDate() + 2);
-    const acceptStart = new Date(today); acceptStart.setDate(today.getDate() + 7);
-    const acceptEnd = new Date(today); acceptEnd.setDate(today.getDate() + 14);
-
-    document.getElementById('new-perf-title').value = '';
-    document.getElementById('new-perf-start').value = toDateStr(perfStart);
-    document.getElementById('new-perf-end').value = toDateStr(perfEnd);
-    document.getElementById('new-perf-accept-start').value = toDateStr(acceptStart);
-    document.getElementById('new-perf-accept-end').value = toDateStr(acceptEnd);
-    document.getElementById('new-perf-venue').value = '';
-    document.getElementById('new-perf-quota').value = '300';
-    document.getElementById('new-perf-desc').value = '';
+    resetRegisterForm();
   }
 }
 
-function showPerformanceDetail(perfId) {
-// ★重要：提示されたstartEditPerformanceが使う変数「selectedPerformanceId」にIDを正しく代入
-  selectedPerformanceId = perfId; 
-  
-  const perf = performancesData.find(p => p.id === perfId);
-  if (!perf) return;
-  
-  // データの持ち方（プロパティ名）を提示された関数の仕様に合わせて調整
-  // ※もし既存コードでエラーが出る場合は元のプロパティ名（perf.start_date等）に戻してください
-  const startDate = perf.start || perf.start_date;
-  const endDate = perf.end || perf.end_date;
-  const foldStart = perf.acceptStart || perf.fold_start_date;
-  const foldEnd = perf.acceptEnd || perf.fold_end_date;
-  const maxQuota = perf.maxQuota || perf.max_quota;
-  const troupeId = perf.troupeId || perf.troupe_id;
-
-  const status = getFoldingStatus(perf);
-  const approvedCount = foldRequestsData
-    .filter(r => r.performance_id === perfId && r.status === 'approved')
-    .reduce((sum, r) => sum + (r.count || 0), 0);
-  const quotaPercent = Math.min(100, (approvedCount / maxQuota) * 100);
-
-  // パネル内テキストの書き換え
-  document.getElementById('panel-perf-title').innerText = perf.title;
-  document.getElementById('panel-troupe-name').innerText = perf.troupes ? perf.troupes.name : '不明な劇団';
-  document.getElementById('panel-date-range').innerText = `${startDate} 〜 ${endDate}`;
-  document.getElementById('panel-venue').innerText = perf.venue;
-  document.getElementById('panel-period').innerText = `${foldStart} 〜 ${foldEnd}`;
-  document.getElementById('panel-status').innerText = status.label;
-  document.getElementById('panel-quota-text').innerText = `承認枠状況: ${approvedCount} / ${maxQuota} 部`;
-  document.getElementById('panel-quota-fill').style.width = `${quotaPercent}%`;
-  
-  // 各種ボタンの取得
-  const submitBtn = document.getElementById('panel-submit-btn');
-  const editBtn = document.getElementById('panel-edit-btn'); 
-  const loginHint = document.getElementById('panel-login-hint');
-  
-  // デフォルト状態のリセット
-  if (submitBtn) { submitBtn.style.display = 'block'; submitBtn.disabled = false; }
-  if (editBtn) editBtn.style.display = 'none';
-  if (loginHint) { loginHint.style.display = 'none'; loginHint.innerText = ''; }
-  
-  // ログイン状態と権限（自劇団の公演かどうか）に応じた制御
-  if (!currentUserId) {
-    if (submitBtn) submitBtn.disabled = true;
-    if (loginHint) {
-      loginHint.style.display = 'flex';
-      loginHint.innerText = '⚠️ 折り込みを申請するにはログインが必要です。';
-    }
-  } else if (currentTroupeId === troupeId) {
-    // ★自劇団の公演の場合：申請ボタンを隠し、編集ボタンを表示する
-    if (submitBtn) submitBtn.style.display = 'none';
-    if (editBtn) editBtn.style.display = 'block';
-    if (loginHint) {
-      loginHint.style.display = 'flex';
-      loginHint.innerText = '💡 あなたの劇団の公演です。情報を編集できます。';
-    }
-  } else if (status.code !== 'open') {
-    if (submitBtn) submitBtn.disabled = true;
-    if (loginHint) {
-      loginHint.style.display = 'flex';
-      loginHint.innerText = `⚠️ 現在のステータスが「${status.label}」のため申請できません。`;
-    }
-  }
-  
-  // フォームのリセット
-  if (document.getElementById('panel-count')) document.getElementById('panel-count').value = '';
-  if (document.getElementById('panel-size')) document.getElementById('panel-size').value = 'A4';
-  if (document.getElementById('panel-notes')) document.getElementById('panel-notes').value = '';
-  if (document.getElementById('panel-success')) document.getElementById('panel-success').style.display = 'none';
-  
-  // パネルを開く
-  document.getElementById('panel-overlay').classList.add('open');
-  document.getElementById('side-panel').classList.add('open');
-}
-
-// 公演情報の編集を開始する関数
-function startEditPerformance() {
-  if (!selectedPerformanceId) return;
-  
-  // 選択中の公演データを取得
-  const perf = performancesData.find(p => p.id === selectedPerformanceId);
-  if (!perf) return;
-  
-  // 編集モードとしてIDを記録
-  editingPerfId = perf.id;
-  
-  // 登録画面のタイトルや文言を「修正」に切り替える
-  document.getElementById('register-page-title').textContent = '公演情報の修正';
-  document.getElementById('register-page-sub').textContent = '登録済みの公演スケジュールや受け入れ条件を変更します。';
-  document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-device-floppy"></i> 変更内容を保存する';
-  
-  // 各入力フォームに既存の値をセット
-  document.getElementById('new-perf-title').value = perf.title || '';
-  document.getElementById('new-perf-start').value = perf.start || '';
-  document.getElementById('new-perf-end').value = perf.end || '';
-  document.getElementById('new-perf-accept-start').value = perf.acceptStart || '';
-  document.getElementById('new-perf-accept-end').value = perf.acceptEnd || '';
-  document.getElementById('new-perf-venue').value = perf.venue || '';
-  document.getElementById('new-perf-quota').value = perf.maxQuota || 0;
-  document.getElementById('new-perf-desc').value = perf.desc || '';
-  
-  // 受け渡し方法のラジオボタンの復元
-  const deliveryRadios = document.getElementsByName('new-perf-delivery');
-  for (let r of deliveryRadios) {
-    if (r.value === perf.deliveryRestriction) {
-      r.checked = true;
-    }
-  }
-  
-  // 住所フィールドの表示・非表示と値の復元
-  const addressInput = document.getElementById('new-perf-address');
-  if (addressInput) {
-    addressInput.value = perf.deliveryAddress || '';
-    // 配送方法のコンテキストに合わせて表示制御している場合はここで呼び出し
-    if (perf.deliveryRestriction === '対面のみ') {
-      // 必要に応じて住所行を隠すロジックがあれば連動
-    }
-  }
-  
-  // 登録（編集）ページへ遷移
-  showPage('register');
-}
-
-// 編集をキャンセルしてカレンダーに戻る関数
 function cancelEditPerformance() {
   if (editingPerfId) {
     if (!confirm('変更内容は保存されません。キャンセルしますか？')) return;
@@ -1705,29 +1554,22 @@ function cancelEditPerformance() {
   showPage('calendar');
 }
 
-// フォームを通常の「新規登録」状態にリセットする関数
 function resetRegisterForm() {
   editingPerfId = null;
   document.getElementById('register-page-title').textContent = '公演の登録';
-  document.getElementById('register-page-sub').textContent = '自劇団の公演スケジュールとビラ折り込みの受け入れ条件を設定します。';
   document.getElementById('register-submit-btn').innerHTML = '<i class="ti ti-plus"></i> 公演情報を登録する';
   
-  // フォームクリア
   document.getElementById('new-perf-title').value = '';
   document.getElementById('new-perf-start').value = '';
   document.getElementById('new-perf-end').value = '';
   document.getElementById('new-perf-accept-start').value = '';
   document.getElementById('new-perf-accept-end').value = '';
   document.getElementById('new-perf-venue').value = '';
-  document.getElementById('new-perf-quota').value = '';
+  document.getElementById('new-perf-quota').value = '300';
   document.getElementById('new-perf-desc').value = '';
   document.getElementById('new-perf-address').value = '';
-  if (document.getElementsByName('new-perf-delivery')[0]) {
-    document.getElementsByName('new-perf-delivery')[0].checked = true;
-  }
 }
 
-// ===================== 公演情報の登録・修正処理（修正版） =====================
 async function handleRegisterPerformance() {
   if (!currentUser) {
     alert('公演情報を登録・修正するにはログインが必要です。');
@@ -1759,7 +1601,6 @@ async function handleRegisterPerformance() {
   }
   const maxQuota = parseInt(quotaInput);
 
-  // 送信オブジェクトの組み立て
   const perfPayload = {
     troupeId: currentUser.id,
     title,
@@ -1772,37 +1613,26 @@ async function handleRegisterPerformance() {
     desc,
     deliveryRestriction,
     deliveryAddress: (deliveryRestriction === '対面のみ') ? '' : deliveryAddress,
-    updatedAt: new Date().toISOString()
   };
 
   try {
     if (editingPerfId) {
-      // ーーーーー 【修正ポイント】既存データの変更（編集モード） ーーーーー
       const { data, error } = await db
         .from('performances')
         .update(perfPayload)
         .eq('id', editingPerfId)
-        .select(); // 更新後の最新データを取得する
+        .select();
 
       if (error) throw error;
 
-      // 1. ローカルのデータ配列（performancesData）を最新に置き換える
       const idx = performancesData.findIndex(p => p.id === editingPerfId);
       if (idx !== -1 && data && data.length > 0) {
         performancesData[idx] = data[0];
-      } else {
-        // 万が一 .select() でデータが返らなかった場合のフォールバック
-        perfPayload.id = editingPerfId;
-        if (idx !== -1) performancesData[idx] = { ...performancesData[idx], ...perfPayload };
       }
-
-      alert('公演情報を更新しました！');
-
+      alert('公演情報を更新しました。');
     } else {
-      // ーーーーー 新規登録モード ーーーーー
-      const newId = 'perf_' + Date.now();
-      perfPayload.id = newId;
-      perfPayload.createdAt = new Date().toISOString();
+      perfPayload.id = 'perf_' + Date.now();
+      perfPayload.email = currentUser.email;
 
       const { data, error } = await db
         .from('performances')
@@ -1811,1254 +1641,273 @@ async function handleRegisterPerformance() {
 
       if (error) throw error;
 
-      if (data && data.length > 0) {
-        performancesData.push(data[0]);
-      } else {
-        performancesData.push(perfPayload);
-      }
-
-      alert('新しい公演情報を登録しました！');
+      performancesData.push(data ? data[0] : perfPayload);
+      alert('新しい公演を登録しました。');
     }
 
-    // ーーーーー 【修正ポイント】画面側への即時反映処理 ーーーーー
-    // 2. 登録・修正フォームを初期状態にリセット
-    resetRegisterForm(); 
-
-    // 3. カレンダーと劇団一覧の表示を最新データで再描画
-    renderCalendar();
-    if (typeof renderTroupes === 'function') {
-      renderTroupes(troupesData);
-    }
-
-    // 4. カレンダー画面に安全に戻す
+    resetRegisterForm();
     showPage('calendar');
-
   } catch (error) {
-    console.error('公演登録/更新エラー:', error.message);
-    alert('公演の登録または更新に失敗しました: ' + error.message);
+    console.error('公演登録/更新エラー:', error);
+    alert('処理に失敗しました: ' + error.message);
   }
 }
 
-// ==========================================
-// 8. 公演登録・編集機能
-// ==========================================
-
-// 編集パネルを開き、既存のデータをフォームにセットする
-
-// 編集パネルを閉じる
-function closeEditPanel() {
-  document.getElementById('edit-panel-overlay').classList.remove('open');
-  document.getElementById('edit-side-panel').classList.remove('open');
-}
-
-// Supabaseのデータを更新する
-async function updatePerformance() {
-  const id = document.getElementById('edit-perf-id').value;
-  const title = document.getElementById('edit-perf-title').value;
-  const venue = document.getElementById('edit-perf-venue').value;
-  const sDate = document.getElementById('edit-perf-start').value;
-  const eDate = document.getElementById('edit-perf-end').value;
-  const fsDate = document.getElementById('edit-fold-start').value;
-  const feDate = document.getElementById('edit-fold-end').value;
-  const quota = parseInt(document.getElementById('edit-perf-quota').value);
-
-  if (!title || !venue || !sDate || !eDate || !fsDate || !feDate || !quota) {
-    alert('すべての項目を入力してください。');
+// ===================== MY PAGE & AUTH =====================
+function renderMyPage() {
+  if (!currentUser) {
+    document.getElementById('auth-section').style.display = 'block';
+    document.getElementById('dashboard-section').style.display = 'none';
     return;
   }
 
-  const { error } = await supabase.from('performances').update({
-    title: title,
-    venue: venue,
-    start_date: sDate,
-    end_date: eDate,
-    fold_start_date: fsDate,
-    fold_end_date: feDate,
-    max_quota: quota
-  }).eq('id', id);
+  document.getElementById('auth-section').style.display = 'none';
+  document.getElementById('dashboard-section').style.display = 'block';
 
-  if (error) {
-    alert('公演情報の更新に失敗しました: ' + error.message);
+  document.getElementById('welcome-message').textContent = `こんにちは、${currentUser.name} さん`;
+  document.getElementById('account-status-info').textContent = `通知用メールアドレス: ${currentUser.email}`;
+
+  const incoming = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
+  const sent = incomingRequests.filter(r => r.fromTroupeId === currentUser.id);
+
+  document.getElementById('stat-incoming-count').textContent = incoming.length;
+  document.getElementById('stat-sent-count').textContent = sent.length;
+
+  const inboxList = document.getElementById('dashboard-inbox');
+  inboxList.innerHTML = '';
+  if (incoming.length === 0) {
+    inboxList.innerHTML = '<div class="empty-state"><i class="ti ti-inbox-off"></i>届いた折り込み依頼はありません</div>';
   } else {
-    alert('公演情報を更新しました！');
-    closeEditPanel();
-    closeSidePanel(); // 詳細パネルも開いていた場合は閉じる
-    await fetchInitialData(); // データを再取得
-    renderCalendar();         // カレンダーを再描画
-    renderMyPage();           // マイページを再描画
+    incoming.forEach(req => {
+      const item = document.createElement('div');
+      item.className = `inbox-item ${req.status === 'pending' ? 'unread' : ''}`;
+      item.innerHTML = `
+        <div class="inbox-body">
+          <div class="inbox-from">${req.fromName}（${req.fromEmail}）</div>
+          <div class="inbox-preview">${req.notes || '備考なし'}</div>
+          <div class="inbox-meta">
+            <span class="inbox-copies">${req.copies} 部 (${req.size})</span>
+            <span style="font-size:11px; color:var(--muted);">${req.deliveryMethod} / ${req.timestamp}</span>
+            <span class="status-badge ${req.status === 'accepted' ? 'status-open' : req.status === 'declined' ? 'status-closed' : 'status-soon'}">${req.status === 'accepted' ? '承認済み' : req.status === 'declined' ? '辞退' : '保留中'}</span>
+          </div>
+        </div>
+        <div class="inbox-actions">
+          ${req.status === 'pending' ? `
+            <button class="inbox-btn inbox-btn-accept" onclick="handleRequestStatus('${req.id}', 'accepted')">承認</button>
+            <button class="inbox-btn inbox-btn-decline" onclick="handleRequestStatus('${req.id}', 'declined')">辞退</button>
+          ` : ''}
+        </div>`;
+      inboxList.appendChild(item);
+    });
   }
-}
 
-function togglePerfAddressField() {
-  const radios = document.getElementsByName('new-perf-delivery');
-  let val = 'どちらでも可';
-  for (let r of radios) { if (r.checked) { val = r.value; break; } }
-  const row = document.getElementById('perf-address-row');
-  if (row) row.style.display = (val === '対面のみ') ? 'none' : 'block';
-}
-
-async function deletePerformanceClick() {
-  if (!confirm('本当にこの公演情報をカレンダーから完全に削除しますか？\n紐づいている折り込みリクエスト履歴も全て抹消されます。')) return;
-  try {
-    const { error: reqErr } = await db.from('requests').delete().eq('perfId', selectedPerformanceId);
-    if (reqErr) throw reqErr;
-    const { error: perfErr } = await db.from('performances').delete().eq('id', selectedPerformanceId);
-    if (perfErr) throw perfErr;
-    performancesData = performancesData.filter(p => p.id !== selectedPerformanceId);
-    incomingRequests = incomingRequests.filter(r => r.perfId !== selectedPerformanceId);
-    alert('公演情報を削除しました。');
-    showPage('calendar');
-  } catch (error) {
-    console.error('公演削除エラー:', error.message);
-    alert('公演の削除に失敗しました: ' + error.message);
-  }
-}
-
-// ===================== AUTH =====================
-function updateAuthUI() {
-  const loginBtn = document.getElementById('nav-login-btn');
-  if (currentUser) {
-    loginBtn.innerHTML = `<i class="ti ti-layout-dashboard"></i>管理マイページ`;
-  } else {
-    loginBtn.innerHTML = `<i class="ti ti-user"></i>ログイン`;
-  }
-}
-
-async function handleRegisterTroupe() {
-  const name = document.getElementById('reg-troupe-name').value.trim();
-  const email = document.getElementById('reg-troupe-email').value.trim();
-  const password = document.getElementById('reg-troupe-password').value.trim();
-  const affiliation = '';
-  const description = '';
-  const homepage = '';
-  const sns = '';
-
-  if (!name || !email || !password) { alert('劇団名、メールアドレス、パスワードは必須入力項目です。'); return; }
-
-  try {
-    const { data: existing, error: checkError } = await db.from('troupes').select('id').eq('email', email);
-    if (checkError) throw checkError;
-    if (existing && existing.length > 0) { alert('このメールアドレスは既に登録されています。'); return; }
-
-    const newTroupe = { id: 'tr_' + Date.now(), name, affiliation, email, password, description, homepage, sns };
-    const { error } = await db.from('troupes').insert([newTroupe]);
-    if (error) throw error;
-
-    troupesData.push(newTroupe);
-    currentUser = newTroupe;
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    alert(`劇団「${name}」のアカウントを作成し、ログインしました！`);
-    updateFilterDropdown();
-    renderLegend();
-    updateAuthUI();
-    showPage('mypage');
-  } catch (error) {
-    console.error('劇団登録エラー:', error.message);
-    alert('劇団の登録に失敗しました: ' + error.message);
-  }
+  document.getElementById('edit-troupe-name').value = currentUser.name || '';
+  document.getElementById('edit-troupe-desc').value = currentUser.description || '';
+  document.getElementById('edit-troupe-hp').value = currentUser.homepage || '';
+  document.getElementById('edit-troupe-sns').value = currentUser.sns || '';
 }
 
 async function handleLogin() {
   const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-password').value;
+  const pass = document.getElementById('login-password').value.trim();
 
-  if (!email || !pass) { alert('メールアドレスとパスワードを入力してください'); return; }
+  if (!email || !pass) {
+    alert('メールアドレスとパスワードを入力してください。');
+    return;
+  }
 
-  try {
-    const { data: foundTroupes, error } = await db.from('troupes').select('*').eq('email', email);
-    if (error) throw error;
-
-    if (foundTroupes && foundTroupes.length > 0) {
-      const found = foundTroupes[0];
-      if (found.password === pass) {
-        currentUser = found;
-        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-        alert(`劇団「${found.name}」としてログインしました。`);
-        await loadAllData();
-        updateAuthUI();
-        showPage('mypage');
-      } else {
-        alert('パスワードが間違っています。');
-      }
-    } else {
-      alert('登録されていないメールアドレスです。');
-    }
-  } catch (error) {
-    console.error('ログインエラー:', error.message);
-    alert('ログイン中にエラーが発生しました: ' + error.message);
+  const troupe = troupesData.find(t => t.email === email && t.password === pass);
+  if (troupe) {
+    currentUser = troupe;
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateAuthUI();
+    renderMyPage();
+  } else {
+    alert('メールアドレスまたはパスワードが正しくありません。');
   }
 }
 
 function handleLogout() {
   currentUser = null;
   localStorage.removeItem('currentUser');
-  conversationsData = [];
-  currentConvId = null;
-  if (chatChannel) { try { db.removeChannel(chatChannel); } catch(e) {} chatChannel = null; }
   updateAuthUI();
-  alert('ログアウトしました。');
-  showPage('calendar');
+  renderMyPage();
 }
 
-async function handleUpdateTroupeProfile() {
-  if (!currentUser) return;
-
-  const name = document.getElementById('edit-troupe-name').value.trim();
-  if (!name) { alert('劇団名は必須です。'); document.getElementById('edit-troupe-name').focus(); return; }
-
-  const newPassword = document.getElementById('edit-troupe-password').value;
-
-  const univSel = document.getElementById('edit-troupe-univ').value;
-  let affiliation = univSel;
-  if (univSel === 'その他') {
-    const other = document.getElementById('edit-troupe-univ-other').value.trim();
-    if (!other) { alert('大学名を入力してください。'); document.getElementById('edit-troupe-univ-other').focus(); return; }
-    affiliation = other;
-  }
-
-  const description = document.getElementById('edit-troupe-desc').value.trim();
-  const homepage = document.getElementById('edit-troupe-hp').value.trim();
-  const sns = document.getElementById('edit-troupe-sns').value.trim();
-
-  const updates = { name, affiliation, description, homepage, sns };
-  if (newPassword) updates.password = newPassword;
-
-  try {
-    const { error } = await db.from('troupes').update(updates).eq('id', currentUser.id);
-    if (error) throw error;
-    Object.assign(currentUser, updates);
-    const idx = troupesData.findIndex(t => t.id === currentUser.id);
-    if (idx !== -1) Object.assign(troupesData[idx], updates);
-    document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
-    document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation || '未設定'} | システム通知先: ${currentUser.email}`;
-    document.getElementById('edit-troupe-password').value = '';
-    alert('プロフィールを保存しました！');
-  } catch (error) {
-    console.error('プロフィール更新エラー:', error.message);
-    alert('プロフィールの保存に失敗しました: ' + error.message);
-  }
-}
-
-function toggleUnivOtherField(prefix) {
-  const sel = document.getElementById(`${prefix}-troupe-univ`);
-  const row = document.getElementById(`${prefix}-univ-other-row`);
-  if (!sel || !row) return;
-  row.style.display = sel.value === 'その他' ? 'block' : 'none';
-  if (sel.value !== 'その他') {
-    const otherInput = document.getElementById(`${prefix}-troupe-univ-other`);
-    if (otherInput) otherInput.value = '';
-  }
-}
-
-// ===================== MY PAGE =====================
-function renderMyPage() {
-  const authSec = document.getElementById('auth-section');
-  const dashSec = document.getElementById('dashboard-section');
-
-  if (!currentUser) {
-    authSec.style.display = 'block';
-    dashSec.style.display = 'none';
-    return;
-  }
-
-  authSec.style.display = 'none';
-  dashSec.style.display = 'block';
-
-  document.getElementById('welcome-message').innerHTML = `<i class="ti ti-theater"></i> こんにちは、<strong>${currentUser.name}</strong> 管理ページ`;
-  document.getElementById('account-status-info').textContent = `所属: ${currentUser.affiliation || '未設定'} | システム通知先: ${currentUser.email}`;
-
-  // プロフィール編集フォームに現在値をセット
-  const nameEl = document.getElementById('edit-troupe-name');
-  if (nameEl) nameEl.value = currentUser.name || '';
-  const pwEl = document.getElementById('edit-troupe-password');
-  if (pwEl) pwEl.value = '';
-
-  const knownUnivs = ['早稲田大学', '慶應義塾大学', 'その他'];
-  const affil = currentUser.affiliation || '';
-  const univEl = document.getElementById('edit-troupe-univ');
-  if (univEl) {
-    if (knownUnivs.includes(affil) || affil === '') {
-      univEl.value = affil || '早稲田大学';
-      document.getElementById('edit-univ-other-row').style.display = 'none';
-      document.getElementById('edit-troupe-univ-other').value = '';
-    } else {
-      univEl.value = 'その他';
-      document.getElementById('edit-univ-other-row').style.display = 'block';
-      document.getElementById('edit-troupe-univ-other').value = affil;
-    }
-  }
-  const descEl = document.getElementById('edit-troupe-desc');
-  if (descEl) descEl.value = currentUser.description || '';
-  const hpEl = document.getElementById('edit-troupe-hp');
-  if (hpEl) hpEl.value = currentUser.homepage || '';
-  const snsEl = document.getElementById('edit-troupe-sns');
-  if (snsEl) snsEl.value = currentUser.sns || '';
-
-  const myReqs = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
-  const sentReqs = incomingRequests.filter(r =>
-    r.fromTroupeId === currentUser.id || (r.fromEmail === currentUser.email && r.toTroupeId !== currentUser.id)
-  );
-
-  document.getElementById('stat-incoming-count').textContent = myReqs.length;
-  document.getElementById('stat-sent-count').textContent = sentReqs.length;
-
-  // ── インボックス ──
-  const inboxWrap = document.getElementById('dashboard-inbox');
-  inboxWrap.innerHTML = '';
-
-  if (myReqs.length === 0) {
-    inboxWrap.innerHTML = '<div class="empty-state"><i class="ti ti-mailbox-off"></i>まだ折り込みリクエストは届いていません。</div>';
+function updateAuthUI() {
+  const loginBtn = document.getElementById('nav-login-btn');
+  if (currentUser) {
+    loginBtn.innerHTML = `<i class="ti ti-layout-dashboard"></i> ${currentUser.name}`;
   } else {
-    [...myReqs].reverse().forEach(req => {
-      const targetPerf = performancesData.find(p => p.id === req.perfId);
-      const perfTitleStr = targetPerf ? targetPerf.title : "削除された公演";
-      const isNew = req.status === 'pending';
-      const item = document.createElement('div');
-      item.className = `inbox-item ${isNew ? 'unread' : ''}`;
-
-      // チャットへボタン（fromTroupeId or emailからtroupe特定）
-      const fromTroupeId = req.fromTroupeId || troupesData.find(t => t.email === req.fromEmail)?.id;
-      const chatBtnEl = document.createElement('div');
-      chatBtnEl.className = 'inbox-actions';
-      if (fromTroupeId) {
-        const btn = document.createElement('button');
-        btn.className = 'inbox-btn';
-        btn.style.cssText = 'background:var(--crimson-pale); border-color:rgba(139,26,47,0.2); color:var(--crimson); display:flex; align-items:center; gap:4px;';
-        btn.innerHTML = '<i class="ti ti-messages"></i> チャットへ';
-        btn.onclick = () => openChatWithTroupe(fromTroupeId);
-        chatBtnEl.appendChild(btn);
-      }
-
-      const methodStr = req.deliveryMethod || "対面";
-      const methodIcon = methodStr === "郵送" ? "ti-truck" : "ti-box";
-      const methodBadgeColor = methodStr === "郵送" ? "color:#1a4a8b; background:#e5eef9;" : "color:#8b5a1a; background:#fff4e5;";
-      const addressHtml = req.address ? `<div style="font-size:12px; color:var(--ink-mid); background:var(--surface); border:1px dashed var(--border-neutral); padding:4px 8px; border-radius:4px; margin-top:4px;"><i class="ti ti-map-pin" style="font-size:12px;"></i> 返送用住所: ${req.address}</div>` : '';
-
-      item.innerHTML = `
-        <div class="inbox-body">
-          <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">対象公演：${perfTitleStr}</div>
-          <div class="inbox-from">${req.fromName} <span style="font-weight:400; font-size:12px; color:var(--muted)">(${req.fromEmail})</span></div>
-          ${addressHtml}
-          <div class="inbox-preview" title="${req.notes || '備考なし'}" style="margin-top:4px;">備考: ${req.notes || 'なし'}</div>
-          <div class="inbox-meta">
-            <span class="inbox-copies">${req.copies} 部</span>
-            <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
-            <span style="font-size:11px; font-weight:600; padding:2px 8px; border-radius:3px; ${methodBadgeColor}"><i class="ti ${methodIcon}"></i> ${methodStr}</span>
-            <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
-          </div>
-        </div>`;
-      item.appendChild(chatBtnEl);
-      inboxWrap.appendChild(item);
-    });
-  }
-
-  // ── 送信済み依頼 ──
-  const sentSection = document.getElementById('sent-requests-section');
-  if (sentSection) {
-    sentSection.innerHTML = '';
-    const sentHeader = document.createElement('div');
-    sentHeader.style.cssText = 'margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border-neutral);';
-    sentHeader.innerHTML = '<div class="section-title"><i class="ti ti-send"></i>送信した折り込み依頼</div>';
-    sentSection.appendChild(sentHeader);
-
-    if (sentReqs.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'empty-state';
-      empty.innerHTML = '<i class="ti ti-send-off"></i>まだ依頼を送信していません。';
-      sentSection.appendChild(empty);
-    } else {
-      const sentList = document.createElement('div');
-      sentList.className = 'inbox-list';
-      [...sentReqs].reverse().forEach(req => {
-        const toTroupe = troupesData.find(t => t.id === req.toTroupeId);
-        const toName = toTroupe ? toTroupe.name : req.toTroupeId;
-        const targetPerf = performancesData.find(p => p.id === req.perfId);
-        const perfTitle = targetPerf ? targetPerf.title : "削除された公演";
-
-        const item = document.createElement('div');
-        item.className = 'inbox-item';
-        item.innerHTML = `
-          <div class="inbox-body">
-            <div style="font-size:11px; color:var(--muted); margin-bottom:2px;">依頼先: <strong>${toName}</strong>  /  公演: ${perfTitle}</div>
-            <div class="inbox-meta" style="margin-top:4px;">
-              <span class="inbox-copies">${req.copies} 部</span>
-              <span style="font-size:11px; color:var(--muted); background:var(--surface2); padding:2px 6px; border-radius:3px;">${req.size}</span>
-              <span style="font-size:11px; color:var(--muted); margin-left:auto;"><i class="ti ti-clock"></i> ${req.timestamp}</span>
-            </div>
-          </div>`;
-
-        if (req.toTroupeId) {
-          const actions = document.createElement('div');
-          actions.className = 'inbox-actions';
-          const btn = document.createElement('button');
-          btn.className = 'inbox-btn';
-          btn.style.cssText = 'background:var(--crimson-pale); border-color:rgba(139,26,47,0.2); color:var(--crimson); display:flex; align-items:center; gap:4px;';
-          btn.innerHTML = '<i class="ti ti-messages"></i> チャットへ';
-          btn.onclick = () => openChatWithTroupe(req.toTroupeId);
-          actions.appendChild(btn);
-          item.appendChild(actions);
-        }
-        sentList.appendChild(item);
-      });
-      sentSection.appendChild(sentList);
-    }
+    loginBtn.innerHTML = `<i class="ti ti-user"></i> ログイン`;
   }
 }
 
-async function processRequest(reqId, newStatus) {
-  const req = incomingRequests.find(r => r.id === reqId);
-  if (!req) return;
-
-  if (newStatus === 'accepted') {
-    const targetPerf = performancesData.find(p => p.id === req.perfId);
-    if (targetPerf) {
-      const currentTotal = incomingRequests
-        .filter(r => r.perfId === req.perfId && (r.status === 'accepted' || r.status === 'pending'))
-        .reduce((sum, r) => sum + parseInt(r.copies || 0), 0);
-      if (currentTotal > targetPerf.maxQuota) {
-        if (!confirm('注意: この申請を承認すると、設定されている上限受付部数枠を超過します。本当に承認しますか？')) return;
-      }
-    }
-  }
-
+async function handleRequestStatus(reqId, newStatus) {
   try {
     const { error } = await db.from('requests').update({ status: newStatus }).eq('id', reqId);
     if (error) throw error;
-    req.status = newStatus;
-    alert(newStatus === 'accepted' ? 'リクエストを承認しました！' : 'リクエストを拒否（辞退）しました。');
+
+    const req = incomingRequests.find(r => r.id === reqId);
+    if (req) req.status = newStatus;
     renderMyPage();
   } catch (error) {
-    console.error('依頼応答エラー:', error.message);
-    alert('依頼の応答中にエラーが発生しました: ' + error.message);
+    alert('ステータスの更新に失敗しました: ' + error.message);
   }
 }
 
-async function deleteTroupeAccount() {
-  if (!currentUser) { alert('ログインしていません。'); return; }
-  if (!confirm('【警告】本当にこの劇団アカウントを削除しますか？\n（この劇団が登録した公演情報や、他団体からの申請履歴も一緒にすべて削除されます）')) return;
+// ===================== CHAT CORE (SLACK STYLE IMPLEMENTATION) =====================
+function initChat() {
+  const prompt = document.getElementById('chat-login-prompt');
+  const layout = document.getElementById('chat-layout');
 
-  const id = currentUser.id;
-  try {
-    const { error: perfErr } = await db.from('performances').delete().eq('troupeId', id);
-    if (perfErr) throw perfErr;
-    const { error: reqErr } = await db.from('requests').delete().eq('toTroupeId', id);
-    if (reqErr) throw reqErr;
-    const { error: troupeErr } = await db.from('troupes').delete().eq('id', id);
-    if (troupeErr) throw troupeErr;
-
-    troupesData = troupesData.filter(t => t.id !== id);
-    performancesData = performancesData.filter(p => p.troupeId !== id);
-    incomingRequests = incomingRequests.filter(r => r.toTroupeId !== id);
-    currentUser = null;
-    localStorage.removeItem('currentUser');
-    alert('アカウント情報をすべて完全に削除しました。');
-    updateFilterDropdown();
-    renderLegend();
-    updateAuthUI();
-    showPage('troupes');
-  } catch (error) {
-    console.error('劇団削除エラー:', error.message);
-    alert('劇団の削除中にエラーが発生しました: ' + error.message);
-  }
-}
-
-const ADMIN_RESET_PASSWORD = 'K5fgrR/<,P%adfpoIT';
-
-async function resetAllDataToDefault() {
-  const input = prompt('管理者パスワードを入力してください：');
-  if (input === null) return;
-  if (input !== ADMIN_RESET_PASSWORD) {
-    alert('パスワードが違います。');
-    return;
-  }
-  if (!confirm('すべての団体・公演・依頼・チャットデータを完全に削除します。\nこの操作は取り消せません。本当に実行しますか？')) return;
-
-  try {
-    await db.from('messages').delete().neq('id', '');
-    await db.from('conversations').delete().neq('id', '');
-    await db.from('requests').delete().neq('id', '');
-    await db.from('performances').delete().neq('id', '');
-    await db.from('troupes').delete().neq('id', '');
-
-    currentUser = null;
-    localStorage.removeItem('currentUser');
-    troupesData = [];
-    performancesData = [];
-    incomingRequests = [];
-    conversationsData = [];
-
-    updateFilterDropdown();
-    renderLegend();
-    updateAuthUI();
-    renderCalendar();
-    alert('すべてのデータを削除しました。');
-    showPage('calendar');
-  } catch (error) {
-    console.error('削除エラー:', error.message);
-    alert('削除に失敗しました: ' + error.message);
-  }
-}
-
-// ===================== CHAT グローバル変数 =====================
-let conversationsData = [];
-let currentConvId = null;
-let chatMessages = [];
-let chatChannel = null;
-const EMOJI_LIST = ['👍','❤️','😊','😂','🎉','✅','🙏','👏','😮','🤔','💪','🎭','📦','✉️','⭐','🔥','🤝','😅','🙌','💌'];
-
-// ===================== CHAT 関数群 =====================
-async function initChat() {
   if (!currentUser) {
-    document.getElementById('chat-login-prompt').style.display = 'block';
-    document.getElementById('chat-layout').style.display = 'none';
+    prompt.style.display = 'block';
+    layout.style.display = 'none';
     return;
   }
-  document.getElementById('chat-login-prompt').style.display = 'none';
-  document.getElementById('chat-layout').style.display = 'flex';
 
-  await loadConversations();
-  renderConvList();
+  prompt.style.display = 'none';
+  layout.style.display = 'flex';
 
-  // 絵文字ピッカー初期化（1回だけ）
-  const ep = document.getElementById('chat-emoji-picker');
-  if (ep && ep.children.length === 0) {
-    EMOJI_LIST.forEach(em => {
-      const s = document.createElement('span');
-      s.textContent = em;
-      s.onclick = () => insertEmoji(em);
-      ep.appendChild(s);
-    });
-  }
+  renderChatConversations();
 }
 
-async function loadConversations() {
-  try {
-    const { data, error } = await db.from('conversations')
-      .select('*')
-      .or(`troupeAId.eq.${currentUser.id},troupeBId.eq.${currentUser.id}`)
-      .order('updatedAt', { ascending: false });
-    if (error) throw error;
-    conversationsData = data || [];
-  } catch (e) {
-    console.error('会話読み込みエラー:', e);
-    conversationsData = [];
-  }
-}
-
-function getOtherTroupeId(conv) {
-  return conv.troupeAId === currentUser.id ? conv.troupeBId : conv.troupeAId;
-}
-
-function getMyUnreadCount(conv) {
-  return (conv.troupeAId === currentUser.id ? conv.unreadForA : conv.unreadForB) || 0;
-}
-
-function getTroupeColorInfo(troupeId) {
-  const colorClass = getTroupeColorClass(troupeId);
-  let dummy = document.createElement('div');
-  dummy.className = colorClass;
-  document.body.appendChild(dummy);
-  const bg = window.getComputedStyle(dummy).backgroundColor;
-  const color = window.getComputedStyle(dummy).borderLeftColor;
-  document.body.removeChild(dummy);
-  return { bg, color };
-}
-
-function renderConvList() {
+function renderChatConversations() {
   const list = document.getElementById('conv-list');
-  if (!list) return;
   list.innerHTML = '';
 
-  if (conversationsData.length === 0) {
-    list.innerHTML = '<div style="padding:1rem; font-size:12px; color:var(--muted); text-align:center; line-height:1.8;">まだ会話がありません。<br>折り込み依頼を送ると<br>自動的に開始されます。</div>';
+  const partners = troupesData.filter(t => t.id !== currentUser.id);
+
+  if (partners.length === 0) {
+    list.innerHTML = '<div style="padding:16px; font-size:12px; color:#9A9B9E;">メッセージ可能な劇団がありません</div>';
     return;
   }
 
-  conversationsData.forEach(conv => {
-    const otherId = getOtherTroupeId(conv);
-    const other = troupesData.find(t => t.id === otherId);
-    if (!other) return;
-    const { bg, color } = getTroupeColorInfo(otherId);
-    const unread = getMyUnreadCount(conv);
+  partners.forEach(partner => {
+    const unreadCount = messagesData.filter(m => m.fromTroupeId === partner.id && m.toTroupeId === currentUser.id && !m.read).length;
 
     const item = document.createElement('div');
-    item.className = `chat-conv-item${currentConvId === conv.id ? ' active' : ''}`;
-    item.dataset.convId = conv.id;
-    item.onclick = () => openConversation(conv.id);
+    item.className = `chat-conv-item ${activeChatPartnerId === partner.id ? 'active' : ''}`;
+    item.onclick = () => selectChatPartner(partner.id);
 
-    const av = document.createElement('div');
-    av.className = 'troupe-avatar';
-    av.style.cssText = `width:36px; height:36px; font-size:14px; flex-shrink:0; background:${bg}; color:${color};`;
-    av.textContent = other.name.charAt(0);
-    item.appendChild(av);
-
-    const meta = document.createElement('div');
-    meta.className = 'chat-conv-meta';
-    meta.innerHTML = `<div class="chat-conv-name">${other.name}</div><div class="chat-conv-preview">${conv.lastMessage || '---'}</div>`;
-    item.appendChild(meta);
-
-    if (unread > 0) {
-      const badge = document.createElement('div');
-      badge.className = 'chat-unread';
-      badge.textContent = unread;
-      item.appendChild(badge);
-    }
-
+    item.innerHTML = `
+      <div class="chat-conv-avatar">${partner.name.charAt(0)}</div>
+      <div class="chat-conv-meta">
+        <div class="chat-conv-name"># ${partner.name}</div>
+        ${unreadCount > 0 ? `<div class="chat-unread">${unreadCount}</div>` : ''}
+      </div>`;
     list.appendChild(item);
   });
 }
 
-async function openConversation(convId) {
-  currentConvId = convId;
-  const conv = conversationsData.find(c => c.id === convId);
-  if (!conv) return;
+function selectChatPartner(partnerId) {
+  activeChatPartnerId = partnerId;
+  const partner = troupesData.find(t => t.id === partnerId);
+  if (!partner) return;
 
-  const otherId = getOtherTroupeId(conv);
-  const other = troupesData.find(t => t.id === otherId);
-  const { bg, color } = getTroupeColorInfo(otherId);
-
-  const headerAv = document.getElementById('chat-header-avatar');
-  headerAv.textContent = other ? other.name.charAt(0) : '?';
-  headerAv.style.background = bg;
-  headerAv.style.color = color;
-  document.getElementById('chat-header-name').textContent = other ? other.name : otherId;
-  document.getElementById('chat-header-univ').textContent = other ? (other.affiliation || '') : '';
+  renderChatConversations();
 
   document.getElementById('chat-empty-state').style.display = 'none';
   document.getElementById('chat-view').style.display = 'flex';
 
-  await loadMessages(convId);
+  const avatar = document.getElementById('chat-header-avatar');
+  avatar.textContent = partner.name.charAt(0);
+  document.getElementById('chat-header-name').textContent = `# ${partner.name}`;
 
-  // 既読リセット
-  const amA = conv.troupeAId === currentUser.id;
-  const myUnreadField = amA ? 'unreadForA' : 'unreadForB';
-  if (getMyUnreadCount(conv) > 0) {
-    conv[myUnreadField] = 0;
-    db.from('conversations').update({ [myUnreadField]: 0 }).eq('id', convId).catch(() => {});
-  }
-
-  // リスト再描画（バッジ更新）
-  document.querySelectorAll('.chat-conv-item').forEach(el => {
-    el.classList.toggle('active', el.dataset.convId === convId);
-  });
-  renderConvList();
-
-  subscribeToMessages(convId);
+  renderChatMessages();
 }
 
-async function loadMessages(convId) {
-  try {
-    const { data, error } = await db.from('messages')
-      .select('*')
-      .eq('conversationId', convId)
-      .order('createdAt', { ascending: true });
-    if (error) throw error;
-    chatMessages = data || [];
-    renderMessages();
-  } catch (e) {
-    console.error('メッセージ読み込みエラー:', e);
-    chatMessages = [];
-  }
-}
-
-function renderMessages() {
+function renderChatMessages() {
   const container = document.getElementById('chat-messages');
-  if (!container) return;
   container.innerHTML = '';
 
-  const conv = conversationsData.find(c => c.id === currentConvId);
-  const otherId = conv ? getOtherTroupeId(conv) : null;
+  if (!activeChatPartnerId) return;
 
-  chatMessages.forEach(msg => {
-    const isBot = msg.senderId === 'bot';
-    const isMine = !isBot && msg.senderId === currentUser.id;
-    const ts = new Date(msg.createdAt);
-    const timeStr = ts.toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const msgs = messagesData.filter(m => 
+    (m.fromTroupeId === currentUser.id && m.toTroupeId === activeChatPartnerId) ||
+    (m.fromTroupeId === activeChatPartnerId && m.toTroupeId === currentUser.id)
+  ).sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-    const wrap = document.createElement('div');
-    wrap.className = `chat-msg-wrap ${isBot ? 'bot' : isMine ? 'mine' : 'theirs'}`;
+  if (msgs.length === 0) {
+    container.innerHTML = `
+      <div style="text-align:left; padding:20px 0; color:#616061;">
+        <h3 style="font-size:18px; color:#1D1C1D; font-weight:900; margin-bottom:6px;"># ${troupesData.find(t=>t.id===activeChatPartnerId)?.name} へのダイレクトメッセージ</h3>
+        <p style="font-size:14px;">ここが会話のスタート地点です。折り込みに関する連絡や確認事項を送信してみましょう！</p>
+      </div>`;
+    return;
+  }
 
-    const bubble = document.createElement('div');
-    bubble.className = `chat-bubble ${isBot ? 'bot' : isMine ? 'mine' : 'theirs'}`;
-    bubble.textContent = msg.content;
+  msgs.forEach(msg => {
+    const isMine = msg.fromTroupeId === currentUser.id;
+    const authorName = isMine ? currentUser.name : (troupesData.find(t => t.id === msg.fromTroupeId)?.name || '相手');
 
-    if (isBot) {
-      const inner = document.createElement('div');
-      inner.style.cssText = 'display:flex; flex-direction:column; align-items:center; gap:3px;';
-      const label = document.createElement('div');
-      label.style.cssText = 'font-size:10px; color:var(--muted); display:flex; align-items:center; gap:4px;';
-      label.innerHTML = '<i class="ti ti-robot"></i>システムメッセージ';
-      const time = document.createElement('div');
-      time.className = 'chat-time';
-      time.textContent = timeStr;
-      inner.appendChild(label);
-      inner.appendChild(bubble);
-      inner.appendChild(time);
-      wrap.appendChild(inner);
-    } else if (isMine) {
-      const time = document.createElement('span');
-      time.className = 'chat-time';
-      time.textContent = timeStr;
-      wrap.appendChild(time);
-      wrap.appendChild(bubble);
-    } else {
-      const { bg, color } = getTroupeColorInfo(otherId || msg.senderId);
-      const av = document.createElement('div');
-      av.className = 'troupe-avatar';
-      av.style.cssText = `width:28px; height:28px; font-size:11px; flex-shrink:0; background:${bg}; color:${color}; align-self:flex-end;`;
-      const sender = troupesData.find(t => t.id === msg.senderId);
-      av.textContent = sender ? sender.name.charAt(0) : '?';
-      const time = document.createElement('span');
-      time.className = 'chat-time';
-      time.textContent = timeStr;
-      wrap.appendChild(av);
-      wrap.appendChild(bubble);
-      wrap.appendChild(time);
-    }
-
-    container.appendChild(wrap);
+    const group = document.createElement('div');
+    group.className = 'chat-msg-group';
+    group.innerHTML = `
+      <div class="chat-msg-avatar">${authorName.charAt(0)}</div>
+      <div class="chat-msg-content">
+        <div class="chat-msg-header">
+          <span class="chat-msg-author">${authorName}</span>
+          <span class="chat-msg-time">${msg.timestamp}</span>
+        </div>
+        <div class="chat-msg-text">${escapeHtml(msg.text)}</div>
+      </div>`;
+    container.appendChild(group);
   });
 
   container.scrollTop = container.scrollHeight;
 }
 
 async function sendChatMessage() {
-  if (!currentUser || !currentConvId) return;
   const input = document.getElementById('chat-text-input');
-  if (!input) return;
-  const content = input.value.trim();
-  if (!content) return;
+  const text = input.value.trim();
 
-  input.value = '';
-  closeEmojiPicker();
+  if (!text || !activeChatPartnerId || !currentUser) return;
 
-  const conv = conversationsData.find(c => c.id === currentConvId);
-  if (!conv) return;
-
-  const amA = conv.troupeAId === currentUser.id;
-  const otherId = getOtherTroupeId(conv);
-  const otherUnreadField = amA ? 'unreadForB' : 'unreadForA';
-
-  const msg = {
+  const newMsg = {
     id: 'msg_' + Date.now(),
-    conversationId: currentConvId,
-    senderId: currentUser.id,
-    content,
-    type: 'text',
-    createdAt: new Date().toISOString(),
+    fromTroupeId: currentUser.id,
+    toTroupeId: activeChatPartnerId,
+    text,
+    timestamp: new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
+    read: false
   };
 
   try {
-    const { error } = await db.from('messages').insert([msg]);
-    if (error) throw error;
+    const { error } = await db.from('messages').insert([newMsg]);
+    if (error) console.warn('DBメッセージ保存失敗（ローカル表示のみ継続）:', error);
 
-    const preview = content.length > 30 ? content.substring(0, 30) + '…' : content;
-    const newUnread = (conv[otherUnreadField] || 0) + 1;
-    await db.from('conversations').update({
-      lastMessage: preview,
-      updatedAt: new Date().toISOString(),
-      [otherUnreadField]: newUnread,
-    }).eq('id', currentConvId);
-    conv.lastMessage = preview;
-    conv[otherUnreadField] = newUnread;
-
-    // 通知メール（クールダウン付き）
-    const other = troupesData.find(t => t.id === otherId);
-    if (other && other.email) {
-      fetch(`${SUPABASE_URL}/functions/v1/send-chat-notification`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` },
-        body: JSON.stringify({
-          conversationId: currentConvId,
-          fromName: currentUser.name,
-          toEmail: other.email,
-          messagePreview: content.length > 60 ? content.substring(0, 60) + '…' : content,
-          recipientIsA: conv.troupeAId === otherId,
-        }),
-      }).catch(e => console.warn('通知メールスキップ:', e));
-    }
-
-    // 楽観的更新
-    chatMessages.push(msg);
-    renderMessages();
-    renderConvList();
+    messagesData.push(newMsg);
+    input.value = '';
+    renderChatMessages();
   } catch (e) {
     console.error('メッセージ送信エラー:', e);
-    alert('メッセージの送信に失敗しました');
   }
 }
 
-function subscribeToMessages(convId) {
-  if (chatChannel) { try { db.removeChannel(chatChannel); } catch(e) {} chatChannel = null; }
-
-  chatChannel = db.channel(`chat-${convId}`)
-    .on('postgres_changes', {
-      event: 'INSERT', schema: 'public', table: 'messages',
-      filter: `conversationId=eq.${convId}`,
-    }, (payload) => {
-      const msg = payload.new;
-      if (!msg || chatMessages.find(m => m.id === msg.id)) return;
-      chatMessages.push(msg);
-      renderMessages();
-
-      // 既読リセット（相手のメッセージが来た場合）
-      if (msg.senderId !== currentUser.id) {
-        const conv = conversationsData.find(c => c.id === convId);
-        if (conv) {
-          const amA = conv.troupeAId === currentUser.id;
-          const myField = amA ? 'unreadForA' : 'unreadForB';
-          if (conv[myField] > 0) {
-            conv[myField] = 0;
-            db.from('conversations').update({ [myField]: 0 }).eq('id', convId).catch(() => {});
-            renderConvList();
-          }
-        }
-      }
-    })
-    .subscribe();
-}
-
-async function getOrCreateConversation(troupeAId, troupeBId) {
-  const [idA, idB] = [troupeAId, troupeBId].sort();
-  try {
-    const { data, error } = await db.from('conversations')
-      .select('*').eq('troupeAId', idA).eq('troupeBId', idB);
-    if (error) throw error;
-    if (data && data.length > 0) {
-      if (!conversationsData.find(c => c.id === data[0].id)) conversationsData.unshift(data[0]);
-      return data[0];
-    }
-    const now = new Date().toISOString();
-    const newConv = { id: `conv_${idA}_${idB}`, troupeAId: idA, troupeBId: idB, lastMessage: '', unreadForA: 0, unreadForB: 0, updatedAt: now, createdAt: now };
-    const { error: ie } = await db.from('conversations').insert([newConv]);
-    if (ie) throw ie;
-    conversationsData.unshift(newConv);
-    return newConv;
-  } catch (e) {
-    console.error('会話作成エラー:', e);
-    return null;
-  }
-}
-
-async function sendBotMessage(convId, content) {
-  const conv = conversationsData.find(c => c.id === convId);
-  if (!conv) return;
-  const amA = conv.troupeAId === currentUser.id;
-  const otherField = amA ? 'unreadForB' : 'unreadForA';
-  const preview = content.length > 30 ? content.substring(0, 30) + '…' : content;
-  const msg = { id: `msg_bot_${Date.now()}`, conversationId: convId, senderId: 'bot', content, type: 'text', createdAt: new Date().toISOString() };
-  try {
-    await db.from('messages').insert([msg]);
-    const newUnread = (conv[otherField] || 0) + 1;
-    await db.from('conversations').update({ lastMessage: preview, updatedAt: new Date().toISOString(), [otherField]: newUnread }).eq('id', convId);
-    conv.lastMessage = preview;
-    conv[otherField] = newUnread;
-  } catch (e) { console.error('ボットメッセージ送信エラー:', e); }
+function initEmojiPicker() {
+  const popup = document.getElementById('chat-emoji-picker');
+  const emojis = ['👍', '🙌', '✨', '😊', '😭', '🙏', '🎭', '🎟️', '👏', '🔥', '🎉', '👌', '👀', '💯', '❤️', '✅'];
+  popup.innerHTML = '';
+  emojis.forEach(e => {
+    const span = document.createElement('span');
+    span.textContent = e;
+    span.onclick = () => {
+      document.getElementById('chat-text-input').value += e;
+      popup.classList.remove('open');
+    };
+    popup.appendChild(span);
+  });
 }
 
 function toggleEmojiPicker() {
-  const ep = document.getElementById('chat-emoji-picker');
-  if (ep) ep.classList.toggle('open');
+  document.getElementById('chat-emoji-picker').classList.toggle('open');
 }
 
-function closeEmojiPicker() {
-  const ep = document.getElementById('chat-emoji-picker');
-  if (ep) ep.classList.remove('open');
+function escapeHtml(str) {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
-
-function insertEmoji(emoji) {
-  const input = document.getElementById('chat-text-input');
-  if (input) {
-    const pos = input.selectionStart || input.value.length;
-    input.value = input.value.substring(0, pos) + emoji + input.value.substring(pos);
-    input.focus();
-    input.setSelectionRange(pos + emoji.length, pos + emoji.length);
-  }
-  closeEmojiPicker();
-}
-
-async function openChatWithTroupe(troupeId) {
-  if (!currentUser) { alert('チャットを使うにはログインしてください。'); return; }
-  showPage('chat');
-  // initChat が呼ばれるので少し待つ
-  setTimeout(async () => {
-    await loadConversations();
-    const conv = await getOrCreateConversation(currentUser.id, troupeId);
-    if (conv) {
-      renderConvList();
-      await openConversation(conv.id);
-    }
-  }, 50);
-}
-
-// ===================== エントリポイント（1回だけ） =====================
-window.onload = initApp;
-
-// ===================== SIDE PANEL =====================
-function openSidePanel(perfId) {
-  selectedPerformanceId = perfId;
-  const perf = performancesData.find(p => p.id === perfId);
-  if (!perf) return;
-
-  const troupe = troupesData.find(t => t.id === perf.troupeId);
-  document.getElementById('panel-perf-title').textContent = perf.title;
-  document.getElementById('panel-troupe-label').textContent = troupe ? troupe.name : '';
-  document.getElementById('panel-perf-dates').textContent = `${perf.start} ～ ${perf.end}`;
-  document.getElementById('panel-venue').textContent = perf.venue || '未設定';
-  document.getElementById('panel-accept-period').textContent = `${perf.acceptStart || '?'} ～ ${perf.acceptEnd || '?'}`;
-
-  const statusObj = getAcceptanceStatus(perf);
-  document.getElementById('panel-status-badge').innerHTML = `<span class="status-badge ${statusObj.class}">${statusObj.text}</span>`;
-
-  document.getElementById('panel-quota-text').textContent = `1団体あたり上限：${perf.maxQuota} 部`;
-
-  // フォーム初期化
-  document.getElementById('panel-from-name').value = currentUser ? currentUser.name : '';
-  document.getElementById('panel-from-email').value = currentUser ? currentUser.email : '';
-  const copiesInput = document.getElementById('panel-copies');
-  copiesInput.max = perf.maxQuota;
-  copiesInput.value = Math.min(100, perf.maxQuota);
-  document.getElementById('panel-size').value = 'A4ペラ';
-  document.getElementById('panel-notes').value = '';
-  document.getElementById('panel-address').value = '';
-
-  const restriction = perf.deliveryRestriction || 'どちらでも可';
-  const addrBox = document.getElementById('panel-delivery-address-box');
-  const addrText = document.getElementById('panel-delivery-address');
-  if (restriction !== '対面のみ' && perf.deliveryAddress) {
-    addrText.textContent = perf.deliveryAddress;
-    addrBox.style.display = 'block';
-  } else {
-    addrBox.style.display = 'none';
-  }
-
-  const faceRadio = document.querySelector('input[name="panel-delivery"][value="対面"]');
-  const mailRadio = document.querySelector('input[name="panel-delivery"][value="郵送"]');
-  const faceLabel = faceRadio ? faceRadio.closest('label') : null;
-  const mailLabel = mailRadio ? mailRadio.closest('label') : null;
-
-  if (restriction === '対面のみ') {
-    faceRadio.checked = true; faceRadio.disabled = false;
-    mailRadio.disabled = true;
-    if (faceLabel) faceLabel.style.opacity = '1';
-    if (mailLabel) mailLabel.style.opacity = '0.35';
-    document.getElementById('panel-address-row').style.display = 'none';
-  } else if (restriction === '郵送のみ') {
-    mailRadio.checked = true; mailRadio.disabled = false;
-    faceRadio.disabled = true;
-    if (mailLabel) mailLabel.style.opacity = '1';
-    if (faceLabel) faceLabel.style.opacity = '0.35';
-    document.getElementById('panel-address-row').style.display = 'block';
-  } else {
-    faceRadio.checked = true; faceRadio.disabled = false; mailRadio.disabled = false;
-    if (faceLabel) faceLabel.style.opacity = '1';
-    if (mailLabel) mailLabel.style.opacity = '1';
-    document.getElementById('panel-address-row').style.display = 'none';
-  }
-
-  document.getElementById('panel-login-hint').style.display = currentUser ? 'none' : 'flex';
-
-  const submitBtn = document.getElementById('panel-submit-btn');
-  if (statusObj.accept) {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="ti ti-send"></i> この内容で折り込みを申請する';
-  } else {
-    submitBtn.disabled = true;
-    submitBtn.textContent = `受付不可（${statusObj.text}）`;
-  }
-
-  document.getElementById('panel-success').classList.remove('show');
-  document.getElementById('panel-form-body').style.display = 'block';
-
-  document.getElementById('panel-overlay').classList.add('open');
-  document.getElementById('side-panel').classList.add('open');
-}
-
-function closeSidePanel() {
-  document.getElementById('panel-overlay').classList.remove('open');
-  document.getElementById('side-panel').classList.remove('open');
-}
-
-async function submitPanelRequest() {
-  const perf = performancesData.find(p => p.id === selectedPerformanceId);
-  if (!perf) return;
-
-  const fromName = document.getElementById('panel-from-name').value.trim();
-  const fromEmail = document.getElementById('panel-from-email').value.trim();
-  const copies = parseInt(document.getElementById('panel-copies').value);
-  const size = document.getElementById('panel-size').value;
-  const notes = document.getElementById('panel-notes').value.trim();
-  const address = document.getElementById('panel-address').value.trim();
-  const radios = document.getElementsByName('panel-delivery');
-  let deliveryMethod = '対面';
-  for (let r of radios) { if (r.checked) { deliveryMethod = r.value; break; } }
-
-  if (!fromName || !fromEmail || isNaN(copies) || copies <= 0) {
-    alert('必須項目をすべて入力し、部数は正しく入力してください。');
-    return;
-  }
-  if (copies > perf.maxQuota) {
-    alert(`1団体あたりの折り込み上限は ${perf.maxQuota} 部です。部数を修正してください。`);
-    document.getElementById('panel-copies').focus();
-    return;
-  }
-
-  const newRequest = {
-    id: 'req_' + Date.now(),
-    perfId: selectedPerformanceId,
-    toTroupeId: perf.troupeId,
-    fromTroupeId: currentUser ? currentUser.id : null,
-    fromName, fromEmail, address, deliveryMethod, copies, size,
-    notes: notes || '',
-    status: 'pending',
-    timestamp: new Date().toLocaleString('ja-JP')
-  };
-
-  const submitBtn = document.getElementById('panel-submit-btn');
-  submitBtn.disabled = true;
-  submitBtn.innerHTML = '<i class="ti ti-loader"></i> 送信中...';
-
-  try {
-    const { error } = await db.from('requests').insert([newRequest]);
-    if (error) throw error;
-    incomingRequests.push(newRequest);
-
-    // Resend メール通知（Edge Function経由）
-    try {
-      const targetTroupe = troupesData.find(t => t.id === perf.troupeId);
-      if (targetTroupe && targetTroupe.email) {
-        await fetch(`${SUPABASE_URL}/functions/v1/send-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-          },
-          body: JSON.stringify({
-            fromName,
-            fromEmail,
-            toEmail: targetTroupe.email,
-            perfTitle: perf.title,
-            copies,
-            size,
-            deliveryMethod,
-            address: address || '',
-            notes: notes || '',
-          }),
-        });
-      }
-    } catch (emailError) {
-      console.warn('メール通知スキップ（依頼データは保存済み）:', emailError);
-    }
-
-    document.getElementById('panel-form-body').style.display = 'none';
-    document.getElementById('panel-success').classList.add('show');
-
-    // チャットボタン表示
-    const chatBtn = document.getElementById('panel-chat-btn');
-    if (chatBtn && currentUser) {
-      chatBtn.style.display = 'inline-flex';
-      const capturedTroupeId = perf.troupeId;
-      chatBtn.onclick = () => { closeSidePanel(); openChatWithTroupe(capturedTroupeId); };
-    }
-
-    // チャット会話作成 + ボットメッセージ
-    if (currentUser) {
-      try {
-        const conv = await getOrCreateConversation(currentUser.id, perf.troupeId);
-        if (conv) {
-          const delivStr = deliveryMethod === '郵送' ? `郵送（${address || '住所未入力'}）` : '対面';
-          const botText = `📬 折り込み依頼が届きました\n\n差出団体: ${fromName}\n対象公演: 「${perf.title}」\n部数: ${copies}部\nサイズ: ${size}\n受け渡し方法: ${delivStr}${notes ? `\n備考: ${notes}` : ''}\n\nこのチャットで詳細をやり取りしてください。`;
-          await sendBotMessage(conv.id, botText);
-        }
-      } catch (chatErr) {
-        console.warn('チャット会話作成スキップ:', chatErr);
-      }
-    }
-  } catch (error) {
-    console.error('折り込み依頼送信エラー:', error);
-    alert('送信に失敗しました: ' + (error.message || JSON.stringify(error)));
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '<i class="ti ti-send"></i> この内容で折り込みを申請する';
-  }
-}
-
-// 💡 公演編集モーダルを開き、既存のデータをセットする関数
-function openEditPerfModal(id) {
-  const perf = performancesData.find(p => p.id === id);
-  if (!perf) return;
-
-  document.getElementById('edit-perf-id').value = perf.id;
-  document.getElementById('edit-perf-title').value = perf.title;
-  document.getElementById('edit-perf-date').value = perf.date;
-  document.getElementById('edit-perf-desc').value = perf.desc || '';
-
-  const modal = document.getElementById('edit-perf-modal');
-  modal.style.display = 'flex';
-}
-
-// 💡 モーダルを閉じる関数
-function closeEditPerfModal() {
-  document.getElementById('edit-perf-modal').style.display = 'none';
-}
-
-// 💡 編集内容をクラウド・ローカルに保存する関数
-async function submitEditPerformance() {
-  const id = document.getElementById('edit-perf-id').value;
-  const title = document.getElementById('edit-perf-title').value.trim();
-  const date = document.getElementById('edit-perf-date').value;
-  const desc = document.getElementById('edit-perf-desc').value.trim();
-
-  if (!title || !date) {
-    alert('公演名と公演日は必須です。');
-    return;
-  }
-
-  // 対象の公演データを更新
-  const perfIndex = performancesData.findIndex(p => p.id === id);
-  if (perfIndex !== -1) {
-    performancesData[perfIndex].title = title;
-    performancesData[perfIndex].date = date;
-    performancesData[perfIndex].desc = desc;
-
-    // データの保存と再描画
-    await saveAllData();
-    alert('公演情報を更新しました！');
-    
-    closeEditPerfModal();
-    
-    // カレンダーとマイページを最新の状態に更新
-    renderCalendar();
-    renderDashboardInbox();
-  } else {
-    alert('公演データが見つかりませんでした。');
-  }
-}
-
 </script>
-
-<!-- ===================== SIDE PANEL HTML ===================== -->
-<div class="panel-overlay" id="panel-overlay" onclick="closeSidePanel()"></div>
-<div class="side-panel" id="side-panel">
-  <div class="panel-header">
-    <div style="min-width:0;">
-      <div class="panel-perf-title" id="panel-perf-title">-</div>
-      <div class="panel-troupe-label" id="panel-troupe-label">-</div>
-    </div>
-    <button class="panel-close-btn" onclick="closeSidePanel()"><i class="ti ti-x"></i></button>
-  </div>
-  <div class="panel-body">
-    <div class="panel-info-grid">
-      <span class="panel-info-label"><i class="ti ti-calendar" style="font-size:13px"></i>公演期間</span>
-      <span class="panel-info-val" id="panel-perf-dates">-</span>
-      <span class="panel-info-label"><i class="ti ti-map-pin" style="font-size:13px"></i>会場</span>
-      <span class="panel-info-val" id="panel-venue">-</span>
-      <span class="panel-info-label"><i class="ti ti-clock" style="font-size:13px"></i>受付期間</span>
-      <span class="panel-info-val" id="panel-accept-period">-</span>
-      <span class="panel-info-label"><i class="ti ti-inbox" style="font-size:13px"></i>受付状況</span>
-      <span id="panel-status-badge">-</span>
-    </div>
-    <div id="panel-delivery-address-box" style="display:none; background:var(--surface2); border:1px solid var(--border-neutral); border-radius:var(--radius-sm); padding:8px 12px; font-size:12px; margin-top:8px;">
-      <div style="color:var(--muted); margin-bottom:3px; display:flex; align-items:center; gap:4px;"><i class="ti ti-map-pin" style="font-size:13px;"></i>郵送先住所</div>
-      <div id="panel-delivery-address" style="color:var(--ink); font-weight:500; word-break:break-all;"></div>
-    </div>
-    <div class="panel-quota-text" id="panel-quota-text" style="font-size:12px; color:var(--crimson); font-weight:500; margin-top:4px;"></div>
-
-    <div class="panel-divider"></div>
-
-    <div class="panel-section-title"><i class="ti ti-send"></i>折り込みを依頼する</div>
-    <div class="panel-login-hint" id="panel-login-hint" style="display:none;">
-      <i class="ti ti-info-circle"></i>ログインすると劇団名・メールが自動入力されます
-    </div>
-
-    <div id="panel-form-body">
-      <div class="panel-form-row">
-        <label class="panel-form-label">劇団名・団体名 <span style="color:var(--crimson)">*</span></label>
-        <input class="panel-form-input" id="panel-from-name" type="text" placeholder="例：劇団早稲田座">
-      </div>
-      <div class="panel-form-row">
-        <label class="panel-form-label">連絡先メール <span style="color:var(--crimson)">*</span></label>
-        <input class="panel-form-input" id="panel-from-email" type="email" placeholder="example@gmail.com">
-      </div>
-      <div class="panel-2col">
-        <div class="panel-form-row">
-          <label class="panel-form-label">部数 <span style="color:var(--crimson)">*</span></label>
-          <input class="panel-form-input" id="panel-copies" type="number" value="100" min="10">
-        </div>
-        <div class="panel-form-row">
-          <label class="panel-form-label">サイズ</label>
-          <select class="panel-form-input" id="panel-size">
-            <option value="A4ペラ">A4ペラ</option>
-            <option value="A4二つ折り">A4二つ折り</option>
-            <option value="B5ペラ">B5ペラ</option>
-            <option value="その他">その他</option>
-          </select>
-        </div>
-      </div>
-      <div class="panel-form-row">
-        <label class="panel-form-label">受け渡し方法 <span style="color:var(--crimson)">*</span></label>
-        <div class="panel-radio-group">
-          <label class="panel-radio-label">
-            <input type="radio" name="panel-delivery" value="対面" checked
-              onchange="document.getElementById('panel-address-row').style.display='none'">
-            <i class="ti ti-box" style="font-size:14px"></i>対面（直接持込・引取）
-          </label>
-          <label class="panel-radio-label">
-            <input type="radio" name="panel-delivery" value="郵送"
-              onchange="document.getElementById('panel-address-row').style.display='block'">
-            <i class="ti ti-truck" style="font-size:14px"></i>郵送・宅配便
-          </label>
-        </div>
-      </div>
-      <div class="panel-form-row" id="panel-address-row" style="display:none;">
-        <label class="panel-form-label">郵送先住所</label>
-        <input class="panel-form-input" id="panel-address" type="text" placeholder="東京都〇〇区…">
-      </div>
-      <div class="panel-form-row">
-        <label class="panel-form-label">備考・特記事項</label>
-        <textarea class="panel-form-input" id="panel-notes" rows="3" style="resize:vertical;" placeholder="搬入日時のご相談など"></textarea>
-      </div>
-      <button class="panel-submit-btn" id="panel-submit-btn" onclick="submitPanelRequest()">
-        <i class="ti ti-send"></i> この内容で折り込みを申請する
-      </button>
-    </div>
-    <div class="panel-success" id="panel-success">
-      <i class="ti ti-circle-check" style="font-size:28px; display:block; margin-bottom:8px;"></i>
-      折り込み依頼を送信しました！<br>
-      <span style="font-size:12px; margin-top:4px; display:block; color:#388e3c;">チャットで詳細を確認・調整できます</span>
-      <button id="panel-chat-btn" style="display:none; margin-top:12px; padding:8px 20px; background:var(--ink-mid); color:white; border:none; border-radius:var(--radius-md); font-size:13px; cursor:pointer; font-family:inherit; align-items:center; gap:6px;">
-        <i class="ti ti-messages"></i>チャットで話し合う →
-      </button>
-    </div>
-  </div>
-</div>
-
-<div id="edit-perf-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; align-items:center; justify-content:center;">
-    <div style="background:var(--white); padding:2rem; border-radius:var(--radius-lg); max-width:500px; width:90%; box-shadow:0 4px 20px rgba(0,0,0,0.15); position:relative;">
-      <h3 style="margin-bottom:1.5rem; font-size:20px; color:var(--ink);">公演情報の編集</h3>
-      <input type="hidden" id="edit-perf-id">
-      
-      <div class="panel-form-row" style="margin-bottom:1rem;">
-        <label class="panel-form-label" style="display:block; margin-bottom:4px; font-weight:500;">公演名</label>
-        <input class="panel-form-input" id="edit-perf-title" type="text" style="width:100%; padding:8px; border:1px solid var(--border-neutral); border-radius:var(--radius-sm);">
-      </div>
-      <div class="panel-form-row" style="margin-bottom:1rem;">
-        <label class="panel-form-label" style="display:block; margin-bottom:4px; font-weight:500;">公演日 (YYYY-MM-DD)</label>
-        <input class="panel-form-input" id="edit-perf-date" type="date" style="width:100%; padding:8px; border:1px solid var(--border-neutral); border-radius:var(--radius-sm);">
-      </div>
-      <div class="panel-form-row" style="margin-bottom:1.5rem;">
-        <label class="panel-form-label" style="display:block; margin-bottom:4px; font-weight:500;">詳細説明</label>
-        <textarea class="panel-form-input" id="edit-perf-desc" rows="3" style="width:100%; padding:8px; border:1px solid var(--border-neutral); border-radius:var(--radius-sm); resize:vertical;"></textarea>
-      </div>
-      
-      <div style="display:flex; gap:10px; justify-content:flex-end;">
-        <button onclick="closeEditPerfModal()" style="padding:8px 16px; background:var(--surface2); border:none; border-radius:var(--radius-md); cursor:pointer;">キャンセル</button>
-        <button onclick="submitEditPerformance()" style="padding:8px 16px; background:var(--crimson); color:white; border:none; border-radius:var(--radius-md); cursor:pointer;">変更を保存</button>
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>
-
-
-
