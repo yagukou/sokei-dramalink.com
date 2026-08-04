@@ -1258,9 +1258,14 @@ function renderTroupes(troupes) {
     card.className = 'troupe-card';
     card.onclick = () => openTroupeModal(t.id);
 
+    // ログイン中の自劇団カードにのみ設定用の歯車ボタンを表示
     let deleteBtnHtml = '';
     if (currentUser && currentUser.id === t.id) {
-      deleteBtnHtml = `<button class="troupe-delete-btn" title="マイページから管理できます" onclick="event.stopPropagation(); showPage('mypage');"><i class="ti ti-settings" style="font-size: 16px;"></i></button>`;
+      // event.stopPropagation() を明示的に呼び出して親要素へのイベント伝播を防止[cite: 3]
+      deleteBtnHtml = `
+        <button class="troupe-delete-btn" title="マイページから管理できます" onclick="event.stopPropagation(); showPage('mypage');">
+          <i class="ti ti-settings" style="font-size: 16px;"></i>
+        </button>`;
     }
 
     card.innerHTML = `
