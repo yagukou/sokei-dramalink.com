@@ -1913,6 +1913,30 @@ function toggleEmojiPicker() {
 function escapeHtml(str) {
   return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
+async function handleDeletePerformance() {
+  if (!selectedPerformanceId) return;
+  if (!confirm('この公演を削除してもよろしいですか？')) return;
+
+  try {
+    // Supabase DBから削除
+    const { error } = await db
+      .from('performances')
+      .delete()
+      .eq('id', selectedPerformanceId);
+
+    if (error) throw error;
+
+    // ローカルデータの更新
+    performancesData = performancesData.filter(p => p.id !== selectedPerformanceId);
+
+    alert('公演を削除しました。');
+    showPage('calendar');
+  } catch (error) {
+    console.error('公演削除エラー:', error);
+    alert('削除に失敗しました: ' + error.message);
+  }
+}
 </script>
 </body>
 </html>
