@@ -360,6 +360,80 @@ gap: 4px;
 .emoji-picker-popup span:hover { background: var(--surface2); }
 .chat-empty-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 10px; font-size: 14px; }
 .chat-empty-state i { font-size: 48px; color: var(--border-neutral); display: block; }
+
+:root {
+      --sidebar-bg: #1A1D21;
+      --sidebar-hover: #2C3036;
+      --sidebar-text: #ABABAD;
+      --sidebar-active: #1164A3;
+      --chat-bg: #FFFFFF;
+      --border-color: #E2E8F0;
+      --text-main: #1D1C1D;
+      --text-sub: #616061;
+      --badge-urgent: #CD2B31;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text-main); height: 100vh; display: flex; }
+
+    .app-container { display: flex; width: 100%; height: 100%; }
+
+    /* --- 1. 左側サイドバー（依頼劇団一覧） --- */
+    .sidebar { width: 260px; background: var(--sidebar-bg); color: var(--sidebar-text); display: flex; flex-direction: column; flex-shrink: 0; }
+    .workspace-header { padding: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #FFF; font-weight: bold; font-size: 15px; }
+    
+    .channel-list { flex: 1; overflow-y: auto; padding: 12px 0; }
+    .section-title { padding: 8px 16px; font-size: 11px; font-weight: 700; text-transform: uppercase; color: #868688; }
+    
+    .channel-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; cursor: pointer; font-size: 13px; color: #D1D5DB; }
+    .channel-item:hover { background: var(--sidebar-hover); }
+    .channel-item.active { background: var(--sidebar-active); color: #FFF; font-weight: 600; }
+
+    .status-tag { font-size: 10px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.15); color: #FFF; }
+    .status-tag.urgent { background: var(--badge-urgent); }
+
+    /* --- 2. 中央メインチャット --- */
+    .chat-main { flex: 1; display: flex; flex-direction: column; background: var(--chat-bg); }
+    
+    .chat-header { height: 60px; border-bottom: 1px solid var(--border-color); padding: 0 20px; display: flex; align-items: center; justify-content: space-between; }
+    .troupe-title { font-size: 16px; font-weight: bold; }
+    .member-info { font-size: 12px; color: var(--text-sub); }
+
+    .chat-timeline { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+    .message-item { display: flex; gap: 12px; }
+    .avatar { width: 36px; height: 36px; border-radius: 6px; color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; flex-shrink: 0; }
+    .avatar.troupe { background: #4F46E5; } /* 依頼劇団側 */
+    .avatar.my-side { background: #059669; } /* 折込受付側 */
+
+    .message-content { flex: 1; }
+    .message-header { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+    .sender-name { font-weight: bold; font-size: 14px; }
+    .sender-role { font-size: 10px; color: var(--text-sub); background: #F1F5F9; padding: 1px 5px; border-radius: 3px; }
+    .timestamp { font-size: 11px; color: var(--text-sub); }
+    .message-text { font-size: 14px; line-height: 1.5; color: #334155; }
+
+    .attachment-card { margin-top: 8px; border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; align-items: center; gap: 10px; max-width: 300px; background: #F8FAFC; }
+    .file-icon { width: 30px; height: 36px; background: #EF4444; border-radius: 4px; color: #FFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; }
+
+    /* 入力エリア */
+    .chat-input-area { padding: 16px; border-top: 1px solid var(--border-color); }
+    .quick-actions { display: flex; gap: 8px; margin-bottom: 8px; }
+    .action-btn { font-size: 12px; padding: 4px 10px; border: 1px solid var(--border-color); border-radius: 12px; background: #FFF; cursor: pointer; color: #475569; }
+    .action-btn:hover { background: #F1F5F9; }
+    
+    .input-wrapper { display: flex; gap: 8px; }
+    .input-box { flex: 1; border: 1px solid var(--border-color); border-radius: 6px; padding: 10px; font-size: 14px; resize: none; outline: none; }
+    .input-box:focus { border-color: #1164A3; }
+    .send-btn { padding: 0 16px; background: #007A5A; color: white; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .send-btn:hover { background: #00664A; }
+
+    /* --- 3. 右側案件詳細パネル --- */
+    .chat-info-panel { width: 280px; border-left: 1px solid var(--border-color); padding: 20px; background: #FAFAFA; font-size: 13px; }
+    .panel-title { font-weight: bold; font-size: 14px; margin-bottom: 16px; border-bottom: 2px solid var(--border-color); padding-bottom: 6px; }
+    .info-group { margin-bottom: 12px; }
+    .info-label { color: var(--text-sub); font-size: 11px; margin-bottom: 2px; }
+    .info-value { font-weight: bold; color: #1E293B; }
+    .highlight-box { background: #FEF3C7; border-left: 3px solid #F59E0B; padding: 8px; margin-top: 12px; font-size: 12px; }
 </style>
 </head>
 <body>
@@ -875,48 +949,188 @@ gap: 4px;
 </div>
 
 <!-- ===================== CHAT PAGE ===================== -->
-<div class="page" id="page-chat">
-<div class="page-header" style="margin-bottom:0.75rem;">
-<div class="page-title">チャット</div>
-<div class="page-sub">折り込みを依頼した劇団とメッセージを交換できます</div>
+<div class="app-container">
+  <!-- 1. サイドバー（劇団チャンネル） -->
+  <aside class="sidebar">
+    <div class="workspace-header">折り込み進行管理デスク</div>
+    <div class="channel-list">
+      <div class="section-title">依頼劇団一覧</div>
+      <div id="troupe-list-container">
+        <!-- JSで動的に表示 -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- 2. 中央チャットエリア -->
+  <main class="chat-main">
+    <header class="chat-header">
+      <div>
+        <div class="troupe-title" id="chat-title">劇団を選択してください</div>
+        <div class="member-info" id="chat-members"></div>
+      </div>
+    </header>
+
+    <div class="chat-timeline" id="chat-timeline">
+      <!-- メッセージがここに挿入されます -->
+    </div>
+
+    <div class="chat-input-area">
+      <div class="quick-actions">
+        <button class="action-btn" onclick="insertTemplate('📎 チラシ原稿PDFを送信しました。ご確認をお願いします。')">📎 原稿PDF送付</button>
+        <button class="action-btn" onclick="insertTemplate('🚚 搬入指定日は◯月◯日必着となります。')">🚚 搬入日案内</button>
+        <button class="action-btn" onclick="insertTemplate('✅ 入稿確認が完了いたしました。')">✅ 承認完了</button>
+      </div>
+      <div class="input-wrapper">
+        <textarea class="input-box" id="message-input" rows="2" placeholder="メッセージを入力..."></textarea>
+        <button class="send-btn" onclick="sendMessage()">送信</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- 3. 右側案件詳細 -->
+  <aside class="chat-info-panel" id="info-panel">
+    <div class="panel-title">折り込み依頼詳細</div>
+    <div style="color: var(--text-sub);">左側から劇団を選択してください。</div>
+  </aside>
 </div>
-<div id="chat-login-prompt" class="info-banner" style="display:none;">
-<div class="info-banner-title"><i class="ti ti-alert-triangle"></i>ログインが必要です</div>
-<p>チャットを使うにはマイページからログインしてください。</p>
-</div>
-<div class="chat-layout" id="chat-layout" style="display:none;">
-<div class="chat-sidebar">
-<div class="chat-sidebar-header"><i class="ti ti-messages" style="color:var(--crimson);"></i>会話</div>
-<div class="conv-list" id="conv-list"></div>
-</div>
-<div class="chat-main">
-<div class="chat-empty-state" id="chat-empty-state">
-<i class="ti ti-message-circle"></i>
-<span>左の劇団を選んでメッセージ</span>
-</div>
-<div class="chat-view" id="chat-view" style="display:none;">
-<div class="chat-header">
-<div id="chat-header-avatar" class="troupe-avatar" style="width:36px; height:36px; font-size:14px; flex-shrink:0;"></div>
-<div>
-<div id="chat-header-name" style="font-size:14px; font-weight:600;"></div>
-<div id="chat-header-univ" style="font-size:12px; color:var(--muted);"></div>
-</div>
-</div>
-<div class="chat-messages" id="chat-messages"></div>
-<div class="chat-input-area">
-<button class="emoji-toggle" onclick="toggleEmojiPicker()" title="絵文字">😊</button>
-<div class="emoji-picker-popup" id="chat-emoji-picker"></div>
-<input type="text" class="chat-text-input" id="chat-text-input"
-  placeholder="メッセージを入力... (Enterで送信)"
-  onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChatMessage();}">
-<button class="chat-send-btn" onclick="sendChatMessage()" title="送信">
-<i class="ti ti-send" style="font-size:15px;"></i>
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
+
+<script>
+  // 依頼劇団ごとのデータ構造（DB連携時はこの部分をAPI/PHP経由で取得します）
+  const troupesData = {
+    1: {
+      name: "劇団アリス",
+      status: "原稿確認中",
+      isUrgent: false,
+      members: "👥 メンバー: 劇団制作・舞台監督・折込デスク",
+      info: { play: "『月夜の宴』", theater: "本多劇場", copies: "1,500部 / A4", deadline: "2026/09/10 17:00必着" },
+      messages: [
+        { sender: "劇団アリス（制作）", role: "依頼主", avatar: "troupe", time: "10:30", text: "次回公演のチラシ表裏データ（A4サイズ）をお送りします。", file: "月夜の宴_チラシ見本.pdf" },
+        { sender: "折込デスク", role: "自社", avatar: "my-side", time: "10:45", text: "データ受領しました！確認いたします。" }
+      ]
+    },
+    2: {
+      name: "劇団サンシャイン",
+      status: "締め切り間近",
+      isUrgent: true,
+      members: "👥 メンバー: 主宰・劇団制作・折込デスク",
+      info: { play: "『太陽の子供たち』", theater: "サンシャイン劇場", copies: "1,200部 / B5", deadline: "2026/08/20 15:00必着" },
+      messages: [
+        { sender: "劇団サンシャイン（制作）", role: "依頼主", avatar: "troupe", time: "09:00", text: "部数が1,000部から1,200部に変更になりそうです。" },
+        { sender: "折込デスク", role: "自社", avatar: "my-side", time: "09:15", text: "本日午前中までに確定いただければ変更可能です！" }
+      ]
+    }
+  };
+
+  let currentTroupeId = null;
+
+  // 劇団リストの初期描画
+  function renderTroupeList() {
+    const container = document.getElementById('troupe-list-container');
+    container.innerHTML = '';
+
+    Object.keys(troupesData).forEach(id => {
+      const troupe = troupesData[id];
+      const urgentClass = troupe.isUrgent ? 'urgent' : '';
+      const item = document.createElement('div');
+      item.className = `channel-item ${currentTroupeId == id ? 'active' : ''}`;
+      item.onclick = () => selectTroupe(id);
+      item.innerHTML = `
+        <span>👥 ${troupe.name}</span>
+        <span class="status-tag ${urgentClass}">${troupe.status}</span>
+      `;
+      container.appendChild(item);
+    });
+  }
+
+  // 劇団の選択・チャット切り替え
+  function selectTroupe(id) {
+    currentTroupeId = id;
+    renderTroupeList();
+    const data = troupesData[id];
+
+    // ヘッダー情報更新
+    document.getElementById('chat-title').innerText = `# ${data.name}`;
+    document.getElementById('chat-members').innerText = data.members;
+
+    // タイムライン描画
+    renderTimeline();
+
+    // 右側詳細パネル更新
+    document.getElementById('info-panel').innerHTML = `
+      <div class="panel-title">${data.name} 案件詳細</div>
+      <div class="info-group"><div class="info-label">対象公演</div><div class="info-value">${data.info.play}</div></div>
+      <div class="info-group"><div class="info-label">実施劇場</div><div class="info-value">${data.info.theater}</div></div>
+      <div class="info-group"><div class="info-label">依頼部数</div><div class="info-value">${data.info.copies}</div></div>
+      <div class="highlight-box"><strong>搬入期限:</strong><br>${data.info.deadline}</div>
+    `;
+  }
+
+  // タイムラインの再描画
+  function renderTimeline() {
+    const timeline = document.getElementById('chat-timeline');
+    timeline.innerHTML = '';
+    const messages = troupesData[currentTroupeId].messages;
+
+    messages.forEach(msg => {
+      let fileHtml = msg.file ? `
+        <div class="attachment-card">
+          <div class="file-icon">PDF</div>
+          <div style="font-size:12px;"><a href="#">${msg.file}</a></div>
+        </div>` : '';
+
+      timeline.innerHTML += `
+        <div class="message-item">
+          <div class="avatar ${msg.avatar}">${msg.role === '依頼主' ? '劇団' : '自社'}</div>
+          <div class="message-content">
+            <div class="message-header">
+              <span class="sender-name">${msg.sender}</span>
+              <span class="sender-role">${msg.role}</span>
+              <span class="timestamp">${msg.time}</span>
+            </div>
+            <div class="message-text">${msg.text}</div>
+            ${fileHtml}
+          </div>
+        </div>
+      `;
+    });
+    timeline.scrollTop = timeline.scrollHeight;
+  }
+
+  // メッセージ送信機能
+  function sendMessage() {
+    const input = document.getElementById('message-input');
+    const text = input.value.trim();
+    if (!text || !currentTroupeId) return;
+
+    const now = new Date();
+    const timeStr = `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    // データを追加（DB連携時はここでPOSTリクエスト）
+    troupesData[currentTroupeId].messages.push({
+      sender: "折込デスク（あなた）",
+      role: "自社",
+      avatar: "my-side",
+      time: timeStr,
+      text: text
+    });
+
+    input.value = '';
+    renderTimeline();
+  }
+
+  // 定型文挿入ボタン機能
+  function insertTemplate(templateText) {
+    const input = document.getElementById('message-input');
+    input.value = templateText;
+    input.focus();
+  }
+
+  // 初期実行（最初の劇団を選択）
+  window.onload = () => selectTroupe(1);
+</script>
+
+</body>
+</html>
 
 <!-- ===================== TROUPE SIDE PANEL ===================== -->
 <div class="panel-overlay" id="troupe-panel-overlay" onclick="closeTroupeModal()"></div>
