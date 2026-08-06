@@ -1575,6 +1575,7 @@ function resetRegisterForm() {
   document.getElementById('new-perf-address').value = '';
 }
 
+// ===================== REGISTER & EDIT PERFORMANCE =====================
 async function handleRegisterPerformance() {
   if (!currentUser) {
     alert('公演情報を登録・修正するにはログインが必要です。');
@@ -1587,26 +1588,16 @@ async function handleRegisterPerformance() {
   const acceptStart = document.getElementById('new-perf-accept-start').value;
   const acceptEnd = document.getElementById('new-perf-accept-end').value;
   const venue = document.getElementById('new-perf-venue').value.trim();
-  const quotaInput = document.getElementById('new-perf-quota').value;
+  const quota = parseInt(document.getElementById('new-perf-quota').value) || 300;
   const desc = document.getElementById('new-perf-desc').value.trim();
 
-  const radios = document.getElementsByName('new-perf-delivery');
-  let deliveryRestriction = 'どちらでも可';
-  for (let r of radios) {
-    if (r.checked) {
-      deliveryRestriction = r.value;
-      break;
-    }
-  }
-  const deliveryAddress = document.getElementById('new-perf-address').value.trim();
-
-  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue || !quotaInput) {
-    alert('必須項目（*）をすべて入力してください。');
+  if (!title || !start || !end || !acceptStart || !acceptEnd || !venue) {
+    alert('必須項目をすべて入力してください。');
     return;
   }
-  const maxQuota = parseInt(quotaInput);
 
-  const perfPayload = {
+  const perfData = {
+    id: editingPerfId || 'perf_' + Date.now(),
     troupeId: currentUser.id,
     title,
     start,
@@ -1614,195 +1605,66 @@ async function handleRegisterPerformance() {
     acceptStart,
     acceptEnd,
     venue,
-    maxQuota,
+    maxQuota: quota,
     desc,
-    deliveryRestriction,
-    deliveryAddress: (deliveryRestriction === '対面のみ') ? '' : deliveryAddress,
+    email: currentUser.email
   };
 
   try {
-    if (editingPerfId) {
-      const { data, error } = await db
-        .from('performances')
-        .update(perfPayload)
-        .eq('id', editingPerfId)
-        .select();
-
-      if (error) throw error;
-
-      const idx = performancesData.findIndex(p => p.id === editingPerfId);
-      if (idx !== -1 && data && data.length > 0) {
-        performancesData[idx] = data[0];
-      }
-      alert('公演情報を更新しました。');
-    } else {
-      perfPayload.id = 'perf_' + Date.now();
-      perfPayload.email = currentUser.email;
-
-      const { data, error } = await db
-        .from('performances')
-        .insert([perfPayload])
-        .select();
-
-      if (error) throw error;
-
-      performancesData.push(data ? data[0] : perfPayload);
-      alert('新しい公演を登録しました。');
-    }
-
-    resetRegisterForm();
-    showPage('calendar');
-  } catch (error) {
-    console.error('公演登録/更新エラー:', error);
-    alert('処理に失敗しました: ' + error.message);
-  }
-}
-
-// ===================== MY PAGE & AUTH =====================
-function renderMyPage() {
-  if (!currentUser) {
-    document.getElementById('auth-section').style.display = 'block';
-    document.getElementById('dashboard-section').style.display = 'none';
-    return;
-  }
-
-  document.getElementById('auth-section').style.display = 'none';
-  document.getElementById('dashboard-section').style.display = 'block';
-
-  document.getElementById('welcome-message').textContent = `こんにちは、${currentUser.name} さん`;
-  document.getElementById('account-status-info').textContent = `通知用メールアドレス: ${currentUser.email}`;
-
-  const incoming = incomingRequests.filter(r => r.toTroupeId === currentUser.id);
-  const sent = incomingRequests.filter(r => r.fromTroupeId === currentUser.id);
-
-  document.getElementById('stat-incoming-count').textContent = incoming.length;
-  document.getElementById('stat-sent-count').textContent = sent.length;
-
-  const inboxList = document.getElementById('dashboard-inbox');
-  inboxList.innerHTML = '';
-  if (incoming.length === 0) {
-    inboxList.innerHTML = '<div class="empty-state"><i class="ti ti-inbox-off"></i>届いた折り込み依頼はありません</div>';
-  } else {
-    incoming.forEach(req => {
-      const item = document.createElement('div');
-      item.className = `inbox-item ${req.status === 'pending' ? 'unread' : ''}`;
-      item.innerHTML = `
-        <div class="inbox-body">
-          <div class="inbox-from">${req.fromName}（${req.fromEmail}）</div>
-          <div class="inbox-preview">${req.notes || '備考なし'}</div>
-          <div class="inbox-meta">
-            <span class="inbox-copies">${req.copies} 部 (${req.size})</span>
-            <span style="font-size:11px; color:var(--muted);">${req.deliveryMethod} / ${req.timestamp}</span>
-            <span class="status-badge ${req.status === 'accepted' ? 'status-open' : req.status === 'declined' ? 'status-closed' : 'status-soon'}">${req.status === 'accepted' ? '承認済み' : req.status === 'declined' ? '辞退' : '保留中'}</span>
-          </div>
-        </div>
-        <div class="inbox-actions">
-          ${req.status === 'pending' ? `
-            <button class="inbox-btn inbox-btn-accept" onclick="handleRequestStatus('${req.id}', 'accepted')">承認</button>
-            <button class="inbox-btn inbox-btn-decline" onclick="handleRequestStatus('${req.id}', 'declined')">辞退</button>
-          ` : ''}
-        </div>`;
-      inboxList.appendChild(item);
-    });
-  }
-
-  document.getElementById('edit-troupe-name').value = currentUser.name || '';
-  document.getElementById('edit-troupe-desc').value = currentUser.description || '';
-  document.getElementById('edit-troupe-hp').value = currentUser.homepage || '';
-  document.getElementById('edit-troupe-sns').value = currentUser.sns || '';
-}
-
-async function handleLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-password').value.trim();
-
-  if (!email || !pass) {
-    alert('メールアドレスとパスワードを入力してください。');
-    return;
-  }
-
-  const troupe = troupesData.find(t => t.email === email && t.password === pass);
-  if (troupe) {
-    currentUser = troupe;
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    updateAuthUI();
-    renderMyPage();
-  } else {
-    alert('メールアドレスまたはパスワードが正しくありません。');
-  }
-}
-
-function handleLogout() {
-  currentUser = null;
-  localStorage.removeItem('currentUser');
-  updateAuthUI();
-  renderMyPage();
-}
-
-function updateAuthUI() {
-  const loginBtn = document.getElementById('nav-login-btn');
-  if (currentUser) {
-    loginBtn.innerHTML = `<i class="ti ti-layout-dashboard"></i> ${currentUser.name}`;
-  } else {
-    loginBtn.innerHTML = `<i class="ti ti-user"></i> ログイン`;
-  }
-}
-
-async function handleRequestStatus(reqId, newStatus) {
-  try {
-    const { error } = await db.from('requests').update({ status: newStatus }).eq('id', reqId);
+    const { error } = await db.from('performances').upsert([perfData]);
     if (error) throw error;
 
-    const req = incomingRequests.find(r => r.id === reqId);
-    if (req) req.status = newStatus;
-    renderMyPage();
-  } catch (error) {
-    alert('ステータスの更新に失敗しました: ' + error.message);
+    await loadAllData();
+    resetRegisterForm();
+    alert('公演情報を保存しました！');
+    showPage('calendar');
+  } catch (err) {
+    console.error('公演保存エラー:', err);
+    alert('保存に失敗しました: ' + err.message);
   }
 }
 
-// ===================== CHAT CORE (SLACK STYLE IMPLEMENTATION) =====================
+// ===================== CHAT CORE (SUPABASE & REALTIME) =====================
+let chatSubscription = null;
+
 function initChat() {
-  const prompt = document.getElementById('chat-login-prompt');
-  const layout = document.getElementById('chat-layout');
-
   if (!currentUser) {
-    prompt.style.display = 'block';
-    layout.style.display = 'none';
+    document.getElementById('chat-login-prompt').style.display = 'block';
+    document.getElementById('chat-layout').style.display = 'none';
     return;
   }
+  document.getElementById('chat-login-prompt').style.display = 'none';
+  document.getElementById('chat-layout').style.display = 'flex';
 
-  prompt.style.display = 'none';
-  layout.style.display = 'flex';
-
-  renderChatConversations();
+  renderChatSidebar();
+  subscribeToRealtimeMessages();
 }
 
-function renderChatConversations() {
-  const list = document.getElementById('conv-list');
-  list.innerHTML = '';
+// 過去にやり取りのある劇団一覧、または登録劇団一覧を表示
+function renderChatSidebar() {
+  const convList = document.getElementById('conv-list');
+  if (!convList) return;
+  convList.innerHTML = '';
 
-  const partners = troupesData.filter(t => t.id !== currentUser.id);
+  const otherTroupes = troupesData.filter(t => t.id !== currentUser.id);
 
-  if (partners.length === 0) {
-    list.innerHTML = '<div style="padding:16px; font-size:12px; color:#9A9B9E;">メッセージ可能な劇団がありません</div>';
+  if (otherTroupes.length === 0) {
+    convList.innerHTML = '<div style="padding:16px; font-size:12px; color:#9A9B9E;">他の劇団がありません</div>';
     return;
   }
 
-  partners.forEach(partner => {
-    const unreadCount = messagesData.filter(m => m.fromTroupeId === partner.id && m.toTroupeId === currentUser.id && !m.read).length;
-
+  otherTroupes.forEach(t => {
+    const isActive = activeChatPartnerId === t.id;
     const item = document.createElement('div');
-    item.className = `chat-conv-item ${activeChatPartnerId === partner.id ? 'active' : ''}`;
-    item.onclick = () => selectChatPartner(partner.id);
-
+    item.className = `chat-conv-item ${isActive ? 'active' : ''}`;
+    item.onclick = () => selectChatPartner(t.id);
     item.innerHTML = `
-      <div class="chat-conv-avatar">${partner.name.charAt(0)}</div>
+      <div class="chat-conv-avatar">${t.name.charAt(0)}</div>
       <div class="chat-conv-meta">
-        <div class="chat-conv-name"># ${partner.name}</div>
-        ${unreadCount > 0 ? `<div class="chat-unread">${unreadCount}</div>` : ''}
-      </div>`;
-    list.appendChild(item);
+        <div class="chat-conv-name">${t.name}</div>
+      </div>
+    `;
+    convList.appendChild(item);
   });
 }
 
@@ -1811,130 +1673,157 @@ function selectChatPartner(partnerId) {
   const partner = troupesData.find(t => t.id === partnerId);
   if (!partner) return;
 
-  renderChatConversations();
-
   document.getElementById('chat-empty-state').style.display = 'none';
   document.getElementById('chat-view').style.display = 'flex';
 
-  const avatar = document.getElementById('chat-header-avatar');
-  avatar.textContent = partner.name.charAt(0);
-  document.getElementById('chat-header-name').textContent = `# ${partner.name}`;
+  document.getElementById('chat-header-avatar').textContent = partner.name.charAt(0);
+  document.getElementById('chat-header-name').textContent = partner.name;
 
+  renderChatSidebar();
   renderChatMessages();
 }
 
 function renderChatMessages() {
   const container = document.getElementById('chat-messages');
+  if (!container || !activeChatPartnerId) return;
+
   container.innerHTML = '';
 
-  if (!activeChatPartnerId) return;
+  // 自分と相手の間のメッセージを抽出・ソート
+  const currentMsgs = messagesData.filter(m => 
+    (m.sender_id === currentUser.id && m.receiver_id === activeChatPartnerId) ||
+    (m.sender_id === activeChatPartnerId && m.receiver_id === currentUser.id)
+  ).sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
 
-  const msgs = messagesData.filter(m => 
-    (m.fromTroupeId === currentUser.id && m.toTroupeId === activeChatPartnerId) ||
-    (m.fromTroupeId === activeChatPartnerId && m.toTroupeId === currentUser.id)
-  ).sort((a,b) => new Date(a.timestamp) - new Date(b.timestamp));
-
-  if (msgs.length === 0) {
-    container.innerHTML = `
-      <div style="text-align:left; padding:20px 0; color:#616061;">
-        <h3 style="font-size:18px; color:#1D1C1D; font-weight:900; margin-bottom:6px;"># ${troupesData.find(t=>t.id===activeChatPartnerId)?.name} へのダイレクトメッセージ</h3>
-        <p style="font-size:14px;">ここが会話のスタート地点です。折り込みに関する連絡や確認事項を送信してみましょう！</p>
-      </div>`;
+  if (currentMsgs.length === 0) {
+    container.innerHTML = '<div style="text-align:center; color:#616061; font-size:13px; margin-top:20px;">メッセージ履歴はありません。会話を始めましょう！</div>';
     return;
   }
 
-  msgs.forEach(msg => {
-    const isMine = msg.fromTroupeId === currentUser.id;
-    const authorName = isMine ? currentUser.name : (troupesData.find(t => t.id === msg.fromTroupeId)?.name || '相手');
+  currentMsgs.forEach(m => {
+    const isMe = m.sender_id === currentUser.id;
+    const sender = isMe ? currentUser : troupesData.find(t => t.id === activeChatPartnerId);
+    const senderName = sender ? sender.name : '不明';
 
-    const group = document.createElement('div');
-    group.className = 'chat-msg-group';
-    group.innerHTML = `
-      <div class="chat-msg-avatar">${authorName.charAt(0)}</div>
+    const msgGroup = document.createElement('div');
+    msgGroup.className = 'chat-msg-group';
+    msgGroup.innerHTML = `
+      <div class="chat-msg-avatar" style="${isMe ? 'background:var(--crimson);' : ''}">${senderName.charAt(0)}</div>
       <div class="chat-msg-content">
         <div class="chat-msg-header">
-          <span class="chat-msg-author">${authorName}</span>
-          <span class="chat-msg-time">${msg.timestamp}</span>
+          <span class="chat-msg-author">${senderName}</span>
+          <span class="chat-msg-time">${new Date(m.created_at).toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}</span>
         </div>
-        <div class="chat-msg-text">${escapeHtml(msg.text)}</div>
-      </div>`;
-    container.appendChild(group);
+        <div class="chat-msg-text">${escapeHtml(m.text)}</div>
+      </div>
+    `;
+    container.appendChild(msgGroup);
   });
 
   container.scrollTop = container.scrollHeight;
 }
 
+// Supabaseへのメッセージ送信＆保存処理
 async function sendChatMessage() {
   const input = document.getElementById('chat-text-input');
+  if (!input) return;
   const text = input.value.trim();
 
   if (!text || !activeChatPartnerId || !currentUser) return;
 
   const newMsg = {
     id: 'msg_' + Date.now(),
-    fromTroupeId: currentUser.id,
-    toTroupeId: activeChatPartnerId,
-    text,
-    timestamp: new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' }),
-    read: false
+    sender_id: currentUser.id,
+    receiver_id: activeChatPartnerId,
+    text: text,
+    created_at: new Date().toISOString()
   };
 
-  try {
-    const { error } = await db.from('messages').insert([newMsg]);
-    if (error) console.warn('DBメッセージ保存失敗（ローカル表示のみ継続）:', error);
+  input.value = '';
 
+  try {
+    // 1. Supabase DBへ保存
+    const { error } = await db.from('messages').insert([newMsg]);
+    if (error) throw error;
+
+    // 2. ローカル配列に追加＆描画更新
     messagesData.push(newMsg);
-    input.value = '';
     renderChatMessages();
-  } catch (e) {
-    console.error('メッセージ送信エラー:', e);
+
+  } catch (err) {
+    console.error('チャット送信エラー:', err);
+    alert('メッセージの送信に失敗しました: ' + err.message);
   }
 }
 
-function initEmojiPicker() {
-  const popup = document.getElementById('chat-emoji-picker');
-  const emojis = ['👍', '🙌', '✨', '😊', '😭', '🙏', '🎭', '🎟️', '👏', '🔥', '🎉', '👌', '👀', '💯', '❤️', '✅'];
-  popup.innerHTML = '';
-  emojis.forEach(e => {
-    const span = document.createElement('span');
-    span.textContent = e;
-    span.onclick = () => {
-      document.getElementById('chat-text-input').value += e;
-      popup.classList.remove('open');
-    };
-    popup.appendChild(span);
-  });
-}
+// リアルタイム更新の監視
+function subscribeToRealtimeMessages() {
+  if (chatSubscription) return; // 既に購読済みならスキップ
 
-function toggleEmojiPicker() {
-  document.getElementById('chat-emoji-picker').classList.toggle('open');
+  chatSubscription = db
+    .channel('public:messages')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'messages' }, payload => {
+      const newMsg = payload.new;
+      messagesData.push(newMsg);
+      if (
+        activeChatPartnerId &&
+        (newMsg.sender_id === activeChatPartnerId || newMsg.receiver_id === activeChatPartnerId)
+      ) {
+        renderChatMessages();
+      }
+    })
+    .subscribe();
 }
 
 function escapeHtml(str) {
-  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return str.replace(/[&<>'"]/g, 
+    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+  );
 }
 
-async function handleDeletePerformance() {
-  if (!selectedPerformanceId) return;
-  if (!confirm('この公演を削除してもよろしいですか？')) return;
+// 絵文字ピッカーの簡易制御
+function initEmojiPicker() {
+  const picker = document.getElementById('chat-emoji-picker');
+  if (!picker) return;
+  const emojis = ['👍', '🙌', '✨', '😊', '🎭', '✉️', '🙏', '🎉'];
+  picker.innerHTML = emojis.map(e => `<span onclick="insertEmoji('${e}')">${e}</span>`).join('');
+}
 
-  try {
-    // Supabase DBから削除
-    const { error } = await db
-      .from('performances')
-      .delete()
-      .eq('id', selectedPerformanceId);
+function toggleEmojiPicker() {
+  const picker = document.getElementById('chat-emoji-picker');
+  if (picker) picker.classList.toggle('open');
+}
 
-    if (error) throw error;
+function insertEmoji(emoji) {
+  const input = document.getElementById('chat-text-input');
+  if (input) input.value += emoji;
+  toggleEmojiPicker();
+}
 
-    // ローカルデータの更新
-    performancesData = performancesData.filter(p => p.id !== selectedPerformanceId);
+const { data: fetchedMessages, error } = await db.from('messages').select('*');
+if (!error && fetchedMessages) {
+  messagesData = fetchedMessages;
+}
 
-    alert('公演を削除しました。');
-    showPage('calendar');
-  } catch (error) {
-    console.error('公演削除エラー:', error);
-    alert('削除に失敗しました: ' + error.message);
+async function sendChatMessage() {
+  const input = document.getElementById('chat-text-input');
+  const text = input.value.trim();
+  if (!text || !activeChatPartnerId || !currentUser) return;
+
+  const newMsg = {
+    id: 'msg_' + Date.now(),
+    sender_id: currentUser.id,
+    receiver_id: activeChatPartnerId,
+    text: text,
+    created_at: new Date().toISOString()
+  };
+
+  // Supabaseへ保存
+  const { error } = await db.from('messages').insert([newMsg]);
+  if (!error) {
+    messagesData.push(newMsg);
+    renderChatMessages();
+    input.value = '';
   }
 }
 </script>
