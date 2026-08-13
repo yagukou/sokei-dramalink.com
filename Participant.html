@@ -1506,26 +1506,6 @@ function renderMyPage() {
   }
 }
 
-async function handleLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pass = document.getElementById('login-password').value.trim();
-
-  if (!email || !pass) {
-    alert('メールアドレスとパスワードを入力してください。');
-    return;
-  }
-
-  const troupe = troupesData.find(t => t.email === email && t.password === pass);
-  if (troupe) {
-    currentUser = troupe;
-    localStorage.setItem('currentUser', JSON.stringify(currentUser));
-    updateAuthUI();
-    renderMyPage();
-  } else {
-    alert('メールアドレスまたはパスワードが正しくありません。');
-  }
-}
-
 // 1. 新規アカウント作成
 async function handleRegisterTroupe() {
   const name = document.getElementById('reg-troupe-name').value.trim();
@@ -1562,7 +1542,7 @@ async function handleRegisterTroupe() {
   }
 }
 
-// 2. ログイン処理
+// 2. ログイン処理 (Supabaseから検索)
 async function handleLogin() {
   const email = document.getElementById('login-email').value.trim();
   const pass = document.getElementById('login-password').value.trim();
@@ -1572,7 +1552,6 @@ async function handleLogin() {
     return;
   }
 
-  // Supabaseからユーザーを検索
   try {
     const { data, error } = await db
       .from('troupes')
