@@ -1526,6 +1526,7 @@ async function handleLogin() {
   }
 }
 
+// 1. 新規アカウント作成
 async function handleRegisterTroupe() {
   const name = document.getElementById('reg-troupe-name').value.trim();
   const email = document.getElementById('reg-troupe-email').value.trim();
@@ -1538,24 +1539,60 @@ async function handleRegisterTroupe() {
 
   const newTroupe = {
     id: 'troupe_' + Date.now(),
-    name,
-    email,
-    password,
-    affiliation: '早稲田大学'
+    name: name,
+    email: email,
+    password: password,
+    affiliation: '早稲田大学' // デフォルト値
   };
 
   try {
-    const { error } = await db.from('troupes').insert([newTroupe]);
+    const { data, error } = await db.from('troupes').insert([newTroupe]).select();
     if (error) throw error;
 
-    troupesData.push(newTroupe);
-    currentUser = newTroupe;
+    const createdUser = data ? data[0] : newTroupe;
+    troupesData.push(createdUser);
+    currentUser = createdUser;
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    
     updateAuthUI();
     renderMyPage();
     alert('アカウントが作成されました。');
   } catch (error) {
     alert('登録に失敗しました: ' + error.message);
+  }
+}
+
+// 2. ログイン処理
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const pass = document.getElementById('login-password').value.trim();
+
+  if (!email || !pass) {
+    alert('メールアドレスとパスワードを入力してください。');
+    return;
+  }
+
+  // Supabaseからユーザーを検索
+  try {
+    const { data, error } = await db
+      .from('troupes')
+      .select('*')
+      .eq('email', email)
+      .eq('password', pass)
+      .single();
+
+    if (error || !data) {
+      alert('メールアドレスまたはパスワードが正しくありません。');
+      return;
+    }
+
+    currentUser = data;
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    updateAuthUI();
+    renderMyPage();
+    alert(`ログインしました: ${currentUser.name} さん`);
+  } catch (err) {
+    alert('ログイン処理でエラーが発生しました。');
   }
 }
 
